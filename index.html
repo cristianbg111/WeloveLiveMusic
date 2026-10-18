@@ -21,11 +21,11 @@
       --text-muted: #9ca3af;
       --input-bg: #090a0f;
       --input-border: #3b4261;
-      --accent: #ec4899; /* Fucsia / Neón discoteca */
+      --accent: #ec4899;
       --accent-hover: #f472b6;
       --accent-text: #ffffff;
       --item-bg: #161a2b;
-      --badge-bg: #8b5cf6; /* Morado neón */
+      --badge-bg: #8b5cf6;
       --badge-text: #ffffff;
       --tag-bg: #1e2238;
       --spotify: #1db954;
@@ -36,6 +36,7 @@
       --success: #10b981;
       --count-bg: #f59e0b;
       --glow-accent: rgba(236, 72, 153, 0.4);
+      --dj-mode-bg: rgba(236, 72, 153, 0.15);
     }
 
     [data-theme="light"] {
@@ -58,6 +59,7 @@
       --success: #10b981;
       --count-bg: #d97706;
       --glow-accent: rgba(219, 39, 119, 0.2);
+      --dj-mode-bg: rgba(219, 39, 119, 0.08);
     }
 
     * { 
@@ -273,6 +275,26 @@
     .queue-actions {
       display: flex;
       gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .dj-mode-btn {
+      background: var(--badge-bg);
+      color: #ffffff;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .dj-mode-btn.active {
+      background: var(--danger);
+      box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
     }
 
     .pdf-btn {
@@ -310,6 +332,12 @@
       border: 1px solid var(--border);
       margin-bottom: 8px;
     }
+    
+    .queue-item.dj-active {
+      background: var(--dj-mode-bg);
+      border-color: var(--accent);
+    }
+
     .queue-item img { width: 48px; height: 48px; border-radius: 10px; object-fit: cover; cursor: pointer; }
     .queue-info { flex: 1; overflow: hidden; cursor: pointer; }
     .requester-tag {
@@ -329,6 +357,18 @@
       text-align: center;
       white-space: nowrap;
       box-shadow: 0 0 6px rgba(245, 158, 11, 0.4);
+    }
+
+    .delete-song-btn {
+      background: var(--danger);
+      color: white;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 4px;
     }
 
     /* Paginación */
@@ -468,7 +508,7 @@
       body * { visibility: hidden; }
       #tabQueue, #tabQueue * { visibility: visible; }
       #tabQueue { position: absolute; left: 0; top: 0; width: 100%; background: #ffffff !important; color: #000000 !important; }
-      .queue-actions, .theme-btn, .tabs, .search-box, .footer, .pagination { display: none !important; }
+      .queue-actions, .theme-btn, .tabs, .search-box, .footer, .pagination, .delete-song-btn { display: none !important; }
       .queue-item { border: 1px solid #ccc !important; background: #f8fafc !important; color: #000 !important; }
     }
   </style>
@@ -505,10 +545,11 @@
     <!-- TAB PETICIONES SALA -->
     <div id="tabQueue" class="tab-content">
       <div class="queue-header">
-        <span class="queue-title">Peticiones para el DJ</span>
+        <span class="queue-title" id="queueHeaderTitle">Peticiones para el DJ</span>
         <div class="queue-actions">
+          <button class="dj-mode-btn" id="djModeToggleBtn" onclick="toggleDjMode()">🎧 Modo DJ</button>
           <button class="pdf-btn" onclick="exportQueueToPDF()">📄 Exportar PDF</button>
-          <button class="clear-queue-btn" onclick="clearQueueSecure()">🗑️ Borrar</button>
+          <button class="clear-queue-btn" id="clearQueueBtn" style="display: none;" onclick="clearQueueSecure()">🗑️ Borrar Todo</button>
         </div>
       </div>
       <div id="queueResults" class="results">
@@ -604,6 +645,9 @@
     let globalQueueItems = [];
     let currentPage = 1;
     const itemsPerPage = 10;
+    
+    // Estado del Modo DJ
+    let isDjModeActive = false;
 
     const CORRECT_PASSWORD_HASH = "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8";
 
@@ -632,13 +676,11 @@
       document.getElementById('modalTidalBtn').addEventListener('click', openTidalApp);
       document.getElementById('modalYoutubeBtn').addEventListener('click', openYoutubeApp);
 
-      // Registrar visita de forma única por sesión del navegador
       if (!sessionStorage.getItem('visited_live')) {
         sessionStorage.setItem('visited_live', 'true');
         statsRef.transaction(currentValue => (currentValue || 0) + 1);
       }
 
-      // Escuchar el total de visitas en tiempo real desde Firebase
       statsRef.on('value', (snapshot) => {
         const count = snapshot.val() || 0;
         document.getElementById('visitorCount').textContent = count.toLocaleString();
@@ -658,19 +700,52 @@
       return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     }
 
+    // Activación y desactivación del Modo DJ protegido con contraseña encriptada
+    async function toggleDjMode() {
+      if (!isDjModeActive) {
+        const pass = prompt("Introduce la contraseña de Administrador (Modo DJ):");
+        if (pass === null) return;
+
+        const inputHash = await hashString(pass);
+
+        if (inputHash === CORRECT_PASSWORD_HASH) {
+          isDjModeActive = true;
+          document.getElementById('djModeToggleBtn').textContent = "🚪 Salir Modo DJ";
+          document.getElementById('djModeToggleBtn').classList.add('active');
+          document.getElementById('clearQueueBtn').style.display = 'block';
+          document.getElementById('queueHeaderTitle').textContent = "Panel de Control DJ";
+          alert("¡Modo DJ activado con éxito! 🎧");
+          renderQueuePage();
+        } else {
+          alert("Contraseña incorrecta.");
+        }
+      } else {
+        isDjModeActive = false;
+        document.getElementById('djModeToggleBtn').textContent = "🎧 Modo DJ";
+        document.getElementById('djModeToggleBtn').classList.remove('active');
+        document.getElementById('clearQueueBtn').style.display = 'none';
+        document.getElementById('queueHeaderTitle').textContent = "Peticiones para el DJ";
+        alert("Modo DJ desactivado.");
+        renderQueuePage();
+      }
+    }
+
+    // Borrar una canción individualmente desde el Modo DJ
+    function deleteSongItem(songId, songTitle) {
+      if (confirm(`¿Seguro que quieres eliminar "${songTitle}" de la lista?`)) {
+        db.ref('welove_live_music_queue/' + songId).remove().then(() => {
+          // Toast o aviso rápido
+        });
+      }
+    }
+
     async function clearQueueSecure() {
-      const pass = prompt("Introduce la contraseña para borrar la lista:");
-      if (pass === null) return;
-
-      const inputHash = await hashString(pass);
-
-      if (inputHash === CORRECT_PASSWORD_HASH) {
+      if (!isDjModeActive) return;
+      if (confirm("¿Estás completamente seguro de borrar TODAS las peticiones de la sala?")) {
         queueRef.remove().then(() => {
           currentPage = 1;
           alert("Lista borrada con éxito.");
         });
-      } else {
-        alert("Contraseña incorrecta.");
       }
     }
 
@@ -932,13 +1007,21 @@
         const count = item.count || 1;
         const displayUser = item.users || item.user || 'Anónimo';
 
+        // Si el Modo DJ está activo, añadimos el botón de eliminar canción individual
+        const djActionHtml = isDjModeActive 
+          ? `<button class="delete-song-btn" onclick="deleteSongItem('${item.id}', '${safeTitle}')">❌ Eliminar</button>` 
+          : '';
+
+        const djClass = isDjModeActive ? ' dj-active' : '';
+
         return `
-          <div class="queue-item">
+          <div class="queue-item${djClass}">
             <img src="${item.artwork}" alt="${item.title}" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}')">
             <div class="song-info" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}')">
               <div class="song-title">${absoluteIndex}. ${item.title}</div>
               <div class="song-artist">${item.artist}</div>
               <div class="requester-tag">Pedido por: ${displayUser}</div>
+              ${djActionHtml}
             </div>
             <div class="action-buttons">
               <span class="badge-count">🔥 ${count} ${count === 1 ? 'voto' : 'votos'}</span>
