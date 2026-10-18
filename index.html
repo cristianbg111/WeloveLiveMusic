@@ -679,7 +679,7 @@
 
     let globalQueueItems = [];
     let currentPage = 1;
-    const itemsPerPage = 10;
+    const itemsPerPage = 25; // AMPLIADO A 25 PARA QUE QUepan TODAS EN UNA SOLA PÁGINA
     
     let isDjModeActive = false;
     const CORRECT_PASSWORD_ENCODED = "amJkZWVqYXkx"; // "jbdeejay1"
@@ -1049,14 +1049,13 @@
         items.push({ id: id, ...data[id] });
       }
 
-      // CORRECCIÓN CLAVE DE ORDENACIÓN NUMÉRICA PARA MÓVILES (Safari / Android)
       items.sort((a, b) => {
         const countA = Number(a.count || 1);
         const countB = Number(b.count || 1);
         if (countB !== countA) {
-          return countB - countA; // Mayor número de votos primero
+          return countB - countA;
         }
-        return Number(a.timestamp || 0) - Number(b.timestamp || 0); // Si empatan, el más antiguo primero
+        return Number(a.timestamp || 0) - Number(b.timestamp || 0);
       });
 
       globalQueueItems = items;
