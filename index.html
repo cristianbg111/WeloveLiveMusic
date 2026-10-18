@@ -1525,8 +1525,14 @@
     function updateGenreFiltersUI(items) {
       const bar = document.getElementById('genreFiltersBar');
       const genresSet = new Set();
+      
+      // Lista de géneros que queremos excluir o ignorar automáticamente
+      const excludedGenres = ['Christian', 'Christian & Gospel'];
+
       items.forEach(item => {
-        if (item.genre) genresSet.add(item.genre);
+        if (item.genre && !excludedGenres.includes(item.genre)) {
+          genresSet.add(item.genre);
+        }
       });
 
       let html = `<button class="filter-chip ${activeGenreFilter === 'ALL' ? 'active' : ''}" onclick="filterByGenre('ALL')">🎵 Todos (${items.length})</button>`;
