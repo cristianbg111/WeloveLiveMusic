@@ -1111,4 +1111,121 @@
     }
 
     function estimateBpm(genre, title) {
-      const lowerTitle
+      const lowerTitle = title.toLowerCase();
+      if (lowerTitle.includes('rock') || lowerTitle.includes('metal')) return '130-150';
+      if (lowerTitle.includes('pop') || lowerTitle.includes('dance')) return '120-130';
+      return '115-128';
+    }
+
+    function getHashKey(str) {
+      let hash = 0;
+      for (let i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
+      }
+      return camelotKeys[Math.abs(hash) % camelotKeys.length];
+    }
+
+    function openModal(imgUrl, title, artist, audioUrl, genre) {
+      document.getElementById('modalImg').src = imgUrl;
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalArtist').textContent = artist;
+      document.getElementById('modalBpm').textContent = estimateBpm(genre, title) + ' BPM';
+      document.getElementById('modalKey').textContent = getHashKey(title + artist);
+      
+      tapTimes = [];
+      currentSearchTerm = `${title} ${artist}`;
+
+      const audioElement = document.getElementById('modalAudio');
+      if (audioUrl) {
+        audioElement.style.display = 'block';
+        audioElement.src = audioUrl;
+      } else {
+        audioElement.style.display = 'none';
+        audioElement.src = '';
+      }
+
+      const musicQuery = encodeURIComponent(currentSearchTerm);
+      document.getElementById('modalSpotifyBtn').href = `https://open.spotify.com/search/${musicQuery}`;
+      document.getElementById('imageModal').style.display = 'flex';
+    }
+
+    function openTidalApp(event) {
+      event.preventDefault();
+      const query = encodeURIComponent(currentSearchTerm);
+      const appUrl = `tidal://search?q=${query}`;
+      const webUrl = `https://listen.tidal.com/search?q=${query}`;
+      const start = Date.now();
+      window.location.href = appUrl;
+      setTimeout(() => {
+        if (Date.now() - start < 2000) window.open(webUrl, '_blank');
+      }, 1500);
+    }
+
+    function openYoutubeApp(event) {
+      event.preventDefault();
+      const query = encodeURIComponent(currentSearchTerm);
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      const appUrl = isIOS ? `youtube://results?search_query=${query}` : `vnd.youtube://results?search_query=${query}`;
+      const webUrl = `https://www.youtube.com/results?search_query=${query}`;
+      const start = Date.now();
+      window.location.href = appUrl;
+      setTimeout(() => {
+        if (Date.now() - start < 2000) window.open(webUrl, '_blank');
+      }, 1500);
+    }
+
+    function tapTempo() {
+      const now = Date.now();
+      tapTimes.push(now);
+      if (tapTimes.length > 1) {
+        if (tapTimes.length > 5) tapTimes.shift();
+        let intervals = [];
+        for (let i = 1; i < tapTimes.length; i++) {
+          intervals.push(tapTimes[i] - tapTimes[i - 1]);
+        }
+        const avgInterval = intervals.reduce((a, b) => a + b, 0) / intervals.length;
+        const calculatedBpm = Math.round(60000 / avgInterval);
+        if (calculatedBpm >= 40 && calculatedBpm <= 220) {
+          document.getElementById('modalBpm').textContent = `${calculatedBpm} BPM (Tap)`;
+        }
+      }
+    }
+
+    function closeModal() {
+      const audioElement = document.getElementById('modalAudio');
+      audioElement.pause();
+      audioElement.src = '';
+      document.getElementById('imageModal').style.display = 'none';
+    }
+
+    function saveToHistory(query) {
+      let history = JSON.parse(localStorage.getItem('searchHistoryLive')) || [];
+      history = history.filter(item => item.toLowerCase() !== query.toLowerCase());
+      history.unshift(query);
+      if (history.length > 5) history.pop();
+      localStorage.setItem('searchHistoryLive', JSON.stringify(history));
+      loadHistory();
+    }
+
+    function loadHistory() {
+      const history = JSON.parse(localStorage.getItem('searchHistoryLive')) || [];
+      const section = document.getElementById('historySection');
+      const tagsContainer = document.getElementById('historyTags');
+
+      if (history.length === 0) {
+        section.style.display = 'none';
+        return;
+      }
+      section.style.display = 'block';
+      tagsContainer.innerHTML = history.map(item => `
+        <button class="tag" onclick="searchFromHistory('${item}')">${item}</button>
+      `).join('');
+    }
+
+    function searchFromHistory(query) {
+      document.getElementById('songInput').value = query;
+      handleInput();
+    }
+  </script>
+</body>
+</html>
