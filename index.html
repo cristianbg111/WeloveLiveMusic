@@ -122,12 +122,16 @@
 
     .app-logo {
       width: 100%;
-      max-height: 130px;
+      max-width: 300px;
+      height: auto;
+      max-height: 120px;
       object-fit: contain;
       border-radius: 12px;
       border: 1px solid var(--border);
       box-shadow: 0 4px 12px rgba(0,0,0,0.4);
       background: #000000;
+      display: block;
+      margin: 0 auto;
     }
 
     .header-row {
@@ -1341,8 +1345,48 @@
       renderQueuePage();
     }
 
+    // FUNCIÓN CORREGIDA PARA EXPORTAR TODAS LAS CANCIONES AL PDF
     function exportQueueToPDF() {
+      if (globalQueueItems.length === 0) {
+        alert("No hay canciones en la lista para exportar.");
+        return;
+      }
+
+      const queueResults = document.getElementById('queueResults');
+      
+      // Guardamos el HTML actual (la página que se está viendo)
+      const previousHTML = queueResults.innerHTML;
+
+      // Renderizamos temporalmente TODAS las canciones de la lista en el contenedor
+      queueResults.innerHTML = globalQueueItems.map((item, index) => {
+        const absoluteIndex = index + 1;
+        const count = Number(item.count || 1);
+        const displayUser = item.users || item.user || 'Anónimo';
+
+        return `
+          <div class="queue-item">
+            <img src="${item.artwork}" alt="${item.title}">
+            <div class="song-info">
+              <div class="song-title">${absoluteIndex}. ${item.title}</div>
+              <div class="song-artist">${item.artist}</div>
+              <div class="requester-tag">Pedido: ${displayUser}</div>
+            </div>
+            <div class="action-buttons">
+              <span class="badge-count">🔥 ${count}</span>
+              <span class="badge-year">${item.year || 'N/D'}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Lanzamos la ventana de impresión/PDF
       window.print();
+
+      // Restauramos la vista paginada original un instante después
+      setTimeout(() => {
+        queueResults.innerHTML = previousHTML;
+        renderQueuePage();
+      }, 500);
     }
 
     function estimateBpm(genre, title) {
@@ -1404,7 +1448,7 @@
       const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
       const appUrl = isIOS ? `youtube://results?search_query=${query}` : `vnd.youtube://results?search_query=${query}`;
       const webUrl = `https://www.youtube.com/results?search_query=${query}`;
-      const start = Date.now();
+      const start = Date.0;
       window.location.href = appUrl;
       setTimeout(() => {
         if (Date.now() - start < 2000) window.open(webUrl, '_blank');
