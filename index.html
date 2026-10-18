@@ -109,32 +109,52 @@
       margin: auto;
     }
 
+    /* ESTILOS PARA LA CABECERA CON LOGOTIPO */
+    .brand-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      flex-shrink: 0;
+      text-align: center;
+    }
+
+    .app-logo {
+      width: 100%;
+      max-height: 110px;
+      object-fit: contain;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+
     .header-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      width: 100%;
       gap: 12px;
-      margin-bottom: 6px;
-      flex-shrink: 0;
     }
 
     h1 { 
-      font-size: 1.15rem; 
+      font-size: 1.05rem; 
       font-weight: 800; 
       color: var(--text); 
       letter-spacing: 0.5px;
       text-shadow: 0 0 10px var(--glow-accent);
       text-transform: uppercase;
+      margin: 0;
     }
     
     .theme-btn {
       background: var(--tag-bg);
       border: 1px solid var(--border);
       color: var(--text);
-      padding: 6px 10px;
+      padding: 5px 9px;
       border-radius: 10px;
       cursor: pointer;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       white-space: nowrap;
       -webkit-appearance: none;
       touch-action: manipulation;
@@ -548,7 +568,6 @@
     .youtube-btn { background: var(--youtube); color: #ffffff; }
     .back-btn { background: var(--tag-bg); color: var(--text); border: 1px solid var(--border); width: 100%; }
 
-    /* ESTILOS PARA LAS TARJETAS DENTRO DEL HISTÓRICO */
     .history-item-card {
       background: var(--item-bg);
       border: 1px solid var(--border);
@@ -591,7 +610,7 @@
         max-height: none !important;
         overflow: visible !important;
       }
-      .queue-actions, .theme-btn, .tabs, .search-box, .footer, .pagination, .delete-song-btn { display: none !important; }
+      .queue-actions, .theme-btn, .tabs, .search-box, .footer, .pagination, .delete-song-btn, .brand-header { display: none !important; }
       .results {
         max-height: none !important;
         overflow: visible !important;
@@ -610,9 +629,13 @@
 <body>
 
   <div class="card">
-    <div class="header-row">
-      <h1>WE LOVE LIVE MUSIC</h1>
-      <button class="theme-btn" id="themeToggle">☀️ Modo Claro</button>
+    <!-- LOGOTIPO Y CABECERA CONJUNTA -->
+    <div class="brand-header">
+      <img src="LogoWeLoveRemember.jpg" alt="We Love The Remember" class="app-logo">
+      <div class="header-row">
+        <h1>WE LOVE LIVE MUSIC</h1>
+        <button class="theme-btn" id="themeToggle">☀️ Modo Claro</button>
+      </div>
     </div>
     
     <div class="instructions-box">
