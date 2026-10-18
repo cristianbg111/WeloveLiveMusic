@@ -122,12 +122,12 @@
 
     .app-logo {
       width: 100%;
-      max-height: 120px;
+      max-height: 130px;
       object-fit: contain;
       border-radius: 12px;
       border: 1px solid var(--border);
       box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-      background: #000;
+      background: #000000;
     }
 
     .header-row {
@@ -632,7 +632,7 @@
   <div class="card">
     <!-- LOGOTIPO Y CABECERA CONJUNTA -->
     <div class="brand-header">
-      <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEA3ADcAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCACkAPQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AQHDxEEUE3MSFxJCBhDhcWKiZhNygRMiYhZXNGRVokVKdIoKCgoVGRYnKiSUlQZXCWImYmGQoKFiorKc4qM0dLD2Onm65Oh5qZlqOmp6mnqKmpaSRlokTqZGRknKupqKmqslqpaYmZWdndqjk6SFhmmVqKmpqlh4iZkbaipKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD46v8A6vNULY4t5q0rqPNzVK1H+juPevWn8JyIqSfdNUxWldfdNURNYTWojlqSlkoqaE9SWSv4/3n0qGq05/fN9aC0y1AftC1O8IqPT/8AUip6mRo03PTPJp6x1W832/75pY4/rV2Mh0aU98U4S1oREaN5rS8360eb9alDO4tP9WKlWqlt/qxU6tWYy+sXvS+T71W3mjNlP06VT21omI//9k=" alt="We Love The Remember" class="app-logo">
+      <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////wgALCAACAQABAREA/8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQABPxA=" alt="We Love The Remember" class="app-logo" id="logoImg">
       <div class="header-row">
         <h1>WE LOVE LIVE MUSIC</h1>
         <button class="theme-btn" id="themeToggle">☀️ Modo Claro</button>
@@ -761,6 +761,11 @@
   </div>
 
   <script>
+    // Inserción directa de tu imagen en Base64 para garantizar que aparezca siempre
+    const realLogoBase64 = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEA3ADcAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////wgALCAACAQABAREA/8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQABPxA="; // (Imagen integrada completa abajo en el script)
+  </script>
+
+  <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDcAeldon_Sb8yF4tKTGNvKFJGahvpBQ5E",
       authDomain: "nostalgia-dce1f.firebaseapp.com",
@@ -793,6 +798,12 @@
     const CORRECT_PASSWORD_ENCODED = "amJkZWVqYXkx"; // "jbdeejay1"
 
     document.addEventListener('DOMContentLoaded', () => {
+      // Asignar la imagen en Base64 directamente por código para evitar fallos de ruta en GitHub
+      const logoEl = document.getElementById('logoImg');
+      if (logoEl) {
+        logoEl.src = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEA3ADcAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCACkAPQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AQHDxEEUE3MSFxJCBhDhcWKiZhNygRMiYhZXNGRVokVKdIoKCgoVGRYnKiSUlQZXCWImYmGQoKFiorKc4qM0dLD2Onm65Oh5qZlqOmp6mnqKmpaSRlokTqZGRknKupqKmqslqpaYmZWdndqjk6SFhmmVqKmpqlh4iZkbaipKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD46v8A6vNULY4t5q0rqPNzVK1H+juPevWn8JyIqSfdNUxWldfdNURNYTWojlqSlkoqaE9SWSv4/3n0qGq05/fN9aC0y1AftC1O8IqPT/8AUip6mRo03PTPJp6x1W832/75pY4/rV2Mh0aU98U4S1oREaN5rS8360eb9alDO4tP9WKlWqlt/qxU6tWYy+sXvS+T71W3mjNlP06VT21omI//9k=";
+      }
+
       loadHistory();
       const savedTheme = localStorage.getItem('theme') || 'dark';
       document.documentElement.setAttribute('data-theme', savedTheme);
@@ -1244,7 +1255,7 @@
 
       if (!data) {
         globalQueueItems = [];
-        queueResults.innerHTML = '<p class="status-msg">No hay peticiones in la sala todavía.</p>';
+        queueResults.innerHTML = '<p class="status-msg">No hay peticiones en la sala todavía.</p>';
         paginationDiv.style.display = 'none';
         return;
       }
