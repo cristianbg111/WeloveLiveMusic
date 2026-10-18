@@ -76,7 +76,7 @@
     html { 
       -webkit-text-size-adjust: 100%; 
       height: 100%;
-      overflow-x: hidden;
+      overflow: hidden; /* BLOQUEAMOS EL SCROLL GENERAL DE LA PÁGINA */
     }
     
     body {
@@ -88,24 +88,25 @@
       color: var(--text);
       display: flex;
       justify-content: center;
-      align-items: flex-start;
-      min-height: 100vh;
-      min-height: 100dvh;
-      padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(60px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
+      align-items: center;
+      height: 100vh;
+      height: 100dvh;
+      padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+      overflow: hidden; /* EVITA CUALQUIER DESPLAZAMIENTO FUERA DE LA TARJETA */
     }
 
     .card {
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 20px;
-      padding: 20px;
+      padding: 18px;
       max-width: 500px;
       width: 100%;
+      max-height: 100%;
+      display: flex;
+      flex-direction: column;
       box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5), 0 0 20px var(--glow-accent);
       margin: auto;
-      margin-bottom: 40px;
     }
 
     .header-row {
@@ -114,10 +115,11 @@
       align-items: center;
       gap: 12px;
       margin-bottom: 6px;
+      flex-shrink: 0;
     }
 
     h1 { 
-      font-size: 1.25rem; 
+      font-size: 1.15rem; 
       font-weight: 800; 
       color: var(--text); 
       letter-spacing: 0.5px;
@@ -129,10 +131,10 @@
       background: var(--tag-bg);
       border: 1px solid var(--border);
       color: var(--text);
-      padding: 8px 12px;
+      padding: 6px 10px;
       border-radius: 10px;
       cursor: pointer;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       white-space: nowrap;
       -webkit-appearance: none;
       touch-action: manipulation;
@@ -141,37 +143,39 @@
     .instructions-box {
       background: var(--instructions-bg);
       border: 1px solid var(--instructions-border);
-      border-radius: 14px;
-      padding: 12px 14px;
-      margin-bottom: 16px;
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-bottom: 12px;
       box-shadow: inset 0 0 10px var(--instructions-bg);
+      flex-shrink: 0;
     }
 
     .instructions-title {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       font-weight: 800;
       color: var(--accent);
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
       display: flex;
       align-items: center;
       gap: 6px;
     }
 
     .instructions-text {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: var(--text);
-      line-height: 1.45;
+      line-height: 1.4;
       font-weight: 500;
     }
 
     .tabs {
       display: flex;
       gap: 8px;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
       border-bottom: 1px solid var(--border);
-      padding-bottom: 10px;
+      padding-bottom: 8px;
+      flex-shrink: 0;
     }
 
     .tab-btn {
@@ -179,10 +183,10 @@
       background: var(--tag-bg);
       border: 1px solid var(--border);
       color: var(--text-muted);
-      padding: 10px;
+      padding: 8px;
       border-radius: 10px;
       font-weight: 700;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       cursor: pointer;
       text-align: center;
       text-transform: uppercase;
@@ -197,19 +201,26 @@
       box-shadow: 0 0 12px var(--glow-accent);
     }
 
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
+    .tab-content { 
+      display: none; 
+      flex: 1;
+      flex-direction: column;
+      overflow: hidden;
+      min-height: 0;
+    }
+    .tab-content.active { display: flex; }
 
     .search-box {
       display: flex;
       gap: 8px;
-      margin-bottom: 14px;
+      margin-bottom: 10px;
+      flex-shrink: 0;
     }
 
     input {
       flex: 1;
-      padding: 12px 14px;
-      border-radius: 12px;
+      padding: 10px 12px;
+      border-radius: 10px;
       border: 1px solid var(--input-border);
       background: var(--input-bg);
       color: var(--text);
@@ -226,61 +237,63 @@
       background: var(--accent);
       color: var(--accent-text);
       border: none;
-      padding: 12px 16px;
-      border-radius: 12px;
+      padding: 10px 14px;
+      border-radius: 10px;
       font-weight: 700;
       cursor: pointer;
-      font-size: 1rem;
+      font-size: 0.9rem;
       -webkit-appearance: none;
       touch-action: manipulation;
       box-shadow: 0 0 10px var(--glow-accent);
     }
 
-    .history-section { margin-bottom: 16px; }
-    .history-title { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+    .history-section { margin-bottom: 10px; flex-shrink: 0; }
+    .history-title { font-size: 0.7rem; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
     .history-tags { display: flex; flex-wrap: wrap; gap: 6px; }
     .tag {
       background: var(--tag-bg);
       border: 1px solid var(--border);
       color: var(--text);
-      padding: 6px 10px;
-      border-radius: 8px;
-      font-size: 0.78rem;
+      padding: 5px 8px;
+      border-radius: 6px;
+      font-size: 0.72rem;
       cursor: pointer;
       -webkit-appearance: none;
       touch-action: manipulation;
     }
 
+    /* CONTENEDOR CON SCROLL EXCLUSIVO PARA LA LISTA DE CANCIONES */
     .results { 
       display: flex; 
       flex-direction: column; 
-      gap: 10px; 
-      max-height: 52vh; 
+      gap: 8px; 
+      flex: 1;
       overflow-y: auto; 
       -webkit-overflow-scrolling: touch; 
       overscroll-behavior-y: contain;
       padding-right: 4px;
-      padding-bottom: 12px;
+      padding-bottom: 10px;
     }
     
     .song-item {
       display: flex;
       gap: 10px;
       background: var(--item-bg);
-      padding: 10px;
-      border-radius: 12px;
+      padding: 8px 10px;
+      border-radius: 10px;
       align-items: center;
       border: 1px solid var(--border);
+      flex-shrink: 0;
     }
-    .song-item img { width: 48px; height: 48px; border-radius: 8px; object-fit: cover; cursor: pointer; flex-shrink: 0; }
+    .song-item img { width: 42px; height: 42px; border-radius: 8px; object-fit: cover; cursor: pointer; flex-shrink: 0; }
     .song-info { flex: 1; overflow: hidden; cursor: pointer; min-width: 0; }
-    .song-title { font-weight: 700; font-size: 0.9rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .song-artist { font-size: 0.8rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .song-title { font-weight: 700; font-size: 0.85rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .song-artist { font-size: 0.75rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     
     .action-buttons {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 3px;
       align-items: flex-end;
       flex-shrink: 0;
     }
@@ -289,10 +302,10 @@
       background: var(--accent);
       color: var(--accent-text);
       border: none;
-      padding: 6px 10px;
-      border-radius: 8px;
+      padding: 5px 8px;
+      border-radius: 6px;
       font-weight: 700;
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       cursor: pointer;
       white-space: nowrap;
       box-shadow: 0 0 6px var(--glow-accent);
@@ -302,23 +315,24 @@
     .badge-year {
       background: var(--tag-bg);
       color: var(--text-muted);
-      padding: 2px 6px;
-      border-radius: 6px;
+      padding: 2px 5px;
+      border-radius: 5px;
       font-weight: 600;
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       border: 1px solid var(--border);
     }
     
-    .status-msg { text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 16px 0; }
+    .status-msg { text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 12px 0; }
 
     .queue-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       gap: 6px;
+      flex-shrink: 0;
     }
-    .queue-title { font-size: 0.88rem; font-weight: 700; color: var(--text); text-transform: uppercase; letter-spacing: 0.5px; }
+    .queue-title { font-size: 0.82rem; font-weight: 700; color: var(--text); text-transform: uppercase; letter-spacing: 0.5px; }
     
     .queue-actions {
       display: flex;
@@ -327,9 +341,9 @@
     }
 
     .dj-mode-btn, .save-list-btn, .history-list-btn, .pdf-btn, .clear-queue-btn {
-      padding: 6px 10px;
-      border-radius: 8px;
-      font-size: 0.72rem;
+      padding: 5px 8px;
+      border-radius: 6px;
+      font-size: 0.7rem;
       font-weight: 700;
       cursor: pointer;
       -webkit-appearance: none;
@@ -347,11 +361,12 @@
       display: flex;
       gap: 10px;
       background: var(--item-bg);
-      padding: 10px;
-      border-radius: 12px;
+      padding: 8px 10px;
+      border-radius: 10px;
       align-items: center;
       border: 1px solid var(--border);
-      margin-bottom: 8px;
+      margin-bottom: 6px;
+      flex-shrink: 0;
     }
     
     .queue-item.dj-active {
@@ -359,16 +374,16 @@
       border-color: var(--accent);
     }
 
-    .queue-item img { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; cursor: pointer; flex-shrink: 0; }
-    .requester-tag { font-size: 0.7rem; color: var(--accent); font-weight: 700; margin-top: 2px; }
+    .queue-item img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; cursor: pointer; flex-shrink: 0; }
+    .requester-tag { font-size: 0.68rem; color: var(--accent); font-weight: 700; margin-top: 2px; }
 
     .badge-count {
       background: var(--count-bg);
       color: #000000;
-      padding: 2px 6px;
-      border-radius: 8px;
+      padding: 2px 5px;
+      border-radius: 6px;
       font-weight: 800;
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       text-align: center;
       white-space: nowrap;
       box-shadow: 0 0 6px rgba(245, 158, 11, 0.4);
@@ -378,12 +393,12 @@
       background: var(--danger);
       color: white;
       border: none;
-      padding: 4px 8px;
-      border-radius: 6px;
-      font-size: 0.7rem;
+      padding: 3px 6px;
+      border-radius: 5px;
+      font-size: 0.65rem;
       font-weight: 700;
       cursor: pointer;
-      margin-top: 4px;
+      margin-top: 3px;
       -webkit-appearance: none;
     }
 
@@ -391,45 +406,47 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
-      padding: 8px 12px;
+      margin-bottom: 8px;
+      padding: 6px 10px;
       background: var(--item-bg);
       border: 1px solid var(--border);
-      border-radius: 12px;
+      border-radius: 10px;
+      flex-shrink: 0;
     }
     .page-btn {
       background: var(--accent);
       border: none;
       color: var(--accent-text);
-      padding: 7px 12px;
-      border-radius: 8px;
-      font-size: 0.78rem;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
       font-weight: 700;
       cursor: pointer;
       -webkit-appearance: none;
       box-shadow: 0 0 6px var(--glow-accent);
     }
     .page-btn:disabled { opacity: 0.3; cursor: not-allowed; box-shadow: none; background: var(--tag-bg); color: var(--text-muted); }
-    .page-info { font-size: 0.8rem; color: var(--text); font-weight: 800; }
+    .page-info { font-size: 0.75rem; color: var(--text); font-weight: 800; }
 
     .footer {
-      margin-top: 20px;
-      padding-top: 14px;
+      margin-top: 12px;
+      padding-top: 10px;
       border-top: 1px solid var(--border);
       text-align: center;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: var(--text-muted);
       letter-spacing: 0.5px;
-      line-height: 1.5;
+      line-height: 1.4;
+      flex-shrink: 0;
     }
     .footer strong { color: var(--accent); }
     .visitor-counter {
       display: inline-block;
-      margin-top: 5px;
-      font-size: 0.7rem;
+      margin-top: 4px;
+      font-size: 0.65rem;
       background: var(--tag-bg);
       border: 1px solid var(--border);
-      padding: 2px 8px;
+      padding: 2px 6px;
       border-radius: 20px;
       color: var(--text-muted);
     }
@@ -453,7 +470,7 @@
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 20px;
-      padding: 20px;
+      padding: 18px;
       max-width: 400px;
       width: 100%;
       text-align: center;
@@ -463,9 +480,9 @@
       -webkit-overflow-scrolling: touch;
       margin: auto;
     }
-    .modal-content img { width: 100%; aspect-ratio: 1/1; border-radius: 12px; object-fit: cover; margin-bottom: 12px; border: 1px solid var(--border); }
-    .modal-title { font-size: 1rem; font-weight: 800; color: var(--text); margin-bottom: 4px; }
-    .modal-artist { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px; }
+    .modal-content img { width: 100%; aspect-ratio: 1/1; border-radius: 12px; object-fit: cover; margin-bottom: 10px; border: 1px solid var(--border); }
+    .modal-title { font-size: 0.95rem; font-weight: 800; color: var(--text); margin-bottom: 3px; }
+    .modal-artist { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px; }
 
     .dj-stats {
       display: flex;
@@ -473,31 +490,31 @@
       background: var(--item-bg);
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 8px;
-      margin-bottom: 12px;
+      padding: 6px;
+      margin-bottom: 10px;
     }
     .stat-box { display: flex; flex-direction: column; align-items: center; }
-    .stat-label { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
-    .stat-value { font-size: 0.95rem; font-weight: 900; color: var(--accent); }
+    .stat-label { font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
+    .stat-value { font-size: 0.9rem; font-weight: 900; color: var(--accent); }
 
     .tap-btn {
       background: var(--tag-bg);
       border: 1px dashed var(--accent);
       color: var(--text);
-      padding: 8px 10px;
+      padding: 7px 10px;
       border-radius: 8px;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 600;
       cursor: pointer;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       width: 100%;
       -webkit-appearance: none;
     }
 
-    audio { width: 100%; height: 38px; margin-bottom: 12px; border-radius: 6px; }
+    audio { width: 100%; height: 36px; margin-bottom: 10px; border-radius: 6px; }
     .modal-actions { display: flex; flex-direction: column; gap: 6px; }
 
-    .spotify-btn, .tidal-btn, .youtube-btn, .back-btn, .close-btn {
+    .spotify-btn, .tidal-btn, .youtube-btn, .back-btn {
       display: flex; align-items: center; justify-content: center; gap: 8px;
       padding: 10px 14px; border-radius: 10px; font-weight: 700; font-size: 0.85rem; text-decoration: none; cursor: pointer;
       -webkit-appearance: none;
@@ -506,7 +523,6 @@
     .tidal-btn { background: var(--tidal); color: #ffffff; border: 1px solid var(--border); }
     .youtube-btn { background: var(--youtube); color: #ffffff; }
     .back-btn { background: var(--tag-bg); color: var(--text); border: 1px solid var(--border); width: 100%; }
-    .close-btn { background: var(--tag-bg); color: var(--text); border: 1px solid var(--border); width: 100%; }
 
     @media print {
       body * { visibility: hidden; }
@@ -627,9 +643,8 @@
           </svg>
           Buscar en YouTube
         </a>
-        <!-- NUEVO BOTÓN DE VOLVER -->
+        <!-- BOTÓN VOLVER CONSERVADO Y BOTÓN CERRAR ELIMINADO -->
         <button class="back-btn" id="backModalBtn">⬅️ Volver</button>
-        <button class="close-btn" id="closeModalBtn">Cerrar</button>
       </div>
     </div>
   </div>
@@ -642,7 +657,7 @@
       <div id="savedListsContainer" style="margin-bottom: 16px;">
         <p class="status-msg">Cargando histórico...</p>
       </div>
-      <button class="close-btn" onclick="closeHistoryModal()">Cerrar</button>
+      <button class="back-btn" onclick="closeHistoryModal()">Cerrar</button>
     </div>
   </div>
 
@@ -698,18 +713,16 @@
       });
 
       document.getElementById('tapBtn').addEventListener('click', tapTempo);
-      document.getElementById('closeModalBtn').addEventListener('click', closeModal);
       document.getElementById('backModalBtn').addEventListener('click', closeModal);
       document.getElementById('imageModal').addEventListener('click', closeModal);
       document.getElementById('historyModal').addEventListener('click', closeHistoryModal);
       document.getElementById('modalTidalBtn').addEventListener('click', openTidalApp);
       document.getElementById('modalYoutubeBtn').addEventListener('click', openYoutubeApp);
 
-      // Listener para detectar cuando el usuario pulsa el botón "Atrás" físico o gestual del móvil
       window.addEventListener('popstate', (event) => {
         const modal = document.getElementById('imageModal');
         if (modal.style.display === 'flex') {
-          closeModal(false); // Cierra el modal sin volver a tocar el historial
+          closeModal(false);
         }
       });
 
@@ -1180,7 +1193,6 @@
       const musicQuery = encodeURIComponent(currentSearchTerm);
       document.getElementById('modalSpotifyBtn').href = `https://open.spotify.com/search/${musicQuery}`;
       
-      // Añadimos entrada al historial para que el botón "Atrás" del móvil cierre el modal
       history.pushState({ modalOpen: true }, '', '');
       document.getElementById('imageModal').style.display = 'flex';
     }
@@ -1233,7 +1245,6 @@
       audioElement.src = '';
       document.getElementById('imageModal').style.display = 'none';
 
-      // Si se cerró mediante botón, retrocedemos en el historial del navegador si procede
       if (updateHistory && window.history.state && window.history.state.modalOpen) {
         window.history.back();
       }
