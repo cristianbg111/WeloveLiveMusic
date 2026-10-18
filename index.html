@@ -201,7 +201,6 @@
       box-shadow: 0 0 12px var(--glow-accent);
     }
 
-    /* ANIMACIÓN DE COLOR EN MOVIMIENTO PARA EL BOTÓN "BUSCA Y AÑADE" */
     @keyframes neonGlow {
       0% {
         background-position: 0% 50%;
@@ -548,6 +547,29 @@
     .youtube-btn { background: var(--youtube); color: #ffffff; }
     .back-btn { background: var(--tag-bg); color: var(--text); border: 1px solid var(--border); width: 100%; }
 
+    /* ESTILOS PARA LAS TARJETAS DENTRO DEL HISTÓRICO */
+    .history-item-card {
+      background: var(--item-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 8px;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .history-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+    .history-item-title { font-weight: 800; font-size: 0.85rem; color: var(--text); }
+    .history-item-date { font-size: 0.7rem; color: var(--text-muted); }
+    .history-actions { display: flex; gap: 6px; justify-content: flex-end; }
+    .history-view-btn { background: var(--badge-bg); color: #fff; border: none; padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; cursor: pointer; }
+
     @media print {
       html, body {
         height: auto !important;
@@ -599,7 +621,6 @@
       </div>
     </div>
 
-    <!-- PESTAÑAS ACTUALIZADAS -->
     <div class="tabs">
       <button class="tab-btn highlight-animated active" onclick="switchTab('search')">✨ Busca y Añade</button>
       <button class="tab-btn" onclick="switchTab('queue')">📻 Lista Peticiones</button>
@@ -703,12 +724,14 @@
   <!-- MODAL HISTÓRICO DE LISTAS -->
   <div class="modal" id="historyModal">
     <div class="modal-content" onclick="event.stopPropagation()">
-      <div class="modal-title">📂 Histórico de Sesiones</div>
-      <div class="modal-artist" style="margin-bottom: 12px;">Listas guardadas en la base de datos</div>
-      <div id="savedListsContainer" style="margin-bottom: 16px;">
+      <div class="modal-title" id="historyModalTitle">📂 Histórico de Sesiones</div>
+      <div class="modal-artist" id="historyModalSubtitle" style="margin-bottom: 12px;">Listas guardadas en la base de datos</div>
+      
+      <div id="savedListsContainer" style="margin-bottom: 16px; max-height: 50vh; overflow-y: auto;">
         <p class="status-msg">Cargando histórico...</p>
       </div>
-      <button class="back-btn" onclick="closeHistoryModal()">Cerrar</button>
+
+      <button class="back-btn" id="historyBackBtn" onclick="closeHistoryModal()">Cerrar</button>
     </div>
   </div>
 
@@ -775,7 +798,13 @@
 
       window.addEventListener('popstate', (event) => {
         const modal = document.getElementById('imageModal');
+        const historyModal = document.getElementById('historyModal');
         
+        if (historyModal.style.display === 'flex' && historyModal.dataset.viewingList === 'true') {
+          openHistoryModal(); // Vuelve a la lista de sesiones guardadas
+          return;
+        }
+
         if (modal.style.display === 'flex') {
           closeModal(false);
           return;
@@ -866,8 +895,18 @@
     function openHistoryModal() {
       if (!isDjModeActive) return;
       const container = document.getElementById('savedListsContainer');
+      const modalTitle = document.getElementById('historyModalTitle');
+      const modalSubtitle = document.getElementById('historyModalSubtitle');
+      const backBtn = document.getElementById('historyBackBtn');
+      
+      const historyModal = document.getElementById('historyModal');
+      historyModal.dataset.viewingList = 'false';
+      modalTitle.textContent = "📂 Histórico de Sesiones";
+      modalSubtitle.textContent = "Listas guardadas en la base de datos";
+      backBtn.textContent = "Cerrar";
+
       container.innerHTML = '<p class="status-msg">Cargando listas guardadas...</p>';
-      document.getElementById('historyModal').style.display = 'flex';
+      historyModal.style.display = 'flex';
 
       historyRef.once('value', (snapshot) => {
         const data = snapshot.val();
@@ -885,11 +924,68 @@
 
         container.innerHTML = listsArray.map(list => {
           const totalSongs = list.items ? list.items.length : 0;
+          const safeListName = (list.name || '').replace(/'/g, "\\'");
           return `
             <div class="history-item-card">
-              <div class="history-item-title">🎵 ${list.name}</div>
-              <div class="history-item-date">📅 ${list.date} — 🎸 ${totalSongs} canciones</div>
-              <button class="request-btn" onclick="deleteHistoryList('${list.id}', '${list.name.replace(/'/g, "\\'")}')">🗑️ Borrar</button>
+              <div class="history-item-header" onclick="viewSavedList('${list.id}')">
+                <div>
+                  <div class="history-item-title">🎵 ${list.name}</div>
+                  <div class="history-item-date">📅 ${list.date} — 🎸 ${totalSongs} canciones</div>
+                </div>
+              </div>
+              <div class="history-actions">
+                <button class="history-view-btn" onclick="viewSavedList('${list.id}')">👁️ Ver canciones</button>
+                <button class="request-btn" onclick="deleteHistoryList('${list.id}', '${safeListName}')">🗑️ Borrar</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      });
+    }
+
+    function viewSavedList(listId) {
+      const container = document.getElementById('savedListsContainer');
+      const modalTitle = document.getElementById('historyModalTitle');
+      const modalSubtitle = document.getElementById('historyModalSubtitle');
+      const backBtn = document.getElementById('historyBackBtn');
+      const historyModal = document.getElementById('historyModal');
+
+      historyModal.dataset.viewingList = 'true';
+      container.innerHTML = '<p class="status-msg">Cargando canciones...</p>';
+
+      historyRef.child(listId).once('value', (snapshot) => {
+        const listData = snapshot.val();
+        if (!listData || !listData.items || listData.items.length === 0) {
+          container.innerHTML = '<p class="status-msg">Esta lista está vacía.</p>';
+          return;
+        }
+
+        modalTitle.textContent = `🎵 ${listData.name}`;
+        modalSubtitle.textContent = `Guardada el ${listData.date} (${listData.items.length} canciones)`;
+        backBtn.textContent = "⬅️ Volver a Listas";
+
+        container.innerHTML = listData.items.map((item, index) => {
+          const safeTitle = (item.title || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+          const safeArtist = (item.artist || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+          const artworkHD = (item.artwork || '').replace('100x100bb', '1000x1000bb');
+          const previewAudio = item.previewAudio || '';
+          const genre = item.genre || 'Live Music';
+          const year = item.year || 'N/D';
+          const count = Number(item.count || 1);
+          const displayUser = item.users || item.user || 'Anónimo';
+
+          return `
+            <div class="queue-item" style="margin-bottom: 6px;">
+              <img src="${item.artwork}" alt="${item.title}" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}')">
+              <div class="song-info" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}')">
+                <div class="song-title">${index + 1}. ${item.title}</div>
+                <div class="song-artist">${item.artist}</div>
+                <div class="requester-tag">Pedido: ${displayUser}</div>
+              </div>
+              <div class="action-buttons">
+                <span class="badge-count">🔥 ${count}</span>
+                <span class="badge-year">${year}</span>
+              </div>
             </div>
           `;
         }).join('');
@@ -897,7 +993,12 @@
     }
 
     function closeHistoryModal() {
-      document.getElementById('historyModal').style.display = 'none';
+      const historyModal = document.getElementById('historyModal');
+      if (historyModal.dataset.viewingList === 'true') {
+        openHistoryModal(); // Si estaba viendo las canciones, vuelve al menú principal del histórico
+      } else {
+        historyModal.style.display = 'none';
+      }
     }
 
     function deleteHistoryList(listId, listName) {
@@ -925,12 +1026,7 @@
     }
 
     function switchTab(tabName) {
-      document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('active');
-        if (btn.classList.contains('highlight-animated')) {
-          // Mantiene la animación visible incluso al cambiar de pestaña si lo deseas, o puedes quitarla. Aquí se conserva siempre llamativa.
-        }
-      });
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
       document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
 
       if (tabName === 'search') {
