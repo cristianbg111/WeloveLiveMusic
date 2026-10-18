@@ -390,6 +390,7 @@
       border: 1px solid var(--border);
       margin-bottom: 6px;
       flex-shrink: 0;
+      text-align: left;
     }
     
     .queue-item.dj-active {
@@ -397,7 +398,7 @@
       border-color: var(--accent);
     }
 
-    .queue-item img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; cursor: pointer; flex-shrink: 0; }
+    .queue-item img { width: 40px !important; height: 40px !important; min-width: 40px; border-radius: 8px; object-fit: cover; cursor: pointer; flex-shrink: 0; }
     .requester-tag { font-size: 0.68rem; color: var(--accent); font-weight: 700; margin-top: 2px; }
 
     .badge-count {
@@ -976,7 +977,7 @@
           const displayUser = item.users || item.user || 'Anónimo';
 
           return `
-            <div class="queue-item" style="margin-bottom: 6px;">
+            <div class="queue-item">
               <img src="${artworkThumb}" alt="${item.title}" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}')">
               <div class="song-info" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}')">
                 <div class="song-title">${index + 1}. ${item.title}</div>
