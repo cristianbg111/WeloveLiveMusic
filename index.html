@@ -297,6 +297,28 @@
       box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
     }
 
+    .save-list-btn {
+      background: var(--success);
+      color: #ffffff;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .history-list-btn {
+      background: var(--count-bg);
+      color: #000000;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
     .pdf-btn {
       background: var(--success);
       color: #ffffff;
@@ -447,6 +469,8 @@
       width: 100%;
       text-align: center;
       box-shadow: 0 25px 50px rgba(0,0,0,0.6), 0 0 30px var(--glow-accent);
+      max-height: 85vh;
+      overflow-y: auto;
     }
     .modal-content img { width: 100%; aspect-ratio: 1/1; border-radius: 14px; object-fit: cover; margin-bottom: 14px; border: 1px solid var(--border); }
     .modal-title { font-size: 1.1rem; font-weight: 800; color: var(--text); margin-bottom: 4px; }
@@ -503,6 +527,17 @@
       padding: 10px 16px; border-radius: 10px; font-weight: 700; cursor: pointer; width: 100%;
     }
 
+    .history-item-card {
+      background: var(--item-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 10px;
+      text-align: left;
+    }
+    .history-item-title { font-weight: 700; font-size: 0.95rem; color: var(--accent); }
+    .history-item-date { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px; }
+
     /* Estilos específicos para impresión / PDF */
     @media print {
       body * { visibility: hidden; }
@@ -548,8 +583,10 @@
         <span class="queue-title" id="queueHeaderTitle">Peticiones para el DJ</span>
         <div class="queue-actions">
           <button class="dj-mode-btn" id="djModeToggleBtn" onclick="toggleDjMode()">🎧 Modo DJ</button>
-          <button class="pdf-btn" onclick="exportQueueToPDF()">📄 Exportar PDF</button>
-          <button class="clear-queue-btn" id="clearQueueBtn" style="display: none;" onclick="clearQueueSecure()">🗑️ Borrar Todo</button>
+          <button class="save-list-btn" id="saveListBtn" style="display: none;" onclick="saveCurrentList()">💾 Guardar</button>
+          <button class="history-list-btn" id="historyListBtn" style="display: none;" onclick="openHistoryModal()">📂 Histórico</button>
+          <button class="pdf-btn" onclick="exportQueueToPDF()">📄 PDF</button>
+          <button class="clear-queue-btn" id="clearQueueBtn" style="display: none;" onclick="clearQueueSecure()">🗑️ Borrar</button>
         </div>
       </div>
       <div id="queueResults" class="results">
@@ -570,7 +607,7 @@
     </footer>
   </div>
 
-  <!-- MODAL DETALLES -->
+  <!-- MODAL DETALLES DE CANCIÓN -->
   <div class="modal" id="imageModal">
     <div class="modal-content" onclick="event.stopPropagation()">
       <img id="modalImg" src="" alt="Portada HD">
@@ -618,6 +655,18 @@
     </div>
   </div>
 
+  <!-- MODAL HISTÓRICO DE LISTAS -->
+  <div class="modal" id="historyModal">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <div class="modal-title">📂 Histórico de Sesiones</div>
+      <div class="modal-artist" style="margin-bottom: 12px;">Listas guardadas en la base de datos</div>
+      <div id="savedListsContainer" style="margin-bottom: 16px;">
+        <p class="status-msg">Cargando histórico...</p>
+      </div>
+      <button class="close-btn" onclick="closeHistoryModal()">Cerrar</button>
+    </div>
+  </div>
+
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDcAeldon_Sb8yF4tKTGNvKFJGahvpBQ5E",
@@ -633,6 +682,7 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     const queueRef = db.ref('welove_live_music_queue');
+    const historyRef = db.ref('welove_live_music_history');
     const statsRef = db.ref('welove_live_music_stats/visits');
 
     let debounceTimer;
@@ -647,9 +697,7 @@
     const itemsPerPage = 10;
     
     let isDjModeActive = false;
-
-    // Contraseña encriptada en Base64 seguro para evitar bloqueos del navegador
-    const CORRECT_PASSWORD_ENCODED = "amJkZWVqYXkx"; // "jbdeejay1" cifrado
+    const CORRECT_PASSWORD_ENCODED = "amJkZWVqYXkx"; // "jbdeejay1"
 
     document.addEventListener('DOMContentLoaded', () => {
       loadHistory();
@@ -673,6 +721,7 @@
       document.getElementById('tapBtn').addEventListener('click', tapTempo);
       document.getElementById('closeModalBtn').addEventListener('click', closeModal);
       document.getElementById('imageModal').addEventListener('click', closeModal);
+      document.getElementById('historyModal').addEventListener('click', closeHistoryModal);
       document.getElementById('modalTidalBtn').addEventListener('click', openTidalApp);
       document.getElementById('modalYoutubeBtn').addEventListener('click', openYoutubeApp);
 
@@ -692,19 +741,20 @@
       });
     });
 
-    function toggleDjMode() {
+    async function toggleDjMode() {
       if (!isDjModeActive) {
         const pass = prompt("Introduce la contraseña de Administrador (Modo DJ):");
         if (pass === null) return;
 
-        // Comprobación segura y encriptada que funciona en cualquier dispositivo
         const encodedInput = btoa(pass.trim());
 
         if (encodedInput === CORRECT_PASSWORD_ENCODED) {
           isDjModeActive = true;
           document.getElementById('djModeToggleBtn').textContent = "🚪 Salir Modo DJ";
           document.getElementById('djModeToggleBtn').classList.add('active');
-          document.getElementById('clearQueueBtn').style.display = 'block';
+          document.getElementById('saveListBtn').style.display = 'inline-block';
+          document.getElementById('historyListBtn').style.display = 'inline-block';
+          document.getElementById('clearQueueBtn').style.display = 'inline-block';
           document.getElementById('queueHeaderTitle').textContent = "Panel de Control DJ";
           alert("¡Modo DJ activado con éxito! 🎧");
           renderQueuePage();
@@ -715,10 +765,86 @@
         isDjModeActive = false;
         document.getElementById('djModeToggleBtn').textContent = "🎧 Modo DJ";
         document.getElementById('djModeToggleBtn').classList.remove('active');
+        document.getElementById('saveListBtn').style.display = 'none';
+        document.getElementById('historyListBtn').style.display = 'none';
         document.getElementById('clearQueueBtn').style.display = 'none';
         document.getElementById('queueHeaderTitle').textContent = "Peticiones para el DJ";
         alert("Modo DJ desactivado.");
         renderQueuePage();
+      }
+    }
+
+    // Guardar lista actual en el histórico
+    function saveCurrentList() {
+      if (!isDjModeActive) return;
+      if (globalQueueItems.length === 0) {
+        alert("No hay peticiones en la lista para guardar.");
+        return;
+      }
+
+      const listName = prompt("Introduce un nombre para guardar esta sesión (ej: Sesión Plaza Toros):");
+      if (!listName || listName.trim() === "") return;
+
+      const cleanName = listName.trim();
+      const now = new Date();
+      const dateStr = now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      historyRef.push({
+        name: cleanName,
+        date: dateStr,
+        timestamp: Date.now(),
+        items: globalQueueItems
+      }).then(() => {
+        alert(`¡Lista "${cleanName}" guardada en el histórico con éxito! 📂`);
+      }).catch(err => {
+        alert("Error al guardar la lista en la base de datos.");
+      });
+    }
+
+    // Abrir modal de histórico
+    function openHistoryModal() {
+      if (!isDjModeActive) return;
+      const container = document.getElementById('savedListsContainer');
+      container.innerHTML = '<p class="status-msg">Cargando listas guardadas...</p>';
+      document.getElementById('historyModal').style.display = 'flex';
+
+      historyRef.once('value', (snapshot) => {
+        const data = snapshot.val();
+        if (!data) {
+          container.innerHTML = '<p class="status-msg">No hay listas guardadas todavía.</p>';
+          return;
+        }
+
+        let listsArray = [];
+        for (let key in data) {
+          listsArray.push({ id: key, ...data[key] });
+        }
+
+        // Ordenar de más reciente a más antiguo
+        listsArray.sort((a, b) => b.timestamp - a.timestamp);
+
+        container.innerHTML = listsArray.map(list => {
+          const totalSongs = list.items ? list.items.length : 0;
+          return `
+            <div class="history-item-card">
+              <div class="history-item-title">🎵 ${list.name}</div>
+              <div class="history-item-date">📅 ${list.date} — 🎸 ${totalSongs} canciones guardadas</div>
+              <button class="request-btn" onclick="deleteHistoryList('${list.id}', '${list.name.replace(/'/g, "\\'")}')">🗑️ Borrar del Histórico</button>
+            </div>
+          `;
+        }).join('');
+      });
+    }
+
+    function closeHistoryModal() {
+      document.getElementById('historyModal').style.display = 'none';
+    }
+
+    function deleteHistoryList(listId, listName) {
+      if (confirm(`¿Seguro que quieres eliminar la lista guardada "${listName}"?`)) {
+        historyRef.child(listId).remove().then(() => {
+          openHistoryModal(); // Recargar el modal
+        });
       }
     }
 
