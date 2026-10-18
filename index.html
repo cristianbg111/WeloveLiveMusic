@@ -523,7 +523,6 @@
     .youtube-btn { background: var(--youtube); color: #ffffff; }
     .back-btn { background: var(--tag-bg); color: var(--text); border: 1px solid var(--border); width: 100%; }
 
-    /* REPARACIÓN Y OPTIMIZACIÓN DE IMPRESIÓN / PDF */
     @media print {
       html, body {
         height: auto !important;
@@ -745,10 +744,26 @@
       document.getElementById('modalTidalBtn').addEventListener('click', openTidalApp);
       document.getElementById('modalYoutubeBtn').addEventListener('click', openYoutubeApp);
 
+      // INICIALIZAR HISTORIAL PARA CONTROLAR LA SALIDA DE LA PÁGINA PRINCIPAL
+      history.replaceState({ mainPage: true }, '', '');
+      history.pushState({ mainPage: true }, '', '');
+
       window.addEventListener('popstate', (event) => {
         const modal = document.getElementById('imageModal');
+        
+        // Si el modal está abierto, lo cerramos
         if (modal.style.display === 'flex') {
           closeModal(false);
+          return;
+        }
+
+        // Si estamos en la pantalla principal y pulsa atrás
+        if (confirm("¿Realmente quieres salir de la aplicación?")) {
+          // Permite salir realmente retrocediendo en el historial del navegador
+          history.go(-1);
+        } else {
+          // Vuelve a asegurar el estado en el historial para que no se salga
+          history.pushState({ mainPage: true }, '', '');
         }
       });
 
