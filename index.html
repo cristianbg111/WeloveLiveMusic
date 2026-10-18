@@ -66,11 +66,14 @@
       box-sizing: border-box; 
       margin: 0; 
       padding: 0; 
-      transition: background 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
       -webkit-tap-highlight-color: transparent; 
     }
 
-    html { -webkit-text-size-adjust: 100%; }
+    html { 
+      -webkit-text-size-adjust: 100%; 
+      height: 100%;
+      overflow-x: hidden;
+    }
     
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -85,16 +88,19 @@
       min-height: 100vh;
       min-height: 100dvh;
       padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .card {
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 20px;
-      padding: 24px;
+      padding: 20px;
       max-width: 500px;
       width: 100%;
       box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5), 0 0 20px var(--glow-accent);
+      margin: auto;
     }
 
     .header-row {
@@ -106,7 +112,7 @@
     }
 
     h1 { 
-      font-size: 1.35rem; 
+      font-size: 1.25rem; 
       font-weight: 800; 
       color: var(--text); 
       letter-spacing: 0.5px;
@@ -127,15 +133,15 @@
       touch-action: manipulation;
     }
 
-    p.subtitle { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 18px; }
+    p.subtitle { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 16px; }
 
     /* Tabs estilo cabina */
     .tabs {
       display: flex;
       gap: 8px;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
       border-bottom: 1px solid var(--border);
-      padding-bottom: 12px;
+      padding-bottom: 10px;
     }
 
     .tab-btn {
@@ -146,11 +152,12 @@
       padding: 10px;
       border-radius: 10px;
       font-weight: 700;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       cursor: pointer;
       text-align: center;
       text-transform: uppercase;
       letter-spacing: 0.5px;
+      -webkit-appearance: none;
     }
 
     .tab-btn.active {
@@ -166,17 +173,17 @@
     .search-box {
       display: flex;
       gap: 8px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     input {
       flex: 1;
-      padding: 12px 16px;
+      padding: 12px 14px;
       border-radius: 12px;
       border: 1px solid var(--input-border);
       background: var(--input-bg);
       color: var(--text);
-      font-size: 16px; 
+      font-size: 16px !important; /* IMPORTANTE: Evita zoom automático en Safari iOS */
       outline: none;
       -webkit-appearance: none;
     }
@@ -189,7 +196,7 @@
       background: var(--accent);
       color: var(--accent-text);
       border: none;
-      padding: 12px 18px;
+      padding: 12px 16px;
       border-radius: 12px;
       font-weight: 700;
       cursor: pointer;
@@ -199,157 +206,119 @@
       box-shadow: 0 0 10px var(--glow-accent);
     }
 
-    .history-section { margin-bottom: 18px; }
-    .history-title { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+    .history-section { margin-bottom: 16px; }
+    .history-title { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
     .history-tags { display: flex; flex-wrap: wrap; gap: 6px; }
     .tag {
       background: var(--tag-bg);
       border: 1px solid var(--border);
       color: var(--text);
-      padding: 6px 12px;
-      border-radius: 10px;
-      font-size: 0.8rem;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 0.78rem;
       cursor: pointer;
       -webkit-appearance: none;
       touch-action: manipulation;
     }
 
-    .results { display: flex; flex-direction: column; gap: 10px; }
+    .results { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 10px; 
+      max-height: 55vh; 
+      overflow-y: auto; 
+      -webkit-overflow-scrolling: touch; 
+      overscroll-behavior-y: contain;
+      padding-right: 2px;
+    }
     
     .song-item {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       background: var(--item-bg);
-      padding: 10px 12px;
-      border-radius: 14px;
+      padding: 10px;
+      border-radius: 12px;
       align-items: center;
       border: 1px solid var(--border);
     }
-    .song-item img { width: 52px; height: 52px; border-radius: 10px; object-fit: cover; cursor: pointer; }
-    .song-info { flex: 1; overflow: hidden; cursor: pointer; }
-    .song-title { font-weight: 700; font-size: 0.95rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .song-artist { font-size: 0.85rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .song-item img { width: 48px; height: 48px; border-radius: 8px; object-fit: cover; cursor: pointer; flex-shrink: 0; }
+    .song-info { flex: 1; overflow: hidden; cursor: pointer; min-width: 0; }
+    .song-title { font-weight: 700; font-size: 0.9rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .song-artist { font-size: 0.8rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     
     .action-buttons {
       display: flex;
       flex-direction: column;
       gap: 4px;
       align-items: flex-end;
+      flex-shrink: 0;
     }
 
     .request-btn {
       background: var(--accent);
       color: var(--accent-text);
       border: none;
-      padding: 6px 12px;
+      padding: 6px 10px;
       border-radius: 8px;
       font-weight: 700;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       cursor: pointer;
       white-space: nowrap;
       box-shadow: 0 0 6px var(--glow-accent);
+      -webkit-appearance: none;
     }
 
     .badge-year {
       background: var(--tag-bg);
       color: var(--text-muted);
-      padding: 3px 8px;
-      border-radius: 8px;
+      padding: 2px 6px;
+      border-radius: 6px;
       font-weight: 600;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       border: 1px solid var(--border);
     }
     
-    .status-msg { text-align: center; color: var(--text-muted); font-size: 0.9rem; padding: 16px 0; }
+    .status-msg { text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 16px 0; }
 
     /* Queue styles */
     .queue-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
-      gap: 8px;
+      margin-bottom: 10px;
+      gap: 6px;
     }
-    .queue-title { font-size: 0.95rem; font-weight: 700; color: var(--text); text-transform: uppercase; letter-spacing: 0.5px; }
+    .queue-title { font-size: 0.88rem; font-weight: 700; color: var(--text); text-transform: uppercase; letter-spacing: 0.5px; }
     
     .queue-actions {
       display: flex;
-      gap: 6px;
+      gap: 4px;
       flex-wrap: wrap;
     }
 
-    .dj-mode-btn {
-      background: var(--badge-bg);
-      color: #ffffff;
-      border: none;
-      padding: 6px 10px;
-      border-radius: 8px;
-      font-size: 0.75rem;
+    .dj-mode-btn, .save-list-btn, .history-list-btn, .pdf-btn, .clear-queue-btn {
+      padding: 5px 8px;
+      border-radius: 6px;
+      font-size: 0.7rem;
       font-weight: 700;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 4px;
+      -webkit-appearance: none;
+      white-space: nowrap;
     }
 
-    .dj-mode-btn.active {
-      background: var(--danger);
-      box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
-    }
-
-    .save-list-btn {
-      background: var(--success);
-      color: #ffffff;
-      border: none;
-      padding: 6px 10px;
-      border-radius: 8px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .history-list-btn {
-      background: var(--count-bg);
-      color: #000000;
-      border: none;
-      padding: 6px 10px;
-      border-radius: 8px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .pdf-btn {
-      background: var(--success);
-      color: #ffffff;
-      border: none;
-      padding: 6px 10px;
-      border-radius: 8px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .clear-queue-btn {
-      background: transparent;
-      border: 1px solid var(--danger);
-      color: var(--danger);
-      padding: 6px 10px;
-      border-radius: 8px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
+    .dj-mode-btn { background: var(--badge-bg); color: #ffffff; border: none; }
+    .dj-mode-btn.active { background: var(--danger); box-shadow: 0 0 8px rgba(239, 68, 68, 0.6); }
+    .save-list-btn { background: var(--success); color: #ffffff; border: none; }
+    .history-list-btn { background: var(--count-bg); color: #000000; border: none; }
+    .pdf-btn { background: var(--success); color: #ffffff; border: none; display: flex; align-items: center; gap: 3px; }
+    .clear-queue-btn { background: transparent; border: 1px solid var(--danger); color: var(--danger); }
 
     .queue-item {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       background: var(--item-bg);
-      padding: 10px 12px;
-      border-radius: 14px;
+      padding: 10px;
+      border-radius: 12px;
       align-items: center;
       border: 1px solid var(--border);
       margin-bottom: 8px;
@@ -360,22 +329,16 @@
       border-color: var(--accent);
     }
 
-    .queue-item img { width: 48px; height: 48px; border-radius: 10px; object-fit: cover; cursor: pointer; }
-    .queue-info { flex: 1; overflow: hidden; cursor: pointer; }
-    .requester-tag {
-      font-size: 0.75rem;
-      color: var(--accent);
-      font-weight: 700;
-      margin-top: 2px;
-    }
+    .queue-item img { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; cursor: pointer; flex-shrink: 0; }
+    .requester-tag { font-size: 0.7rem; color: var(--accent); font-weight: 700; margin-top: 2px; }
 
     .badge-count {
       background: var(--count-bg);
       color: #000000;
-      padding: 3px 8px;
-      border-radius: 10px;
+      padding: 2px 6px;
+      border-radius: 8px;
       font-weight: 800;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       text-align: center;
       white-space: nowrap;
       box-shadow: 0 0 6px rgba(245, 158, 11, 0.4);
@@ -385,12 +348,13 @@
       background: var(--danger);
       color: white;
       border: none;
-      padding: 4px 8px;
+      padding: 3px 6px;
       border-radius: 6px;
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       font-weight: 700;
       cursor: pointer;
       margin-top: 4px;
+      -webkit-appearance: none;
     }
 
     /* Paginación */
@@ -398,56 +362,48 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 16px;
-      padding-top: 12px;
+      margin-top: 14px;
+      padding-top: 10px;
       border-top: 1px solid var(--border);
     }
     .page-btn {
       background: var(--tag-bg);
       border: 1px solid var(--border);
       color: var(--text);
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-size: 0.8rem;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
       font-weight: 600;
       cursor: pointer;
+      -webkit-appearance: none;
     }
-    .page-btn:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-    }
-    .page-info {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      font-weight: 600;
-    }
+    .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .page-info { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; }
 
     .footer {
-      margin-top: 24px;
-      padding-top: 16px;
+      margin-top: 20px;
+      padding-top: 14px;
       border-top: 1px solid var(--border);
       text-align: center;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: var(--text-muted);
       letter-spacing: 0.5px;
-      line-height: 1.6;
+      line-height: 1.5;
     }
     .footer strong { color: var(--accent); }
     .visitor-counter {
       display: inline-block;
-      margin-top: 6px;
-      font-size: 0.75rem;
+      margin-top: 5px;
+      font-size: 0.7rem;
       background: var(--tag-bg);
       border: 1px solid var(--border);
-      padding: 3px 10px;
+      padding: 2px 8px;
       border-radius: 20px;
       color: var(--text-muted);
     }
-    .visitor-counter span {
-      color: var(--accent);
-      font-weight: 800;
-    }
+    .visitor-counter span { color: var(--accent); font-weight: 800; }
 
+    /* Modales adaptados con scroll táctil fluido */
     .modal {
       display: none;
       position: fixed;
@@ -456,87 +412,80 @@
       justify-content: center;
       align-items: center;
       z-index: 1000;
-      padding: 20px;
+      padding: 16px;
       -webkit-backdrop-filter: blur(10px);
       backdrop-filter: blur(10px);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
     .modal-content {
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 20px;
-      padding: 24px;
+      padding: 20px;
       max-width: 400px;
       width: 100%;
       text-align: center;
       box-shadow: 0 25px 50px rgba(0,0,0,0.6), 0 0 30px var(--glow-accent);
       max-height: 85vh;
       overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      margin: auto;
     }
-    .modal-content img { width: 100%; aspect-ratio: 1/1; border-radius: 14px; object-fit: cover; margin-bottom: 14px; border: 1px solid var(--border); }
-    .modal-title { font-size: 1.1rem; font-weight: 800; color: var(--text); margin-bottom: 4px; }
-    .modal-artist { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 14px; }
+    .modal-content img { width: 100%; aspect-ratio: 1/1; border-radius: 12px; object-fit: cover; margin-bottom: 12px; border: 1px solid var(--border); }
+    .modal-title { font-size: 1rem; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+    .modal-artist { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px; }
 
     .dj-stats {
       display: flex;
       justify-content: space-around;
       background: var(--item-bg);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 10px;
-      margin-bottom: 14px;
+      border-radius: 10px;
+      padding: 8px;
+      margin-bottom: 12px;
     }
     .stat-box { display: flex; flex-direction: column; align-items: center; }
-    .stat-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
-    .stat-value { font-size: 1.05rem; font-weight: 900; color: var(--accent); }
+    .stat-label { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
+    .stat-value { font-size: 0.95rem; font-weight: 900; color: var(--accent); }
 
     .tap-btn {
       background: var(--tag-bg);
       border: 1px dashed var(--accent);
       color: var(--text);
-      padding: 10px 12px;
-      border-radius: 10px;
-      font-size: 0.8rem;
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 0.75rem;
       font-weight: 600;
       cursor: pointer;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
       width: 100%;
+      -webkit-appearance: none;
     }
 
-    audio { width: 100%; height: 40px; margin-bottom: 14px; border-radius: 8px; }
-    .modal-actions { display: flex; flex-direction: column; gap: 8px; }
+    audio { width: 100%; height: 38px; margin-bottom: 12px; border-radius: 6px; }
+    .modal-actions { display: flex; flex-direction: column; gap: 6px; }
 
-    .spotify-btn {
+    .spotify-btn, .tidal-btn, .youtube-btn, .close-btn {
       display: flex; align-items: center; justify-content: center; gap: 8px;
-      background: var(--spotify); color: #ffffff; text-decoration: none;
-      padding: 12px 16px; border-radius: 10px; font-weight: 700; font-size: 0.9rem;
+      padding: 10px 14px; border-radius: 10px; font-weight: 700; font-size: 0.85rem; text-decoration: none; cursor: pointer;
+      -webkit-appearance: none;
     }
-    .tidal-btn {
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      background: var(--tidal); color: #ffffff; text-decoration: none;
-      padding: 12px 16px; border-radius: 10px; font-weight: 700; font-size: 0.9rem;
-      border: 1px solid var(--border); cursor: pointer;
-    }
-    .youtube-btn {
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      background: var(--youtube); color: #ffffff; text-decoration: none;
-      padding: 12px 16px; border-radius: 10px; font-weight: 700; font-size: 0.9rem;
-      cursor: pointer;
-    }
-    .close-btn {
-      background: var(--tag-bg); color: var(--text); border: 1px solid var(--border);
-      padding: 10px 16px; border-radius: 10px; font-weight: 700; cursor: pointer; width: 100%;
-    }
+    .spotify-btn { background: var(--spotify); color: #ffffff; }
+    .tidal-btn { background: var(--tidal); color: #ffffff; border: 1px solid var(--border); }
+    .youtube-btn { background: var(--youtube); color: #ffffff; }
+    .close-btn { background: var(--tag-bg); color: var(--text); border: 1px solid var(--border); width: 100%; }
 
     .history-item-card {
       background: var(--item-bg);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px;
-      margin-bottom: 10px;
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 8px;
       text-align: left;
     }
-    .history-item-title { font-weight: 700; font-size: 0.95rem; color: var(--accent); }
-    .history-item-date { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px; }
+    .history-item-title { font-weight: 700; font-size: 0.88rem; color: var(--accent); }
+    .history-item-date { font-size: 0.7rem; color: var(--text-muted); margin-bottom: 6px; }
 
     /* Estilos específicos para impresión / PDF */
     @media print {
@@ -580,29 +529,29 @@
     <!-- TAB PETICIONES SALA -->
     <div id="tabQueue" class="tab-content">
       <div class="queue-header">
-        <span class="queue-title" id="queueHeaderTitle">Peticiones para el DJ</span>
+        <span class="queue-title" id="queueHeaderTitle">Peticiones Sala</span>
         <div class="queue-actions">
-          <button class="dj-mode-btn" id="djModeToggleBtn" onclick="toggleDjMode()">🎧 Modo DJ</button>
+          <button class="dj-mode-btn" id="djModeToggleBtn" onclick="toggleDjMode()">🎧 DJ</button>
           <button class="save-list-btn" id="saveListBtn" style="display: none;" onclick="saveCurrentList()">💾 Guardar</button>
-          <button class="history-list-btn" id="historyListBtn" style="display: none;" onclick="openHistoryModal()">📂 Histórico</button>
+          <button class="history-list-btn" id="historyListBtn" style="display: none;" onclick="openHistoryModal()">📂 Hist.</button>
           <button class="pdf-btn" onclick="exportQueueToPDF()">📄 PDF</button>
-          <button class="clear-queue-btn" id="clearQueueBtn" style="display: none;" onclick="clearQueueSecure()">🗑️ Borrar</button>
+          <button class="clear-queue-btn" id="clearQueueBtn" style="display: none;" onclick="clearQueueSecure()">🗑️</button>
         </div>
       </div>
       <div id="queueResults" class="results">
         <p class="status-msg">Cargando lista...</p>
       </div>
       <div id="queuePagination" class="pagination" style="display: none;">
-        <button class="page-btn" id="prevPageBtn" onclick="changePage(-1)">⬅️ Anterior</button>
-        <span class="page-info" id="pageInfoText">Página 1 de 1</span>
-        <button class="page-btn" id="nextPageBtn" onclick="changePage(1)">Siguiente ➡️</button>
+        <button class="page-btn" id="prevPageBtn" onclick="changePage(-1)">⬅️ Ant</button>
+        <span class="page-info" id="pageInfoText">Pág 1/1</span>
+        <button class="page-btn" id="nextPageBtn" onclick="changePage(1)">Sig ➡️</button>
       </div>
     </div>
 
     <footer class="footer">
       App creada por <strong>We Love The Remember Studios</strong>
       <div class="visitor-counter">
-        👀 Visitas totales: <span id="visitorCount">...</span>
+        👀 Visitas: <span id="visitorCount">...</span>
       </div>
     </footer>
   </div>
@@ -633,19 +582,19 @@
 
       <div class="modal-actions">
         <a id="modalSpotifyBtn" href="#" target="_blank" class="spotify-btn">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 0C5.376 0 0 5.377 0 12c0 6.624 5.376 12 12 12 6.624 0 12-5.376 12-12 0-6.623-5.376-12-12-12zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.02 8.52-.6 11.64 1.32.42.18.48.66.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141 C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
           </svg>
           Escuchar en Spotify
         </a>
         <a id="modalTidalBtn" href="#" class="tidal-btn">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 7.2L7.2 12 12 16.8 16.8 12 12 7.2zm-9.6 0L0 12l2.4 2.4L4.8 12 2.4 7.2zm19.2 0L19.2 12l2.4 2.4 2.4-2.4-2.4-4.8zM12 0L7.2 4.8 12 9.6 16.8 4.8 12 0z"/>
           </svg>
           Escuchar en Tidal
         </a>
         <a id="modalYoutubeBtn" href="#" class="youtube-btn">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
             <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
           </svg>
           Buscar en YouTube
@@ -750,12 +699,12 @@
 
         if (encodedInput === CORRECT_PASSWORD_ENCODED) {
           isDjModeActive = true;
-          document.getElementById('djModeToggleBtn').textContent = "🚪 Salir Modo DJ";
+          document.getElementById('djModeToggleBtn').textContent = "🚪 Salir";
           document.getElementById('djModeToggleBtn').classList.add('active');
           document.getElementById('saveListBtn').style.display = 'inline-block';
           document.getElementById('historyListBtn').style.display = 'inline-block';
           document.getElementById('clearQueueBtn').style.display = 'inline-block';
-          document.getElementById('queueHeaderTitle').textContent = "Panel de Control DJ";
+          document.getElementById('queueHeaderTitle').textContent = "Control DJ";
           alert("¡Modo DJ activado con éxito! 🎧");
           renderQueuePage();
         } else {
@@ -763,18 +712,17 @@
         }
       } else {
         isDjModeActive = false;
-        document.getElementById('djModeToggleBtn').textContent = "🎧 Modo DJ";
+        document.getElementById('djModeToggleBtn').textContent = "🎧 DJ";
         document.getElementById('djModeToggleBtn').classList.remove('active');
         document.getElementById('saveListBtn').style.display = 'none';
         document.getElementById('historyListBtn').style.display = 'none';
         document.getElementById('clearQueueBtn').style.display = 'none';
-        document.getElementById('queueHeaderTitle').textContent = "Peticiones para el DJ";
+        document.getElementById('queueHeaderTitle').textContent = "Peticiones Sala";
         alert("Modo DJ desactivado.");
         renderQueuePage();
       }
     }
 
-    // Guardar lista actual en el histórico
     function saveCurrentList() {
       if (!isDjModeActive) return;
       if (globalQueueItems.length === 0) {
@@ -795,13 +743,12 @@
         timestamp: Date.now(),
         items: globalQueueItems
       }).then(() => {
-        alert(`¡Lista "${cleanName}" guardada en el histórico con éxito! 📂`);
+        alert(`¡Lista "${cleanName}" guardada con éxito! 📂`);
       }).catch(err => {
         alert("Error al guardar la lista en la base de datos.");
       });
     }
 
-    // Abrir modal de histórico
     function openHistoryModal() {
       if (!isDjModeActive) return;
       const container = document.getElementById('savedListsContainer');
@@ -820,7 +767,6 @@
           listsArray.push({ id: key, ...data[key] });
         }
 
-        // Ordenar de más reciente a más antiguo
         listsArray.sort((a, b) => b.timestamp - a.timestamp);
 
         container.innerHTML = listsArray.map(list => {
@@ -828,8 +774,8 @@
           return `
             <div class="history-item-card">
               <div class="history-item-title">🎵 ${list.name}</div>
-              <div class="history-item-date">📅 ${list.date} — 🎸 ${totalSongs} canciones guardadas</div>
-              <button class="request-btn" onclick="deleteHistoryList('${list.id}', '${list.name.replace(/'/g, "\\'")}')">🗑️ Borrar del Histórico</button>
+              <div class="history-item-date">📅 ${list.date} — 🎸 ${totalSongs} canciones</div>
+              <button class="request-btn" onclick="deleteHistoryList('${list.id}', '${list.name.replace(/'/g, "\\'")}')">🗑️ Borrar</button>
             </div>
           `;
         }).join('');
@@ -843,7 +789,7 @@
     function deleteHistoryList(listId, listName) {
       if (confirm(`¿Seguro que quieres eliminar la lista guardada "${listName}"?`)) {
         historyRef.child(listId).remove().then(() => {
-          openHistoryModal(); // Recargar el modal
+          openHistoryModal();
         });
       }
     }
@@ -886,7 +832,7 @@
     }
 
     function updateThemeButton(theme) {
-      document.getElementById('themeToggle').textContent = theme === 'dark' ? '☀️ Modo Claro' : '🌙 Modo Oscuro';
+      document.getElementById('themeToggle').textContent = theme === 'dark' ? '☀️ Claro' : '🌙 Oscuro';
     }
 
     function handleInput() {
@@ -1104,7 +1050,7 @@
 
       if (globalQueueItems.length > itemsPerPage) {
         paginationDiv.style.display = 'flex';
-        pageInfoText.textContent = `Página ${currentPage} de ${totalPages}`;
+        pageInfoText.textContent = `Pág ${currentPage}/${totalPages}`;
         prevBtn.disabled = currentPage === 1;
         nextBtn.disabled = currentPage === totalPages;
       } else {
@@ -1134,11 +1080,11 @@
             <div class="song-info" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}')">
               <div class="song-title">${absoluteIndex}. ${item.title}</div>
               <div class="song-artist">${item.artist}</div>
-              <div class="requester-tag">Pedido por: ${displayUser}</div>
+              <div class="requester-tag">Pedido: ${displayUser}</div>
               ${djActionHtml}
             </div>
             <div class="action-buttons">
-              <span class="badge-count">🔥 ${count} ${count === 1 ? 'voto' : 'votos'}</span>
+              <span class="badge-count">🔥 ${count}</span>
               <span class="badge-year">${year}</span>
             </div>
           </div>
