@@ -133,7 +133,12 @@
       touch-action: manipulation;
     }
 
-    p.subtitle { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 16px; }
+    p.subtitle { 
+      font-size: 0.82rem; 
+      color: var(--text-muted); 
+      margin-bottom: 16px; 
+      line-height: 1.4;
+    }
 
     /* Tabs estilo cabina */
     .tabs {
@@ -507,7 +512,10 @@
       <h1>WE LOVE LIVE MUSIC</h1>
       <button class="theme-btn" id="themeToggle">☀️ Modo Claro</button>
     </div>
-    <p class="subtitle">Busca canciones y envía tus peticiones al DJ para la sesión.</p>
+    <p class="subtitle">
+      Busca canciones y envía tus peticiones al DJ para la sesión.<br>
+      Para pedir una canción a la sala, busca tu canción preferida y una vez la localices pulsa sobre el botón de pedir. Se agregará a la lista de peticiones.
+    </p>
 
     <div class="tabs">
       <button class="tab-btn active" onclick="switchTab('search')">🔍 Buscador</button>
@@ -542,7 +550,7 @@
         </div>
       </div>
 
-      <!-- Paginación movida a la PARTE SUPERIOR de la lista -->
+      <!-- Paginación en la parte superior -->
       <div id="queuePagination" class="pagination" style="display: none;">
         <button class="page-btn" id="prevPageBtn" onclick="changePage(-1)">⬅️ Anterior</button>
         <span class="page-info" id="pageInfoText">Pág 1/1</span>
