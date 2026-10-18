@@ -868,11 +868,19 @@
       
       <div class="dj-stats">
         <div class="stat-box">
-          <span class="stat-label">BPM Estimado</span>
+          <span class="stat-label">Año</span>
+          <span class="stat-value" id="modalYear">---</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-label">Género</span>
+          <span class="stat-value" id="modalGenre" style="font-size: 0.75rem;">---</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-label">BPM</span>
           <span class="stat-value" id="modalBpm">---</span>
         </div>
         <div class="stat-box">
-          <span class="stat-label">Tonalidad (Camelot)</span>
+          <span class="stat-label">Camelot</span>
           <span class="stat-value" id="modalKey">---</span>
         </div>
       </div>
@@ -955,6 +963,9 @@
     let isDjModeActive = false;
     let areRequestsOpen = true; 
     const CORRECT_PASSWORD_ENCODED = "amJkZWVqYXkx"; 
+
+    // Lista de géneros "raros" o específicos que redirigiremos automáticamente a "Otros"
+    const rareGenresList = ['Christian', 'Christian & Gospel', 'Spoken Word', 'Holiday', 'Alternative'];
 
     document.addEventListener('DOMContentLoaded', () => {
       loadHistory();
@@ -1213,7 +1224,7 @@
           const artworkThumb = item.artwork || 'https://via.placeholder.com/100?text=Sin+Imagen';
           const artworkHD = artworkThumb.replace('100x100bb', '1000x1000bb');
           const previewAudio = item.previewAudio || '';
-          const genre = item.genre || 'Live Music';
+          const genre = item.genre || 'Otros';
           const year = item.year || 'N/D';
           const count = Number(item.count || 1);
           const displayUser = item.users || item.user || 'Anónimo';
@@ -1221,8 +1232,8 @@
 
           return `
             <div class="queue-item${isPlayedClass}">
-              <img src="${artworkThumb}" alt="${item.title}" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}')">
-              <div class="song-info" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}')">
+              <img src="${artworkThumb}" alt="${item.title}" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}', '${year}')">
+              <div class="song-info" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}', '${year}')">
                 <div class="song-title">${index + 1}. ${item.title}</div>
                 <div class="song-artist">${item.artist}</div>
                 <div class="requester-tag">Pedido: ${displayUser} ${item.played ? '✅ [Pinchada]' : ''}</div>
@@ -1416,7 +1427,11 @@
         const artwork100 = song.artworkUrl100 || 'https://via.placeholder.com/100?text=Sin+Imagen';
         const artworkHD = song.artworkUrl100 ? song.artworkUrl100.replace('100x100bb', '1000x1000bb') : artwork100;
         const previewAudio = song.previewUrl || '';
-        const genre = song.primaryGenreName || 'General';
+        
+        let genre = song.primaryGenreName || 'General';
+        if (rareGenresList.includes(genre)) {
+          genre = 'Otros';
+        }
 
         const safeTitle = (song.trackName || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
         const safeArtist = (song.artistName || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
@@ -1426,8 +1441,8 @@
 
         return `
           <div class="song-item">
-            <img src="${artwork100}" alt="${song.trackName}" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}')">
-            <div class="song-info" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}')">
+            <img src="${artwork100}" alt="${song.trackName}" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}', '${year}')">
+            <div class="song-info" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}', '${year}')">
               <div class="song-title">${song.trackName}</div>
               <div class="song-artist">${song.artistName}</div>
             </div>
@@ -1473,7 +1488,7 @@
             artist: artist,
             artwork: artwork,
             previewAudio: previewAudio || '',
-            genre: genre || 'Live Music',
+            genre: genre || 'Otros',
             year: year || 'N/D',
             user: requesterName,
             users: requesterName,
@@ -1501,7 +1516,12 @@
 
       const items = [];
       for (let id in data) {
-        items.push({ id: id, ...data[id] });
+        let itemData = data[id];
+        // Normalizamos si venía antiguo con género raro
+        if (rareGenresList.includes(itemData.genre)) {
+          itemData.genre = 'Otros';
+        }
+        items.push({ id: id, ...itemData });
       }
 
       items.sort((a, b) => {
@@ -1525,20 +1545,28 @@
     function updateGenreFiltersUI(items) {
       const bar = document.getElementById('genreFiltersBar');
       const genresSet = new Set();
-      
-      // Lista de géneros que queremos excluir o ignorar automáticamente
-      const excludedGenres = ['Christian', 'Christian & Gospel'];
 
       items.forEach(item => {
-        if (item.genre && !excludedGenres.includes(item.genre)) {
-          genresSet.add(item.genre);
-        }
+        let g = item.genre || 'Otros';
+        if (rareGenresList.includes(g)) g = 'Otros';
+        genresSet.add(g);
       });
 
       let html = `<button class="filter-chip ${activeGenreFilter === 'ALL' ? 'active' : ''}" onclick="filterByGenre('ALL')">🎵 Todos (${items.length})</button>`;
       
-      genresSet.forEach(genre => {
-        const count = items.filter(i => i.genre === genre).length;
+      // Ordenar para que "Otros" aparezca al final si existe
+      let sortedGenres = Array.from(genresSet).sort((a, b) => {
+        if (a === 'Otros') return 1;
+        if (b === 'Otros') return -1;
+        return a.localeCompare(b);
+      });
+
+      sortedGenres.forEach(genre => {
+        const count = items.filter(i => {
+          let ig = i.genre || 'Otros';
+          if (rareGenresList.includes(ig)) ig = 'Otros';
+          return ig === genre;
+        }).length;
         const isActive = activeGenreFilter === genre ? 'active' : '';
         html += `<button class="filter-chip ${isActive}" onclick="filterByGenre('${genre}')">${genre} (${count})</button>`;
       });
@@ -1557,7 +1585,11 @@
       if (activeGenreFilter === 'ALL') {
         return globalQueueItems;
       }
-      return globalQueueItems.filter(item => item.genre === activeGenreFilter);
+      return globalQueueItems.filter(item => {
+        let ig = item.genre || 'Otros';
+        if (rareGenresList.includes(ig)) ig = 'Otros';
+        return ig === activeGenreFilter;
+      });
     }
 
     function renderQueuePage() {
@@ -1595,7 +1627,8 @@
         const safeArtist = (item.artist || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
         const artworkHD = (item.artwork || '').replace('100x100bb', '1000x1000bb');
         const previewAudio = item.previewUrl || item.previewAudio || '';
-        const genre = item.genre || 'Live Music';
+        let genre = item.genre || 'Otros';
+        if (rareGenresList.includes(genre)) genre = 'Otros';
         const year = item.year || 'N/D';
         const count = Number(item.count || 1);
         const displayUser = item.users || item.user || 'Anónimo';
@@ -1619,8 +1652,8 @@
 
         return `
           <div class="queue-item${djClass}${playedClass}">
-            <img src="${item.artwork}" alt="${item.title}" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}')">
-            <div class="song-info" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}')">
+            <img src="${item.artwork}" alt="${item.title}" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}', '${year}')">
+            <div class="song-info" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}', '${year}')">
               <div class="song-title">${absoluteIndex}. ${item.title}</div>
               <div class="song-artist">${item.artist}</div>
               <div class="requester-tag">Pedido: ${displayUser} ${isPlayed ? '✅ [Pinchada]' : ''}</div>
@@ -1699,10 +1732,12 @@
       return camelotKeys[Math.abs(hash) % camelotKeys.length];
     }
 
-    function openModal(imgUrl, title, artist, audioUrl, genre) {
+    function openModal(imgUrl, title, artist, audioUrl, genre, year) {
       document.getElementById('modalImg').src = imgUrl;
       document.getElementById('modalTitle').textContent = title;
       document.getElementById('modalArtist').textContent = artist;
+      document.getElementById('modalYear').textContent = year || 'N/D';
+      document.getElementById('modalGenre').textContent = genre || 'Otros';
       document.getElementById('modalBpm').textContent = estimateBpm(genre, title) + ' BPM';
       document.getElementById('modalKey').textContent = getHashKey(title + artist);
       
