@@ -201,6 +201,31 @@
       box-shadow: 0 0 12px var(--glow-accent);
     }
 
+    /* ANIMACIÓN DE COLOR EN MOVIMIENTO PARA EL BOTÓN "BUSCA Y AÑADE" */
+    @keyframes neonGlow {
+      0% {
+        background-position: 0% 50%;
+        box-shadow: 0 0 8px rgba(236, 72, 153, 0.5);
+      }
+      50% {
+        background-position: 100% 50%;
+        box-shadow: 0 0 16px rgba(139, 92, 246, 0.8), 0 0 6px rgba(236, 72, 153, 0.8);
+      }
+      100% {
+        background-position: 0% 50%;
+        box-shadow: 0 0 8px rgba(236, 72, 153, 0.5);
+      }
+    }
+
+    .tab-btn.highlight-animated {
+      background: linear-gradient(270deg, #ec4899, #8b5cf6, #3b82f6, #ec4899);
+      background-size: 300% 300%;
+      color: #ffffff !important;
+      border-color: rgba(255, 255, 255, 0.3) !important;
+      animation: neonGlow 4s ease infinite;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+
     .tab-content { 
       display: none; 
       flex: 1;
@@ -574,9 +599,10 @@
       </div>
     </div>
 
+    <!-- PESTAÑAS ACTUALIZADAS -->
     <div class="tabs">
-      <button class="tab-btn active" onclick="switchTab('search')">🔍 Buscador</button>
-      <button class="tab-btn" onclick="switchTab('queue')">📻 Peticiones Sala</button>
+      <button class="tab-btn highlight-animated active" onclick="switchTab('search')">✨ Busca y Añade</button>
+      <button class="tab-btn" onclick="switchTab('queue')">📻 Lista Peticiones</button>
     </div>
 
     <!-- TAB BUSCADOR -->
@@ -597,7 +623,7 @@
     <!-- TAB PETICIONES SALA -->
     <div id="tabQueue" class="tab-content">
       <div class="queue-header">
-        <span class="queue-title" id="queueHeaderTitle">Peticiones Sala</span>
+        <span class="queue-title" id="queueHeaderTitle">Lista Peticiones</span>
         <div class="queue-actions">
           <button class="dj-mode-btn" id="djModeToggleBtn" onclick="toggleDjMode()">🎧 DJ</button>
           <button class="save-list-btn" id="saveListBtn" style="display: none;" onclick="saveCurrentList()">💾 Guardar</button>
@@ -744,25 +770,20 @@
       document.getElementById('modalTidalBtn').addEventListener('click', openTidalApp);
       document.getElementById('modalYoutubeBtn').addEventListener('click', openYoutubeApp);
 
-      // INICIALIZAR HISTORIAL PARA CONTROLAR LA SALIDA DE LA PÁGINA PRINCIPAL
       history.replaceState({ mainPage: true }, '', '');
       history.pushState({ mainPage: true }, '', '');
 
       window.addEventListener('popstate', (event) => {
         const modal = document.getElementById('imageModal');
         
-        // Si el modal está abierto, lo cerramos
         if (modal.style.display === 'flex') {
           closeModal(false);
           return;
         }
 
-        // Si estamos en la pantalla principal y pulsa atrás
         if (confirm("¿Realmente quieres salir de la aplicación?")) {
-          // Permite salir realmente retrocediendo en el historial del navegador
           history.go(-1);
         } else {
-          // Vuelve a asegurar el estado en el historial para que no se salga
           history.pushState({ mainPage: true }, '', '');
         }
       });
@@ -810,7 +831,7 @@
         document.getElementById('saveListBtn').style.display = 'none';
         document.getElementById('historyListBtn').style.display = 'none';
         document.getElementById('clearQueueBtn').style.display = 'none';
-        document.getElementById('queueHeaderTitle').textContent = "Peticiones Sala";
+        document.getElementById('queueHeaderTitle').textContent = "Lista Peticiones";
         alert("Modo DJ desactivado.");
         renderQueuePage();
       }
@@ -904,7 +925,12 @@
     }
 
     function switchTab(tabName) {
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.classList.contains('highlight-animated')) {
+          // Mantiene la animación visible incluso al cambiar de pestaña si lo deseas, o puedes quitarla. Aquí se conserva siempre llamativa.
+        }
+      });
       document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
 
       if (tabName === 'search') {
