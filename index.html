@@ -87,7 +87,7 @@
       align-items: center;
       min-height: 100vh;
       min-height: 100dvh;
-      padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+      padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
     }
@@ -183,7 +183,7 @@
       border: 1px solid var(--input-border);
       background: var(--input-bg);
       color: var(--text);
-      font-size: 16px !important; /* IMPORTANTE: Evita zoom automático en Safari iOS */
+      font-size: 16px !important;
       outline: none;
       -webkit-appearance: none;
     }
@@ -297,9 +297,9 @@
     }
 
     .dj-mode-btn, .save-list-btn, .history-list-btn, .pdf-btn, .clear-queue-btn {
-      padding: 5px 8px;
-      border-radius: 6px;
-      font-size: 0.7rem;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 0.72rem;
       font-weight: 700;
       cursor: pointer;
       -webkit-appearance: none;
@@ -348,37 +348,40 @@
       background: var(--danger);
       color: white;
       border: none;
-      padding: 3px 6px;
+      padding: 4px 8px;
       border-radius: 6px;
-      font-size: 0.65rem;
+      font-size: 0.7rem;
       font-weight: 700;
       cursor: pointer;
       margin-top: 4px;
       -webkit-appearance: none;
     }
 
-    /* Paginación */
+    /* Paginación situada arriba de la lista */
     .pagination {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 14px;
-      padding-top: 10px;
-      border-top: 1px solid var(--border);
+      margin-bottom: 12px;
+      padding: 8px 12px;
+      background: var(--item-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
     }
     .page-btn {
-      background: var(--tag-bg);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 5px 10px;
-      border-radius: 6px;
-      font-size: 0.75rem;
-      font-weight: 600;
+      background: var(--accent);
+      border: none;
+      color: var(--accent-text);
+      padding: 7px 12px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 700;
       cursor: pointer;
       -webkit-appearance: none;
+      box-shadow: 0 0 6px var(--glow-accent);
     }
-    .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-    .page-info { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; }
+    .page-btn:disabled { opacity: 0.3; cursor: not-allowed; box-shadow: none; background: var(--tag-bg); color: var(--text-muted); }
+    .page-info { font-size: 0.8rem; color: var(--text); font-weight: 800; }
 
     .footer {
       margin-top: 20px;
@@ -403,7 +406,7 @@
     }
     .visitor-counter span { color: var(--accent); font-weight: 800; }
 
-    /* Modales adaptados con scroll táctil fluido */
+    /* Modales */
     .modal {
       display: none;
       position: fixed;
@@ -538,13 +541,16 @@
           <button class="clear-queue-btn" id="clearQueueBtn" style="display: none;" onclick="clearQueueSecure()">🗑️</button>
         </div>
       </div>
+
+      <!-- Paginación movida a la PARTE SUPERIOR de la lista -->
+      <div id="queuePagination" class="pagination" style="display: none;">
+        <button class="page-btn" id="prevPageBtn" onclick="changePage(-1)">⬅️ Anterior</button>
+        <span class="page-info" id="pageInfoText">Pág 1/1</span>
+        <button class="page-btn" id="nextPageBtn" onclick="changePage(1)">Siguiente ➡️</button>
+      </div>
+
       <div id="queueResults" class="results">
         <p class="status-msg">Cargando lista...</p>
-      </div>
-      <div id="queuePagination" class="pagination" style="display: none;">
-        <button class="page-btn" id="prevPageBtn" onclick="changePage(-1)">⬅️ Ant</button>
-        <span class="page-info" id="pageInfoText">Pág 1/1</span>
-        <button class="page-btn" id="nextPageBtn" onclick="changePage(1)">Sig ➡️</button>
       </div>
     </div>
 
@@ -1105,121 +1111,4 @@
     }
 
     function estimateBpm(genre, title) {
-      const lowerTitle = title.toLowerCase();
-      if (lowerTitle.includes('rock') || lowerTitle.includes('metal')) return '130-150';
-      if (lowerTitle.includes('pop') || lowerTitle.includes('dance')) return '120-130';
-      return '115-128';
-    }
-
-    function getHashKey(str) {
-      let hash = 0;
-      for (let i = 0; i < str.length; i++) {
-        hash = str.charCodeAt(i) + ((hash << 5) - hash);
-      }
-      return camelotKeys[Math.abs(hash) % camelotKeys.length];
-    }
-
-    function openModal(imgUrl, title, artist, audioUrl, genre) {
-      document.getElementById('modalImg').src = imgUrl;
-      document.getElementById('modalTitle').textContent = title;
-      document.getElementById('modalArtist').textContent = artist;
-      document.getElementById('modalBpm').textContent = estimateBpm(genre, title) + ' BPM';
-      document.getElementById('modalKey').textContent = getHashKey(title + artist);
-      
-      tapTimes = [];
-      currentSearchTerm = `${title} ${artist}`;
-
-      const audioElement = document.getElementById('modalAudio');
-      if (audioUrl) {
-        audioElement.style.display = 'block';
-        audioElement.src = audioUrl;
-      } else {
-        audioElement.style.display = 'none';
-        audioElement.src = '';
-      }
-
-      const musicQuery = encodeURIComponent(currentSearchTerm);
-      document.getElementById('modalSpotifyBtn').href = `https://open.spotify.com/search/${musicQuery}`;
-      document.getElementById('imageModal').style.display = 'flex';
-    }
-
-    function openTidalApp(event) {
-      event.preventDefault();
-      const query = encodeURIComponent(currentSearchTerm);
-      const appUrl = `tidal://search?q=${query}`;
-      const webUrl = `https://listen.tidal.com/search?q=${query}`;
-      const start = Date.now();
-      window.location.href = appUrl;
-      setTimeout(() => {
-        if (Date.now() - start < 2000) window.open(webUrl, '_blank');
-      }, 1500);
-    }
-
-    function openYoutubeApp(event) {
-      event.preventDefault();
-      const query = encodeURIComponent(currentSearchTerm);
-      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-      const appUrl = isIOS ? `youtube://results?search_query=${query}` : `vnd.youtube://results?search_query=${query}`;
-      const webUrl = `https://www.youtube.com/results?search_query=${query}`;
-      const start = Date.now();
-      window.location.href = appUrl;
-      setTimeout(() => {
-        if (Date.now() - start < 2000) window.open(webUrl, '_blank');
-      }, 1500);
-    }
-
-    function tapTempo() {
-      const now = Date.now();
-      tapTimes.push(now);
-      if (tapTimes.length > 1) {
-        if (tapTimes.length > 5) tapTimes.shift();
-        let intervals = [];
-        for (let i = 1; i < tapTimes.length; i++) {
-          intervals.push(tapTimes[i] - tapTimes[i - 1]);
-        }
-        const avgInterval = intervals.reduce((a, b) => a + b, 0) / intervals.length;
-        const calculatedBpm = Math.round(60000 / avgInterval);
-        if (calculatedBpm >= 40 && calculatedBpm <= 220) {
-          document.getElementById('modalBpm').textContent = `${calculatedBpm} BPM (Tap)`;
-        }
-      }
-    }
-
-    function closeModal() {
-      const audioElement = document.getElementById('modalAudio');
-      audioElement.pause();
-      audioElement.src = '';
-      document.getElementById('imageModal').style.display = 'none';
-    }
-
-    function saveToHistory(query) {
-      let history = JSON.parse(localStorage.getItem('searchHistoryLive')) || [];
-      history = history.filter(item => item.toLowerCase() !== query.toLowerCase());
-      history.unshift(query);
-      if (history.length > 5) history.pop();
-      localStorage.setItem('searchHistoryLive', JSON.stringify(history));
-      loadHistory();
-    }
-
-    function loadHistory() {
-      const history = JSON.parse(localStorage.getItem('searchHistoryLive')) || [];
-      const section = document.getElementById('historySection');
-      const tagsContainer = document.getElementById('historyTags');
-
-      if (history.length === 0) {
-        section.style.display = 'none';
-        return;
-      }
-      section.style.display = 'block';
-      tagsContainer.innerHTML = history.map(item => `
-        <button class="tag" onclick="searchFromHistory('${item}')">${item}</button>
-      `).join('');
-    }
-
-    function searchFromHistory(query) {
-      document.getElementById('songInput').value = query;
-      handleInput();
-    }
-  </script>
-</body>
-</html>
+      const lowerTitle
