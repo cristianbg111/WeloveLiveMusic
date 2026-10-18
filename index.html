@@ -125,7 +125,7 @@
       width: 100%;
       max-width: 260px;
       height: auto;
-      max-height: 95px; /* Reducido para dejar más espacio en pantallas ajustadas */
+      max-height: 95px;
       object-fit: contain;
       border-radius: 10px;
       border: 1px solid var(--border);
@@ -136,7 +136,6 @@
       transition: max-height 0.3s ease;
     }
 
-    /* Si estamos en la pestaña de lista de peticiones, hacemos el logo aún más compacto opcionalmente */
     body.queue-tab-active .app-logo {
       max-height: 60px;
     }
@@ -431,7 +430,6 @@
       border-color: var(--accent);
     }
 
-    /* Estilo cuando la canción ya ha sido marcada como pinchada por el DJ */
     .queue-item.played {
       opacity: 0.55;
       border-color: var(--success);
@@ -867,8 +865,8 @@
       document.getElementById('modalTidalBtn').addEventListener('click', openTidalApp);
       document.getElementById('modalYoutubeBtn').addEventListener('click', openYoutubeApp);
 
+      // Estado inicial limpio en el historial del navegador
       history.replaceState({ mainPage: true }, '', '');
-      history.pushState({ mainPage: true }, '', '');
 
       window.addEventListener('popstate', (event) => {
         const modal = document.getElementById('imageModal');
@@ -884,11 +882,7 @@
           return;
         }
 
-        if (confirm("¿Realmente quieres salir de la aplicación?")) {
-          history.go(-1);
-        } else {
-          history.pushState({ mainPage: true }, '', '');
-        }
+        // Si estamos en la página principal y se pulsa atrás, no saltará el aviso de salida accidental
       });
 
       if (!sessionStorage.getItem('visited_live')) {
@@ -981,6 +975,7 @@
 
       container.innerHTML = '<p class="status-msg">Cargando listas guardadas...</p>';
       historyModal.style.display = 'flex';
+      history.pushState({ modalOpen: true }, '', '');
 
       historyRef.once('value', (snapshot) => {
         const data = snapshot.val();
@@ -1074,6 +1069,9 @@
         openHistoryModal();
       } else {
         historyModal.style.display = 'none';
+        if (window.history.state && window.history.state.modalOpen) {
+          window.history.back();
+        }
       }
     }
 
@@ -1085,14 +1083,15 @@
       }
     }
 
-    function deleteSongItem(songId, songTitle) {
+    function deleteSongItem(songId, songTitle, event) {
+      if (event) event.stopPropagation();
       if (confirm(`¿Seguro que quieres eliminar "${songTitle}" de la lista?`)) {
         db.ref('welove_live_music_queue/' + songId).remove();
       }
     }
 
-    // Función para marcar o desmarcar una canción como pinchada (Solo accesible en Modo DJ)
-    function toggleSongPlayed(songId, currentStatus) {
+    function toggleSongPlayed(songId, currentStatus, event) {
+      if (event) event.stopPropagation();
       if (!isDjModeActive) return;
       db.ref('welove_live_music_queue/' + songId).update({
         played: !currentStatus
@@ -1372,16 +1371,15 @@
         const isPlayed = item.played === true;
         const playedClass = isPlayed ? ' played' : '';
 
-        // Controles adicionales visibles únicamente si el Modo DJ está activado
         let djControlsHtml = '';
         if (isDjModeActive) {
           djControlsHtml = `
             <div class="dj-row-controls">
-              <label class="played-checkbox-label">
-                <input type="checkbox" ${isPlayed ? 'checked' : ''} onchange="toggleSongPlayed('${item.id}', ${isPlayed})">
+              <label class="played-checkbox-label" onclick="event.stopPropagation()">
+                <input type="checkbox" ${isPlayed ? 'checked' : ''} onchange="toggleSongPlayed('${item.id}', ${isPlayed}, event)">
                 Pinchada
               </label>
-              <button class="delete-song-btn" onclick="deleteSongItem('${item.id}', '${safeTitle}')">❌ Borrar</button>
+              <button class="delete-song-btn" onclick="deleteSongItem('${item.id}', '${safeTitle}', event)">❌ Borrar</button>
             </div>
           `;
         }
@@ -1490,6 +1488,7 @@
       const musicQuery = encodeURIComponent(currentSearchTerm);
       document.getElementById('modalSpotifyBtn').href = `https://open.spotify.com/search/${musicQuery}`;
       
+      // Empujamos el estado al historial para cerrar el modal limpiamente con el botón atrás sin salir de la app
       history.pushState({ modalOpen: true }, '', '');
       document.getElementById('imageModal').style.display = 'flex';
     }
@@ -1541,6 +1540,7 @@
       audioElement.pause();
       audioElement.src = '';
       document.getElementById('imageModal').style.display = 'none';
+      document.getElementById('historyModal').style.display = 'none';
 
       if (updateHistory && window.history.state && window.history.state.modalOpen) {
         window.history.back();
@@ -1572,7 +1572,7 @@
     }
 
     function searchFromHistory(query) {
-      document.getElementById('songInput').value, query;
+      document.getElementById('songInput').value = query;
       handleInput();
     }
   </script>
