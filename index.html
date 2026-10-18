@@ -88,10 +88,11 @@
       color: var(--text);
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: flex-start; /* Cambiado a flex-start para permitir scroll natural en móviles */
       min-height: 100vh;
       min-height: 100dvh;
-      padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+      /* Margen de seguridad inferior ampliado para evitar que la barra del navegador tape contenido */
+      padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(60px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
     }
@@ -105,6 +106,7 @@
       width: 100%;
       box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5), 0 0 20px var(--glow-accent);
       margin: auto;
+      margin-bottom: 40px; /* Espacio extra al final de la tarjeta */
     }
 
     .header-row {
@@ -254,11 +256,12 @@
       display: flex; 
       flex-direction: column; 
       gap: 10px; 
-      max-height: 55vh; 
+      max-height: 52vh; 
       overflow-y: auto; 
       -webkit-overflow-scrolling: touch; 
       overscroll-behavior-y: contain;
-      padding-right: 2px;
+      padding-right: 4px;
+      padding-bottom: 12px; /* Margen interno inferior para evitar cortes con el borde de la tarjeta */
     }
     
     .song-item {
@@ -679,7 +682,7 @@
 
     let globalQueueItems = [];
     let currentPage = 1;
-    const itemsPerPage = 25; // AMPLIADO A 25 PARA QUE QUepan TODAS EN UNA SOLA PÁGINA
+    const itemsPerPage = 25;
     
     let isDjModeActive = false;
     const CORRECT_PASSWORD_ENCODED = "amJkZWVqYXkx"; // "jbdeejay1"
