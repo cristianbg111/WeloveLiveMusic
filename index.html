@@ -368,8 +368,23 @@
       font-size: 0.8rem;
       color: var(--text-muted);
       letter-spacing: 0.5px;
+      line-height: 1.6;
     }
     .footer strong { color: var(--accent); }
+    .visitor-counter {
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 0.75rem;
+      background: var(--tag-bg);
+      border: 1px solid var(--border);
+      padding: 3px 10px;
+      border-radius: 20px;
+      color: var(--text-muted);
+    }
+    .visitor-counter span {
+      color: var(--accent);
+      font-weight: 800;
+    }
 
     .modal {
       display: none;
@@ -508,6 +523,9 @@
 
     <footer class="footer">
       App creada por <strong>We Love The Remember Studios</strong>
+      <div class="visitor-counter">
+        👀 Visitas totales: <span id="visitorCount">...</span>
+      </div>
     </footer>
   </div>
 
@@ -574,6 +592,7 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     const queueRef = db.ref('welove_live_music_queue');
+    const statsRef = db.ref('welove_live_music_stats/visits');
 
     let debounceTimer;
     let tapTimes = [];
@@ -612,6 +631,18 @@
       document.getElementById('imageModal').addEventListener('click', closeModal);
       document.getElementById('modalTidalBtn').addEventListener('click', openTidalApp);
       document.getElementById('modalYoutubeBtn').addEventListener('click', openYoutubeApp);
+
+      // Registrar visita de forma única por sesión del navegador
+      if (!sessionStorage.getItem('visited_live')) {
+        sessionStorage.setItem('visited_live', 'true');
+        statsRef.transaction(currentValue => (currentValue || 0) + 1);
+      }
+
+      // Escuchar el total de visitas en tiempo real desde Firebase
+      statsRef.on('value', (snapshot) => {
+        const count = snapshot.val() || 0;
+        document.getElementById('visitorCount').textContent = count.toLocaleString();
+      });
 
       queueRef.on('value', (snapshot) => {
         const data = snapshot.val();
