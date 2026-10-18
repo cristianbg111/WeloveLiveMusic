@@ -1345,7 +1345,7 @@
       renderQueuePage();
     }
 
-    // FUNCIÓN CORREGIDA PARA EXPORTAR TODAS LAS CANCIONES AL PDF
+    // FUNCIÓN DE EXPORTACIÓN A PDF (CON LA CORRECCIÓN APLICADA)
     function exportQueueToPDF() {
       if (globalQueueItems.length === 0) {
         alert("No hay canciones en la lista para exportar.");
@@ -1353,11 +1353,8 @@
       }
 
       const queueResults = document.getElementById('queueResults');
-      
-      // Guardamos el HTML actual (la página que se está viendo)
       const previousHTML = queueResults.innerHTML;
 
-      // Renderizamos temporalmente TODAS las canciones de la lista en el contenedor
       queueResults.innerHTML = globalQueueItems.map((item, index) => {
         const absoluteIndex = index + 1;
         const count = Number(item.count || 1);
@@ -1379,10 +1376,8 @@
         `;
       }).join('');
 
-      // Lanzamos la ventana de impresión/PDF
       window.print();
 
-      // Restauramos la vista paginada original un instante después
       setTimeout(() => {
         queueResults.innerHTML = previousHTML;
         renderQueuePage();
@@ -1448,7 +1443,7 @@
       const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
       const appUrl = isIOS ? `youtube://results?search_query=${query}` : `vnd.youtube://results?search_query=${query}`;
       const webUrl = `https://www.youtube.com/results?search_query=${query}`;
-      const start = Date.0;
+      const start = Date.now();
       window.location.href = appUrl;
       setTimeout(() => {
         if (Date.now() - start < 2000) window.open(webUrl, '_blank');
