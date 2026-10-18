@@ -37,6 +37,8 @@
       --count-bg: #f59e0b;
       --glow-accent: rgba(236, 72, 153, 0.4);
       --dj-mode-bg: rgba(236, 72, 153, 0.15);
+      --instructions-bg: rgba(236, 72, 153, 0.08);
+      --instructions-border: rgba(236, 72, 153, 0.3);
     }
 
     [data-theme="light"] {
@@ -60,6 +62,8 @@
       --count-bg: #d97706;
       --glow-accent: rgba(219, 39, 119, 0.2);
       --dj-mode-bg: rgba(219, 39, 119, 0.08);
+      --instructions-bg: rgba(219, 39, 119, 0.05);
+      --instructions-border: rgba(219, 39, 119, 0.2);
     }
 
     * { 
@@ -133,11 +137,33 @@
       touch-action: manipulation;
     }
 
-    p.subtitle { 
-      font-size: 0.82rem; 
-      color: var(--text-muted); 
-      margin-bottom: 16px; 
-      line-height: 1.4;
+    /* NUEVO DISEÑO DESTACADO PARA LAS INSTRUCCIONES */
+    .instructions-box {
+      background: var(--instructions-bg);
+      border: 1px solid var(--instructions-border);
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+      box-shadow: inset 0 0 10px var(--instructions-bg);
+    }
+
+    .instructions-title {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .instructions-text {
+      font-size: 0.8rem;
+      color: var(--text);
+      line-height: 1.45;
+      font-weight: 500;
     }
 
     /* Tabs estilo cabina */
@@ -512,10 +538,14 @@
       <h1>WE LOVE LIVE MUSIC</h1>
       <button class="theme-btn" id="themeToggle">☀️ Modo Claro</button>
     </div>
-    <p class="subtitle">
-      Busca canciones y envía tus peticiones al DJ para la sesión.<br>
-      Para pedir una canción a la sala, busca tu canción preferida y una vez la localices pulsa sobre el botón de pedir. Se agregará a la lista de peticiones.
-    </p>
+    
+    <!-- BLOQUE INSTRUCTIVO DESTACADO -->
+    <div class="instructions-box">
+      <div class="instructions-title">🎧 ¡Envía tus peticiones al DJ!</div>
+      <div class="instructions-text">
+        Busca tu canción preferida y, una vez la localices, pulsa sobre el botón <strong>"Pedir"</strong>. Se agregará al instante a la lista de peticiones de la sala.
+      </div>
+    </div>
 
     <div class="tabs">
       <button class="tab-btn active" onclick="switchTab('search')">🔍 Buscador</button>
