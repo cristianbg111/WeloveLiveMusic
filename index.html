@@ -801,7 +801,7 @@
         const historyModal = document.getElementById('historyModal');
         
         if (historyModal.style.display === 'flex' && historyModal.dataset.viewingList === 'true') {
-          openHistoryModal(); // Vuelve a la lista de sesiones guardadas
+          openHistoryModal();
           return;
         }
 
@@ -967,7 +967,8 @@
         container.innerHTML = listData.items.map((item, index) => {
           const safeTitle = (item.title || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
           const safeArtist = (item.artist || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
-          const artworkHD = (item.artwork || '').replace('100x100bb', '1000x1000bb');
+          const artworkThumb = item.artwork || 'https://via.placeholder.com/100?text=Sin+Imagen';
+          const artworkHD = artworkThumb.replace('100x100bb', '1000x1000bb');
           const previewAudio = item.previewAudio || '';
           const genre = item.genre || 'Live Music';
           const year = item.year || 'N/D';
@@ -976,7 +977,7 @@
 
           return `
             <div class="queue-item" style="margin-bottom: 6px;">
-              <img src="${item.artwork}" alt="${item.title}" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}')">
+              <img src="${artworkThumb}" alt="${item.title}" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}')">
               <div class="song-info" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}')">
                 <div class="song-title">${index + 1}. ${item.title}</div>
                 <div class="song-artist">${item.artist}</div>
@@ -995,7 +996,7 @@
     function closeHistoryModal() {
       const historyModal = document.getElementById('historyModal');
       if (historyModal.dataset.viewingList === 'true') {
-        openHistoryModal(); // Si estaba viendo las canciones, vuelve al menú principal del histórico
+        openHistoryModal();
       } else {
         historyModal.style.display = 'none';
       }
