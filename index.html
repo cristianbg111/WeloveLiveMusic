@@ -803,7 +803,7 @@
           listsArray.push({ id: key, ...data[key] });
         }
 
-        listsArray.sort((a, b) => b.timestamp - a.timestamp);
+        listsArray.sort((a, b) => Number(b.timestamp) - Number(a.timestamp));
 
         container.innerHTML = listsArray.map(list => {
           const totalSongs = list.items ? list.items.length : 0;
@@ -963,7 +963,7 @@
       results.sort((a, b) => {
         const yearA = a.releaseDate ? new Date(a.releaseDate).getFullYear() : 9999;
         const yearB = b.releaseDate ? new Date(b.releaseDate).getFullYear() : 9999;
-        return yearA - yearB;
+        return Number(yearA) - Number(yearB);
       });
 
       resultsDiv.innerHTML = results.map((song) => {
@@ -1006,7 +1006,7 @@
       songRef.once('value', (snapshot) => {
         if (snapshot.exists()) {
           const data = snapshot.val();
-          const newCount = (data.count || 1) + 1;
+          const newCount = Number(data.count || 1) + 1;
           const updatedUsers = data.users ? `${data.users}, ${requesterName}` : requesterName;
 
           songRef.update({
@@ -1049,13 +1049,14 @@
         items.push({ id: id, ...data[id] });
       }
 
+      // CORRECCIÓN CLAVE DE ORDENACIÓN NUMÉRICA PARA MÓVILES (Safari / Android)
       items.sort((a, b) => {
-        const countA = a.count || 1;
-        const countB = b.count || 1;
+        const countA = Number(a.count || 1);
+        const countB = Number(b.count || 1);
         if (countB !== countA) {
-          return countB - countA;
+          return countB - countA; // Mayor número de votos primero
         }
-        return a.timestamp - b.timestamp;
+        return Number(a.timestamp || 0) - Number(b.timestamp || 0); // Si empatan, el más antiguo primero
       });
 
       globalQueueItems = items;
@@ -1094,7 +1095,6 @@
       }
 
       queueResults.innerHTML = currentItems.map((item, index) => {
-        // CORRECCIÓN DEL ÍNDICE ABSOLUTO PARA QUE LA 10 APAREZCA CORRECTAMENTE
         const absoluteIndex = startIndex + index + 1;
         const safeTitle = (item.title || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
         const safeArtist = (item.artist || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
@@ -1102,7 +1102,7 @@
         const previewAudio = item.previewAudio || '';
         const genre = item.genre || 'Live Music';
         const year = item.year || 'N/D';
-        const count = item.count || 1;
+        const count = Number(item.count || 1);
         const displayUser = item.users || item.user || 'Anónimo';
 
         const djActionHtml = isDjModeActive 
