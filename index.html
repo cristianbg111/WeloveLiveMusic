@@ -140,7 +140,6 @@
       max-height: 50px;
     }
 
-    /* OCULTAR INSTRUCCIONES EN LA PESTAÑA DE LISTA DE PETICIONES PARA GANAR ESPACIO */
     body.queue-tab-active .instructions-box {
       display: none !important;
     }
@@ -242,7 +241,6 @@
       font-weight: 500;
     }
 
-    /* ESTILO AVISO EVENTO */
     .aviso-evento {
       margin-top: 8px;
       padding-top: 6px;
@@ -433,6 +431,20 @@
       font-size: 0.63rem;
       border: 1px solid var(--border);
     }
+
+    .badge-genre {
+      background: rgba(139, 92, 246, 0.15);
+      color: #c084fc;
+      padding: 2px 5px;
+      border-radius: 5px;
+      font-weight: 600;
+      font-size: 0.6rem;
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 90px;
+    }
     
     .status-msg { text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 12px 0; }
 
@@ -472,6 +484,34 @@
     .history-list-btn { background: var(--count-bg); color: #000000; border: none; }
     .pdf-btn { background: var(--success); color: #ffffff; border: none; display: flex; align-items: center; gap: 3px; }
     .clear-queue-btn { background: transparent; border: 1px solid var(--danger); color: var(--danger); }
+
+    /* BARRA DE FILTROS RÁPIDOS POR GÉNERO */
+    .genre-filters-bar {
+      display: flex;
+      gap: 4px;
+      overflow-x: auto;
+      margin-bottom: 8px;
+      padding-bottom: 2px;
+      flex-shrink: 0;
+      -webkit-overflow-scrolling: touch;
+    }
+    .filter-chip {
+      background: var(--tag-bg);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      -webkit-appearance: none;
+    }
+    .filter-chip.active {
+      background: var(--badge-bg);
+      color: #ffffff;
+      border-color: var(--badge-bg);
+    }
 
     .queue-item {
       display: flex;
@@ -720,7 +760,7 @@
         max-height: none !important;
         overflow: visible !important;
       }
-      .queue-actions, .theme-btn, .tabs, .search-box, .footer, .pagination, .delete-song-btn, .dj-row-controls, .neon-banner, .brand-header { display: none !important; }
+      .queue-actions, .theme-btn, .tabs, .search-box, .footer, .pagination, .delete-song-btn, .dj-row-controls, .neon-banner, .brand-header, .genre-filters-bar { display: none !important; }
       .results {
         max-height: none !important;
         overflow: visible !important;
@@ -748,7 +788,7 @@
       </div>
     </div>
     
-    <!-- BANNER DE NEÓN DE ESTADO DE PETICIONES (PERMANECE VISIBLE) -->
+    <!-- BANNER DE NEÓN DE ESTADO DE PETICIONES -->
     <div id="neonBanner" class="neon-banner enabled">🟢 Peticiones de canciones: ABIERTAS</div>
 
     <div class="instructions-box">
@@ -793,6 +833,11 @@
           <button class="pdf-btn" onclick="exportQueueToPDF()">📄 PDF</button>
           <button class="clear-queue-btn" id="clearQueueBtn" style="display: none;" onclick="clearQueueSecure()">🗑️</button>
         </div>
+      </div>
+
+      <!-- BARRA DE FILTROS RÁPIDOS POR GÉNERO -->
+      <div class="genre-filters-bar" id="genreFiltersBar">
+        <button class="filter-chip active" onclick="filterByGenre('ALL')">🎵 Todos</button>
       </div>
 
       <div id="queuePagination" class="pagination" style="display: none;">
@@ -903,12 +948,13 @@
     const camelotKeys = ["8A (A min)", "9A (E min)", "10A (B min)", "11A (F# min)", "12A (C# min)", "4A (F min)", "5A (C min)", "6A (G min)", "7A (D min)"];
 
     let globalQueueItems = [];
+    let activeGenreFilter = 'ALL';
     let currentPage = 1;
     const itemsPerPage = 25;
     
     let isDjModeActive = false;
-    let areRequestsOpen = true; // Por defecto abiertas
-    const CORRECT_PASSWORD_ENCODED = "amJkZWVqYXkx"; // "jbdeejay1"
+    let areRequestsOpen = true; 
+    const CORRECT_PASSWORD_ENCODED = "amJkZWVqYXkx"; 
 
     document.addEventListener('DOMContentLoaded', () => {
       loadHistory();
@@ -981,7 +1027,6 @@
         processQueueData(data);
       });
 
-      // Escuchar el estado de las peticiones en tiempo real desde Firebase
       settingsRef.on('value', (snapshot) => {
         const isOpen = snapshot.val();
         areRequestsOpen = (isOpen !== null) ? isOpen : true;
@@ -1024,7 +1069,6 @@
       }
     }
 
-    // Función para activar o desactivar las peticiones globalmente
     function toggleRequestsState() {
       if (!isDjModeActive) return;
       const newState = !areRequestsOpen;
@@ -1033,7 +1077,6 @@
       });
     }
 
-    // Actualiza el banner de neón en todas las pantallas y bloquea/desbloquea los botones de pedir
     function updateNeonBannerUI() {
       const banner = document.getElementById('neonBanner');
       const toggleBtn = document.getElementById('toggleRequestsBtn');
@@ -1054,7 +1097,6 @@
         }
       }
 
-      // Actualizar dinámicamente los botones "Pedir" de los resultados de búsqueda activos si los hay
       document.querySelectorAll('.request-btn').forEach(btn => {
         if (!areRequestsOpen) {
           btn.disabled = true;
@@ -1374,7 +1416,7 @@
         const artwork100 = song.artworkUrl100 || 'https://via.placeholder.com/100?text=Sin+Imagen';
         const artworkHD = song.artworkUrl100 ? song.artworkUrl100.replace('100x100bb', '1000x1000bb') : artwork100;
         const previewAudio = song.previewUrl || '';
-        const genre = song.primaryGenreName || '';
+        const genre = song.primaryGenreName || 'General';
 
         const safeTitle = (song.trackName || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
         const safeArtist = (song.artistName || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
@@ -1391,6 +1433,7 @@
             </div>
             <div class="action-buttons">
               <span class="badge-year">${year}</span>
+              <span class="badge-genre">${genre}</span>
               <button class="request-btn" ${disabledAttr} ${btnTitleAttr} onclick="requestSong('${safeTitle}', '${safeArtist}', '${artwork100}', '${previewAudio}', '${genre}', '${year}')">➕ Pedir</button>
             </div>
           </div>
@@ -1452,6 +1495,7 @@
         globalQueueItems = [];
         queueResults.innerHTML = '<p class="status-msg">No hay peticiones en la sala todavía.</p>';
         paginationDiv.style.display = 'none';
+        updateGenreFiltersUI([]);
         return;
       }
 
@@ -1470,11 +1514,44 @@
       });
 
       globalQueueItems = items;
+      updateGenreFiltersUI(globalQueueItems);
       
-      const totalPages = Math.ceil(globalQueueItems.length / itemsPerPage) || 1;
+      const totalPages = Math.ceil(getFilteredQueueItems().length / itemsPerPage) || 1;
       if (currentPage > totalPages) currentPage = totalPages;
 
       renderQueuePage();
+    }
+
+    function updateGenreFiltersUI(items) {
+      const bar = document.getElementById('genreFiltersBar');
+      const genresSet = new Set();
+      items.forEach(item => {
+        if (item.genre) genresSet.add(item.genre);
+      });
+
+      let html = `<button class="filter-chip ${activeGenreFilter === 'ALL' ? 'active' : ''}" onclick="filterByGenre('ALL')">🎵 Todos (${items.length})</button>`;
+      
+      genresSet.forEach(genre => {
+        const count = items.filter(i => i.genre === genre).length;
+        const isActive = activeGenreFilter === genre ? 'active' : '';
+        html += `<button class="filter-chip ${isActive}" onclick="filterByGenre('${genre}')">${genre} (${count})</button>`;
+      });
+
+      bar.innerHTML = html;
+    }
+
+    function filterByGenre(genre) {
+      activeGenreFilter = genre;
+      currentPage = 1;
+      updateGenreFiltersUI(globalQueueItems);
+      renderQueuePage();
+    }
+
+    function getFilteredQueueItems() {
+      if (activeGenreFilter === 'ALL') {
+        return globalQueueItems;
+      }
+      return globalQueueItems.filter(item => item.genre === activeGenreFilter);
     }
 
     function renderQueuePage() {
@@ -1484,18 +1561,20 @@
       const prevBtn = document.getElementById('prevPageBtn');
       const nextBtn = document.getElementById('nextPageBtn');
 
-      if (globalQueueItems.length === 0) {
-        queueResults.innerHTML = '<p class="status-msg">No hay peticiones en la sala todavía.</p>';
+      const filteredItems = getFilteredQueueItems();
+
+      if (filteredItems.length === 0) {
+        queueResults.innerHTML = '<p class="status-msg">No hay peticiones con este filtro.</p>';
         paginationDiv.style.display = 'none';
         return;
       }
 
-      const totalPages = Math.ceil(globalQueueItems.length / itemsPerPage);
+      const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
       const startIndex = (currentPage - 1) * itemsPerPage;
       const endIndex = startIndex + itemsPerPage;
-      const currentItems = globalQueueItems.slice(startIndex, endIndex);
+      const currentItems = filteredItems.slice(startIndex, endIndex);
 
-      if (globalQueueItems.length > itemsPerPage) {
+      if (filteredItems.length > itemsPerPage) {
         paginationDiv.style.display = 'flex';
         pageInfoText.textContent = `Pág ${currentPage}/${totalPages}`;
         prevBtn.disabled = currentPage === 1;
@@ -1551,7 +1630,8 @@
     }
 
     function changePage(direction) {
-      const totalPages = Math.ceil(globalQueueItems.length / itemsPerPage);
+      const filteredItems = getFilteredQueueItems();
+      const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
       currentPage += direction;
       if (currentPage < 1) currentPage = 1;
       if (currentPage > totalPages) currentPage = totalPages;
@@ -1559,7 +1639,8 @@
     }
 
     function exportQueueToPDF() {
-      if (globalQueueItems.length === 0) {
+      const filteredItems = getFilteredQueueItems();
+      if (filteredItems.length === 0) {
         alert("No hay canciones en la lista para exportar.");
         return;
       }
@@ -1567,7 +1648,7 @@
       const queueResults = document.getElementById('queueResults');
       const previousHTML = queueResults.innerHTML;
 
-      queueResults.innerHTML = globalQueueItems.map((item, index) => {
+      queueResults.innerHTML = filteredItems.map((item, index) => {
         const absoluteIndex = index + 1;
         const count = Number(item.count || 1);
         const displayUser = item.users || item.user || 'Anónimo';
