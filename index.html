@@ -694,8 +694,8 @@
     </div>
 
     <div class="tabs">
-      <button class="tab-btn highlight-animated active" onclick="switchTab('search')">✨ Busca y Añade</button>
-      <button class="tab-btn" onclick="switchTab('queue')">📻 Lista Peticiones</button>
+      <button class="tab-btn highlight-animated active" onclick="switchTab('search', true)">✨ Busca y Añade</button>
+      <button class="tab-btn" onclick="switchTab('queue', true)">📻 Lista Peticiones</button>
     </div>
 
     <!-- TAB BUSCADOR -->
@@ -863,17 +863,24 @@
       document.getElementById('imageModal').addEventListener('click', closeModal);
       document.getElementById('historyModal').addEventListener('click', closeHistoryModal);
       document.getElementById('modalTidalBtn').addEventListener('click', openTidalApp);
-      document.getElementById('modalYoutubeBtn').addEventListener('click', openYoutubeApp);
+      document.getElementById('modalYoutubeBtn',).addEventListener('click', openYoutubeApp);
 
-      // Estado inicial limpio en el historial del navegador
-      history.replaceState({ mainPage: true }, '', '');
+      // Inicializamos el historial en la página principal
+      history.replaceState({ page: 'search' }, '', '');
 
+      // Control inteligente del botón "Atrás" / Gesto del navegador
       window.addEventListener('popstate', (event) => {
         const modal = document.getElementById('imageModal');
         const historyModal = document.getElementById('historyModal');
         
+        // Si hay un modal abierto, lo cerramos
         if (historyModal.style.display === 'flex' && historyModal.dataset.viewingList === 'true') {
           openHistoryModal();
+          return;
+        }
+
+        if (historyModal.style.display === 'flex') {
+          closeHistoryModal();
           return;
         }
 
@@ -882,7 +889,15 @@
           return;
         }
 
-        // Si estamos en la página principal y se pulsa atrás, no saltará el aviso de salida accidental
+        // Si estamos en la pestaña de peticiones, al dar atrás volvemos a la pestaña de búsqueda principal
+        const queueTab = document.getElementById('tabQueue');
+        if (queueTab.classList.contains('active')) {
+          switchTab('search', false);
+          return;
+        }
+
+        // Si ya estamos en la página principal y se vuelve a dar atrás, actualizamos/recargamos la vista sin salir
+        window.location.reload();
       });
 
       if (!sessionStorage.getItem('visited_live')) {
@@ -1108,7 +1123,8 @@
       }
     }
 
-    function switchTab(tabName) {
+    // Función modificada para gestionar el historial al cambiar de pestaña
+    function switchTab(tabName, pushState = true) {
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
       document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
 
@@ -1116,10 +1132,16 @@
         document.querySelectorAll('.tab-btn')[0].classList.add('active');
         document.getElementById('tabSearch').classList.add('active');
         document.body.classList.remove('queue-tab-active');
+        if (pushState) {
+          history.pushState({ page: 'search' }, '', '');
+        }
       } else {
         document.querySelectorAll('.tab-btn')[1].classList.add('active');
         document.getElementById('tabQueue').classList.add('active');
         document.body.classList.add('queue-tab-active');
+        if (pushState) {
+          history.pushState({ page: 'queue' }, '', '');
+        }
       }
     }
 
@@ -1488,7 +1510,6 @@
       const musicQuery = encodeURIComponent(currentSearchTerm);
       document.getElementById('modalSpotifyBtn').href = `https://open.spotify.com/search/${musicQuery}`;
       
-      // Empujamos el estado al historial para cerrar el modal limpiamente con el botón atrás sin salir de la app
       history.pushState({ modalOpen: true }, '', '');
       document.getElementById('imageModal').style.display = 'flex';
     }
