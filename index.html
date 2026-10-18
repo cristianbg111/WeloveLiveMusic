@@ -137,7 +137,6 @@
       touch-action: manipulation;
     }
 
-    /* NUEVO DISEÑO DESTACADO PARA LAS INSTRUCCIONES */
     .instructions-box {
       background: var(--instructions-bg);
       border: 1px solid var(--instructions-border);
@@ -166,7 +165,6 @@
       font-weight: 500;
     }
 
-    /* Tabs estilo cabina */
     .tabs {
       display: flex;
       gap: 8px;
@@ -311,7 +309,6 @@
     
     .status-msg { text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 16px 0; }
 
-    /* Queue styles */
     .queue-header {
       display: flex;
       justify-content: space-between;
@@ -388,7 +385,6 @@
       -webkit-appearance: none;
     }
 
-    /* Paginación situada arriba de la lista */
     .pagination {
       display: flex;
       justify-content: space-between;
@@ -437,7 +433,6 @@
     }
     .visitor-counter span { color: var(--accent); font-weight: 800; }
 
-    /* Modales */
     .modal {
       display: none;
       position: fixed;
@@ -521,7 +516,6 @@
     .history-item-title { font-weight: 700; font-size: 0.88rem; color: var(--accent); }
     .history-item-date { font-size: 0.7rem; color: var(--text-muted); margin-bottom: 6px; }
 
-    /* Estilos específicos para impresión / PDF */
     @media print {
       body * { visibility: hidden; }
       #tabQueue, #tabQueue * { visibility: visible; }
@@ -539,7 +533,6 @@
       <button class="theme-btn" id="themeToggle">☀️ Modo Claro</button>
     </div>
     
-    <!-- BLOQUE INSTRUCTIVO DESTACADO -->
     <div class="instructions-box">
       <div class="instructions-title">🎧 ¡Envía tus peticiones al DJ!</div>
       <div class="instructions-text">
@@ -580,7 +573,6 @@
         </div>
       </div>
 
-      <!-- Paginación en la parte superior -->
       <div id="queuePagination" class="pagination" style="display: none;">
         <button class="page-btn" id="prevPageBtn" onclick="changePage(-1)">⬅️ Anterior</button>
         <span class="page-info" id="pageInfoText">Pág 1/1</span>
@@ -1102,6 +1094,7 @@
       }
 
       queueResults.innerHTML = currentItems.map((item, index) => {
+        // CORRECCIÓN DEL ÍNDICE ABSOLUTO PARA QUE LA 10 APAREZCA CORRECTAMENTE
         const absoluteIndex = startIndex + index + 1;
         const safeTitle = (item.title || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
         const safeArtist = (item.artist || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
