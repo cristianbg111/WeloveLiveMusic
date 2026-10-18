@@ -171,6 +171,42 @@
       touch-action: manipulation;
     }
 
+    /* BANNER DE ESTADO DE PETICIONES (NEÓN) */
+    .neon-banner {
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+      flex-shrink: 0;
+      transition: all 0.3s ease;
+    }
+
+    .neon-banner.enabled {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid var(--success);
+      color: var(--success);
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+    }
+
+    .neon-banner.disabled {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid var(--danger);
+      color: var(--danger);
+      box-shadow: 0 0 12px rgba(239, 68, 68, 0.6);
+      animation: pulseNeon 2s infinite;
+    }
+
+    @keyframes pulseNeon {
+      0% { box-shadow: 0 0 5px rgba(239, 68, 68, 0.4); }
+      50% { box-shadow: 0 0 18px rgba(239, 68, 68, 0.8); }
+      100% { box-shadow: 0 0 5px rgba(239, 68, 68, 0.4); }
+    }
+
     .instructions-box {
       background: var(--instructions-bg);
       border: 1px solid var(--instructions-border);
@@ -365,6 +401,12 @@
       box-shadow: 0 0 6px var(--glow-accent);
       -webkit-appearance: none;
     }
+    .request-btn:disabled {
+      background: var(--tag-bg);
+      color: var(--text-muted);
+      cursor: not-allowed;
+      box-shadow: none;
+    }
 
     .badge-year {
       background: var(--tag-bg);
@@ -394,7 +436,7 @@
       flex-wrap: wrap;
     }
 
-    .dj-mode-btn, .save-list-btn, .history-list-btn, .pdf-btn, .clear-queue-btn {
+    .dj-mode-btn, .toggle-requests-btn, .save-list-btn, .history-list-btn, .pdf-btn, .clear-queue-btn {
       padding: 4px 7px;
       border-radius: 6px;
       font-size: 0.68rem;
@@ -406,6 +448,10 @@
 
     .dj-mode-btn { background: var(--badge-bg); color: #ffffff; border: none; }
     .dj-mode-btn.active { background: var(--danger); box-shadow: 0 0 8px rgba(239, 68, 68, 0.6); }
+    
+    .toggle-requests-btn { background: var(--success); color: #ffffff; border: none; }
+    .toggle-requests-btn.off { background: var(--danger); }
+
     .save-list-btn { background: var(--success); color: #ffffff; border: none; }
     .history-list-btn { background: var(--count-bg); color: #000000; border: none; }
     .pdf-btn { background: var(--success); color: #ffffff; border: none; display: flex; align-items: center; gap: 3px; }
@@ -658,7 +704,7 @@
         max-height: none !important;
         overflow: visible !important;
       }
-      .queue-actions, .theme-btn, .tabs, .search-box, .footer, .pagination, .delete-song-btn, .dj-row-controls, .brand-header { display: none !important; }
+      .queue-actions, .theme-btn, .tabs, .search-box, .footer, .pagination, .delete-song-btn, .dj-row-controls, .neon-banner, .brand-header { display: none !important; }
       .results {
         max-height: none !important;
         overflow: visible !important;
@@ -686,6 +732,9 @@
       </div>
     </div>
     
+    <!-- BANNER DE NEÓN DE ESTADO DE PETICIONES -->
+    <div id="neonBanner" class="neon-banner enabled">🟢 Peticiones de canciones: ABIERTAS</div>
+
     <div class="instructions-box">
       <div class="instructions-title">🎧 ¡Envía tus peticiones al DJ!</div>
       <div class="instructions-text">
@@ -719,6 +768,7 @@
         <span class="queue-title" id="queueHeaderTitle">Lista Peticiones</span>
         <div class="queue-actions">
           <button class="dj-mode-btn" id="djModeToggleBtn" onclick="toggleDjMode()">🎧 DJ</button>
+          <button class="toggle-requests-btn" id="toggleRequestsBtn" style="display: none;" onclick="toggleRequestsState()">🔒 Peticiones: ON</button>
           <button class="save-list-btn" id="saveListBtn" style="display: none;" onclick="saveCurrentList()">💾 Guardar</button>
           <button class="history-list-btn" id="historyListBtn" style="display: none;" onclick="openHistoryModal()">📂 Hist.</button>
           <button class="pdf-btn" onclick="exportQueueToPDF()">📄 PDF</button>
@@ -823,6 +873,7 @@
     const db = firebase.database();
     const queueRef = db.ref('welove_live_music_queue');
     const historyRef = db.ref('welove_live_music_history');
+    const settingsRef = db.ref('welove_live_music_settings/requestsOpen');
     const statsRef = db.ref('welove_live_music_stats/visits');
 
     let debounceTimer;
@@ -837,7 +888,8 @@
     const itemsPerPage = 25;
     
     let isDjModeActive = false;
-    const CORRECT_PASSWORD_ENCODED = "amJkZWVqYXkx"; 
+    let areRequestsOpen = true; // Por defecto abiertas
+    const CORRECT_PASSWORD_ENCODED = "amJkZWVqYXkx"; // "jbdeejay1"
 
     document.addEventListener('DOMContentLoaded', () => {
       loadHistory();
@@ -863,17 +915,14 @@
       document.getElementById('imageModal').addEventListener('click', closeModal);
       document.getElementById('historyModal').addEventListener('click', closeHistoryModal);
       document.getElementById('modalTidalBtn').addEventListener('click', openTidalApp);
-      document.getElementById('modalYoutubeBtn',).addEventListener('click', openYoutubeApp);
+      document.getElementById('modalYoutubeBtn').addEventListener('click', openYoutubeApp);
 
-      // Inicializamos el historial en la página principal
       history.replaceState({ page: 'search' }, '', '');
 
-      // Control inteligente del botón "Atrás" / Gesto del navegador
       window.addEventListener('popstate', (event) => {
         const modal = document.getElementById('imageModal');
         const historyModal = document.getElementById('historyModal');
         
-        // Si hay un modal abierto, lo cerramos
         if (historyModal.style.display === 'flex' && historyModal.dataset.viewingList === 'true') {
           openHistoryModal();
           return;
@@ -889,14 +938,12 @@
           return;
         }
 
-        // Si estamos en la pestaña de peticiones, al dar atrás volvemos a la pestaña de búsqueda principal
         const queueTab = document.getElementById('tabQueue');
         if (queueTab.classList.contains('active')) {
           switchTab('search', false);
           return;
         }
 
-        // Si ya estamos en la página principal y se vuelve a dar atrás, actualizamos/recargamos la vista sin salir
         window.location.reload();
       });
 
@@ -914,6 +961,13 @@
         const data = snapshot.val();
         processQueueData(data);
       });
+
+      // Escuchar el estado de las peticiones en tiempo real desde Firebase
+      settingsRef.on('value', (snapshot) => {
+        const isOpen = snapshot.val();
+        areRequestsOpen = (isOpen !== null) ? isOpen : true;
+        updateNeonBannerUI();
+      });
     });
 
     async function toggleDjMode() {
@@ -927,6 +981,7 @@
           isDjModeActive = true;
           document.getElementById('djModeToggleBtn').textContent = "🚪 Salir";
           document.getElementById('djModeToggleBtn').classList.add('active');
+          document.getElementById('toggleRequestsBtn').style.display = 'inline-block';
           document.getElementById('saveListBtn').style.display = 'inline-block';
           document.getElementById('historyListBtn').style.display = 'inline-block';
           document.getElementById('clearQueueBtn').style.display = 'inline-block';
@@ -940,6 +995,7 @@
         isDjModeActive = false;
         document.getElementById('djModeToggleBtn').textContent = "🎧 DJ";
         document.getElementById('djModeToggleBtn').classList.remove('active');
+        document.getElementById('toggleRequestsBtn').style.display = 'none';
         document.getElementById('saveListBtn').style.display = 'none';
         document.getElementById('historyListBtn').style.display = 'none';
         document.getElementById('clearQueueBtn').style.display = 'none';
@@ -947,6 +1003,48 @@
         alert("Modo DJ desactivado.");
         renderQueuePage();
       }
+    }
+
+    // Función para activar o desactivar las peticiones globalmente
+    function toggleRequestsState() {
+      if (!isDjModeActive) return;
+      const newState = !areRequestsOpen;
+      settingsRef.set(newState).then(() => {
+        alert(newState ? "¡Peticiones ABIERTAS para el público! 🟢" : "¡Peticiones DESACTIVADAS para el público! 🔴");
+      });
+    }
+
+    // Actualiza el banner de neón en todas las pantallas y bloquea/desbloquea los botones de pedir
+    function updateNeonBannerUI() {
+      const banner = document.getElementById('neonBanner');
+      const toggleBtn = document.getElementById('toggleRequestsBtn');
+
+      if (areRequestsOpen) {
+        banner.className = "neon-banner enabled";
+        banner.textContent = "🟢 Peticiones de canciones: ABIERTAS";
+        if (toggleBtn) {
+          toggleBtn.textContent = "🔒 Peticiones: ON";
+          toggleBtn.classList.remove('off');
+        }
+      } else {
+        banner.className = "neon-banner disabled";
+        banner.textContent = "⛔ PETICIONES DESACTIVADAS TEMPORALMENTE";
+        if (toggleBtn) {
+          toggleBtn.textContent = "🔓 Peticiones: OFF";
+          toggleBtn.classList.add('off');
+        }
+      }
+
+      // Actualizar dinámicamente los botones "Pedir" de los resultados de búsqueda activos si los hay
+      document.querySelectorAll('.request-btn').forEach(btn => {
+        if (!areRequestsOpen) {
+          btn.disabled = true;
+          btn.title = "Las peticiones están desactivadas por el DJ";
+        } else {
+          btn.disabled = false;
+          btn.title = "";
+        }
+      });
     }
 
     function saveCurrentList() {
@@ -1123,7 +1221,6 @@
       }
     }
 
-    // Función modificada para gestionar el historial al cambiar de pestaña
     function switchTab(tabName, pushState = true) {
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
       document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
@@ -1263,6 +1360,9 @@
         const safeTitle = (song.trackName || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
         const safeArtist = (song.artistName || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
 
+        const disabledAttr = !areRequestsOpen ? 'disabled' : '';
+        const btnTitleAttr = !areRequestsOpen ? 'title="Las peticiones están desactivadas por el DJ"' : '';
+
         return `
           <div class="song-item">
             <img src="${artwork100}" alt="${song.trackName}" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}')">
@@ -1272,7 +1372,7 @@
             </div>
             <div class="action-buttons">
               <span class="badge-year">${year}</span>
-              <button class="request-btn" onclick="requestSong('${safeTitle}', '${safeArtist}', '${artwork100}', '${previewAudio}', '${genre}', '${year}')">➕ Pedir</button>
+              <button class="request-btn" ${disabledAttr} ${btnTitleAttr} onclick="requestSong('${safeTitle}', '${safeArtist}', '${artwork100}', '${previewAudio}', '${genre}', '${year}')">➕ Pedir</button>
             </div>
           </div>
         `;
@@ -1280,6 +1380,11 @@
     }
 
     function requestSong(title, artist, artwork, previewAudio, genre, year) {
+      if (!areRequestsOpen) {
+        alert("⚠️ En este momento las peticiones están desactivadas por el DJ.");
+        return;
+      }
+
       let requesterName = prompt("Introduce tu nombre o alias para la petición:");
       if (!requesterName || requesterName.trim() === "") return;
       requesterName = requesterName.trim();
