@@ -8,6 +8,9 @@
  <meta name="theme-color" content="#090a0f" />  
  <title>WE LOVE LIVE MUSIC</title>  
    
+<!-- PWA Manifest & Icons -->  
+ <link rel="manifest" href="manifest.json">  
+  
 <!-- Firebase SDK (Compat) -->  
  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>  
  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>  
@@ -255,6 +258,29 @@
  border-bottom: 1px solid var(--border);  
  padding-bottom: 6px;  
  flex-shrink: 0;  
+ position: relative;  
+ }  
+  
+ .queue-tab-btn {  
+ position: relative;  
+ }  
+ .queue-tab-btn.has-new::after {  
+ content: '';  
+ position: absolute;  
+ top: 4px;  
+ right: 6px;  
+ width: 8px;  
+ height: 8px;  
+ background: var(--danger);  
+ border-radius: 50%;  
+ box-shadow: 0 0 6px var(--danger);  
+ animation: pulseNotification 1.5s infinite;  
+ }  
+  
+ @keyframes pulseNotification {  
+ 0% { transform: scale(0.95); opacity: 0.8; }  
+ 50% { transform: scale(1.3); opacity: 1; }  
+ 100% { transform: scale(0.95); opacity: 0.8; }  
  }  
   
  .tab-btn {  
@@ -391,7 +417,7 @@
  flex-shrink: 0;  
  }  
   
- .request-btn {  
+ .request-btn, .vote-btn {  
  background: var(--accent);  
  color: var(--accent-text);  
  border: none;  
@@ -404,7 +430,12 @@
  box-shadow: 0 0 6px var(--glow-accent);  
  -webkit-appearance: none;  
  }  
- .request-btn:disabled {  
+ .vote-btn {  
+ background: var(--count-bg);  
+ color: #000;  
+ box-shadow: 0 0 6px rgba(245, 158, 11, 0.4);  
+ }  
+ .request-btn:disabled, .vote-btn:disabled {  
  background: var(--tag-bg);  
  color: var(--text-muted);  
  cursor: not-allowed;  
@@ -874,7 +905,7 @@
   
  <div class="tabs">  
  <button class="tab-btn highlight-animated active" onclick="switchTab('search', true)">✨ Busca y Añade</button>  
- <button class="tab-btn" onclick="switchTab('queue', true)">📻 Lista Peticiones</button>  
+ <button class="tab-btn queue-tab-btn" id="queueTabBtn" onclick="switchTab('queue', true)">📻 Lista Peticiones</button>  
  </div>  
   
  <div id="tabSearch" class="tab-content active">  
@@ -1043,6 +1074,10 @@
  let areRequestsOpen = true;  
  const CORRECT_PASSWORD_ENCODED = "amJkZWVqYXkx";  
   
+ // Control de notificaciones visuales para el DJ  
+ let lastQueueLength = 0;  
+ let hasUnreadRequests = false;  
+  
  document.addEventListener('DOMContentLoaded', () => {  
  loadHistory();  
  const savedTheme = localStorage.getItem('theme') || 'dark';  
@@ -1145,9 +1180,13 @@
  }  
  });  
 
- // --- CONTROLADOR DE MODO STANDBY (ARRANCA ACTIVO Y 15 SEGUNDOS DE INACTIVIDAD) ---  
+ // --- CONTROLADOR DE MODO STANDBY DINÁMICO (30s Público / 60s Modo DJ) ---  
  let standbyTimer;  
- const standbyDelay = 15000; // 15 segundos  
+  
+ function getStandbyDelay() {  
+ // 60 segundos si está el Modo DJ activo, de lo contrario 30 segundos  
+ return isDjModeActive ? 60000 : 30000;  
+ }  
   
  function showStandby() {  
  const standbyScreen = document.getElementById('standby-screen');  
@@ -1166,7 +1205,7 @@
   
  function resetStandbyTimer() {  
  clearTimeout(standbyTimer);  
- standbyTimer = setTimeout(showStandby, standbyDelay);  
+ standbyTimer = setTimeout(showStandby, getStandbyDelay());  
  }  
   
  ['click', 'mousemove', 'touchstart', 'keypress', 'scroll'].forEach(event => {  
@@ -1191,7 +1230,8 @@
  document.getElementById('historyListBtn').style.display = 'inline-block';  
  document.getElementById('clearQueueBtn').style.display = 'inline-block';  
  document.getElementById('queueHeaderTitle').textContent = "Control DJ";  
- alert("¡Modo DJ activado con éxito! 🎧");  
+ alert("¡Modo DJ activado con éxito! 🎧 (Standby ajustado a 60s)");  
+ resetStandbyTimer(); // Reiniciar el temporizador con el nuevo tiempo de DJ  
  renderQueuePage();  
  } else {  
  alert("Contraseña incorrecta.");  
@@ -1205,7 +1245,8 @@
  document.getElementById('historyListBtn').style.display = 'none';  
  document.getElementById('clearQueueBtn').style.display = 'none';  
  document.getElementById('queueHeaderTitle').textContent = "Lista Peticiones";  
- alert("Modo DJ desactivado.");  
+ alert("Modo DJ desactivado. (Standby ajustado a 30s)");  
+ resetStandbyTimer(); // Reiniciar el temporizador al tiempo normal  
  renderQueuePage();  
  }  
  }  
@@ -1438,6 +1479,10 @@
  document.querySelectorAll('.tab-btn')[1].classList.add('active');  
  document.getElementById('tabQueue').classList.add('active');  
  document.body.classList.add('queue-tab-active');  
+   
+ hasUnreadRequests = false;  
+ document.getElementById('queueTabBtn').classList.remove('has-new');  
+  
  if (pushState) {  
  history.pushState({ page: 'queue' }, '', '');  
  }  
@@ -1565,6 +1610,17 @@
  const disabledAttr = !areRequestsOpen ? 'disabled' : '';  
  const btnTitleAttr = !areRequestsOpen ? 'title="Las peticiones están desactivadas por el DJ"' : '';  
   
+ const songKey = btoa(unescape(encodeURIComponent(song.trackName + " - " + song.artistName)))  
+ .replace(/[/+:=]/g, '_');  
+ const existingQueueItem = globalQueueItems.find(item => item.id === songKey);  
+   
+ let actionButtonHtml = '';  
+ if (existingQueueItem) {  
+ actionButtonHtml = `<button class="vote-btn" ${disabledAttr} ${btnTitleAttr} onclick="voteSong('${songKey}', '${safeTitle}')">🔥 Votar (+1)</button>`;  
+ } else {  
+ actionButtonHtml = `<button class="request-btn" ${disabledAttr} ${btnTitleAttr} onclick="requestSong('${safeTitle}', '${safeArtist}', '${artwork100}', '${previewAudio}', '${genre}', '${year}')">➕ Pedir</button>`;  
+ }  
+  
  return `  
  <div class="song-item">  
  <img src="${artwork100}" alt="${song.trackName}" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}')">  
@@ -1574,11 +1630,25 @@
  </div>  
  <div class="action-buttons">  
  <span class="badge-year">${year}</span>  
- <button class="request-btn" ${disabledAttr} ${btnTitleAttr} onclick="requestSong('${safeTitle}', '${safeArtist}', '${artwork100}', '${previewAudio}', '${genre}', '${year}')">➕ Pedir</button>  
+ ${actionButtonHtml}  
  </div>  
  </div>  
  `;  
  }).join('');  
+ }  
+  
+ function checkRateLimit() {  
+ const lastRequestTime = localStorage.getItem('last_request_timestamp');  
+ const now = Date.now();  
+ const cooldownTime = 15000;  
+  
+ if (lastRequestTime && (now - lastRequestTime < cooldownTime)) {  
+ const remainingSeconds = Math.ceil((cooldownTime - (now - lastRequestTime)) / 1000);  
+ alert(`⏳ Por favor, espera ${remainingSeconds} segundos antes de realizar otra petición.`);  
+ return false;  
+ }  
+ localStorage.setItem('last_request_timestamp', now);  
+ return true;  
  }  
   
  function requestSong(title, artist, artwork, previewAudio, genre, year) {  
@@ -1586,6 +1656,8 @@
  alert("⚠️ En este momento las peticiones están desactivadas por el DJ.");  
  return;  
  }  
+  
+ if (!checkRateLimit()) return;  
   
  let requesterName = prompt("Introduce tu nombre o alias para la petición:");  
  if (!requesterName || requesterName.trim() === "") return;  
@@ -1625,6 +1697,38 @@
  });  
   
  alert(`¡Petición enviada al DJ correctamente! 🎧🔥`);  
+ const query = document.getElementById('songInput').value.trim();  
+ if (query) executeSearch(query);  
+ }  
+  
+ function voteSong(songKey, title) {  
+ if (!areRequestsOpen) {  
+ alert("⚠️ En este momento las peticiones están desactivadas por el DJ.");  
+ return;  
+ }  
+  
+ if (!checkRateLimit()) return;  
+  
+ let voterName = prompt("Introduce tu nombre o alias para votar esta canción:");  
+ if (!voterName || voterName.trim() === "") return;  
+ voterName = voterName.trim();  
+  
+ const songRef = db.ref('welove_live_music_queue/' + songKey);  
+ songRef.once('value', (snapshot) => {  
+ if (snapshot.exists()) {  
+ const data = snapshot.val();  
+ const newCount = Number(data.count || 1) + 1;  
+ const updatedUsers = data.users ? `${data.users}, ${voterName}` : voterName;  
+  
+ songRef.update({  
+ count: newCount,  
+ users: updatedUsers  
+ });  
+ alert(`¡Voto sumado con éxito para "${title}"! 🔥`);  
+ const query = document.getElementById('songInput').value.trim();  
+ if (query) executeSearch(query);  
+ }  
+ });  
  }  
   
  function processQueueData(data) {  
@@ -1635,6 +1739,7 @@
  globalQueueItems = [];  
  queueResults.innerHTML = '<p class="status-msg">No hay peticiones en la sala todavía.</p>';  
  paginationDiv.style.display = 'none';  
+ lastQueueLength = 0;  
  return;  
  }  
   
@@ -1651,6 +1756,15 @@
  }  
  return Number(a.timestamp || 0) - Number(b.timestamp || 0);  
  });  
+  
+ if (items.length > lastQueueLength && lastQueueLength !== 0) {  
+ const queueTab = document.getElementById('tabQueue');  
+ if (!queueTab.classList.contains('active')) {  
+ hasUnreadRequests = true;  
+ document.getElementById('queueTabBtn').classList.add('has-new');  
+ }  
+ }  
+ lastQueueLength = items.length;  
   
  globalQueueItems = items;  
    
