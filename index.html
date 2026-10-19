@@ -718,7 +718,7 @@
  .history-actions { display: flex; gap: 6px; justify-content: flex-end; }  
  .history-view-btn { background: var(--badge-bg); color: #fff; border: none; padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; cursor: pointer; }  
   
- /* --- ESTILOS MODO STANDBY & EFECTOS VISUALES (OPTIMIZADO MÓVIL) --- */  
+ /* --- ESTILOS MODO STANDBY BLINDADO PARA MÓVILES --- */  
  #standby-screen {  
  position: fixed;  
  top: 0;  
@@ -729,17 +729,13 @@
  background: #05050a;  
  z-index: 9999;  
  display: none;  
- flex-direction: column;  
- justify-content: space-between;  
- align-items: center;  
  overflow: hidden;  
  cursor: pointer;  
  box-sizing: border-box;  
- padding: 16px 16px max(16px, env(safe-area-inset-bottom)) 16px;  
  }  
   
  #standby-screen.active {  
- display: flex;  
+ display: block;  
  }  
   
  .laser-background {  
@@ -779,16 +775,16 @@
  50% { opacity: 0.8; }  
  }  
   
- /* --- LOGO ESTÁTICO DE STANDBY (MÁS GRANDE Y CENTRADO) --- */  
+ /* --- LOGO GRANDE Y ABSOLUTO ARRIBA-CENTRO --- */  
  .standby-logo-container {  
- position: relative;  
- z-index: 2;  
- width: 220px;  
- max-width: 65vw;  
+ position: absolute;  
+ top: 8vh;  
+ left: 50%;  
+ transform: translateX(-50%);  
+ width: min(280px, 75vw);  
  height: auto;  
- margin-top: auto;  
- margin-bottom: auto;  
- flex-shrink: 0;  
+ z-index: 2;  
+ pointer-events: none;  
  filter: drop-shadow(0 0 20px rgba(236, 72, 153, 0.7));  
  }  
   
@@ -802,13 +798,16 @@
  display: block;  
  }  
   
+ /* --- TEXTOS CENTRALES --- */  
  .standby-content {  
- position: relative;  
+ position: absolute;  
+ top: 52%;  
+ left: 50%;  
+ transform: translate(-50%, -50%);  
+ width: 100%;  
+ padding: 0 16px;  
  z-index: 2;  
  text-align: center;  
- margin-top: auto;  
- margin-bottom: auto;  
- flex-shrink: 0;  
  }  
   
  .standby-title {  
@@ -834,19 +833,20 @@
  to { text-shadow: 0 0 20px #00f3ff, 0 0 30px #00f3ff, 0 0 50px #00f3ff; }  
  }  
   
+ /* --- VÚMETROS FIJOS ABAJO --- */  
  .equalizer-container {  
- position: relative;  
+ position: absolute;  
+ bottom: max(16px, env(safe-area-inset-bottom));  
+ left: 50%;  
+ transform: translateX(-50%);  
  z-index: 2;  
  display: flex;  
  align-items: flex-end;  
  justify-content: center;  
  gap: 5px;  
  height: 60px;  
- width: 100%;  
+ width: 90%;  
  max-width: 500px;  
- margin-top: auto;  
- margin-bottom: 10px;  
- flex-shrink: 0;  
  }  
   
  .eq-bar {  
@@ -1043,7 +1043,7 @@
  </div>  
  </div>  
   
- <!-- PANTALLA STANDBY INMERSIVA CON LOGO GRANDE CENTRADO Y VÚMETROS VISIBLES -->  
+ <!-- PANTALLA STANDBY INMERSIVA BLINDADA -->  
  <div id="standby-screen" class="active">  
  <div class="laser-background"></div>  
  <div class="strobe-overlay"></div>  
