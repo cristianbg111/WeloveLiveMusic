@@ -1179,11 +1179,11 @@
  }  
  });  
 
- // --- CONTROLADOR DE MODO STANDBY DINÁMICO (30s Público / 60s Modo DJ) ---  
+ // --- CONTROLADOR DE MODO STANDBY DINÁMICO (60s Público / 120s Modo DJ) ---  
  let standbyTimer;  
   
  function getStandbyDelay() {  
- return isDjModeActive ? 60000 : 30000;  
+ return isDjModeActive ? 120000 : 60000;  
  }  
   
  function showStandby() {  
@@ -1228,7 +1228,7 @@
  document.getElementById('historyListBtn').style.display = 'inline-block';  
  document.getElementById('clearQueueBtn').style.display = 'inline-block';  
  document.getElementById('queueHeaderTitle').textContent = "Control DJ";  
- alert("¡Modo DJ activado con éxito! 🎧 (Standby ajustado a 60s)");  
+ alert("¡Modo DJ activado con éxito! 🎧 (Standby ajustado a 120s)");  
  resetStandbyTimer();  
  renderQueuePage();  
  } else {  
@@ -1243,7 +1243,7 @@
  document.getElementById('historyListBtn').style.display = 'none';  
  document.getElementById('clearQueueBtn').style.display = 'none';  
  document.getElementById('queueHeaderTitle').textContent = "Lista Peticiones";  
- alert("Modo DJ desactivado. (Standby ajustado a 30s)");  
+ alert("Modo DJ desactivado. (Standby ajustado a 60s)");  
  resetStandbyTimer();  
  renderQueuePage();  
  }  
@@ -1731,7 +1731,7 @@
   
  // --- SISTEMA DE ALERTA Y VIBRACIÓN PARA EL DJ (SOLO MODO DJ) ---  
  function triggerDjAlert(reasonText) {  
- if (!isDjModeActive) return; // <--- Restringido exclusivamente al Modo DJ  
+ if (!isDjModeActive) return;  
 
  // 1. Vibración en móviles (Patrón: vibra 200ms, para 100ms, vibra 400ms)  
  if ('vibrate' in navigator) {  
@@ -1782,7 +1782,6 @@
  return Number(a.timestamp || 0) - Number(b.timestamp || 0);  
  });  
   
- // Detectar si entra una nueva canción o hay un voto fuerte para disparar la alerta del DJ  
  if (lastQueueLength !== 0) {  
  if (items.length > lastQueueLength) {  
  triggerDjAlert("Nueva petición");  
