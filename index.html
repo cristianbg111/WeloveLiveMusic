@@ -720,7 +720,7 @@
  .history-actions { display: flex; gap: 6px; justify-content: flex-end; }  
  .history-view-btn { background: var(--badge-bg); color: #fff; border: none; padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; cursor: pointer; }  
   
- /* --- ESTILOS PANTALLA STANDBY CON LOGO REBOTANDO DE FONDO Y VÚMETROS --- */  
+ /* --- ESTILOS PANTALLA STANDBY --- */  
  #standby-screen {  
  position: fixed;  
  top: 0;  
@@ -736,6 +736,7 @@
  box-sizing: border-box;  
  }  
   
+ /* INICIA VISIBLE DESDE EL PRIMER SEGUNDO */  
  #standby-screen.active {  
  display: block;  
  }  
@@ -784,7 +785,7 @@
  left: 0;  
  width: 180px;  
  height: auto;  
- z-index: 1; /* Detrás de los textos y vúmetros de standby */  
+ z-index: 1;  
  pointer-events: none;  
  opacity: 0.5;  
  filter: drop-shadow(0 0 18px rgba(236, 72, 153, 0.7));  
@@ -1049,8 +1050,8 @@
  </div>  
  </div>  
   
- <!-- PANTALLA STANDBY (CON LASER, VÚMETROS Y LOGO REBOTANDO DENTRO) -->  
- <div id="standby-screen">  
+ <!-- PANTALLA STANDBY (INICIA ACTIVA DESDE EL PRIMER SEGUNDO) -->  
+ <div id="standby-screen" class="active">  
  <div class="laser-background"></div>  
  <div class="strobe-overlay"></div>  
   
@@ -1190,6 +1191,9 @@
  areRequestsOpen = (isOpen !== null) ? isOpen : true;  
  updateNeonBannerUI();  
  });  
+
+ // INICIAR EL REBOTE DEL LOGO DESDE EL PRIMER SEGUNDO DE CARGA EN STANDBY
+ startBouncingLogo();  
  });  
   
  // --- WAKE LOCK API (EVITAR APAGADO DE PANTALLA EN TODA LA APP) ---  
