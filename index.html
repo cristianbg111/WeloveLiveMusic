@@ -734,7 +734,7 @@
  overflow: hidden;  
  cursor: pointer;  
  box-sizing: border-box;  
- padding: 40px;  
+ padding: 30px;  
  }  
   
  #standby-screen.active {  
@@ -778,6 +778,27 @@
  50% { opacity: 0.8; }  
  }  
   
+ /* --- LOGO FLOTANTE DE STANDBY --- */  
+ .standby-logo-container {  
+ position: absolute;  
+ width: 180px;  
+ height: auto;  
+ z-index: 3;  
+ pointer-events: none;  
+ will-change: transform;  
+ filter: drop-shadow(0 0 15px rgba(236, 72, 153, 0.6));  
+ }  
+  
+ .standby-logo-container img {  
+ width: 100%;  
+ height: auto;  
+ object-fit: contain;  
+ border-radius: 10px;  
+ border: 1px solid rgba(255, 255, 255, 0.2);  
+ background: #000;  
+ display: block;  
+ }  
+  
  .standby-content {  
  position: relative;  
  z-index: 2;  
@@ -786,18 +807,18 @@
  }  
   
  .standby-title {  
- font-size: 3.5rem;  
+ font-size: 2.8rem;  
  font-weight: 900;  
  color: #fff;  
  text-transform: uppercase;  
  text-shadow: 0 0 10px #ff007f, 0 0 20px #ff007f, 0 0 40px #ff007f, 0 0 80px #ff007f;  
- letter-spacing: 4px;  
- margin-bottom: 15px;  
+ letter-spacing: 3px;  
+ margin-bottom: 12px;  
  animation: neonGlowStandby 2s ease-in-out infinite alternate;  
  }  
   
  .standby-subtitle {  
- font-size: 1.5rem;  
+ font-size: 1.3rem;  
  color: #00f3ff;  
  text-shadow: 0 0 8px #00f3ff;  
  letter-spacing: 2px;  
@@ -815,7 +836,7 @@
  align-items: flex-end;  
  justify-content: center;  
  gap: 8px;  
- height: 120px;  
+ height: 100px;  
  width: 100%;  
  max-width: 800px;  
  }  
@@ -841,7 +862,7 @@
   
  @keyframes bounceEq {  
  0% { height: 10px; opacity: 0.4; }  
- 100% { height: 100px; opacity: 1; box-shadow: 0 0 20px #ff007f; }  
+ 100% { height: 90px; opacity: 1; box-shadow: 0 0 20px #ff007f; }  
  }  
   
  @media print {  
@@ -1014,10 +1035,14 @@
  </div>  
  </div>  
   
- <!-- PANTALLA STANDBY INMERSIVA CON EFECTOS VISUALES (ARRANCA ACTIVA) -->  
+ <!-- PANTALLA STANDBY INMERSIVA CON LOGO REBOTANDO -->  
  <div id="standby-screen" class="active">  
  <div class="laser-background"></div>  
  <div class="strobe-overlay"></div>  
+  
+ <div class="standby-logo-container" id="standbyLogo">  
+ <img src="logo.jpg" alt="Logo Standby">  
+ </div>  
    
  <div></div>  
    
@@ -1155,6 +1180,43 @@
  });  
  });  
   
+ // --- ANIMACIÓN DE LOGO REBOTANDO EN STANDBY ---  
+ let logoAnimId = null;  
+ let posX = 50, posY = 50;  
+ let velX = 1.5, velY = 1.2;  
+
+ function startLogoBounce() {  
+ const logoEl = document.getElementById('standbyLogo');  
+ if (!logoEl) return;  
+
+ function frame() {  
+ const screenWidth = window.innerWidth;  
+ const screenHeight = window.innerHeight;  
+ const logoWidth = logoEl.offsetWidth || 180;  
+ const logoHeight = logoEl.offsetHeight || 90;  
+
+ posX += velX;  
+ posY += velY;  
+
+ if (posX <= 10) { posX = 10; velX *= -1; }  
+ if (posX + logoWidth >= screenWidth - 10) { posX = screenWidth - logoWidth - 10; velX *= -1; }  
+ if (posY <= 10) { posY = 10; velY *= -1; }  
+ if (posY + logoHeight >= screenHeight - 10) { posY = screenHeight - logoHeight - 10; velY *= -1; }  
+
+ logoEl.style.transform = `translate(${posX}px, ${posY}px)`;  
+ logoAnimId = requestAnimationFrame(frame);  
+ }  
+
+ cancelAnimationFrame(logoAnimId);  
+ posX = Math.random() * (window.innerWidth - 200);  
+ posY = Math.random() * (window.innerHeight - 200);  
+ logoAnimId = requestAnimationFrame(frame);  
+ }  
+
+ function stopLogoBounce() {  
+ cancelAnimationFrame(logoAnimId);  
+ }  
+  
  // --- WAKE LOCK API (EVITAR APAGADO DE PANTALLA) ---  
  let wakeLock = null;  
 
@@ -1179,17 +1241,18 @@
  }  
  });  
 
- // --- CONTROLADOR DE MODO STANDBY DINÁMICO (60s Público / 120s Modo DJ) ---  
+ // --- CONTROLADOR DE MODO STANDBY DINÁMICO (50s Público / 120s Modo DJ) ---  
  let standbyTimer;  
   
  function getStandbyDelay() {  
- return isDjModeActive ? 120000 : 60000;  
+ return isDjModeActive ? 120000 : 50000;  
  }  
   
  function showStandby() {  
  const standbyScreen = document.getElementById('standby-screen');  
  if (standbyScreen) {  
  standbyScreen.classList.add('active');  
+ startLogoBounce();  
  }  
  }  
   
@@ -1197,6 +1260,7 @@
  const standbyScreen = document.getElementById('standby-screen');  
  if (standbyScreen && standbyScreen.classList.contains('active')) {  
  standbyScreen.classList.remove('active');  
+ stopLogoBounce();  
  }  
  resetStandbyTimer();  
  }  
@@ -1243,7 +1307,7 @@
  document.getElementById('historyListBtn').style.display = 'none';  
  document.getElementById('clearQueueBtn').style.display = 'none';  
  document.getElementById('queueHeaderTitle').textContent = "Lista Peticiones";  
- alert("Modo DJ desactivado. (Standby ajustado a 60s)");  
+ alert("Modo DJ desactivado. (Standby ajustado a 50s)");  
  resetStandbyTimer();  
  renderQueuePage();  
  }  
