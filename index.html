@@ -110,7 +110,7 @@
  flex-direction: column;  
  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5), 0 0 20px var(--glow-accent);  
  margin: auto;  
- z-index: 2; /* Por encima del logo rebotando de fondo */  
+ z-index: 2;  
  position: relative;  
  }  
   
@@ -720,32 +720,7 @@
  .history-actions { display: flex; gap: 6px; justify-content: flex-end; }  
  .history-view-btn { background: var(--badge-bg); color: #fff; border: none; padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; cursor: pointer; }  
   
- /* --- LOGO REBOTANTE GENERAL EN SEGUNDO PLANO (VISIBLE SIEMPRE EN TODA LA APP) --- */  
- #bouncing-logo {  
- position: fixed;  
- top: 0;  
- left: 0;  
- width: 180px;  
- height: auto;  
- z-index: 1; /* Detrás de la tarjeta principal */  
- pointer-events: none;  
- opacity: 0.4; /* Semi-transparente elegante */  
- filter: drop-shadow(0 0 18px rgba(236, 72, 153, 0.7));  
- will-change: transform;  
- display: block; /* Visible desde el inicio en pantalla normal y standby */  
- }  
-  
- #bouncing-logo img {  
- width: 100%;  
- height: auto;  
- object-fit: contain;  
- border-radius: 12px;  
- border: 1px solid rgba(255, 255, 255, 0.25);  
- background: #000;  
- display: block;  
- }  
-  
- /* --- ESTILOS MODO STANDBY --- */  
+ /* --- ESTILOS PANTALLA STANDBY CON LOGO REBOTANDO DE FONDO Y VÚMETROS --- */  
  #standby-screen {  
  position: fixed;  
  top: 0;  
@@ -802,7 +777,32 @@
  50% { opacity: 0.8; }  
  }  
   
- /* --- TEXTOS CENTRALES (PRIMER PLANO STANDBY) --- */  
+ /* --- LOGO REBOTANTE DENTRO DE LA PANTALLA STANDBY --- */  
+ #bouncing-logo {  
+ position: absolute;  
+ top: 0;  
+ left: 0;  
+ width: 180px;  
+ height: auto;  
+ z-index: 1; /* Detrás de los textos y vúmetros de standby */  
+ pointer-events: none;  
+ opacity: 0.5;  
+ filter: drop-shadow(0 0 18px rgba(236, 72, 153, 0.7));  
+ will-change: transform;  
+ display: none;  
+ }  
+  
+ #bouncing-logo img {  
+ width: 100%;  
+ height: auto;  
+ object-fit: contain;  
+ border-radius: 12px;  
+ border: 1px solid rgba(255, 255, 255, 0.25);  
+ background: #000;  
+ display: block;  
+ }  
+  
+ /* --- TEXTOS CENTRALES STANDBY --- */  
  .standby-content {  
  position: absolute;  
  top: 50%;  
@@ -838,7 +838,7 @@
  to { text-shadow: 0 0 20px #00f3ff, 0 0 30px #00f3ff, 0 0 50px #00f3ff; }  
  }  
   
- /* --- VÚMETROS FIJOS ABAJO (PRIMER PLANO STANDBY) --- */  
+ /* --- VÚMETROS FIJOS ABAJO STANDBY --- */  
  .equalizer-container {  
  position: absolute;  
  bottom: max(16px, env(safe-area-inset-bottom));  
@@ -899,7 +899,7 @@
  max-height: none !important;  
  overflow: visible !important;  
  }  
- .queue-actions, .theme-btn, .tabs, .search-box, .footer, .pagination, .delete-song-btn, .dj-row-controls, .neon-banner, .brand-header, #standby-screen, #bouncing-logo { display: none !important; }  
+ .queue-actions, .theme-btn, .tabs, .search-box, .footer, .pagination, .delete-song-btn, .dj-row-controls, .neon-banner, .brand-header, #standby-screen { display: none !important; }  
  .results {  
  max-height: none !important;  
  overflow: visible !important;  
@@ -916,11 +916,6 @@
  </style>  
 </head>  
 <body>  
-
- <!-- LOGO REBOTANTE EN SEGUNDO PLANO (ACTIVO DESDE EL INICIO EN TODA LA APP) -->  
- <div id="bouncing-logo">  
- <img src="logo.jpg" alt="Logo Rebotando">  
- </div>  
   
  <div class="card">  
  <div class="brand-header">  
@@ -1054,10 +1049,14 @@
  </div>  
  </div>  
   
- <!-- PANTALLA STANDBY -->  
+ <!-- PANTALLA STANDBY (CON LASER, VÚMETROS Y LOGO REBOTANDO DENTRO) -->  
  <div id="standby-screen">  
  <div class="laser-background"></div>  
  <div class="strobe-overlay"></div>  
+  
+ <div id="bouncing-logo">  
+ <img src="logo.jpg" alt="Logo Rebotando">  
+ </div>  
    
  <div class="standby-content">  
  <div class="standby-title">We LOVE Live Music</div>  
@@ -1191,9 +1190,6 @@
  areRequestsOpen = (isOpen !== null) ? isOpen : true;  
  updateNeonBannerUI();  
  });  
-
- // INICIAR EL REBOTE DEL LOGO DESDE EL PRIMER SEGUNDO DE CARGA
- startBouncingLogo();  
  });  
   
  // --- WAKE LOCK API (EVITAR APAGADO DE PANTALLA EN TODA LA APP) ---  
@@ -1233,6 +1229,7 @@
  const standbyScreen = document.getElementById('standby-screen');  
  if (standbyScreen) {  
  standbyScreen.classList.add('active');  
+ startBouncingLogo();  
  }  
  }  
   
@@ -1240,6 +1237,7 @@
  const standbyScreen = document.getElementById('standby-screen');  
  if (standbyScreen && standbyScreen.classList.contains('active')) {  
  standbyScreen.classList.remove('active');  
+ stopBouncingLogo();  
  }  
  resetStandbyTimer();  
  }  
@@ -1255,7 +1253,7 @@
   
  resetStandbyTimer();  
 
- // --- MOTOR DE REBOTE CONTINUO (ACTIVO SIEMPRE EN SEGUNDO PLANO) ---  
+ // --- MOTOR DE REBOTE PARA EL LOGO EN STANDBY ---  
  let bounceAnimId = null;  
  let posX = 120, posY = 120;  
  let speedX = 2.4, speedY = 1.9;  
@@ -1264,6 +1262,7 @@
  const logo = document.getElementById('bouncing-logo');  
  if (!logo) return;  
   
+ logo.style.display = 'block';  
  const screenW = window.innerWidth;  
  const screenH = window.innerHeight;  
  const logoW = 180;  
@@ -1301,6 +1300,15 @@
   
  cancelAnimationFrame(bounceAnimId);  
  bounceAnimId = requestAnimationFrame(frame);  
+ }  
+
+ function stopBouncingLogo() {  
+ const logo = document.getElementById('bouncing-logo');  
+ if (logo) logo.style.display = 'none';  
+ if (bounceAnimId) {  
+ cancelAnimationFrame(bounceAnimId);  
+ bounceAnimId = null;  
+ }  
  }  
   
  async function toggleDjMode() {  
