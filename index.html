@@ -110,6 +110,8 @@
  flex-direction: column;  
  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5), 0 0 20px var(--glow-accent);  
  margin: auto;  
+ z-index: 2; /* Por encima del logo rebotando de fondo */  
+ position: relative;  
  }  
   
  .brand-header {  
@@ -718,7 +720,32 @@
  .history-actions { display: flex; gap: 6px; justify-content: flex-end; }  
  .history-view-btn { background: var(--badge-bg); color: #fff; border: none; padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; cursor: pointer; }  
   
- /* --- ESTILOS MODO STANDBY CON LOGO REBOTANTE EN SEGUNDO PLANO --- */  
+ /* --- LOGO REBOTANTE GENERAL EN SEGUNDO PLANO (VISIBLE SIEMPRE EN TODA LA APP) --- */  
+ #bouncing-logo {  
+ position: fixed;  
+ top: 0;  
+ left: 0;  
+ width: 180px;  
+ height: auto;  
+ z-index: 1; /* Detrás de la tarjeta principal */  
+ pointer-events: none;  
+ opacity: 0.4; /* Semi-transparente elegante */  
+ filter: drop-shadow(0 0 18px rgba(236, 72, 153, 0.7));  
+ will-change: transform;  
+ display: block; /* Visible desde el inicio en pantalla normal y standby */  
+ }  
+  
+ #bouncing-logo img {  
+ width: 100%;  
+ height: auto;  
+ object-fit: contain;  
+ border-radius: 12px;  
+ border: 1px solid rgba(255, 255, 255, 0.25);  
+ background: #000;  
+ display: block;  
+ }  
+  
+ /* --- ESTILOS MODO STANDBY --- */  
  #standby-screen {  
  position: fixed;  
  top: 0;  
@@ -775,32 +802,7 @@
  50% { opacity: 0.8; }  
  }  
   
- /* --- LOGO REBOTANTE EN SEGUNDO PLANO (TAMAÑO VISIBLE) --- */  
- #bouncing-logo {  
- position: absolute;  
- top: 0;  
- left: 0;  
- width: 180px;  
- height: auto;  
- z-index: 1; /* Detrás del texto y vúmetros */  
- pointer-events: none;  
- opacity: 0.5; /* Semi-transparente para segundo plano */  
- filter: drop-shadow(0 0 18px rgba(236, 72, 153, 0.7));  
- will-change: transform;  
- display: none; /* Se activa con JS en cuanto entra el standby */  
- }  
-  
- #bouncing-logo img {  
- width: 100%;  
- height: auto;  
- object-fit: contain;  
- border-radius: 12px;  
- border: 1px solid rgba(255, 255, 255, 0.25);  
- background: #000;  
- display: block;  
- }  
-  
- /* --- TEXTOS CENTRALES (PRIMER PLANO) --- */  
+ /* --- TEXTOS CENTRALES (PRIMER PLANO STANDBY) --- */  
  .standby-content {  
  position: absolute;  
  top: 50%;  
@@ -836,7 +838,7 @@
  to { text-shadow: 0 0 20px #00f3ff, 0 0 30px #00f3ff, 0 0 50px #00f3ff; }  
  }  
   
- /* --- VÚMETROS FIJOS ABAJO (PRIMER PLANO) --- */  
+ /* --- VÚMETROS FIJOS ABAJO (PRIMER PLANO STANDBY) --- */  
  .equalizer-container {  
  position: absolute;  
  bottom: max(16px, env(safe-area-inset-bottom));  
@@ -897,7 +899,7 @@
  max-height: none !important;  
  overflow: visible !important;  
  }  
- .queue-actions, .theme-btn, .tabs, .search-box, .footer, .pagination, .delete-song-btn, .dj-row-controls, .neon-banner, .brand-header, #standby-screen { display: none !important; }  
+ .queue-actions, .theme-btn, .tabs, .search-box, .footer, .pagination, .delete-song-btn, .dj-row-controls, .neon-banner, .brand-header, #standby-screen, #bouncing-logo { display: none !important; }  
  .results {  
  max-height: none !important;  
  overflow: visible !important;  
@@ -914,6 +916,11 @@
  </style>  
 </head>  
 <body>  
+
+ <!-- LOGO REBOTANTE EN SEGUNDO PLANO (ACTIVO DESDE EL INICIO EN TODA LA APP) -->  
+ <div id="bouncing-logo">  
+ <img src="logo.jpg" alt="Logo Rebotando">  
+ </div>  
   
  <div class="card">  
  <div class="brand-header">  
@@ -1047,14 +1054,10 @@
  </div>  
  </div>  
   
- <!-- PANTALLA STANDBY CON LOGO REBOTANTE EN SEGUNDO PLANO -->  
- <div id="standby-screen" class="active">  
+ <!-- PANTALLA STANDBY -->  
+ <div id="standby-screen">  
  <div class="laser-background"></div>  
  <div class="strobe-overlay"></div>  
-  
- <div id="bouncing-logo">  
- <img src="logo.jpg" alt="Logo Rebotando">  
- </div>  
    
  <div class="standby-content">  
  <div class="standby-title">We LOVE Live Music</div>  
@@ -1188,9 +1191,12 @@
  areRequestsOpen = (isOpen !== null) ? isOpen : true;  
  updateNeonBannerUI();  
  });  
+
+ // INICIAR EL REBOTE DEL LOGO DESDE EL PRIMER SEGUNDO DE CARGA
+ startBouncingLogo();  
  });  
   
- // --- WAKE LOCK API (EVITAR APAGADO DE PANTALLA) ---  
+ // --- WAKE LOCK API (EVITAR APAGADO DE PANTALLA EN TODA LA APP) ---  
  let wakeLock = null;  
 
  async function requestWakeLock() {  
@@ -1208,10 +1214,12 @@
  requestWakeLock();  
  });  
 
- document.addEventListener('visibilitychange', async () => {  
- if (wakeLock !== null && document.visibilityState === 'visible') {  
+ ['visibilitychange', 'touchstart', 'click', 'mousemove'].forEach(event => {  
+ document.addEventListener(event, async () => {  
+ if (wakeLock === null && document.visibilityState === 'visible') {  
  await requestWakeLock();  
  }  
+ });  
  });  
 
  // --- CONTROLADOR DE MODO STANDBY DINÁMICO (29s Público / 59s Modo DJ) ---  
@@ -1225,7 +1233,6 @@
  const standbyScreen = document.getElementById('standby-screen');  
  if (standbyScreen) {  
  standbyScreen.classList.add('active');  
- startBouncingLogo();  
  }  
  }  
   
@@ -1233,7 +1240,6 @@
  const standbyScreen = document.getElementById('standby-screen');  
  if (standbyScreen && standbyScreen.classList.contains('active')) {  
  standbyScreen.classList.remove('active');  
- stopBouncingLogo();  
  }  
  resetStandbyTimer();  
  }  
@@ -1249,7 +1255,7 @@
   
  resetStandbyTimer();  
 
- // --- MOTOR DE REBOTE INSTANTÁNEO ---  
+ // --- MOTOR DE REBOTE CONTINUO (ACTIVO SIEMPRE EN SEGUNDO PLANO) ---  
  let bounceAnimId = null;  
  let posX = 120, posY = 120;  
  let speedX = 2.4, speedY = 1.9;  
@@ -1258,13 +1264,11 @@
  const logo = document.getElementById('bouncing-logo');  
  if (!logo) return;  
   
- logo.style.display = 'block';  
  const screenW = window.innerWidth;  
  const screenH = window.innerHeight;  
  const logoW = 180;  
  const logoH = 90;  
   
- // Posición inicial aleatoria segura para que no nazca estático ni en esquinas muertas  
  posX = Math.random() * Math.max(50, screenW - logoW - 100) + 50;  
  posY = Math.random() * Math.max(50, screenH - logoH - 100) + 50;  
   
@@ -1297,15 +1301,6 @@
   
  cancelAnimationFrame(bounceAnimId);  
  bounceAnimId = requestAnimationFrame(frame);  
- }  
-
- function stopBouncingLogo() {  
- const logo = document.getElementById('bouncing-logo');  
- if (logo) logo.style.display = 'none';  
- if (bounceAnimId) {  
- cancelAnimationFrame(bounceAnimId);  
- bounceAnimId = null;  
- }  
  }  
   
  async function toggleDjMode() {  
@@ -1829,20 +1824,18 @@
  function triggerDjAlert(reasonText) {  
  if (!isDjModeActive) return;  
 
- // 1. Vibración en móviles (Patrón: vibra 200ms, para 100ms, vibra 400ms)  
  if ('vibrate' in navigator) {  
  try {  
  navigator.vibrate([200, 100, 400]);  
  } catch (e) {}  
  }  
 
- // 2. Alerta sonora sutil mediante Web Audio API (pitido agradable de cabina)  
  try {  
  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();  
  const osc = audioCtx.createOscillator();  
  const gain = audioCtx.createGain();  
  osc.type = 'sine';  
- osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // Nota D5  
+ osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);  
  gain.gain.setValueAtTime(0.1, audioCtx.currentTime);  
  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);  
  osc.connect(gain);  
