@@ -1222,11 +1222,11 @@
  });  
  });  
 
- // --- CONTROLADOR DE MODO STANDBY DINÁMICO (29s Público / 59s Modo DJ) ---  
+ // --- CONTROLADOR DE MODO STANDBY DINÁMICO (60s Público / 120s Modo DJ) ---  
  let standbyTimer;  
   
  function getStandbyDelay() {  
- return isDjModeActive ? 59000 : 29000;  
+ return isDjModeActive ? 120000 : 60000;  
  }  
   
  function showStandby() {  
@@ -1331,7 +1331,7 @@
  document.getElementById('historyListBtn').style.display = 'inline-block';  
  document.getElementById('clearQueueBtn').style.display = 'inline-block';  
  document.getElementById('queueHeaderTitle').textContent = "Control DJ";  
- alert("¡Modo DJ activado con éxito! 🎧 (Standby ajustado a 59s)");  
+ alert("¡Modo DJ activado con éxito! 🎧 (Standby ajustado a 2 minutos)");  
  resetStandbyTimer();  
  renderQueuePage();  
  } else {  
@@ -1346,7 +1346,7 @@
  document.getElementById('historyListBtn').style.display = 'none';  
  document.getElementById('clearQueueBtn').style.display = 'none';  
  document.getElementById('queueHeaderTitle').textContent = "Lista Peticiones";  
- alert("Modo DJ desactivado. (Standby ajustado a 29s)");  
+ alert("Modo DJ desactivado. (Standby ajustado a 1 minuto)");  
  resetStandbyTimer();  
  renderQueuePage();  
  }  
@@ -1832,28 +1832,35 @@
  });  
  }  
   
- // --- SISTEMA DE ALERTA Y VIBRACIÓN PARA EL DJ (SOLO MODO DJ) ---  
+ // --- SISTEMA DE ALERTA Y VIBRACIÓN MÁS FUERTE PARA EL DJ (SOLO MODO DJ) ---  
  function triggerDjAlert(reasonText) {  
  if (!isDjModeActive) return;  
 
  if ('vibrate' in navigator) {  
  try {  
- navigator.vibrate([200, 100, 400]);  
+ navigator.vibrate([400, 150, 400, 150, 600]);  
  } catch (e) {}  
  }  
 
  try {  
  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();  
+   
+ // Doble pitido de alta potencia  
+ [0, 0.25, 0.5].forEach((delay) => {  
  const osc = audioCtx.createOscillator();  
  const gain = audioCtx.createGain();  
- osc.type = 'sine';  
- osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);  
- gain.gain.setValueAtTime(0.1, audioCtx.currentTime);  
- gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);  
+ osc.type = 'square'; // Onda cuadrada (más estridente y audible en entornos ruidosos)  
+ osc.frequency.setValueAtTime(880, audioCtx.currentTime + delay); // Nota La5 (más aguda)  
+   
+ // Volumen alto (0.4 en lugar de 0.1)  
+ gain.gain.setValueAtTime(0.4, audioCtx.currentTime + delay);  
+ gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + delay + 0.18);  
+   
  osc.connect(gain);  
  gain.connect(audioCtx.destination);  
- osc.start();  
- osc.stop(audioCtx.currentTime + 0.4);  
+ osc.start(audioCtx.currentTime + delay);  
+ osc.stop(audioCtx.currentTime + delay + 0.18);  
+ });  
  } catch (e) {}  
  }  
   
