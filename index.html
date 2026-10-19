@@ -706,7 +706,6 @@
  padding: 40px;  
  }  
   
- /* Modificado para que por defecto arranque activa */  
  #standby-screen.active {  
  display: flex;  
  }  
@@ -1122,6 +1121,30 @@
  });  
  });  
   
+ // --- WAKE LOCK API (EVITAR APAGADO DE PANTALLA) ---  
+ let wakeLock = null;  
+
+ async function requestWakeLock() {  
+ if ('wakeLock' in navigator) {  
+ try {  
+ wakeLock = await navigator.wakeLock.request('screen');  
+ wakeLock.addEventListener('release', () => {  
+ wakeLock = null;  
+ });  
+ } catch (err) {}  
+ }  
+ }  
+
+ document.addEventListener('DOMContentLoaded', () => {  
+ requestWakeLock();  
+ });  
+
+ document.addEventListener('visibilitychange', async () => {  
+ if (wakeLock !== null && document.visibilityState === 'visible') {  
+ await requestWakeLock();  
+ }  
+ });  
+
  // --- CONTROLADOR DE MODO STANDBY (ARRANCA ACTIVO Y 15 SEGUNDOS DE INACTIVIDAD) ---  
  let standbyTimer;  
  const standbyDelay = 15000; // 15 segundos  
@@ -1150,7 +1173,6 @@
  window.addEventListener(event, hideStandby, true);  
  });  
   
- // Inicializar el temporizador al cargar (arranca en standby, se activará tras 15s si el usuario toca algo o se queda a la espera)  
  resetStandbyTimer();  
   
  async function toggleDjMode() {  
