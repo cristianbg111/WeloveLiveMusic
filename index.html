@@ -716,7 +716,7 @@
  .history-item-title { font-weight: 800; font-size: 0.85rem; color: var(--text); }  
  .history-item-date { font-size: 0.7rem; color: var(--text-muted); }  
  .history-actions { display: flex; gap: 6px; justify-content: flex-end; }  
- .history-view-btn { background: var(--badge-bg); color: #fff; border: none; padding: 4px 8px; border-radius: 6px; font-size: 0.70rem; font-weight: 700; cursor: pointer; }  
+ .history-view-btn { background: var(--badge-bg); color: #fff; border: none; padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; cursor: pointer; }  
   
  /* --- ESTILOS MODO STANDBY CON LOGO REBOTANDO EN SEGUNDO PLANO --- */  
  #standby-screen {  
@@ -775,15 +775,17 @@
  50% { opacity: 0.8; }  
  }  
   
- /* --- LOGO REBOTANDO EN SEGUNDO PLANO (ESTILO REBOTANTE) --- */  
+ /* --- LOGO REBOTANTE EN SEGUNDO PLANO (TAMAÑO VISIBLE Y FLUIDO) --- */  
  #bouncing-logo {  
  position: absolute;  
- width: 140px;  
+ top: 0;  
+ left: 0;  
+ width: 170px;  
  height: auto;  
  z-index: 1; /* Detrás del texto y vúmetros */  
  pointer-events: none;  
- opacity: 0.45; /* Semi-transparente para que no moleste */  
- filter: drop-shadow(0 0 15px rgba(236, 72, 153, 0.5));  
+ opacity: 0.45; /* Semi-transparente para segundo plano */  
+ filter: drop-shadow(0 0 15px rgba(236, 72, 153, 0.6));  
  will-change: transform;  
  }  
   
@@ -791,8 +793,8 @@
  width: 100%;  
  height: auto;  
  object-fit: contain;  
- border-radius: 10px;  
- border: 1px solid rgba(255, 255, 255, 0.2);  
+ border-radius: 12px;  
+ border: 1px solid rgba(255, 255, 255, 0.25);  
  background: #000;  
  display: block;  
  }  
@@ -1246,24 +1248,32 @@
   
  resetStandbyTimer();  
 
- // --- MOTOR DE REBOTE EN SEGUNDO PLANO ---  
+ // --- MOTOR DE REBOTE EN SEGUNDO PLANO (CORREGIDO Y FLUIDO) ---  
  let bounceAnimId = null;  
- let posX = 50, posY = 50;  
- let speedX = 1.8, speedY = 1.4;  
+ let posX = 100, posY = 100;  
+ let speedX = 2.2, speedY = 1.8;  
+ let initializedBounce = false;  
 
  function startBouncingLogo() {  
  const logo = document.getElementById('bouncing-logo');  
  if (!logo) return;  
   
- // Posición inicial aleatoria dentro de márgenes seguros  
- posX = Math.random() * (window.innerWidth - 160);  
- posY = Math.random() * (window.innerHeight - 160);  
-  
- function frame() {  
  const screenW = window.innerWidth;  
  const screenH = window.innerHeight;  
- const logoW = logo.offsetWidth || 140;  
- const logoH = logo.offsetHeight || 70;  
+ const logoW = logo.offsetWidth || 170;  
+ const logoH = logo.offsetHeight || 90;  
+  
+ if (!initializedBounce) {  
+ posX = Math.random() * Math.max(50, screenW - logoW - 50);  
+ posY = Math.random() * Math.max(50, screenH - logoH - 50);  
+ initializedBounce = true;  
+ }  
+  
+ function frame() {  
+ const currentW = window.innerWidth;  
+ const currentH = window.innerHeight;  
+ const lW = logo.offsetWidth || 170;  
+ const lH = logo.offsetHeight || 90;  
   
  posX += speedX;  
  posY += speedY;  
@@ -1271,16 +1281,16 @@
  if (posX <= 0) {  
  posX = 0;  
  speedX *= -1;  
- } else if (posX + logoW >= screenW) {  
- posX = screenW - logoW;  
+ } else if (posX + lW >= currentW) {  
+ posX = currentW - lW;  
  speedX *= -1;  
  }  
   
  if (posY <= 0) {  
  posY = 0;  
  speedY *= -1;  
- } else if (posY + logoH >= screenH) {  
- posY = screenH - logoH;  
+ } else if (posY + lH >= currentH) {  
+ posY = currentH - lH;  
  speedY *= -1;  
  }  
   
