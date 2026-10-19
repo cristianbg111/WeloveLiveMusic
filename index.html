@@ -8,8 +8,8 @@
  <meta name="theme-color" content="#090a0f" />  
  <title>WE LOVE LIVE MUSIC</title>  
    
-<!-- PWA Manifest & Icons -->  
- <link rel="manifest" href="manifest.json">  
+<!-- PWA Manifest integrado en Data URI para instalación directa -->  
+ <link rel="manifest" href='data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22We%20Love%20Live%20Music%22%2C%22short_name%22%3A%22Live%20Music%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23090a0f%22%2C%22theme_color%22%3A%22%23090a0f%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22logo.jpg%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fjpeg%22%7D%5D%7D'>  
   
 <!-- Firebase SDK (Compat) -->  
  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>  
@@ -1074,7 +1074,6 @@
  let areRequestsOpen = true;  
  const CORRECT_PASSWORD_ENCODED = "amJkZWVqYXkx";  
   
- // Control de notificaciones visuales para el DJ  
  let lastQueueLength = 0;  
  let hasUnreadRequests = false;  
   
@@ -1184,7 +1183,6 @@
  let standbyTimer;  
   
  function getStandbyDelay() {  
- // 60 segundos si está el Modo DJ activo, de lo contrario 30 segundos  
  return isDjModeActive ? 60000 : 30000;  
  }  
   
@@ -1231,7 +1229,7 @@
  document.getElementById('clearQueueBtn').style.display = 'inline-block';  
  document.getElementById('queueHeaderTitle').textContent = "Control DJ";  
  alert("¡Modo DJ activado con éxito! 🎧 (Standby ajustado a 60s)");  
- resetStandbyTimer(); // Reiniciar el temporizador con el nuevo tiempo de DJ  
+ resetStandbyTimer();  
  renderQueuePage();  
  } else {  
  alert("Contraseña incorrecta.");  
@@ -1246,7 +1244,7 @@
  document.getElementById('clearQueueBtn').style.display = 'none';  
  document.getElementById('queueHeaderTitle').textContent = "Lista Peticiones";  
  alert("Modo DJ desactivado. (Standby ajustado a 30s)");  
- resetStandbyTimer(); // Reiniciar el temporizador al tiempo normal  
+ resetStandbyTimer();  
  renderQueuePage();  
  }  
  }  
@@ -1772,6 +1770,11 @@
  if (currentPage > totalPages) currentPage = totalPages;  
   
  renderQueuePage();  
+   
+ const query = document.getElementById('songInput').value.trim();  
+ if (query && searchCache.has(query.toLowerCase())) {  
+ renderResults(searchCache.get(query.toLowerCase()), query);  
+ }  
  }  
   
  function renderQueuePage() {  
