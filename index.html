@@ -716,9 +716,9 @@
  .history-item-title { font-weight: 800; font-size: 0.85rem; color: var(--text); }  
  .history-item-date { font-size: 0.7rem; color: var(--text-muted); }  
  .history-actions { display: flex; gap: 6px; justify-content: flex-end; }  
- .history-view-btn { background: var(--badge-bg); color: #fff; border: none; padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; cursor: pointer; }  
+ .history-view-btn { background: var(--badge-bg); color: #fff; border: none; padding: 4px 8px; border-radius: 6px; font-size: 0.70rem; font-weight: 700; cursor: pointer; }  
   
- /* --- ESTILOS MODO STANDBY BLINDADO PARA MÓVILES --- */  
+ /* --- ESTILOS MODO STANDBY CON LOGO REBOTANDO EN SEGUNDO PLANO --- */  
  #standby-screen {  
  position: fixed;  
  top: 0;  
@@ -775,39 +775,39 @@
  50% { opacity: 0.8; }  
  }  
   
- /* --- LOGO GRANDE Y ABSOLUTO ARRIBA-CENTRO --- */  
- .standby-logo-container {  
+ /* --- LOGO REBOTANDO EN SEGUNDO PLANO (ESTILO REBOTANTE) --- */  
+ #bouncing-logo {  
  position: absolute;  
- top: 8vh;  
- left: 50%;  
- transform: translateX(-50%);  
- width: min(280px, 75vw);  
+ width: 140px;  
  height: auto;  
- z-index: 2;  
+ z-index: 1; /* Detrás del texto y vúmetros */  
  pointer-events: none;  
- filter: drop-shadow(0 0 20px rgba(236, 72, 153, 0.7));  
+ opacity: 0.45; /* Semi-transparente para que no moleste */  
+ filter: drop-shadow(0 0 15px rgba(236, 72, 153, 0.5));  
+ will-change: transform;  
  }  
   
- .standby-logo-container img {  
+ #bouncing-logo img {  
  width: 100%;  
  height: auto;  
  object-fit: contain;  
- border-radius: 12px;  
- border: 1px solid rgba(255, 255, 255, 0.25);  
+ border-radius: 10px;  
+ border: 1px solid rgba(255, 255, 255, 0.2);  
  background: #000;  
  display: block;  
  }  
   
- /* --- TEXTOS CENTRALES --- */  
+ /* --- TEXTOS CENTRALES (PRIMER PLANO) --- */  
  .standby-content {  
  position: absolute;  
- top: 52%;  
+ top: 50%;  
  left: 50%;  
  transform: translate(-50%, -50%);  
  width: 100%;  
  padding: 0 16px;  
- z-index: 2;  
+ z-index: 3;  
  text-align: center;  
+ pointer-events: none;  
  }  
   
  .standby-title {  
@@ -833,13 +833,13 @@
  to { text-shadow: 0 0 20px #00f3ff, 0 0 30px #00f3ff, 0 0 50px #00f3ff; }  
  }  
   
- /* --- VÚMETROS FIJOS ABAJO --- */  
+ /* --- VÚMETROS FIJOS ABAJO (PRIMER PLANO) --- */  
  .equalizer-container {  
  position: absolute;  
  bottom: max(16px, env(safe-area-inset-bottom));  
  left: 50%;  
  transform: translateX(-50%);  
- z-index: 2;  
+ z-index: 3;  
  display: flex;  
  align-items: flex-end;  
  justify-content: center;  
@@ -847,6 +847,7 @@
  height: 60px;  
  width: 90%;  
  max-width: 500px;  
+ pointer-events: none;  
  }  
   
  .eq-bar {  
@@ -1043,13 +1044,13 @@
  </div>  
  </div>  
   
- <!-- PANTALLA STANDBY INMERSIVA BLINDADA -->  
+ <!-- PANTALLA STANDBY CON LOGO REBOTANTE EN SEGUNDO PLANO -->  
  <div id="standby-screen" class="active">  
  <div class="laser-background"></div>  
  <div class="strobe-overlay"></div>  
   
- <div class="standby-logo-container">  
- <img src="logo.jpg" alt="Logo Standby">  
+ <div id="bouncing-logo">  
+ <img src="logo.jpg" alt="Logo Rebotando">  
  </div>  
    
  <div class="standby-content">  
@@ -1210,17 +1211,18 @@
  }  
  });  
 
- // --- CONTROLADOR DE MODO STANDBY DINÁMICO (50s Público / 120s Modo DJ) ---  
+ // --- CONTROLADOR DE MODO STANDBY DINÁMICO (29s Público / 59s Modo DJ) ---  
  let standbyTimer;  
   
  function getStandbyDelay() {  
- return isDjModeActive ? 120000 : 50000;  
+ return isDjModeActive ? 59000 : 29000;  
  }  
   
  function showStandby() {  
  const standbyScreen = document.getElementById('standby-screen');  
  if (standbyScreen) {  
  standbyScreen.classList.add('active');  
+ startBouncingLogo();  
  }  
  }  
   
@@ -1228,6 +1230,7 @@
  const standbyScreen = document.getElementById('standby-screen');  
  if (standbyScreen && standbyScreen.classList.contains('active')) {  
  standbyScreen.classList.remove('active');  
+ stopBouncingLogo();  
  }  
  resetStandbyTimer();  
  }  
@@ -1242,6 +1245,59 @@
  });  
   
  resetStandbyTimer();  
+
+ // --- MOTOR DE REBOTE EN SEGUNDO PLANO ---  
+ let bounceAnimId = null;  
+ let posX = 50, posY = 50;  
+ let speedX = 1.8, speedY = 1.4;  
+
+ function startBouncingLogo() {  
+ const logo = document.getElementById('bouncing-logo');  
+ if (!logo) return;  
+  
+ // Posición inicial aleatoria dentro de márgenes seguros  
+ posX = Math.random() * (window.innerWidth - 160);  
+ posY = Math.random() * (window.innerHeight - 160);  
+  
+ function frame() {  
+ const screenW = window.innerWidth;  
+ const screenH = window.innerHeight;  
+ const logoW = logo.offsetWidth || 140;  
+ const logoH = logo.offsetHeight || 70;  
+  
+ posX += speedX;  
+ posY += speedY;  
+  
+ if (posX <= 0) {  
+ posX = 0;  
+ speedX *= -1;  
+ } else if (posX + logoW >= screenW) {  
+ posX = screenW - logoW;  
+ speedX *= -1;  
+ }  
+  
+ if (posY <= 0) {  
+ posY = 0;  
+ speedY *= -1;  
+ } else if (posY + logoH >= screenH) {  
+ posY = screenH - logoH;  
+ speedY *= -1;  
+ }  
+  
+ logo.style.transform = `translate(${posX}px, ${posY}px)`;  
+ bounceAnimId = requestAnimationFrame(frame);  
+ }  
+  
+ cancelAnimationFrame(bounceAnimId);  
+ bounceAnimId = requestAnimationFrame(frame);  
+ }  
+
+ function stopBouncingLogo() {  
+ if (bounceAnimId) {  
+ cancelAnimationFrame(bounceAnimId);  
+ bounceAnimId = null;  
+ }  
+ }  
   
  async function toggleDjMode() {  
  if (!isDjModeActive) {  
@@ -1259,7 +1315,7 @@
  document.getElementById('historyListBtn').style.display = 'inline-block';  
  document.getElementById('clearQueueBtn').style.display = 'inline-block';  
  document.getElementById('queueHeaderTitle').textContent = "Control DJ";  
- alert("¡Modo DJ activado con éxito! 🎧 (Standby ajustado a 120s)");  
+ alert("¡Modo DJ activado con éxito! 🎧 (Standby ajustado a 59s)");  
  resetStandbyTimer();  
  renderQueuePage();  
  } else {  
@@ -1274,7 +1330,7 @@
  document.getElementById('historyListBtn').style.display = 'none';  
  document.getElementById('clearQueueBtn').style.display = 'none';  
  document.getElementById('queueHeaderTitle').textContent = "Lista Peticiones";  
- alert("Modo DJ desactivado. (Standby ajustado a 50s)");  
+ alert("Modo DJ desactivado. (Standby ajustado a 29s)");  
  resetStandbyTimer();  
  renderQueuePage();  
  }  
