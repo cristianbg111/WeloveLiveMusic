@@ -1729,6 +1729,31 @@
  });  
  }  
   
+ // --- SISTEMA DE ALERTA Y VIBRACIÓN PARA EL DJ ---  
+ function triggerDjAlert(reasonText) {  
+ // 1. Vibración en móviles (Patrón: vibra 200ms, para 100ms, vibra 400ms)  
+ if ('vibrate' in navigator) {  
+ try {  
+ navigator.vibrate([200, 100, 400]);  
+ } catch (e) {}  
+ }  
+
+ // 2. Alerta sonora sutil mediante Web Audio API (pitido agradable de cabina)  
+ try {  
+ const audioCtx = new (window.AudioContext || window.webkitAudioContext)();  
+ const osc = audioCtx.createOscillator();  
+ const gain = audioCtx.createGain();  
+ osc.type = 'sine';  
+ osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // Nota D5  
+ gain.gain.setValueAtTime(0.1, audioCtx.currentTime);  
+ gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);  
+ osc.connect(gain);  
+ gain.connect(audioCtx.destination);  
+ osc.start();  
+ osc.stop(audioCtx.currentTime + 0.4);  
+ } catch (e) {}  
+ }  
+  
  function processQueueData(data) {  
  const queueResults = document.getElementById('queueResults');  
  const paginationDiv = document.getElementById('queuePagination');  
@@ -1755,6 +1780,22 @@
  return Number(a.timestamp || 0) - Number(b.timestamp || 0);  
  });  
   
+ // Detectar si entra una nueva canción o hay un voto fuerte para disparar la alerta del DJ  
+ if (lastQueueLength !== 0) {  
+ if (items.length > lastQueueLength) {  
+ triggerDjAlert("Nueva petición");  
+ } else {  
+ // Comprobar si alguna canción ha superado o igualado los 5 votos recientemente  
+ const hasHighVote = items.some(newItem => {  
+ const oldItem = globalQueueItems.find(old => old.id === newItem.id);  
+ return oldItem && Number(newItem.count) >= 5 && Number(oldItem.count) < Number(newItem.count);  
+ });  
+ if (hasHighVote) {  
+ triggerDjAlert("Tema con muchos votos");  
+ }  
+ }  
+ }  
+  
  if (items.length > lastQueueLength && lastQueueLength !== 0) {  
  const queueTab = document.getElementById('tabQueue');  
  if (!queueTab.classList.contains('active')) {  
@@ -1771,7 +1812,6 @@
   
  renderQueuePage();  
    
- // NUEVO: Actualiza automáticamente los resultados de búsqueda en pantalla en tiempo real  
  const query = document.getElementById('songInput').value.trim();  
  if (query && searchCache.has(query.toLowerCase())) {  
  renderResults(searchCache.get(query.toLowerCase()), query);  
