@@ -1845,14 +1845,12 @@
  try {  
  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();  
    
- // Doble pitido de alta potencia  
  [0, 0.25, 0.5].forEach((delay) => {  
  const osc = audioCtx.createOscillator();  
  const gain = audioCtx.createGain();  
- osc.type = 'square'; // Onda cuadrada (más estridente y audible en entornos ruidosos)  
- osc.frequency.setValueAtTime(880, audioCtx.currentTime + delay); // Nota La5 (más aguda)  
+ osc.type = 'square';  
+ osc.frequency.setValueAtTime(880, audioCtx.currentTime + delay);  
    
- // Volumen alto (0.4 en lugar de 0.1)  
  gain.gain.setValueAtTime(0.4, audioCtx.currentTime + delay);  
  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + delay + 0.18);  
    
