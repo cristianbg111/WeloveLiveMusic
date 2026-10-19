@@ -734,7 +734,7 @@
  overflow: hidden;  
  cursor: pointer;  
  box-sizing: border-box;  
- padding: 30px;  
+ padding: 20px 20px max(20px, env(safe-area-inset-bottom)) 20px;  
  }  
   
  #standby-screen.active {  
@@ -778,14 +778,15 @@
  50% { opacity: 0.8; }  
  }  
   
- /* --- LOGO FLOTANTE DE STANDBY --- */  
+ /* --- LOGO ESTÁTICO DE STANDBY (MEDIANO) --- */  
  .standby-logo-container {  
- position: absolute;  
- width: 180px;  
+ position: relative;  
+ z-index: 2;  
+ width: 150px;  
+ max-width: 40vw;  
  height: auto;  
- z-index: 3;  
- pointer-events: none;  
- will-change: transform;  
+ margin-top: 15px;  
+ flex-shrink: 0;  
  filter: drop-shadow(0 0 15px rgba(236, 72, 153, 0.6));  
  }  
   
@@ -803,25 +804,26 @@
  position: relative;  
  z-index: 2;  
  text-align: center;  
- margin: auto;  
+ margin: auto 0;  
+ flex-shrink: 0;  
  }  
   
  .standby-title {  
- font-size: 2.8rem;  
+ font-size: clamp(2rem, 6vw, 3.2rem);  
  font-weight: 900;  
  color: #fff;  
  text-transform: uppercase;  
- text-shadow: 0 0 10px #ff007f, 0 0 20px #ff007f, 0 0 40px #ff007f, 0 0 80px #ff007f;  
- letter-spacing: 3px;  
- margin-bottom: 12px;  
+ text-shadow: 0 0 10px #ff007f, 0 0 20px #ff007f, 0 0 40px #ff007f;  
+ letter-spacing: 2px;  
+ margin-bottom: 10px;  
  animation: neonGlowStandby 2s ease-in-out infinite alternate;  
  }  
   
  .standby-subtitle {  
- font-size: 1.3rem;  
+ font-size: clamp(1rem, 3.5vw, 1.3rem);  
  color: #00f3ff;  
  text-shadow: 0 0 8px #00f3ff;  
- letter-spacing: 2px;  
+ letter-spacing: 1px;  
  }  
   
  @keyframes neonGlowStandby {  
@@ -835,10 +837,12 @@
  display: flex;  
  align-items: flex-end;  
  justify-content: center;  
- gap: 8px;  
- height: 100px;  
+ gap: 6px;  
+ height: 75px;  
  width: 100%;  
- max-width: 800px;  
+ max-width: 600px;  
+ margin-bottom: 15px;  
+ flex-shrink: 0;  
  }  
   
  .eq-bar {  
@@ -861,8 +865,8 @@
  .eq-bar:nth-child(10) { animation-duration: 0.5s; }  
   
  @keyframes bounceEq {  
- 0% { height: 10px; opacity: 0.4; }  
- 100% { height: 90px; opacity: 1; box-shadow: 0 0 20px #ff007f; }  
+ 0% { height: 8px; opacity: 0.4; }  
+ 100% { height: 65px; opacity: 1; box-shadow: 0 0 20px #ff007f; }  
  }  
   
  @media print {  
@@ -1035,16 +1039,14 @@
  </div>  
  </div>  
   
- <!-- PANTALLA STANDBY INMERSIVA CON LOGO REBOTANDO -->  
+ <!-- PANTALLA STANDBY INMERSIVA CON LOGO ESTÁTICO Y VÚMETROS VISIBLES -->  
  <div id="standby-screen" class="active">  
  <div class="laser-background"></div>  
  <div class="strobe-overlay"></div>  
   
- <div class="standby-logo-container" id="standbyLogo">  
+ <div class="standby-logo-container">  
  <img src="logo.jpg" alt="Logo Standby">  
  </div>  
-   
- <div></div>  
    
  <div class="standby-content">  
  <div class="standby-title">We LOVE Live Music</div>  
@@ -1180,43 +1182,6 @@
  });  
  });  
   
- // --- ANIMACIÓN DE LOGO REBOTANDO EN STANDBY ---  
- let logoAnimId = null;  
- let posX = 50, posY = 50;  
- let velX = 1.5, velY = 1.2;  
-
- function startLogoBounce() {  
- const logoEl = document.getElementById('standbyLogo');  
- if (!logoEl) return;  
-
- function frame() {  
- const screenWidth = window.innerWidth;  
- const screenHeight = window.innerHeight;  
- const logoWidth = logoEl.offsetWidth || 180;  
- const logoHeight = logoEl.offsetHeight || 90;  
-
- posX += velX;  
- posY += velY;  
-
- if (posX <= 10) { posX = 10; velX *= -1; }  
- if (posX + logoWidth >= screenWidth - 10) { posX = screenWidth - logoWidth - 10; velX *= -1; }  
- if (posY <= 10) { posY = 10; velY *= -1; }  
- if (posY + logoHeight >= screenHeight - 10) { posY = screenHeight - logoHeight - 10; velY *= -1; }  
-
- logoEl.style.transform = `translate(${posX}px, ${posY}px)`;  
- logoAnimId = requestAnimationFrame(frame);  
- }  
-
- cancelAnimationFrame(logoAnimId);  
- posX = Math.random() * (window.innerWidth - 200);  
- posY = Math.random() * (window.innerHeight - 200);  
- logoAnimId = requestAnimationFrame(frame);  
- }  
-
- function stopLogoBounce() {  
- cancelAnimationFrame(logoAnimId);  
- }  
-  
  // --- WAKE LOCK API (EVITAR APAGADO DE PANTALLA) ---  
  let wakeLock = null;  
 
@@ -1252,7 +1217,6 @@
  const standbyScreen = document.getElementById('standby-screen');  
  if (standbyScreen) {  
  standbyScreen.classList.add('active');  
- startLogoBounce();  
  }  
  }  
   
@@ -1260,7 +1224,6 @@
  const standbyScreen = document.getElementById('standby-screen');  
  if (standbyScreen && standbyScreen.classList.contains('active')) {  
  standbyScreen.classList.remove('active');  
- stopLogoBounce();  
  }  
  resetStandbyTimer();  
  }  
