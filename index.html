@@ -1372,7 +1372,7 @@
  });  
  });  
   
- // --- WAKE LOCK API ---  
+ // --- WAKE LOCK API (FORZAR PANTALLA ENCENDIDA) ---  
  let wakeLock = null;  
 
  async function requestWakeLock() {  
@@ -1438,7 +1438,7 @@
   
  resetStandbyTimer();  
 
- // --- APLICAR EFECTOS DE ADMIN CON BOTÓN ACTIVO ---  
+ // --- APLICAR EFECTOS DE ADMIN Y FORZAR PANTALLA ACTIVA ---  
  function setAdminEffect(type, value) {  
  adminEffectRef.set({ type: type, value: value });  
  }  
@@ -1492,6 +1492,11 @@
  const overlay = document.getElementById('room-light-overlay');  
  const adminTab = document.getElementById('tabAdmin');  
  const isInAdminTab = adminTab && adminTab.classList.contains('active');  
+
+ // Si hay efectos activos, forzamos la renovación del Wake Lock para que no se apague la pantalla bajo ningún concepto
+ if (effectData && effectData.type !== 'off') {  
+ requestWakeLock();  
+ }  
 
  if (!effectData || effectData.type === 'off' || (isInAdminTab && !document.getElementById('standby-screen').classList.contains('active')) || userDismissedLight) {  
  overlay.classList.remove('active', 'show-notice');  
