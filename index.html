@@ -732,8 +732,8 @@
  /* --- ESTILOS PANEL MODO ADMIN --- */  
  .admin-panel-grid {  
  display: grid;  
- grid-template-columns: repeat(3, 1fr);  
- gap: 10px;  
+ grid-template-columns: repeat(4, 1fr); /* Actualizado a 4 columnas para incluir el blanco */  
+ gap: 8px;  
  margin-bottom: 12px;  
  }  
   
@@ -761,10 +761,10 @@
  top: 50%;  
  left: 50%;  
  transform: translate(-50%, -50%);  
- color: #ffffff;  
- font-size: 1.2rem;  
+ color: #000000;  
+ font-size: 1.1rem;  
  font-weight: 900;  
- text-shadow: 0 0 4px #000, 0 0 8px #000;  
+ text-shadow: 0 0 4px #fff, 0 0 8px #fff;  
  }  
   
  .admin-action-row {  
@@ -788,14 +788,14 @@
  transition: all 0.2s ease;  
  }  
  .btn-flash { background: #ffffff; color: #000000; }  
- .btn-flash.active { border-color: #000000; box-shadow: 0 0 15px #ffffff; transform: scale(1.02); }  
+ .btn-flash.active { border-color: #00f3ff; box-shadow: 0 0 20px #ffffff; transform: scale(1.02); }  
 
  .btn-burst { background: linear-gradient(135deg, #ff007f, #00f3ff, #ffe600, #8b5cf6); color: #ffffff; animation: neonGlow 3s ease infinite; }  
  .btn-burst.active { border-color: #ffffff; box-shadow: 0 0 20px #00f3ff; transform: scale(1.02); }  
 
  .btn-reset-light { background: var(--danger); color: #ffffff; width: 100%; margin-top: 4px; }  
 
- /* --- CAPA DE LUZ GLOBAL DE SALA (Z-INDEX 100000 POR ENCIMA DEL STANDBY) --- */  
+ /* --- CAPA DE LUZ GLOBAL DE SALA (Z-INDEX 100000 - POR ENCIMA DEL STANDBY) --- */  
  #room-light-overlay {  
  position: fixed;  
  top: 0;  
@@ -803,7 +803,7 @@
  width: 100vw;  
  height: 100vh;  
  height: 100dvh;  
- z-index: 100000; /* Por encima del standby y app en ambos sistemas */  
+ z-index: 100000;  
  display: none;  
  cursor: pointer;  
  -webkit-user-select: none;  
@@ -1039,7 +1039,7 @@
 </head>  
 <body>  
   
- <!-- CAPA DE ILUMINACIÓN GLOBAL DE SALA (Z-INDEX 100000 - POR ENCIMA DEL STANDBY) -->  
+ <!-- CAPA DE ILUMINACIÓN GLOBAL DE SALA -->  
  <div id="room-light-overlay">  
  <div id="room-light-notice">Toca 2 veces para salir</div>  
  </div>  
@@ -1118,7 +1118,7 @@
  <div class="results" style="padding-top: 6px;">  
  <div class="instructions-box" style="margin-bottom: 10px;">  
  <div class="instructions-title">✨ Control Lumínico Global</div>  
- <div class="instructions-text">Pulsa cualquier color, flash o ráfaga para sincronizar las pantallas de todos los asistentes en la sala al instante.</div>  
+ <div class="instructions-text">Pulsa cualquier color, flash estroboscópico o ráfaga para sincronizar las pantallas de todos los asistentes en la sala al instante.</div>  
  </div>  
 
  <div class="admin-panel-grid">  
@@ -1128,10 +1128,11 @@
  <button class="color-circle-btn" data-effect-type="color" data-effect-val="#8b5cf6" style="background: #8b5cf6;" onclick="setAdminEffect('color', '#8b5cf6')"></button>  
  <button class="color-circle-btn" data-effect-type="color" data-effect-val="#10b981" style="background: #10b981;" onclick="setAdminEffect('color', '#10b981')"></button>  
  <button class="color-circle-btn" data-effect-type="color" data-effect-val="#ff5500" style="background: #ff5500;" onclick="setAdminEffect('color', '#ff5500')"></button>  
+ <button class="color-circle-btn" data-effect-type="color" data-effect-val="#ffffff" style="background: #ffffff;" onclick="setAdminEffect('color', '#ffffff')"></button>  
  </div>  
 
  <div class="admin-action-row">  
- <button class="admin-action-btn btn-flash" data-effect-type="flash" data-effect-val="#ffffff" onclick="setAdminEffect('flash', '#ffffff')">⚡ Flash Blanco</button>  
+ <button class="admin-action-btn btn-flash" data-effect-type="flash" data-effect-val="flash" onclick="setAdminEffect('flash', 'flash')">⚡ Flash Blanco (Estrobo)</button>  
  <button class="admin-action-btn btn-burst" data-effect-type="burst" data-effect-val="burst" onclick="setAdminEffect('burst', 'burst')">💥 Ráfaga Color</button>  
  </div>  
 
@@ -1209,7 +1210,7 @@
  </div>  
  </div>  
   
- <!-- PANTALLA STANDBY (INICIA ACTIVA DESDE EL PRIMER SEGUNDO) -->  
+ <!-- PANTALLA STANDBY -->  
  <div id="standby-screen" class="active">  
  <div class="laser-background"></div>  
  <div class="strobe-overlay"></div>  
@@ -1275,7 +1276,7 @@
   
  let lastQueueLength = 0;  
  let hasUnreadRequests = false;  
- let burstInterval = null;  
+ let effectInterval = null;  
  let userDismissedLight = false;  
  let lastOverlayTapTime = 0;  
  let latestAdminEffectData = null;  
@@ -1476,9 +1477,9 @@
  if (now - lastOverlayTapTime < 800) {  
  userDismissedLight = true;  
  overlay.classList.remove('active', 'show-notice');  
- if (burstInterval) {  
- clearInterval(burstInterval);  
- burstInterval = null;  
+ if (effectInterval) {  
+ clearInterval(effectInterval);  
+ effectInterval = null;  
  }  
  } else {  
  lastOverlayTapTime = now;  
@@ -1490,9 +1491,9 @@
  }  
 
  function applyAdminEffectLocally(effectData) {  
- if (burstInterval) {  
- clearInterval(burstInterval);  
- burstInterval = null;  
+ if (effectInterval) {  
+ clearInterval(effectInterval);  
+ effectInterval = null;  
  }  
 
  const overlay = document.getElementById('room-light-overlay');  
@@ -1507,11 +1508,19 @@
 
  overlay.classList.add('active');  
 
- if (effectData.type === 'color' || effectData.type === 'flash') {  
+ if (effectData.type === 'color') {  
  overlay.style.backgroundColor = effectData.value;  
+ } else if (effectData.type === 'flash') {  
+ // Estrobo intermitente blanco ultrarrápido  
+ let isWhite = true;  
+ overlay.style.backgroundColor = '#ffffff';  
+ effectInterval = setInterval(() => {  
+ isWhite = !isWhite;  
+ overlay.style.backgroundColor = isWhite ? '#ffffff' : '#000000';  
+ }, 80); // Cambia cada 80ms para un estrobo super dinámico  
  } else if (effectData.type === 'burst') {  
  const colors = ['#ff007f', '#00f3ff', '#ffe600', '#8b5cf6', '#10b981', '#ff5500', '#ffffff'];  
- burstInterval = setInterval(() => {  
+ effectInterval = setInterval(() => {  
  const randomColor = colors[Math.floor(Math.random() * colors.length)];  
  overlay.style.backgroundColor = randomColor;  
  }, 150);  
