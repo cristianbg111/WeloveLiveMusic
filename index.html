@@ -750,7 +750,6 @@
  }  
  .color-circle-btn:active { transform: scale(0.9); }  
 
- /* ESTADO ACTIVO / SELECCIONADO PARA LOS BOTONES DE COLOR */  
  .color-circle-btn.active {  
  border-color: #ffffff;  
  transform: scale(1.08);  
@@ -796,7 +795,7 @@
 
  .btn-reset-light { background: var(--danger); color: #ffffff; width: 100%; margin-top: 4px; }  
 
- /* --- CAPA DE LUZ GLOBAL DE SALA (COMPATIBLE ANDROID & IOS SAFARI) --- */  
+ /* --- CAPA DE LUZ GLOBAL DE SALA (Z-INDEX 100000 POR ENCIMA DEL STANDBY) --- */  
  #room-light-overlay {  
  position: fixed;  
  top: 0;  
@@ -804,7 +803,7 @@
  width: 100vw;  
  height: 100vh;  
  height: 100dvh;  
- z-index: 99999;  
+ z-index: 100000; /* Por encima del standby y app en ambos sistemas */  
  display: none;  
  cursor: pointer;  
  -webkit-user-select: none;  
@@ -859,7 +858,6 @@
  box-sizing: border-box;  
  }  
   
- /* INICIA VISIBLE DESDE EL PRIMER SEGUNDO */  
  #standby-screen.active {  
  display: block;  
  }  
@@ -1041,7 +1039,7 @@
 </head>  
 <body>  
   
- <!-- CAPA DE ILUMINACIÓN GLOBAL DE SALA -->  
+ <!-- CAPA DE ILUMINACIÓN GLOBAL DE SALA (Z-INDEX 100000 - POR ENCIMA DEL STANDBY) -->  
  <div id="room-light-overlay">  
  <div id="room-light-notice">Toca 2 veces para salir</div>  
  </div>  
@@ -1417,6 +1415,9 @@
  standbyScreen.classList.add('active');  
  startBouncingLogo();  
  }  
+ if (latestAdminEffectData) {  
+ applyAdminEffectLocally(latestAdminEffectData);  
+ }  
  }  
   
  function hideStandby() {  
@@ -1498,7 +1499,7 @@
  const adminTab = document.getElementById('tabAdmin');  
  const isInAdminTab = adminTab && adminTab.classList.contains('active');  
 
- if (!effectData || effectData.type === 'off' || isInAdminTab || userDismissedLight) {  
+ if (!effectData || effectData.type === 'off' || (isInAdminTab && !document.getElementById('standby-screen').classList.contains('active')) || userDismissedLight) {  
  overlay.classList.remove('active', 'show-notice');  
  overlay.style.backgroundColor = '';  
  return;  
@@ -2136,7 +2137,7 @@
  });  
  }  
   
- // --- SISTEMA DE ALERTA Y VIBRACIÓN MÁS FUERTE PARA EL DJ (SOLO MODO DJ) ---  
+ // --- SISTEMA DE ALERTA Y VIBRACIÓN MÁS FUERTE PARA EL DJ ---  
  function triggerDjAlert(reasonText) {  
  if (!isDjModeActive) return;  
 
