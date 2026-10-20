@@ -842,7 +842,7 @@
  opacity: 1;  
  }  
 
- /* --- ESTILOS PANTALLA STANDBY OPTIMIZADA (GPU ACCELERATED) --- */  
+ /* --- ESTILOS PANTALLA STANDBY OPTIMIZADA (LOGO ARRIBA) --- */  
  #standby-screen {  
  position: fixed;  
  top: 0;  
@@ -887,27 +887,26 @@
  pointer-events: none;  
  }  
   
- /* --- LOGO FLOTANTE CSS OPTIMIZADO (SIN JS) --- */  
+ /* --- LOGO FLOTANTE CSS POSICIONADO ARRIBA --- */  
  #bouncing-logo {  
  position: absolute;  
- top: 50%;  
+ top: 28%;  
  left: 50%;  
- width: 180px;  
+ width: 160px;  
  height: auto;  
  z-index: 1;  
  pointer-events: none;  
- opacity: 0.7;  
+ opacity: 0.75;  
  filter: drop-shadow(0 0 15px rgba(236, 72, 153, 0.6));  
  transform: translate(-50%, -50%);  
  will-change: transform;  
  display: none;  
- animation: floatLogo 6s ease-in-out infinite alternate;  
+ animation: floatLogoTop 5s ease-in-out infinite alternate;  
  }  
   
- @keyframes floatLogo {  
- 0% { transform: translate(-50%, -50%) translateY(-25px) scale(0.95); }  
- 50% { transform: translate(-50%, -50%) translateY(25px) scale(1.02); }  
- 100% { transform: translate(-50%, -50%) translateY(-25px) scale(0.95); }  
+ @keyframes floatLogoTop {  
+ 0% { transform: translate(-50%, -50%) translateY(-15px) scale(0.96); }  
+ 100% { transform: translate(-50%, -50%) translateY(15px) scale(1.02); }  
  }  
   
  #bouncing-logo img {  
@@ -923,7 +922,7 @@
  /* --- TEXTOS CENTRALES STANDBY --- */  
  .standby-content {  
  position: absolute;  
- top: 50%;  
+ top: 60%;  
  left: 50%;  
  transform: translate(-50%, -50%);  
  width: 100%;  
@@ -1214,7 +1213,7 @@
  <div class="strobe-overlay"></div>  
   
  <div id="bouncing-logo" style="display: block;">  
- <img src="logo.jpg" alt="Logo Flotante">  
+ <img src="logo.jpg" alt="Logo Flotante Arriba">  
  </div>  
    
  <div class="standby-content">  
