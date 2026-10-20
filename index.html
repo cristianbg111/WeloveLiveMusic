@@ -1035,7 +1035,7 @@
 </head>  
 <body>  
   
- <!-- REPRODUCTOR SILENCIOSO DE ANCLAJE PARA EVITAR APAGADO DE PANTALLA -->  
+ <!-- REPRODUCTOR SILENCIOSO DE ANCLAJE -->  
  <audio id="keepAliveAudio" loop preload="auto" style="display:none;">  
  <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQAAAAA=" type="audio/wav">  
  </audio>  
@@ -1375,7 +1375,7 @@
  });  
  });  
   
- // --- BLINDAJE ABSOLUTO DE PANTALLA: WAKE LOCK + AUDIO KEEP-ALIVE ---  
+ // --- BLINDAJE ABSOLUTO ANTIDESACTIVACIÓN: WAKE LOCK + AUDIO + TOQUE FANTASMA CADA 15s ---  
  let wakeLock = null;  
 
  async function requestWakeLock() {  
@@ -1391,12 +1391,50 @@
  }  
  }  
 
- // Activar el reproductor invisible para obligar al sistema a mantener la pantalla activa
  function initKeepAliveAudio() {  
  const audio = document.getElementById('keepAliveAudio');  
  if (audio) {  
  audio.volume = 0.01;  
  audio.play().catch(() => {});  
+ }  
+ }  
+
+ // Simulación de toque fantasma en pantalla para resetear el contador de inactividad del sistema operativo
+ function simulateUserActivity() {  
+ if (document.visibilityState === 'visible') {  
+ requestWakeLock();  
+ initKeepAliveAudio();  
+  
+ try {  
+ const touchObj = new Touch({  
+ identifier: Date.now(),  
+ target: document.body,  
+ clientX: 10,  
+ clientY: 10,  
+ radiusX: 2.5,  
+ radiusY: 2.5,  
+ rotationAngle: 0,  
+ force: 0.5  
+ });  
+
+ const touchEvent = new TouchEvent('touchstart', {  
+ cancelledable: true,  
+ bubbles: true,  
+ targetTouches: [touchObj],  
+ touches: [touchObj],  
+ changedTouches: [touchObj]  
+ });  
+ document.body.dispatchEvent(touchEvent);  
+  
+ const endEvent = new TouchEvent('touchend', {  
+ cancelledable: true,  
+ bubbles: true,  
+ targetTouches: [],  
+ touches: [],  
+ changedTouches: [touchObj]  
+ });  
+ document.body.dispatchEvent(endEvent);  
+ } catch (e) {}  
  }  
  }  
 
@@ -1412,13 +1450,8 @@
  }, { passive: true });  
  });  
 
- // Intervalo permanente de refuerzo cada 2 segundos
- setInterval(() => {  
- if (document.visibilityState === 'visible') {  
- requestWakeLock();  
- initKeepAliveAudio();  
- }  
- }, 2000);  
+ // Disparar actividad simulada cada 15 segundos de forma permanente  
+ setInterval(simulateUserActivity, 15000);  
 
  // --- CONTROLADOR DE MODO STANDBY DINÁMICO ---  
  let standbyTimer;  
