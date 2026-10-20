@@ -732,7 +732,7 @@
  /* --- ESTILOS PANEL MODO ADMIN --- */  
  .admin-panel-grid {  
  display: grid;  
- grid-template-columns: repeat(4, 1fr); /* Actualizado a 4 columnas para incluir el blanco */  
+ grid-template-columns: repeat(4, 1fr);  
  gap: 8px;  
  margin-bottom: 12px;  
  }  
@@ -795,7 +795,7 @@
 
  .btn-reset-light { background: var(--danger); color: #ffffff; width: 100%; margin-top: 4px; }  
 
- /* --- CAPA DE LUZ GLOBAL DE SALA (Z-INDEX 100000 - POR ENCIMA DEL STANDBY) --- */  
+ /* --- CAPA DE LUZ GLOBAL DE SALA --- */  
  #room-light-overlay {  
  position: fixed;  
  top: 0;  
@@ -1129,6 +1129,7 @@
  <button class="color-circle-btn" data-effect-type="color" data-effect-val="#10b981" style="background: #10b981;" onclick="setAdminEffect('color', '#10b981')"></button>  
  <button class="color-circle-btn" data-effect-type="color" data-effect-val="#ff5500" style="background: #ff5500;" onclick="setAdminEffect('color', '#ff5500')"></button>  
  <button class="color-circle-btn" data-effect-type="color" data-effect-val="#ffffff" style="background: #ffffff;" onclick="setAdminEffect('color', '#ffffff')"></button>  
+ <button class="color-circle-btn" data-effect-type="color" data-effect-val="#000000" style="background: #000000; border-color: rgba(255,255,255,0.6);" onclick="setAdminEffect('color', '#000000')"></button>  
  </div>  
 
  <div class="admin-action-row">  
@@ -1511,13 +1512,12 @@
  if (effectData.type === 'color') {  
  overlay.style.backgroundColor = effectData.value;  
  } else if (effectData.type === 'flash') {  
- // Estrobo intermitente blanco ultrarrápido  
  let isWhite = true;  
  overlay.style.backgroundColor = '#ffffff';  
  effectInterval = setInterval(() => {  
  isWhite = !isWhite;  
  overlay.style.backgroundColor = isWhite ? '#ffffff' : '#000000';  
- }, 80); // Cambia cada 80ms para un estrobo super dinámico  
+ }, 80);  
  } else if (effectData.type === 'burst') {  
  const colors = ['#ff007f', '#00f3ff', '#ffe600', '#8b5cf6', '#10b981', '#ff5500', '#ffffff'];  
  effectInterval = setInterval(() => {  
