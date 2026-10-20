@@ -1035,6 +1035,11 @@
 </head>  
 <body>  
   
+ <!-- REPRODUCTOR SILENCIOSO DE ANCLAJE PARA EVITAR APAGADO DE PANTALLA -->  
+ <audio id="keepAliveAudio" loop preload="auto" style="display:none;">  
+ <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQAAAAA=" type="audio/wav">  
+ </audio>  
+
  <!-- CAPA DE ILUMINACIÓN GLOBAL DE SALA -->  
  <div id="room-light-overlay">  
  <div id="room-light-notice">Toca 2 veces para salir</div>  
@@ -1370,7 +1375,7 @@
  });  
  });  
   
- // --- WAKE LOCK API Y SISTEMA ANTIDEFICIENCIAS DE BLOQUEO PERMANENTE ---  
+ // --- BLINDAJE ABSOLUTO DE PANTALLA: WAKE LOCK + AUDIO KEEP-ALIVE ---  
  let wakeLock = null;  
 
  async function requestWakeLock() {  
@@ -1386,28 +1391,34 @@
  }  
  }  
 
+ // Activar el reproductor invisible para obligar al sistema a mantener la pantalla activa
+ function initKeepAliveAudio() {  
+ const audio = document.getElementById('keepAliveAudio');  
+ if (audio) {  
+ audio.volume = 0.01;  
+ audio.play().catch(() => {});  
+ }  
+ }  
+
  document.addEventListener('DOMContentLoaded', () => {  
  requestWakeLock();  
+ initKeepAliveAudio();  
  });  
 
- ['visibilitychange', 'touchstart', 'click', 'mousemove', 'pointerdown'].forEach(event => {  
+ ['touchstart', 'click', 'mousemove', 'pointerdown', 'keydown'].forEach(event => {  
  document.addEventListener(event, async () => {  
- if (wakeLock === null && document.visibilityState === 'visible') {  
- await requestWakeLock();  
- }  
- });  
+ requestWakeLock();  
+ initKeepAliveAudio();  
+ }, { passive: true });  
  });  
 
- // Bucle cada 3 segundos: Forzar Wake Lock y simular microactividad para que ningún modo (ni standby) apague la pantalla
+ // Intervalo permanente de refuerzo cada 2 segundos
  setInterval(() => {  
  if (document.visibilityState === 'visible') {  
  requestWakeLock();  
- // Simulación de microactividad de fondo para evitar suspensión del sistema en móviles
- try {  
- window.dispatchEvent(new Event('mousemove'));  
- } catch(e){}  
+ initKeepAliveAudio();  
  }  
- }, 3000);  
+ }, 2000);  
 
  // --- CONTROLADOR DE MODO STANDBY DINÁMICO ---  
  let standbyTimer;  
