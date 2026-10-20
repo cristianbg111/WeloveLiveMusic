@@ -96,6 +96,7 @@
  height: 100dvh;  
  padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));  
  overflow: hidden;  
+ transition: background-color 0.1s ease;  
  }  
   
  .card {  
@@ -406,8 +407,8 @@
  border: 1px solid var(--border);  
  flex-shrink: 0;  
  }  
- .song-item img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; cursor: pointer; flex-shrink: 0; }  
- .song-info { flex: 1; overflow: hidden; cursor: pointer; min-width: 0; }  
+ .song-item img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; cursor: pointer; flex-shrink: 0; touch-action: manipulation; }  
+ .song-info { flex: 1; overflow: hidden; cursor: pointer; min-width: 0; touch-action: manipulation; }  
  .song-title { font-weight: 700; font-size: 0.83rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }  
  .song-artist { font-size: 0.73rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }  
    
@@ -431,6 +432,7 @@
  white-space: nowrap;  
  box-shadow: 0 0 6px var(--glow-accent);  
  -webkit-appearance: none;  
+ touch-action: manipulation;  
  }  
  .vote-btn {  
  background: var(--count-bg);  
@@ -472,7 +474,7 @@
  flex-wrap: wrap;  
  }  
   
- .dj-mode-btn, .toggle-requests-btn, .save-list-btn, .history-list-btn, .pdf-btn, .clear-queue-btn {  
+ .dj-mode-btn, .admin-mode-btn, .toggle-requests-btn, .save-list-btn, .history-list-btn, .pdf-btn, .clear-queue-btn {  
  padding: 4px 7px;  
  border-radius: 6px;  
  font-size: 0.68rem;  
@@ -480,10 +482,14 @@
  cursor: pointer;  
  -webkit-appearance: none;  
  white-space: nowrap;  
+ touch-action: manipulation;  
  }  
   
  .dj-mode-btn { background: var(--badge-bg); color: #ffffff; border: none; }  
  .dj-mode-btn.active { background: var(--danger); box-shadow: 0 0 8px rgba(239, 68, 68, 0.6); }  
+
+ .admin-mode-btn { background: var(--success); color: #ffffff; border: none; }  
+ .admin-mode-btn.active { background: var(--danger); box-shadow: 0 0 8px rgba(239, 68, 68, 0.6); }  
    
  .toggle-requests-btn { background: var(--success); color: #ffffff; border: none; }  
  .toggle-requests-btn.off { background: var(--danger); }  
@@ -522,7 +528,7 @@
  color: var(--text-muted);  
  }  
   
- .queue-item img { width: 38px !important; height: 38px !important; min-width: 38px; border-radius: 8px; object-fit: cover; cursor: pointer; flex-shrink: 0; }  
+ .queue-item img { width: 38px !important; height: 38px !important; min-width: 38px; border-radius: 8px; object-fit: cover; cursor: pointer; flex-shrink: 0; touch-action: manipulation; }  
  .requester-tag { font-size: 0.65rem; color: var(--accent); font-weight: 700; margin-top: 2px; }  
   
  .badge-count {  
@@ -574,6 +580,7 @@
  font-weight: 700;  
  cursor: pointer;  
  -webkit-appearance: none;  
+ touch-action: manipulation;  
  }  
   
  .pagination {  
@@ -598,6 +605,7 @@
  cursor: pointer;  
  -webkit-appearance: none;  
  box-shadow: 0 0 6px var(--glow-accent);  
+ touch-action: manipulation;  
  }  
  .page-btn:disabled { opacity: 0.3; cursor: not-allowed; box-shadow: none; background: var(--tag-bg); color: var(--text-muted); }  
  .page-info { font-size: 0.72rem; color: var(--text); font-weight: 800; }  
@@ -654,7 +662,7 @@
  -webkit-overflow-scrolling: touch;  
  margin: auto;  
  }  
- .modal-content img { width: 100%; aspect-ratio: 1/1; border-radius: 12px; object-fit: cover; margin-bottom: 10px; border: 1px solid var(--border); }  
+ .modal-content img { width: 100%; aspect-ratio: 1/1; border-radius: 12px; object-fit: cover; margin-bottom: 10px; border: 1px solid var(--border); touch-action: manipulation; }  
  .modal-title { font-size: 0.95rem; font-weight: 800; color: var(--text); margin-bottom: 3px; }  
  .modal-artist { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px; }  
   
@@ -683,6 +691,7 @@
  margin-bottom: 10px;  
  width: 100%;  
  -webkit-appearance: none;  
+ touch-action: manipulation;  
  }  
   
  audio { width: 100%; height: 36px; margin-bottom: 10px; border-radius: 6px; }  
@@ -692,6 +701,7 @@
  display: flex; align-items: center; justify-content: center; gap: 8px;  
  padding: 10px 14px; border-radius: 10px; font-weight: 700; font-size: 0.85rem; text-decoration: none; cursor: pointer;  
  -webkit-appearance: none;  
+ touch-action: manipulation;  
  }  
  .spotify-btn { background: var(--spotify); color: #ffffff; }  
  .tidal-btn { background: var(--tidal); color: #ffffff; border: 1px solid var(--border); }  
@@ -718,8 +728,51 @@
  .history-item-title { font-weight: 800; font-size: 0.85rem; color: var(--text); }  
  .history-item-date { font-size: 0.7rem; color: var(--text-muted); }  
  .history-actions { display: flex; gap: 6px; justify-content: flex-end; }  
- .history-view-btn { background: var(--badge-bg); color: #fff; border: none; padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; cursor: pointer; }  
+ .history-view-btn { background: var(--badge-bg); color: #fff; border: none; padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; cursor: pointer; touch-action: manipulation; }  
   
+ /* --- ESTILOS PANEL MODO ADMIN --- */  
+ .admin-panel-grid {  
+ display: grid;  
+ grid-template-columns: repeat(3, 1fr);  
+ gap: 10px;  
+ margin-bottom: 12px;  
+ }  
+  
+ .color-circle-btn {  
+ aspect-ratio: 1/1;  
+ border-radius: 50%;  
+ border: 3px solid rgba(255,255,255,0.3);  
+ cursor: pointer;  
+ box-shadow: 0 4px 10px rgba(0,0,0,0.4);  
+ transition: transform 0.1s ease, filter 0.1s ease;  
+ -webkit-appearance: none;  
+ touch-action: manipulation;  
+ }  
+ .color-circle-btn:active { transform: scale(0.9); }  
+  
+ .admin-action-row {  
+ display: flex;  
+ gap: 8px;  
+ margin-bottom: 10px;  
+ }  
+  
+ .admin-action-btn {  
+ flex: 1;  
+ padding: 12px;  
+ border-radius: 10px;  
+ font-weight: 800;  
+ font-size: 0.8rem;  
+ text-transform: uppercase;  
+ border: none;  
+ cursor: pointer;  
+ box-shadow: 0 4px 10px rgba(0,0,0,0.3);  
+ -webkit-appearance: none;  
+ touch-action: manipulation;  
+ }  
+ .btn-flash { background: #ffffff; color: #000000; }  
+ .btn-burst { background: linear-gradient(135deg, #ff007f, #00f3ff, #ffe600, #8b5cf6); color: #ffffff; animation: neonGlow 3s ease infinite; }  
+ .btn-reset-light { background: var(--danger); color: #ffffff; width: 100%; margin-top: 4px; }  
+
  /* --- ESTILOS PANTALLA STANDBY --- */  
  #standby-screen {  
  position: fixed;  
@@ -932,7 +985,7 @@
  <div class="instructions-box">  
  <div class="instructions-title">🎧 ¡Envía tus peticiones al DJ!</div>  
  <div class="instructions-text">  
- Busca tu canción preferida y, una vez la localices, pulsa sobre el botón <strong>"Pedir"</strong>. Se agregará al instante a la lista de peticiones de la sala.  
+ Busca tu canción preferida y, una vez la localices, pulsa sobre el botón <strong>"Pedir"</strong>. Se agregará al instante a la lista de peticiones de sala.  
  <div class="aviso-evento">  
  <strong>IMPORTANTE:</strong> Por favor, las peticiones que se realicen deben ser acordes al evento que se está realizando.  
  </div>  
@@ -942,6 +995,7 @@
  <div class="tabs">  
  <button class="tab-btn highlight-animated active" onclick="switchTab('search', true)">✨ Busca y Añade</button>  
  <button class="tab-btn queue-tab-btn" id="queueTabBtn" onclick="switchTab('queue', true)">📻 Lista Peticiones</button>  
+ <button class="tab-btn" id="adminTabBtn" style="display: none;" onclick="switchTab('admin', true)">💡 Admin</button>  
  </div>  
   
  <div id="tabSearch" class="tab-content active">  
@@ -963,6 +1017,7 @@
  <span class="queue-title" id="queueHeaderTitle">Lista Peticiones</span>  
  <div class="queue-actions">  
  <button class="dj-mode-btn" id="djModeToggleBtn" onclick="toggleDjMode()">🎧 DJ</button>  
+ <button class="admin-mode-btn" id="adminModeToggleBtn" onclick="toggleAdminMode()">💡 Admin</button>  
  <button class="toggle-requests-btn" id="toggleRequestsBtn" style="display: none;" onclick="toggleRequestsState()">🔒 Peticiones: ON</button>  
  <button class="save-list-btn" id="saveListBtn" style="display: none;" onclick="saveCurrentList()">💾 Guardar</button>  
  <button class="history-list-btn" id="historyListBtn" style="display: none;" onclick="openHistoryModal()">📁 Hist.</button>  
@@ -979,6 +1034,35 @@
   
  <div id="queueResults" class="results">  
  <p class="status-msg">Cargando lista...</p>  
+ </div>  
+ </div>  
+
+ <!-- PESTAÑA MODO ADMIN DE SALA -->  
+ <div id="tabAdmin" class="tab-content">  
+ <div class="queue-header">  
+ <span class="queue-title">Efectos de Sala (Admin)</span>  
+ </div>  
+ <div class="results" style="padding-top: 6px;">  
+ <div class="instructions-box" style="margin-bottom: 10px;">  
+ <div class="instructions-title">✨ Control Lumínico Global</div>  
+ <div class="instructions-text">Pulsa cualquier color, flash o ráfaga para sincronizar las pantallas de todos los asistentes en la sala al instante.</div>  
+ </div>  
+
+ <div class="admin-panel-grid">  
+ <button class="color-circle-btn" style="background: #ff007f;" onclick="setAdminEffect('color', '#ff007f')"></button>  
+ <button class="color-circle-btn" style="background: #00f3ff;" onclick="setAdminEffect('color', '#00f3ff')"></button>  
+ <button class="color-circle-btn" style="background: #ffe600;" onclick="setAdminEffect('color', '#ffe600')"></button>  
+ <button class="color-circle-btn" style="background: #8b5cf6;" onclick="setAdminEffect('color', '#8b5cf6')"></button>  
+ <button class="color-circle-btn" style="background: #10b981;" onclick="setAdminEffect('color', '#10b981')"></button>  
+ <button class="color-circle-btn" style="background: #ff5500;" onclick="setAdminEffect('color', '#ff5500')"></button>  
+ </div>  
+
+ <div class="admin-action-row">  
+ <button class="admin-action-btn btn-flash" onclick="setAdminEffect('flash', '#ffffff')">⚡ Flash Blanco</button>  
+ <button class="admin-action-btn btn-burst" onclick="setAdminEffect('burst', 'burst')">💥 Ráfaga Color</button>  
+ </div>  
+
+ <button class="admin-action-btn btn-reset-light" onclick="setAdminEffect('off', '')">🛑 Apagar Efectos / Normal</button>  
  </div>  
  </div>  
   
@@ -1012,6 +1096,8 @@
  <div id="audioContainer">  
  <audio id="modalAudio" controls playsinline></audio>  
  </div>  
+  
+ <div id="modalActionContainer" style="margin-bottom: 10px;"></div>  
   
  <div class="modal-actions">  
  <a id="modalSpotifyBtn" href="#" target="_blank" class="spotify-btn">  
@@ -1096,6 +1182,7 @@
  const historyRef = db.ref('welove_live_music_history');  
  const settingsRef = db.ref('welove_live_music_settings/requestsOpen');  
  const statsRef = db.ref('welove_live_music_stats/visits');  
+ const adminEffectRef = db.ref('welove_live_music_settings/adminEffect');  
   
  let debounceTimer;  
  let tapTimes = [];  
@@ -1109,11 +1196,13 @@
  const itemsPerPage = 25;  
    
  let isDjModeActive = false;  
+ let isAdminModeActive = false;  
  let areRequestsOpen = true;  
  const CORRECT_PASSWORD_ENCODED = "amJkZWVqYXkx";  
   
  let lastQueueLength = 0;  
  let hasUnreadRequests = false;  
+ let burstInterval = null;  
   
  document.addEventListener('DOMContentLoaded', () => {  
  loadHistory();  
@@ -1163,7 +1252,8 @@
  }  
   
  const queueTab = document.getElementById('tabQueue');  
- if (queueTab.classList.contains('active')) {  
+ const adminTab = document.getElementById('tabAdmin');  
+ if (queueTab.classList.contains('active') || (adminTab && adminTab.classList.contains('active'))) {  
  switchTab('search', false);  
  return;  
  }  
@@ -1192,7 +1282,12 @@
  updateNeonBannerUI();  
  });  
 
- // INICIAR EL REBOTE DEL LOGO DESDE EL PRIMER SEGUNDO DE CARGA EN STANDBY
+ // ESCUCHAR EFECTOS DE ADMIN EN TIEMPO REAL PARA TODOS LOS MÓVILES
+ adminEffectRef.on('value', (snapshot) => {  
+ const val = snapshot.val();  
+ applyAdminEffectLocally(val);  
+ });  
+
  startBouncingLogo();  
  });  
   
@@ -1222,11 +1317,11 @@
  });  
  });  
 
- // --- CONTROLADOR DE MODO STANDBY DINÁMICO (60s Público / 120s Modo DJ) ---  
+ // --- CONTROLADOR DE MODO STANDBY DINÁMICO (60s Público / 180s Modo DJ o Admin) ---  
  let standbyTimer;  
   
  function getStandbyDelay() {  
- return isDjModeActive ? 120000 : 60000;  
+ return (isDjModeActive || isAdminModeActive) ? 180000 : 60000;  
  }  
   
  function showStandby() {  
@@ -1256,6 +1351,33 @@
  });  
   
  resetStandbyTimer();  
+
+ // --- APLICAR EFECTOS DE ADMIN EN LAS PANTALLAS DE LA SALA ---  
+ function setAdminEffect(type, value) {  
+ adminEffectRef.set({ type: type, value: value });  
+ }  
+
+ function applyAdminEffectLocally(effectData) {  
+ if (burstInterval) {  
+ clearInterval(burstInterval);  
+ burstInterval = null;  
+ }  
+
+ if (!effectData || effectData.type === 'off') {  
+ document.body.style.backgroundColor = '';  
+ return;  
+ }  
+
+ if (effectData.type === 'color' || effectData.type === 'flash') {  
+ document.body.style.backgroundColor = effectData.value;  
+ } else if (effectData.type === 'burst') {  
+ const colors = ['#ff007f', '#00f3ff', '#ffe600', '#8b5cf6', '#10b981', '#ff5500', '#ffffff'];  
+ burstInterval = setInterval(() => {  
+ const randomColor = colors[Math.floor(Math.random() * colors.length)];  
+ document.body.style.backgroundColor = randomColor;  
+ }, 150); // Cambia cada 150ms (efecto ráfaga estroboscópica)  
+ }  
+ }  
 
  // --- MOTOR DE REBOTE PARA EL LOGO EN STANDBY ---  
  let bounceAnimId = null;  
@@ -1324,14 +1446,14 @@
   
  if (encodedInput === CORRECT_PASSWORD_ENCODED) {  
  isDjModeActive = true;  
- document.getElementById('djModeToggleBtn').textContent = "🚪 Salir";  
+ document.getElementById('djModeToggleBtn').textContent = "🚪 Salir DJ";  
  document.getElementById('djModeToggleBtn').classList.add('active');  
  document.getElementById('toggleRequestsBtn').style.display = 'inline-block';  
  document.getElementById('saveListBtn').style.display = 'inline-block';  
  document.getElementById('historyListBtn').style.display = 'inline-block';  
  document.getElementById('clearQueueBtn').style.display = 'inline-block';  
  document.getElementById('queueHeaderTitle').textContent = "Control DJ";  
- alert("¡Modo DJ activado con éxito! 🎧 (Standby ajustado a 2 minutos)");  
+ alert("¡Modo DJ activado con éxito! 🎧 (Standby ajustado a 3 minutos)");  
  resetStandbyTimer();  
  renderQueuePage();  
  } else {  
@@ -1341,14 +1463,45 @@
  isDjModeActive = false;  
  document.getElementById('djModeToggleBtn').textContent = "🎧 DJ";  
  document.getElementById('djModeToggleBtn').classList.remove('active');  
+ if (!isAdminModeActive) {  
  document.getElementById('toggleRequestsBtn').style.display = 'none';  
  document.getElementById('saveListBtn').style.display = 'none';  
  document.getElementById('historyListBtn').style.display = 'none';  
  document.getElementById('clearQueueBtn').style.display = 'none';  
+ }  
  document.getElementById('queueHeaderTitle').textContent = "Lista Peticiones";  
- alert("Modo DJ desactivado. (Standby ajustado a 1 minuto)");  
+ alert("Modo DJ desactivado.");  
  resetStandbyTimer();  
  renderQueuePage();  
+ }  
+ }  
+
+ async function toggleAdminMode() {  
+ if (!isAdminModeActive) {  
+ const pass = prompt("Introduce la contraseña de Administrador (Modo Admin):");  
+ if (pass === null) return;  
+  
+ const encodedInput = btoa(pass.trim());  
+  
+ if (encodedInput === CORRECT_PASSWORD_ENCODED) {  
+ isAdminModeActive = true;  
+ document.getElementById('adminModeToggleBtn').textContent = "🚪 Salir Admin";  
+ document.getElementById('adminModeToggleBtn').classList.add('active');  
+ document.getElementById('adminTabBtn').style.display = 'block';  
+ switchTab('admin', true);  
+ alert("¡Modo Admin activado con éxito! 💡");  
+ resetStandbyTimer();  
+ } else {  
+ alert("Contraseña incorrecta.");  
+ }  
+ } else {  
+ isAdminModeActive = false;  
+ document.getElementById('adminModeToggleBtn').textContent = "💡 Admin";  
+ document.getElementById('adminModeToggleBtn').classList.remove('active');  
+ document.getElementById('adminTabBtn').style.display = 'none';  
+ switchTab('search', true);  
+ alert("Modo Admin desactivado.");  
+ resetStandbyTimer();  
  }  
  }  
   
@@ -1504,8 +1657,8 @@
   
  return `  
  <div class="queue-item${isPlayedClass}">  
- <img src="${artworkThumb}" alt="${item.title}" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}')">  
- <div class="song-info" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}')">  
+ <img src="${artworkThumb}" alt="${item.title}" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}', '${year}')">  
+ <div class="song-info" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}', '${year}')">  
  <div class="song-title">${index + 1}. ${item.title}</div>  
  <div class="song-artist">${item.artist}</div>  
  <div class="requester-tag">Pedido: ${displayUser} ${item.played ? '✅ [Pinchada]' : ''}</div>  
@@ -1576,7 +1729,7 @@
  if (pushState) {  
  history.pushState({ page: 'search' }, '', '');  
  }  
- } else {  
+ } else if (tabName === 'queue') {  
  document.querySelectorAll('.tab-btn')[1].classList.add('active');  
  document.getElementById('tabQueue').classList.add('active');  
  document.body.classList.add('queue-tab-active');  
@@ -1586,6 +1739,14 @@
   
  if (pushState) {  
  history.pushState({ page: 'queue' }, '', '');  
+ }  
+ } else if (tabName === 'admin') {  
+ const adminBtn = document.getElementById('adminTabBtn');  
+ if (adminBtn) adminBtn.classList.add('active');  
+ document.getElementById('tabAdmin').classList.add('active');  
+ document.body.classList.add('queue-tab-active');  
+ if (pushState) {  
+ history.pushState({ page: 'admin' }, '', '');  
  }  
  }  
  }  
@@ -1724,8 +1885,8 @@
   
  return `  
  <div class="song-item">  
- <img src="${artwork100}" alt="${song.trackName}" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}')">  
- <div class="song-info" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}')">  
+ <img src="${artwork100}" alt="${song.trackName}" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}', '${year}')">  
+ <div class="song-info" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}', '${year}')">  
  <div class="song-title">${song.trackName}</div>  
  <div class="song-artist">${song.artistName}</div>  
  </div>  
@@ -1981,8 +2142,8 @@
   
  return `  
  <div class="queue-item${djClass}${playedClass}">  
- <img src="${item.artwork}" alt="${item.title}" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}')">  
- <div class="song-info" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}')">  
+ <img src="${item.artwork}" alt="${item.title}" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}', '${year}')">  
+ <div class="song-info" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}', '${year}')">  
  <div class="song-title">${absoluteIndex}. ${item.title}</div>  
  <div class="song-artist">${item.artist}</div>  
  <div class="requester-tag">Pedido: ${displayUser} ${isPlayed ? '✅ [Pinchada]' : ''}</div>  
@@ -2059,7 +2220,7 @@
  return camelotKeys[Math.abs(hash) % camelotKeys.length];  
  }  
   
- function openModal(imgUrl, title, artist, audioUrl, genre) {  
+ function openModal(imgUrl, title, artist, audioUrl, genre, year) {  
  document.getElementById('modalImg').src = imgUrl;  
  document.getElementById('modalTitle').textContent = title;  
  document.getElementById('modalArtist').textContent = artist;  
@@ -2081,6 +2242,23 @@
  const musicQuery = encodeURIComponent(currentSearchTerm);  
  document.getElementById('modalSpotifyBtn').href = `https://open.spotify.com/search/${musicQuery}`;  
    
+ const modalActionContainer = document.getElementById('modalActionContainer');  
+ const safeTitle = title.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');  
+ const safeArtist = artist.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');  
+ const artwork100 = imgUrl.replace('1000x1000bb', '100x100bb');  
+  
+ const songKey = btoa(unescape(encodeURIComponent(title + " - " + artist)))  
+ .replace(/[/+:=]/g, '_');  
+ const existingQueueItem = globalQueueItems.find(item => item.id === songKey);  
+ const disabledAttr = !areRequestsOpen ? 'disabled' : '';  
+ const btnTitleAttr = !areRequestsOpen ? 'title="Las peticiones están desactivadas por el DJ"' : '';  
+  
+ if (existingQueueItem) {  
+ modalActionContainer.innerHTML = `<button class="vote-btn" style="width: 100%; padding: 10px; font-size: 0.85rem;" ${disabledAttr} ${btnTitleAttr} onclick="voteSong('${songKey}', '${safeTitle}'); closeModal();">🔥 Votar esta canción (+1)</button>`;  
+ } else {  
+ modalActionContainer.innerHTML = `<button class="request-btn" style="width: 100%; padding: 10px; font-size: 0.85rem;" ${disabledAttr} ${btnTitleAttr} onclick="requestSong('${safeTitle}', '${safeArtist}', '${artwork100}', '${audioUrl || ''}', '${genre}', '${year}'); closeModal();">➕ Pedir esta canción al DJ</button>`;  
+ }  
+  
  history.pushState({ modalOpen: true }, '', '');  
  document.getElementById('imageModal').style.display = 'flex';  
  }  
