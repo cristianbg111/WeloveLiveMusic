@@ -1375,7 +1375,7 @@
  });  
  });  
   
- // --- BLINDAJE ABSOLUTO ANTIDESACTIVACIÓN: WAKE LOCK + AUDIO + TOQUE FANTASMA CADA 15s ---  
+ // --- BLINDAJE ABSOLUTO DE PANTALLA: WAKE LOCK + AUDIO KEEP-ALIVE ---  
  let wakeLock = null;  
 
  async function requestWakeLock() {  
@@ -1399,59 +1399,30 @@
  }  
  }  
 
- // Simulación de toque fantasma en pantalla para resetear el contador de inactividad del sistema operativo
- function simulateUserActivity() {  
- if (document.visibilityState === 'visible') {  
- requestWakeLock();  
- initKeepAliveAudio();  
-  
- try {  
- const touchObj = new Touch({  
- identifier: Date.now(),  
- target: document.body,  
- clientX: 10,  
- clientY: 10,  
- radiusX: 2.5,  
- radiusY: 2.5,  
- rotationAngle: 0,  
- force: 0.5  
- });  
-
- const touchEvent = new TouchEvent('touchstart', {  
- cancelledable: true,  
- bubbles: true,  
- targetTouches: [touchObj],  
- touches: [touchObj],  
- changedTouches: [touchObj]  
- });  
- document.body.dispatchEvent(touchEvent);  
-  
- const endEvent = new TouchEvent('touchend', {  
- cancelledable: true,  
- bubbles: true,  
- targetTouches: [],  
- touches: [],  
- changedTouches: [touchObj]  
- });  
- document.body.dispatchEvent(endEvent);  
- } catch (e) {}  
- }  
- }  
-
  document.addEventListener('DOMContentLoaded', () => {  
  requestWakeLock();  
  initKeepAliveAudio();  
  });  
 
- ['touchstart', 'click', 'mousemove', 'pointerdown', 'keydown'].forEach(event => {  
+ ['visibilitychange', 'touchstart', 'click', 'mousemove', 'pointerdown', 'keydown'].forEach(event => {  
  document.addEventListener(event, async () => {  
- requestWakeLock();  
+ if (wakeLock === null && document.visibilityState === 'visible') {  
+ await requestWakeLock();  
+ }  
  initKeepAliveAudio();  
- }, { passive: true });  
+ });  
  });  
 
- // Disparar actividad simulada cada 15 segundos de forma permanente  
- setInterval(simulateUserActivity, 15000);  
+ // Refuerzo permanente cada 3 segundos  
+ setInterval(() => {  
+ if (document.visibilityState === 'visible') {  
+ requestWakeLock();  
+ initKeepAliveAudio();  
+ try {  
+ window.dispatchEvent(new Event('mousemove'));  
+ } catch(e){}  
+ }  
+ }, 3000);  
 
  // --- CONTROLADOR DE MODO STANDBY DINÁMICO ---  
  let standbyTimer;  
