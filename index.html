@@ -772,7 +772,7 @@
  .btn-burst { background: linear-gradient(135deg, #ff007f, #00f3ff, #ffe600, #8b5cf6); color: #ffffff; animation: neonGlow 3s ease infinite; }  
  .btn-reset-light { background: var(--danger); color: #ffffff; width: 100%; margin-top: 4px; }  
 
- /* --- CAPA DE LUZ GLOBAL DE SALA (PANTALLA COMPLETA PARA MÓVILES NORMALES) --- */  
+ /* --- CAPA DE LUZ GLOBAL DE SALA (OPTIMIZADA ANDROID & IOS SAFARI) --- */  
  #room-light-overlay {  
  position: fixed;  
  top: 0;  
@@ -780,9 +780,15 @@
  width: 100vw;  
  height: 100vh;  
  height: 100dvh;  
- z-index: 8888;  
+ z-index: 99999; /* Por encima del standby y app en ambos sistemas */  
  display: none;  
  cursor: pointer;  
+ -webkit-user-select: none;  
+ user-select: none;  
+ -webkit-touch-callout: none;  
+ -webkit-tap-highlight-color: transparent;  
+ filter: brightness(1.5) contrast(1.25); /* Refuerzo máximo de brillo y viveza */  
+ -webkit-filter: brightness(1.5) contrast(1.25);  
  }  
  #room-light-overlay.active {  
  display: block;  
@@ -791,13 +797,13 @@
  /* AVISO TÁCTIL EN EL OVERLAY PARA DOBLE PULSACIÓN */  
  #room-light-notice {  
  position: absolute;  
- bottom: max(30px, env(safe-area-inset-bottom));  
+ bottom: max(35px, env(safe-area-inset-bottom));  
  left: 50%;  
  transform: translateX(-50%);  
- background: rgba(0, 0, 0, 0.65);  
- border: 1px solid rgba(255, 255, 255, 0.2);  
+ background: rgba(0, 0, 0, 0.8);  
+ border: 1px solid rgba(255, 255, 255, 0.35);  
  color: #ffffff;  
- padding: 8px 16px;  
+ padding: 9px 18px;  
  border-radius: 20px;  
  font-size: 0.75rem;  
  font-weight: 700;  
@@ -806,8 +812,8 @@
  pointer-events: none;  
  opacity: 0;  
  transition: opacity 0.2s ease;  
- -webkit-backdrop-filter: blur(5px);  
- backdrop-filter: blur(5px);  
+ -webkit-backdrop-filter: blur(6px);  
+ backdrop-filter: blur(6px);  
  }  
  #room-light-overlay.show-notice #room-light-notice {  
  opacity: 1;  
@@ -1011,9 +1017,9 @@
 </head>  
 <body>  
   
- <!-- CAPA DE ILUMINACIÓN DE SALA (PANTALLA COMPLETA) -->  
+ <!-- CAPA DE ILUMINACIÓN GLOBAL DE SALA (COMPATIBLE ANDROID & IOS SAFARI) -->  
  <div id="room-light-overlay">  
- <div id="room-light-notice">Toca otra vez para salir</div>  
+ <div id="room-light-notice">Toca 2 veces para salir</div>  
  </div>  
 
  <div class="card">  
@@ -1250,6 +1256,7 @@
  let burstInterval = null;  
  let userDismissedLight = false;  
  let lastOverlayTapTime = 0;  
+ let latestAdminEffectData = null;  
   
  document.addEventListener('DOMContentLoaded', () => {  
  loadHistory();  
@@ -1277,9 +1284,13 @@
  document.getElementById('modalTidalBtn').addEventListener('click', openTidalApp);  
  document.getElementById('modalYoutubeBtn').addEventListener('click', openYoutubeApp);  
 
- // CONFIGURAR EL DOBLE TOQUE EN LA CAPA DE LUZ DE SALA  
+ // CONFIGURAR EL DOBLE TOQUE MULTIPLATAFORMA EN LA CAPA DE LUZ  
  const overlay = document.getElementById('room-light-overlay');  
  overlay.addEventListener('click', handleOverlayDoubleTap);  
+ overlay.addEventListener('touchend', (e) => {  
+ e.preventDefault();  
+ handleOverlayDoubleTap(e);  
+ }, { passive: false });  
   
  history.replaceState({ page: 'search' }, '', '');  
   
@@ -1333,10 +1344,10 @@
  updateNeonBannerUI();  
  });  
 
- // ESCUCHAR EFECTOS DE ADMIN EN TIEMPO REAL PARA TODOS LOS MÓVILES
+ // ESCUCHAR EFECTOS DE ADMIN EN TIEMPO REAL (STANDBY O APP)  
  adminEffectRef.on('value', (snapshot) => {  
  const val = snapshot.val();  
- // Si cambia el efecto global desde el admin, permitimos que se vuelva a mostrar en la sala  
+ latestAdminEffectData = val;  
  userDismissedLight = false;  
  applyAdminEffectLocally(val);  
  });  
@@ -1344,7 +1355,7 @@
  startBouncingLogo();  
  });  
   
- // --- WAKE LOCK API (EVITAR APAGADO DE PANTALLA EN TODA LA APP) ---  
+ // --- WAKE LOCK API (EVITAR APAGADO DE PANTALLA EN ANDROID & IOS) ---  
  let wakeLock = null;  
 
  async function requestWakeLock() {  
@@ -1392,6 +1403,10 @@
  stopBouncingLogo();  
  }  
  resetStandbyTimer();  
+
+ if (latestAdminEffectData) {  
+ applyAdminEffectLocally(latestAdminEffectData);  
+ }  
  }  
   
  function resetStandbyTimer() {  
@@ -1405,7 +1420,7 @@
   
  resetStandbyTimer();  
 
- // --- APLICAR EFECTOS DE ADMIN EN LAS PANTALLAS DE LA SALA CON DOBLE TOQUE PARA SALIR ---  
+ // --- APLICAR EFECTOS DE ADMIN CON DOBLE TOQUE MULTIPLATAFORMA ---  
  function setAdminEffect(type, value) {  
  adminEffectRef.set({ type: type, value: value });  
  }  
@@ -1416,7 +1431,6 @@
  const overlay = document.getElementById('room-light-overlay');  
 
  if (now - lastOverlayTapTime < 800) {  
- // ¡Doble toque confirmado! Ocultamos el overlay en este dispositivo  
  userDismissedLight = true;  
  overlay.classList.remove('active', 'show-notice');  
  if (burstInterval) {  
@@ -1424,7 +1438,6 @@
  burstInterval = null;  
  }  
  } else {  
- // Primer toque: mostramos aviso y registramos tiempo  
  lastOverlayTapTime = now;  
  overlay.classList.add('show-notice');  
  setTimeout(() => {  
@@ -1458,7 +1471,7 @@
  burstInterval = setInterval(() => {  
  const randomColor = colors[Math.floor(Math.random() * colors.length)];  
  overlay.style.backgroundColor = randomColor;  
- }, 150); // Cambia cada 150ms (efecto ráfaga estroboscópica)  
+ }, 150);  
  }  
  }  
 
@@ -1833,7 +1846,6 @@
  }  
  }  
 
- // Refrescar el efecto local para ocultar el overlay si el admin entra en su panel  
  adminEffectRef.once('value', (snapshot) => {  
  applyAdminEffectLocally(snapshot.val());  
  });  
