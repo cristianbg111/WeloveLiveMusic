@@ -1298,8 +1298,8 @@
  });  
   
  document.getElementById('tapBtn').addEventListener('click', tapTempo);  
- document.getElementById('backModalBtn').addEventListener('click', closeModal);  
- document.getElementById('imageModal').addEventListener('click', closeModal);  
+ document.getElementById('backModalBtn').addEventListener('click', () => closeModal(true));  
+ document.getElementById('imageModal').addEventListener('click', () => closeModal(true));  
  document.getElementById('historyModal').addEventListener('click', closeHistoryModal);  
  document.getElementById('modalTidalBtn').addEventListener('click', openTidalApp);  
  document.getElementById('modalYoutubeBtn').addEventListener('click', openYoutubeApp);  
@@ -1338,8 +1338,6 @@
  switchTab('search', false);  
  return;  
  }  
-  
- window.location.reload();  
  });  
   
  if (!sessionStorage.getItem('visited_live')) {  
@@ -1372,16 +1370,18 @@
  });  
  });  
   
- // --- WAKE LOCK API (FORZAR PANTALLA ENCENDIDA) ---  
+ // --- WAKE LOCK API (MANTENER PANTALLA SIEMPRE ENCENDIDA) ---  
  let wakeLock = null;  
 
  async function requestWakeLock() {  
  if ('wakeLock' in navigator) {  
  try {  
+ if (wakeLock === null) {  
  wakeLock = await navigator.wakeLock.request('screen');  
  wakeLock.addEventListener('release', () => {  
  wakeLock = null;  
  });  
+ }  
  } catch (err) {}  
  }  
  }  
@@ -1397,6 +1397,13 @@
  }  
  });  
  });  
+
+ // Intervalo de refresco constante para forzar que los navegadores no apaguen la pantalla bajo efectos
+ setInterval(() => {  
+ if (document.visibilityState === 'visible') {  
+ requestWakeLock();  
+ }  
+ }, 10000);  
 
  // --- CONTROLADOR DE MODO STANDBY DINÁMICO ---  
  let standbyTimer;  
@@ -1493,7 +1500,7 @@
  const adminTab = document.getElementById('tabAdmin');  
  const isInAdminTab = adminTab && adminTab.classList.contains('active');  
 
- // Si hay efectos activos, forzamos la renovación del Wake Lock para que no se apague la pantalla bajo ningún concepto
+ // Forzar Wake Lock permanentemente si hay luz activa
  if (effectData && effectData.type !== 'off') {  
  requestWakeLock();  
  }  
@@ -1514,12 +1521,14 @@
  effectInterval = setInterval(() => {  
  isWhite = !isWhite;  
  overlay.style.backgroundColor = isWhite ? '#ffffff' : '#000000';  
+ requestWakeLock();  
  }, 80);  
  } else if (effectData.type === 'burst') {  
  const colors = ['#ff007f', '#00f3ff', '#ffe600', '#8b5cf6', '#10b981', '#ff5500', '#ffffff'];  
  effectInterval = setInterval(() => {  
  const randomColor = colors[Math.floor(Math.random() * colors.length)];  
  overlay.style.backgroundColor = randomColor;  
+ requestWakeLock();  
  }, 150);  
  }  
  }  
@@ -2346,9 +2355,9 @@
  const btnTitleAttr = !areRequestsOpen ? 'title="Las peticiones están desactivadas por el DJ"' : '';  
   
  if (existingQueueItem) {  
- modalActionContainer.innerHTML = `<button class="vote-btn" style="width: 100%; padding: 10px; font-size: 0.85rem;" ${disabledAttr} ${btnTitleAttr} onclick="voteSong('${songKey}', '${safeTitle}'); closeModal();">🔥 Votar esta canción (+1)</button>`;  
+ modalActionContainer.innerHTML = `<button class="vote-btn" style="width: 100%; padding: 10px; font-size: 0.85rem;" ${disabledAttr} ${btnTitleAttr} onclick="voteSong('${songKey}', '${safeTitle}'); closeModal(true);">🔥 Votar esta canción (+1)</button>`;  
  } else {  
- modalActionContainer.innerHTML = `<button class="request-btn" style="width: 100%; padding: 10px; font-size: 0.85rem;" ${disabledAttr} ${btnTitleAttr} onclick="requestSong('${safeTitle}', '${safeArtist}', '${artwork100}', '${audioUrl || ''}', '${genre}', '${year}'); closeModal();">➕ Pedir esta canción al DJ</button>`;  
+ modalActionContainer.innerHTML = `<button class="request-btn" style="width: 100%; padding: 10px; font-size: 0.85rem;" ${disabledAttr} ${btnTitleAttr} onclick="requestSong('${safeTitle}', '${safeArtist}', '${artwork100}', '${audioUrl || ''}', '${genre}', '${year}'); closeModal(true);">➕ Pedir esta canción al DJ</button>`;  
  }  
   
  history.pushState({ modalOpen: true }, '', '');  
