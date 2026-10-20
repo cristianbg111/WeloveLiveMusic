@@ -1399,65 +1399,35 @@
  }  
  }  
 
- // Simulación de toque fantasma en pantalla para resetear el contador de inactividad del sistema operativo
- function simulateUserActivity() {  
- if (document.visibilityState === 'visible') {  
- requestWakeLock();  
- initKeepAliveAudio();  
-  
- try {  
- const touchObj = new Touch({  
- identifier: Date.now(),  
- target: document.body,  
- clientX: 10,  
- clientY: 10,  
- radiusX: 2.5,  
- radiusY: 2.5,  
- rotationAngle: 0,  
- force: 0.5  
- });  
-
- const touchEvent = new TouchEvent('touchstart', {  
- cancelledable: true,  
- bubbles: true,  
- targetTouches: [touchObj],  
- touches: [touchObj],  
- changedTouches: [touchObj]  
- });  
- document.body.dispatchEvent(touchEvent);  
-  
- const endEvent = new TouchEvent('touchend', {  
- cancelledable: true,  
- bubbles: true,  
- targetTouches: [],  
- touches: [],  
- changedTouches: [touchObj]  
- });  
- document.body.dispatchEvent(endEvent);  
- } catch (e) {}  
- }  
- }  
-
  document.addEventListener('DOMContentLoaded', () => {  
  requestWakeLock();  
  initKeepAliveAudio();  
  });  
 
- ['touchstart', 'click', 'mousemove', 'pointerdown', 'keydown'].forEach(event => {  
+ ['visibilitychange', 'touchstart', 'click', 'mousemove', 'pointerdown', 'keydown'].forEach(event => {  
  document.addEventListener(event, async () => {  
- requestWakeLock();  
+ if (wakeLock === null && document.visibilityState === 'visible') {  
+ await requestWakeLock();  
+ }  
  initKeepAliveAudio();  
- }, { passive: true });  
+ });  
  });  
 
- // Disparar actividad simulada cada 15 segundos para mantener la pantalla despierta  
- setInterval(simulateUserActivity, 15000);  
+ setInterval(() => {  
+ if (document.visibilityState === 'visible') {  
+ requestWakeLock();  
+ initKeepAliveAudio();  
+ try {  
+ window.dispatchEvent(new Event('mousemove'));  
+ } catch(e){}  
+ }  
+ }, 3000);  
 
- // --- CONTROLADOR DE MODO STANDBY DINÁMICO ---  
+ // --- CONTROLADOR DE MODO STANDBY (29s normal / 3 min DJ o Admin) ---  
  let standbyTimer;  
   
  function getStandbyDelay() {  
- return (isDjModeActive || isAdminModeActive) ? 180000 : 60000;  
+ return (isDjModeActive || isAdminModeActive) ? 180000 : 29000;  
  }  
   
  function showStandby() {  
