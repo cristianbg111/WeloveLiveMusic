@@ -1034,11 +1034,6 @@
  </style>  
 </head>  
 <body>  
-
- <!-- VÍDEO INVISIBLE ANTI-APAGADO DE PANTALLA -->
- <video id="antiSleepVideo" muted autoplay playsinline loop style="position: fixed; top: 0; left: 0; width: 1px; height: 1px; opacity: 0.01; pointer-events: none; z-index: -1;">
-   <source src="data:video/mp4;base64,AAAAIGZ0eXBpc29tAAAAAGlzb21pc28zdmpwNDEAAAAIZnJlZQAAAAhtZGF0AAAAWwY=", type="video/mp4">
- </video>
   
  <!-- CAPA DE ILUMINACIÓN GLOBAL DE SALA -->  
  <div id="room-light-overlay">  
@@ -1373,16 +1368,6 @@
  applyAdminEffectLocally(val);  
  updateAdminButtonsUI(val);  
  });  
-
- // Forzar reproducción del vídeo anti-apagado con la primera interacción del usuario
- const ensureVideoPlaying = () => {
-   const vid = document.getElementById('antiSleepVideo');
-   if (vid) {
-     vid.play().catch(() => {});
-   }
- };
- document.addEventListener('touchstart', ensureVideoPlaying, { once: true });
- document.addEventListener('click', ensureVideoPlaying, { once: true });
  });  
   
  // --- WAKE LOCK API ---  
