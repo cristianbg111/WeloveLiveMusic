@@ -253,12 +253,13 @@
  font-weight: 600;  
  }  
   
+ /* --- NUEVO DISEÑO OVALADO PROFESIONAL PARA PESTAÑAS --- */  
  .tabs {  
  display: flex;  
  gap: 8px;  
  margin-bottom: 6px;  
  border-bottom: 1px solid var(--border);  
- padding-bottom: 4px;  
+ padding-bottom: 6px;  
  flex-shrink: 0;  
  position: relative;  
  }  
@@ -290,22 +291,30 @@
  background: var(--tag-bg);  
  border: 1px solid var(--border);  
  color: var(--text-muted);  
- padding: 6px;  
- border-radius: 8px;  
- font-weight: 700;  
- font-size: 0.7rem;  
+ padding: 8px 14px;  
+ border-radius: 50px; /* Estilo píldora / ovalado profesional */  
+ font-weight: 800;  
+ font-size: 0.72rem;  
  cursor: pointer;  
  text-align: center;  
  text-transform: uppercase;  
- letter-spacing: 0.5px;  
+ letter-spacing: 0.8px;  
  -webkit-appearance: none;  
+ transition: all 0.25s ease;  
+ box-shadow: 0 2px 6px rgba(0,0,0,0.2);  
+ }  
+  
+ .tab-btn:hover {  
+ border-color: var(--accent);  
+ color: var(--text);  
  }  
   
  .tab-btn.active {  
  background: var(--accent);  
  color: var(--accent-text);  
  border-color: var(--accent);  
- box-shadow: 0 0 12px var(--glow-accent);  
+ box-shadow: 0 0 14px var(--glow-accent), 0 4px 10px rgba(0,0,0,0.3);  
+ transform: translateY(-1px);  
  }  
   
  @keyframes neonGlow {  
@@ -411,7 +420,6 @@
  touch-action: manipulation;  
  }  
   
- /* Contenedor general de resultados en pestaña o vacío */  
  .results {   
  display: flex;   
  flex-direction: column;   
@@ -690,7 +698,7 @@
  margin: auto;  
  }  
 
- /* --- NUEVA VENTANA GRANDE DE RESULTADOS DE BÚSQUEDA --- */  
+ /* --- VENTANA GRANDE DE RESULTADOS DE BÚSQUEDA --- */  
  .search-modal-content {  
  background: var(--card-bg);  
  border: 1px solid var(--border);  
@@ -1125,9 +1133,7 @@
  <div class="history-tags" id="historyTags"></div>  
  </div>  
   
- <div style="flex: 1; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 0.78rem; text-align: center; padding: 20px;">  
- 💡 Introduce un artista o canción arriba y pulsa la lupa para ver la lista completa en pantalla grande.  
- </div>  
+ <div id="results" class="results"></div>  
  </div>  
   
  <div id="tabQueue" class="tab-content">  
@@ -1194,13 +1200,22 @@
  </footer>  
  </div>  
   
- <!-- NUEVA VENTANA MODAL PARA RESULTADOS DE BÚSQUEDA EN GRANDE -->  
+ <!-- VENTANA GRANDE DE RESULTADOS DE BÚSQUEDA CON BARRA Y BOTÓN X -->  
  <div class="modal" id="searchModal">  
  <div class="search-modal-content" onclick="event.stopPropagation()">  
- <div class="queue-header" style="margin-bottom: 8px;">  
+ <div class="queue-header" style="margin-bottom: 6px;">  
  <span class="queue-title" id="searchModalTitle">🎵 Resultados de Búsqueda</span>  
  <button class="page-btn" onclick="closeSearchModal()">✕ Cerrar</button>  
  </div>  
+  
+ <form class="search-box" id="searchModalForm" action="javascript:void(0);" style="margin-bottom: 6px;">  
+ <div class="search-input-wrapper">  
+ <input type="text" id="modalSongInput" placeholder="Buscar artista o canción..." autocomplete="off" spellcheck="false" enterkeyhint="search" />  
+ <button type="button" id="modalClearSearchBtn" class="clear-search-btn" title="Limpiar búsqueda">✕</button>  
+ </div>  
+ <button type="submit" class="search-btn" id="modalSearchBtn">🔍</button>  
+ </form>  
+
  <div id="searchModalResults" class="results">  
  <p class="status-msg">Cargando...</p>  
  </div>  
@@ -1350,17 +1365,31 @@
    
  const songInput = document.getElementById('songInput');  
  const clearSearchBtn = document.getElementById('clearSearchBtn');  
+ const modalSongInput = document.getElementById('modalSongInput');  
+ const modalClearSearchBtn = document.getElementById('modalClearSearchBtn');  
 
  songInput.addEventListener('input', () => {  
- toggleClearButton();  
- handleInput();  
+ toggleClearButton(songInput, clearSearchBtn);  
+ handleInput(songInput.value);  
  });  
 
  clearSearchBtn.addEventListener('click', () => {  
  songInput.value = '';  
- toggleClearButton();  
- closeSearchModal();  
+ toggleClearButton(songInput, clearSearchBtn);  
+ document.getElementById('results').innerHTML = '';  
  songInput.focus();  
+ });  
+
+ modalSongInput.addEventListener('input', () => {  
+ toggleClearButton(modalSongInput, modalClearSearchBtn);  
+ handleModalInput(modalSongInput.value);  
+ });  
+
+ modalClearSearchBtn.addEventListener('click', () => {  
+ modalSongInput.value = '';  
+ toggleClearButton(modalSongInput, modalClearSearchBtn);  
+ document.getElementById('searchModalResults').innerHTML = '';  
+ modalSongInput.focus();  
  });  
   
  document.getElementById('searchForm').addEventListener('submit', (e) => {  
@@ -1368,7 +1397,23 @@
  songInput.blur();  
  clearTimeout(debounceTimer);  
  const query = songInput.value.trim();  
- if (query) executeSearch(query);  
+ if (query) {  
+ modalSongInput.value = query;  
+ toggleClearButton(modalSongInput, modalClearSearchBtn);  
+ executeSearch(query, true);  
+ }  
+ });  
+
+ document.getElementById('searchModalForm').addEventListener('submit', (e) => {  
+ if (e) e.preventDefault();  
+ modalSongInput.blur();  
+ clearTimeout(debounceTimer);  
+ const query = modalSongInput.value.trim();  
+ if (query) {  
+ songInput.value = query;  
+ toggleClearButton(songInput, clearSearchBtn);  
+ executeSearch(query, true);  
+ }  
  });  
   
  document.getElementById('tapBtn').addEventListener('click', tapTempo);  
@@ -1451,13 +1496,11 @@
  });  
  });  
   
- function toggleClearButton() {  
- const songInput = document.getElementById('songInput');  
- const clearBtn = document.getElementById('clearSearchBtn');  
- if (songInput.value.length > 0) {  
- clearBtn.style.display = 'block';  
+ function toggleClearButton(inputEl, btnEl) {  
+ if (inputEl.value.length > 0) {  
+ btnEl.style.display = 'block';  
  } else {  
- clearBtn.style.display = 'none';  
+ btnEl.style.display = 'none';  
  }  
  }  
 
@@ -1962,39 +2005,82 @@
  document.getElementById('themeToggle').textContent = theme === 'dark' ? '☀️ Claro' : '🌙 Oscuro';  
  }  
   
- function handleInput() {  
+ function handleInput(query) {  
  clearTimeout(debounceTimer);  
- const query = document.getElementById('songInput').value.trim();  
    
  if (query.length < 2) {  
+ document.getElementById('results').innerHTML = '';  
  return;  
  }  
   
  const cleanKey = query.toLowerCase();  
  if (searchCache.has(cleanKey)) {  
- renderSearchModalResults(searchCache.get(cleanKey), query);  
+ renderResults(searchCache.get(cleanKey), query, 'results');  
  return;  
  }  
   
  debounceTimer = setTimeout(() => {  
- executeSearch(query);  
- }, 500);  
+ executeLiveSearch(query, 'results');  
+ }, 400);  
+ }  
+
+ function handleModalInput(query) {  
+ clearTimeout(debounceTimer);  
+   
+ if (query.length < 2) {  
+ document.getElementById('searchModalResults').innerHTML = '';  
+ return;  
  }  
   
- async function executeSearch(query) {  
- const searchModalResults = document.getElementById('searchModalResults');  
- const searchModalTitle = document.getElementById('searchModalTitle');  
+ const cleanKey = query.toLowerCase();  
+ if (searchCache.has(cleanKey)) {  
+ renderResults(searchCache.get(cleanKey), query, 'searchModalResults');  
+ return;  
+ }  
+  
+ debounceTimer = setTimeout(() => {  
+ executeLiveSearch(query, 'searchModalResults');  
+ }, 400);  
+ }  
+  
+ async function executeLiveSearch(query, targetContainerId) {  
+ const cleanKey = query.toLowerCase();  
+ currentSearchId++;  
+ const thisSearchId = currentSearchId;  
+ const cleanQuery = encodeURIComponent(cleanKey);  
+  
+ try {  
+ const res = await fetch(`https://itunes.apple.com/search?term=${cleanQuery}&limit=25&entity=song`);  
+ if (res.ok) {  
+ const data = await res.json();  
+ if (thisSearchId === currentSearchId) {  
+ const results = data.results || [];  
+ searchCache.set(cleanKey, results);  
+ renderResults(results, query, targetContainerId);  
+ return;  
+ }  
+ }  
+ } catch (err) {}  
+  
+ executeJSONP(cleanQuery, cleanKey, query, thisSearchId, targetContainerId);  
+ }  
+
+ async function executeSearch(query, openModalFlag = false) {  
  const cleanKey = query.toLowerCase();  
   
+ if (openModalFlag) {  
+ const searchModalTitle = document.getElementById('searchModalTitle');  
+ const searchModalResults = document.getElementById('searchModalResults');  
  searchModalTitle.textContent = `🎵 Resultados para: "${query}"`;  
  searchModalResults.innerHTML = '<p class="status-msg">Buscando coincidencias...</p>';  
  document.getElementById('searchModal').style.display = 'flex';  
  if (!window.history.state || !window.history.state.modalOpen) {  
  history.pushState({ modalOpen: true }, '', '');  
  }  
+ }  
   
  if (searchCache.has(cleanKey)) {  
- renderSearchModalResults(searchCache.get(cleanKey), query);  
+ renderResults(searchCache.get(cleanKey), query, openModalFlag ? 'searchModalResults' : 'results');  
  return;  
  }  
   
@@ -2009,17 +2095,17 @@
  if (thisSearchId === currentSearchId) {  
  const results = data.results || [];  
  searchCache.set(cleanKey, results);  
- renderSearchModalResults(results, query);  
+ renderResults(results, query, openModalFlag ? 'searchModalResults' : 'results');  
  return;  
  }  
  }  
  } catch (err) {}  
   
- executeJSONP(cleanQuery, cleanKey, query, thisSearchId);  
+ executeJSONP(cleanQuery, cleanKey, query, thisSearchId, openModalFlag ? 'searchModalResults' : 'results');  
  }  
   
- function executeJSONP(cleanQuery, cleanKey, originalQuery, thisSearchId) {  
- const searchModalResults = document.getElementById('searchModalResults');  
+ function executeJSONP(cleanQuery, cleanKey, originalQuery, thisSearchId, targetContainerId) {  
+ const resultsDiv = document.getElementById(targetContainerId);  
  const callbackName = 'cb_' + Date.now() + '_' + Math.floor(Math.random() * 1000);  
  const oldScript = document.getElementById('jsonp_itunes');  
  if (oldScript) oldScript.remove();  
@@ -2032,7 +2118,7 @@
  if (thisSearchId === currentSearchId) {  
  const results = (data && data.results) ? data.results : [];  
  searchCache.set(cleanKey, results);  
- renderSearchModalResults(results, originalQuery);  
+ renderResults(results, originalQuery, targetContainerId);  
  }  
  };  
   
@@ -2042,16 +2128,16 @@
  script.onerror = function() {  
  delete window[callbackName];  
  if (thisSearchId === currentSearchId) {  
- searchModalResults.innerHTML = '<p class="status-msg">Error de conexión. Vuelve a pulsar 🔍 para reintentar.</p>';  
+ resultsDiv.innerHTML = '<p class="status-msg">Error de conexión. Pulsa 🔍 para reintentar.</p>';  
  }  
  };  
  document.body.appendChild(script);  
  }  
   
- function renderSearchModalResults(results, query) {  
- const searchModalResults = document.getElementById('searchModalResults');  
+ function renderResults(results, query, targetContainerId) {  
+ const resultsDiv = document.getElementById(targetContainerId);  
  if (!results || results.length === 0) {  
- searchModalResults.innerHTML = '<p class="status-msg">No se encontraron coincidencias.</p>';  
+ resultsDiv.innerHTML = '<p class="status-msg">No se encontraron coincidencias.</p>';  
  return;  
  }  
   
@@ -2063,7 +2149,7 @@
  return Number(yearA) - Number(yearB);  
  });  
   
- searchModalResults.innerHTML = results.map((song) => {  
+ resultsDiv.innerHTML = results.map((song) => {  
  const releaseDate = song.releaseDate ? new Date(song.releaseDate) : null;  
  const year = releaseDate && !isNaN(releaseDate) ? releaseDate.getFullYear() : 'N/D';  
  const artwork100 = song.artworkUrl100 || 'https://via.placeholder.com/100?text=Sin+Imagen';  
@@ -2165,8 +2251,11 @@
   
  alert(`¡Petición enviada al DJ correctamente! 🎧🔥`);  
  const query = document.getElementById('songInput').value.trim();  
- if (query && searchCache.has(query.toLowerCase())) {  
- renderSearchModalResults(searchCache.get(query.toLowerCase()), query);  
+ if (query) {  
+ executeSearch(query, false);  
+ if (document.getElementById('searchModal').style.display === 'flex') {  
+ executeSearch(query, true);  
+ }  
  }  
  }  
   
@@ -2195,8 +2284,11 @@
  });  
  alert(`¡Voto sumado con éxito para "${title}"! 🔥`);  
  const query = document.getElementById('songInput').value.trim();  
- if (query && searchCache.has(query.toLowerCase())) {  
- renderSearchModalResults(searchCache.get(query.toLowerCase()), query);  
+ if (query) {  
+ executeSearch(query, false);  
+ if (document.getElementById('searchModal').style.display === 'flex') {  
+ executeSearch(query, true);  
+ }  
  }  
  }  
  });  
@@ -2285,7 +2377,7 @@
    
  const query = document.getElementById('songInput').value.trim();  
  if (query && searchCache.has(query.toLowerCase())) {  
- renderSearchModalResults(searchCache.get(query.toLowerCase()), query);  
+ renderResults(searchCache.get(query.toLowerCase()), query, 'results');  
  }  
  }  
   
@@ -2520,8 +2612,6 @@
   
  document.getElementById('imageModal').style.display = 'none';  
  document.getElementById('historyModal').style.display = 'none';  
- document.body.style.overflow = '',  
-  
  document.body.style.overflow = '';  
   
  if (shouldBack && window.history.state && window.history.state.modalOpen) {  
@@ -2557,8 +2647,10 @@
   
  function searchFromHistory(query) {  
  document.getElementById('songInput').value = query;  
- toggleClearButton();  
- executeSearch(query);  
+ document.getElementById('modalSongInput').value = query;  
+ toggleClearButton(document.getElementById('songInput'), document.getElementById('clearSearchBtn'));  
+ toggleClearButton(document.getElementById('modalSongInput'), document.getElementById('modalClearSearchBtn'));  
+ executeSearch(query, true);  
  }  
  </script>  
 </body>  
