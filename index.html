@@ -2347,7 +2347,9 @@
  modalActionContainer.innerHTML = `<button class="request-btn" style="width: 100%; padding: 10px; font-size: 0.85rem;" ${disabledAttr} ${btnTitleAttr} onclick="requestSong('${safeTitle}', '${safeArtist}', '${artwork100}', '${audioUrl || ''}', '${genre}', '${year}'); closeModal(true);">➕ Pedir esta canción al DJ</button>`;  
  }  
   
+ if (!window.history.state || !window.history.state.modalOpen) {  
  history.pushState({ modalOpen: true }, '', '');  
+ }  
  document.getElementById('imageModal').style.display = 'flex';  
  }  
   
