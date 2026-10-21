@@ -253,13 +253,14 @@
  font-weight: 600;  
  }  
   
- /* --- NUEVO DISEÑO OVALADO PROFESIONAL PARA PESTAÑAS --- */  
+ /* --- BARRA DE NAVEGACIÓN INFERIOR MODERNA (TIPO PÍLDORA) --- */  
  .tabs {  
  display: flex;  
  gap: 8px;  
- margin-bottom: 6px;  
- border-bottom: 1px solid var(--border);  
- padding-bottom: 6px;  
+ margin-top: 6px;  
+ margin-bottom: 4px;  
+ border-top: 1px solid var(--border);  
+ padding-top: 8px;  
  flex-shrink: 0;  
  position: relative;  
  }  
@@ -270,8 +271,8 @@
  .queue-tab-btn.has-new::after {  
  content: '';  
  position: absolute;  
- top: 4px;  
- right: 6px;  
+ top: 6px;  
+ right: 10px;  
  width: 8px;  
  height: 8px;  
  background: var(--danger);  
@@ -291,7 +292,7 @@
  background: var(--tag-bg);  
  border: 1px solid var(--border);  
  color: var(--text-muted);  
- padding: 8px 14px;  
+ padding: 9px 14px;  
  border-radius: 50px; /* Estilo píldora / ovalado profesional */  
  font-weight: 800;  
  font-size: 0.72rem;  
@@ -646,8 +647,8 @@
  .page-info { font-size: 0.7rem; color: var(--text); font-weight: 800; }  
   
  .footer {  
- margin-top: 6px;  
- padding-top: 6px;  
+ margin-top: 4px;  
+ padding-top: 4px;  
  border-top: 1px solid var(--border);  
  text-align: center;  
  font-size: 0.65rem;  
@@ -1113,12 +1114,6 @@
  </div>  
  </div>  
   
- <div class="tabs">  
- <button class="tab-btn highlight-animated active" onclick="switchTab('search', true)">✨ Busca y Añade</button>  
- <button class="tab-btn queue-tab-btn" id="queueTabBtn" onclick="switchTab('queue', true)">📻 Lista Peticiones</button>  
- <button class="tab-btn" id="adminTabBtn" style="display: none;" onclick="switchTab('admin', true)">💡 Admin</button>  
- </div>  
-  
  <div id="tabSearch" class="tab-content active">  
  <form class="search-box" id="searchForm" action="javascript:void(0);">  
  <div class="search-input-wrapper">  
@@ -1190,6 +1185,13 @@
 
  <button class="admin-action-btn btn-reset-light" onclick="setAdminEffect('off', '')">🛑 Apagar Efectos / Normal</button>  
  </div>  
+ </div>  
+
+ <!-- BARRA DE PESTAÑAS INFERIOR (ESTILO APP MODERNA) -->  
+ <div class="tabs">  
+ <button class="tab-btn highlight-animated active" onclick="switchTab('search', true)">✨ Busca y Añade</button>  
+ <button class="tab-btn queue-tab-btn" id="queueTabBtn" onclick="switchTab('queue', true)">📻 Lista Peticiones</button>  
+ <button class="tab-btn" id="adminTabBtn" style="display: none;" onclick="switchTab('admin', true)">💡 Admin</button>  
  </div>  
   
  <footer class="footer">  
