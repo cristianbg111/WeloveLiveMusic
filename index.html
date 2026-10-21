@@ -5,11 +5,11 @@
  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />  
  <meta name="apple-mobile-web-app-capable" content="yes" />  
  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />  
- <meta name="theme-color" content="#07080c" />  
+ <meta name="theme-color" content="#090a0f" />  
  <title>WE LOVE LIVE MUSIC</title>  
    
 <!-- PWA Manifest integrado en Data URI para instalación directa -->  
- <link rel="manifest" href='data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22We%20Love%20Live%20Music%22%2C%22short_name%22%3A%22Live%20Music%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%2307080c%22%2C%22theme_color%22%3A%22%2307080c%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22logo.jpg%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fjpeg%22%7D%5D%7D'>  
+ <link rel="manifest" href='data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22We%20Love%20Live%20Music%22%2C%22short_name%22%3A%22Live%20Music%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23090a0f%22%2C%22theme_color%22%3A%22%23090a0f%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22logo.jpg%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fjpeg%22%7D%5D%7D'>  
   
 <!-- Firebase SDK (Compat) -->  
  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>  
@@ -17,58 +17,56 @@
   
  <style>  
  :root {  
- --bg: #050608;  
- --card-bg: rgba(13, 16, 25, 0.9);  
- --border: rgba(45, 55, 85, 0.4);  
- --text: #f8fafc;  
- --text-muted: #94a3b8;  
- --input-bg: rgba(10, 12, 18, 0.85);  
- --input-border: rgba(60, 70, 105, 0.5);  
+ --bg: #090a0f;  
+ --card-bg: #121520;  
+ --border: #2a2f45;  
+ --text: #f3f4f6;  
+ --text-muted: #9ca3af;  
+ --input-bg: #090a0f;  
+ --input-border: #3b4261;  
  --accent: #ec4899;  
  --accent-hover: #f472b6;  
  --accent-text: #ffffff;  
- --item-bg: rgba(18, 22, 35, 0.75);  
- --item-hover: rgba(28, 34, 54, 0.85);  
+ --item-bg: #161a2b;  
  --badge-bg: #8b5cf6;  
  --badge-text: #ffffff;  
- --tag-bg: rgba(24, 29, 46, 0.7);  
+ --tag-bg: #1e2238;  
  --spotify: #1db954;  
  --tidal: #000000;  
  --youtube: #ff0000;  
- --modal-overlay: rgba(2, 3, 6, 0.9);  
+ --modal-overlay: rgba(5, 6, 10, 0.85);  
  --danger: #ef4444;  
  --success: #10b981;  
  --count-bg: #f59e0b;  
- --glow-accent: rgba(236, 72, 153, 0.25);  
- --dj-mode-bg: rgba(236, 72, 153, 0.1);  
- --instructions-bg: rgba(236, 72, 153, 0.05);  
- --instructions-border: rgba(236, 72, 153, 0.2);  
+ --glow-accent: rgba(236, 72, 153, 0.4);  
+ --dj-mode-bg: rgba(236, 72, 153, 0.15);  
+ --instructions-bg: rgba(236, 72, 153, 0.08);  
+ --instructions-border: rgba(236, 72, 153, 0.3);  
  }  
   
  [data-theme="light"] {  
  --bg: #f8fafc;  
- --card-bg: rgba(255, 255, 255, 0.94);  
- --border: rgba(203, 213, 225, 0.8);  
+ --card-bg: #ffffff;  
+ --border: #e2e8f0;  
  --text: #0f172a;  
  --text-muted: #64748b;  
- --input-bg: rgba(241, 245, 249, 0.9);  
+ --input-bg: #f1f5f9;  
  --input-border: #cbd5e1;  
  --accent: #db2777;  
  --accent-hover: #be185d;  
  --accent-text: #ffffff;  
- --item-bg: rgba(248, 250, 252, 0.9);  
- --item-hover: rgba(241, 245, 249, 1);  
+ --item-bg: #f8fafc;  
  --badge-bg: #7c3aed;  
  --badge-text: #ffffff;  
- --tag-bg: rgba(241, 245, 249, 0.9);  
- --modal-overlay: rgba(0, 0, 0, 0.65);  
+ --tag-bg: #f1f5f9;  
+ --modal-overlay: rgba(0, 0, 0, 0.6);  
  --danger: #dc2626;  
  --success: #10b981;  
  --count-bg: #d97706;  
- --glow-accent: rgba(219, 39, 119, 0.15);  
- --dj-mode-bg: rgba(219, 39, 119, 0.06);  
- --instructions-bg: rgba(219, 39, 119, 0.03);  
- --instructions-border: rgba(219, 39, 119, 0.18);  
+ --glow-accent: rgba(219, 39, 119, 0.2);  
+ --dj-mode-bg: rgba(219, 39, 119, 0.08);  
+ --instructions-bg: rgba(219, 39, 119, 0.05);  
+ --instructions-border: rgba(219, 39, 119, 0.2);  
  }  
   
  * {   
@@ -88,31 +86,29 @@
  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;  
  background: var(--bg);  
  background-image:   
- radial-gradient(circle at 10% 10%, rgba(139, 92, 246, 0.1) 0%, transparent 40%),  
- radial-gradient(circle at 90% 90%, rgba(236, 72, 153, 0.1) 0%, transparent 40%);  
+ radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.08) 0%, transparent 40%),  
+ radial-gradient(circle at 90% 80%, rgba(236, 72, 153, 0.08) 0%, transparent 40%);  
  color: var(--text);  
  display: flex;  
  justify-content: center;  
  align-items: center;  
  height: 100vh;  
  height: 100dvh;  
- padding: max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) max(75px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));  
+ padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));  
  overflow: hidden;  
  }  
   
  .card {  
  background: var(--card-bg);  
- -webkit-backdrop-filter: blur(30px);  
- backdrop-filter: blur(30px);  
  border: 1px solid var(--border);  
- border-radius: 32px;  
+ border-radius: 20px;  
  padding: 18px;  
  max-width: 500px;  
  width: 100%;  
- height: 100%;  
+ max-height: 100%;  
  display: flex;  
  flex-direction: column;  
- box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.7), 0 0 45px var(--glow-accent);  
+ box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5), 0 0 20px var(--glow-accent);  
  margin: auto;  
  z-index: 2;  
  position: relative;  
@@ -122,24 +118,34 @@
  display: flex;  
  flex-direction: column;  
  align-items: center;  
- gap: 8px;  
- margin-bottom: 8px;  
+ gap: 6px;  
+ margin-bottom: 6px;  
  flex-shrink: 0;  
  text-align: center;  
+ transition: all 0.3s ease;  
  }  
   
  .app-logo {  
  width: 100%;  
- max-width: 200px;  
+ max-width: 260px;  
  height: auto;  
- max-height: 65px;  
+ max-height: 95px;  
  object-fit: contain;  
- border-radius: 12px;  
+ border-radius: 10px;  
  border: 1px solid var(--border);  
- box-shadow: 0 8px 20px rgba(0,0,0,0.4);  
+ box-shadow: 0 4px 10px rgba(0,0,0,0.4);  
  background: #000000;  
  display: block;  
  margin: 0 auto;  
+ transition: max-height 0.3s ease;  
+ }  
+  
+ body.queue-tab-active .app-logo {  
+ max-height: 50px;  
+ }  
+  
+ body.queue-tab-active .instructions-box {  
+ display: none !important;  
  }  
   
  .header-row {  
@@ -147,128 +153,114 @@
  justify-content: space-between;  
  align-items: center;  
  width: 100%;  
- gap: 10px;  
+ gap: 12px;  
  }  
   
  h1 {   
- font-size: 0.88rem;   
- font-weight: 900;   
+ font-size: 1rem;   
+ font-weight: 800;   
  color: var(--text);   
- letter-spacing: 1.2px;  
+ letter-spacing: 0.5px;  
+ text-shadow: 0 0 10px var(--glow-accent);  
  text-transform: uppercase;  
  margin: 0;  
- text-shadow: 0 0 12px var(--glow-accent);  
  }  
    
  .theme-btn {  
  background: var(--tag-bg);  
  border: 1px solid var(--border);  
  color: var(--text);  
- padding: 5px 10px;  
- border-radius: 10px;  
+ padding: 4px 8px;  
+ border-radius: 8px;  
  cursor: pointer;  
- font-size: 0.68rem;  
- font-weight: 700;  
+ font-size: 0.72rem;  
  white-space: nowrap;  
  -webkit-appearance: none;  
- transition: all 0.2s ease;  
- }  
- .theme-btn:hover {  
- background: var(--accent);  
- color: var(--accent-text);  
- border-color: var(--accent);  
+ touch-action: manipulation;  
  }  
   
  .neon-banner {  
  width: 100%;  
  padding: 8px 12px;  
- border-radius: 12px;  
- font-size: 0.7rem;  
+ border-radius: 10px;  
+ font-size: 0.75rem;  
  font-weight: 800;  
  text-align: center;  
  text-transform: uppercase;  
- letter-spacing: 0.8px;  
+ letter-spacing: 1px;  
  margin-bottom: 10px;  
  flex-shrink: 0;  
+ transition: all 0.3s ease;  
  }  
   
  .neon-banner.enabled {  
- background: rgba(16, 185, 129, 0.1);  
- border: 1px solid rgba(16, 185, 129, 0.35);  
+ background: rgba(16, 185, 129, 0.15);  
+ border: 1px solid var(--success);  
  color: var(--success);  
- box-shadow: 0 0 12px rgba(16, 185, 129, 0.2);  
+ box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);  
  }  
   
  .neon-banner.disabled {  
- background: rgba(239, 68, 68, 0.1);  
- border: 1px solid rgba(239, 68, 68, 0.4);  
+ background: rgba(239, 68, 68, 0.15);  
+ border: 1px solid var(--danger);  
  color: var(--danger);  
- box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);  
+ box-shadow: 0 0 12px rgba(239, 68, 68, 0.6);  
  animation: pulseNeon 2s infinite;  
  }  
   
  @keyframes pulseNeon {  
- 0% { box-shadow: 0 0 6px rgba(239, 68, 68, 0.3); }  
- 50% { box-shadow: 0 0 18px rgba(239, 68, 68, 0.7); }  
- 100% { box-shadow: 0 0 6px rgba(239, 68, 68, 0.3); }  
+ 0% { box-shadow: 0 0 5px rgba(239, 68, 68, 0.4); }  
+ 50% { box-shadow: 0 0 18px rgba(239, 68, 68, 0.8); }  
+ 100% { box-shadow: 0 0 5px rgba(239, 68, 68, 0.4); }  
  }  
   
  .instructions-box {  
  background: var(--instructions-bg);  
  border: 1px solid var(--instructions-border);  
- border-radius: 14px;  
- padding: 10px 12px;  
+ border-radius: 10px;  
+ padding: 8px 10px;  
  margin-bottom: 10px;  
+ box-shadow: inset 0 0 10px var(--instructions-bg);  
  flex-shrink: 0;  
+ transition: all 0.3s ease;  
  }  
   
  .instructions-title {  
- font-size: 0.75rem;  
+ font-size: 0.78rem;  
  font-weight: 800;  
  color: var(--accent);  
  text-transform: uppercase;  
  letter-spacing: 0.5px;  
- margin-bottom: 3px;  
+ margin-bottom: 2px;  
  display: flex;  
  align-items: center;  
- gap: 5px;  
+ gap: 6px;  
  }  
   
  .instructions-text {  
- font-size: 0.7rem;  
- color: var(--text-muted);  
- line-height: 1.35;  
- font-weight: 500;  
- }  
- .instructions-text strong {  
+ font-size: 0.72rem;  
  color: var(--text);  
+ line-height: 1.3;  
+ font-weight: 500;  
  }  
   
  .aviso-evento {  
- margin-top: 6px;  
- padding-top: 5px;  
+ margin-top: 8px;  
+ padding-top: 6px;  
  border-top: 1px dashed var(--instructions-border);  
  color: var(--count-bg);  
- font-size: 0.66rem;  
- font-weight: 700;  
+ font-size: 0.69rem;  
+ font-weight: 600;  
  }  
   
- /* --- DOCK DE NAVEGACIÓN INFERIOR ESTILO APP MODERNA --- */  
  .tabs {  
- position: absolute;  
- bottom: 12px;  
- left: 16px;  
- right: 16px;  
  display: flex;  
- gap: 6px;  
- background: var(--card-bg);  
- -webkit-backdrop-filter: blur(25px);  
- backdrop-filter: blur(25px);  
- padding: 6px;  
- border-radius: 22px;  
- border: 1px solid var(--border);  
- box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 20px var(--glow-accent);  
- z-index: 10;  
+ gap: 8px;  
+ margin-bottom: 10px;  
+ border-bottom: 1px solid var(--border);  
+ padding-bottom: 6px;  
+ flex-shrink: 0;  
+ position: relative;  
  }  
   
  .queue-tab-btn {  
@@ -277,62 +269,58 @@
  .queue-tab-btn.has-new::after {  
  content: '';  
  position: absolute;  
- top: 8px;  
- right: 12px;  
- width: 7px;  
- height: 7px;  
+ top: 4px;  
+ right: 6px;  
+ width: 8px;  
+ height: 8px;  
  background: var(--danger);  
  border-radius: 50%;  
- box-shadow: 0 0 8px var(--danger);  
+ box-shadow: 0 0 6px var(--danger);  
  animation: pulseNotification 1.5s infinite;  
  }  
   
  @keyframes pulseNotification {  
- 0% { transform: scale(0.9); opacity: 0.8; }  
- 50% { transform: scale(1.4); opacity: 1; }  
- 100% { transform: scale(0.9); opacity: 0.8; }  
+ 0% { transform: scale(0.95); opacity: 0.8; }  
+ 50% { transform: scale(1.3); opacity: 1; }  
+ 100% { transform: scale(0.95); opacity: 0.8; }  
  }  
   
  .tab-btn {  
  flex: 1;  
- background: transparent;  
- border: 1px solid transparent;  
+ background: var(--tag-bg);  
+ border: 1px solid var(--border);  
  color: var(--text-muted);  
- padding: 10px 6px;  
- border-radius: 16px;  
- font-weight: 800;  
- font-size: 0.7rem;  
+ padding: 7px;  
+ border-radius: 10px;  
+ font-weight: 700;  
+ font-size: 0.73rem;  
  cursor: pointer;  
  text-align: center;  
  text-transform: uppercase;  
  letter-spacing: 0.5px;  
  -webkit-appearance: none;  
- transition: all 0.25s ease;  
- display: flex;  
- flex-direction: column;  
- align-items: center;  
- gap: 3px;  
  }  
   
  .tab-btn.active {  
  background: var(--accent);  
  color: var(--accent-text);  
- border-color: transparent;  
- box-shadow: 0 4px 15px var(--glow-accent);  
+ border-color: var(--accent);  
+ box-shadow: 0 0 12px var(--glow-accent);  
  }  
   
  @keyframes neonGlow {  
- 0% { background-position: 0% 50%; box-shadow: 0 0 10px rgba(236, 72, 153, 0.4); }  
- 50% { background-position: 100% 50%; box-shadow: 0 0 20px rgba(139, 92, 246, 0.6); }  
- 100% { background-position: 0% 50%; box-shadow: 0 0 10px rgba(236, 72, 153, 0.4); }  
+ 0% { background-position: 0% 50%; box-shadow: 0 0 8px rgba(236, 72, 153, 0.5); }  
+ 50% { background-position: 100% 50%; box-shadow: 0 0 16px rgba(139, 92, 246, 0.8), 0 0 6px rgba(236, 72, 153, 0.8); }  
+ 100% { background-position: 0% 50%; box-shadow: 0 0 8px rgba(236, 72, 153, 0.5); }  
  }  
   
  .tab-btn.highlight-animated {  
  background: linear-gradient(270deg, #ec4899, #8b5cf6, #3b82f6, #ec4899);  
  background-size: 300% 300%;  
  color: #ffffff !important;  
- border-color: transparent !important;  
+ border-color: rgba(255, 255, 255, 0.3) !important;  
  animation: neonGlow 4s ease infinite;  
+ text-shadow: 0 1px 2px rgba(0,0,0,0.3);  
  }  
   
  .tab-content {   
@@ -341,7 +329,6 @@
  flex-direction: column;  
  overflow: hidden;  
  min-height: 0;  
- padding-bottom: 50px;  
  }  
  .tab-content.active { display: flex; }  
   
@@ -354,61 +341,47 @@
   
  input {  
  flex: 1;  
- padding: 11px 15px;  
- border-radius: 14px;  
+ padding: 9px 12px;  
+ border-radius: 10px;  
  border: 1px solid var(--input-border);  
  background: var(--input-bg);  
  color: var(--text);  
  font-size: 16px !important;  
  outline: none;  
  -webkit-appearance: none;  
- transition: all 0.25s ease;  
  }  
  input:focus {   
  border-color: var(--accent);   
- box-shadow: 0 0 12px var(--glow-accent);  
- background: var(--card-bg);  
+ box-shadow: 0 0 8px var(--glow-accent);  
  }  
   
  .search-btn {  
  background: var(--accent);  
  color: var(--accent-text);  
  border: none;  
- padding: 0 15px;  
- border-radius: 14px;  
- font-weight: 800;  
+ padding: 9px 14px;  
+ border-radius: 10px;  
+ font-weight: 700;  
  cursor: pointer;  
- font-size: 0.95rem;  
+ font-size: 0.85rem;  
  -webkit-appearance: none;  
  touch-action: manipulation;  
- box-shadow: 0 0 12px var(--glow-accent);  
- transition: all 0.2s ease;  
- }  
- .search-btn:hover {  
- background: var(--accent-hover);  
- transform: translateY(-1px);  
+ box-shadow: 0 0 10px var(--glow-accent);  
  }  
   
  .history-section { margin-bottom: 8px; flex-shrink: 0; }  
- .history-title { font-size: 0.65rem; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.8px; font-weight: 800; }  
+ .history-title { font-size: 0.68rem; color: var(--text-muted); margin-bottom: 3px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }  
  .history-tags { display: flex; flex-wrap: wrap; gap: 5px; }  
  .tag {  
  background: var(--tag-bg);  
  border: 1px solid var(--border);  
- color: var(--text-muted);  
- padding: 4px 9px;  
- border-radius: 8px;  
- font-size: 0.68rem;  
+ color: var(--text);  
+ padding: 4px 7px;  
+ border-radius: 6px;  
+ font-size: 0.7rem;  
  cursor: pointer;  
  -webkit-appearance: none;  
  touch-action: manipulation;  
- transition: all 0.2s ease;  
- font-weight: 600;  
- }  
- .tag:hover {  
- color: var(--text);  
- border-color: var(--accent);  
- background: var(--card-bg);  
  }  
   
  .results {   
@@ -420,34 +393,28 @@
  -webkit-overflow-scrolling: touch;   
  overscroll-behavior-y: contain;  
  padding-right: 4px;  
- padding-bottom: 8px;  
+ padding-bottom: 10px;  
  }  
    
  .song-item {  
  display: flex;  
  gap: 10px;  
  background: var(--item-bg);  
- border: 1px solid var(--border);  
- padding: 9px 12px;  
- border-radius: 16px;  
+ padding: 8px 10px;  
+ border-radius: 10px;  
  align-items: center;  
+ border: 1px solid var(--border);  
  flex-shrink: 0;  
- transition: all 0.2s ease;  
  }  
- .song-item:hover {  
- background: var(--item-hover);  
- border-color: rgba(236, 72, 153, 0.3);  
- transform: translateY(-1px);  
- }  
- .song-item img { width: 44px; height: 44px; border-radius: 10px; object-fit: cover; cursor: pointer; flex-shrink: 0; touch-action: manipulation; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }  
+ .song-item img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; cursor: pointer; flex-shrink: 0; touch-action: manipulation; }  
  .song-info { flex: 1; overflow: hidden; cursor: pointer; min-width: 0; touch-action: manipulation; }  
- .song-title { font-weight: 800; font-size: 0.82rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }  
- .song-artist { font-size: 0.7rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500; }  
+ .song-title { font-weight: 700; font-size: 0.83rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }  
+ .song-artist { font-size: 0.73rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }  
    
  .action-buttons {  
  display: flex;  
  flex-direction: column;  
- gap: 4px;  
+ gap: 3px;  
  align-items: flex-end;  
  flex-shrink: 0;  
  }  
@@ -456,43 +423,39 @@
  background: var(--accent);  
  color: var(--accent-text);  
  border: none;  
- padding: 6px 10px;  
- border-radius: 9px;  
- font-weight: 800;  
+ padding: 5px 8px;  
+ border-radius: 6px;  
+ font-weight: 700;  
  font-size: 0.68rem;  
  cursor: pointer;  
  white-space: nowrap;  
- box-shadow: 0 0 10px var(--glow-accent);  
+ box-shadow: 0 0 6px var(--glow-accent);  
  -webkit-appearance: none;  
  touch-action: manipulation;  
- transition: all 0.2s ease;  
  }  
- .request-btn:hover { background: var(--accent-hover); transform: translateY(-1px); }  
  .vote-btn {  
  background: var(--count-bg);  
  color: #000;  
- box-shadow: 0 0 10px rgba(245, 158, 11, 0.3);  
+ box-shadow: 0 0 6px rgba(245, 158, 11, 0.4);  
  }  
- .vote-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }  
  .request-btn:disabled, .vote-btn:disabled {  
  background: var(--tag-bg);  
  color: var(--text-muted);  
  cursor: not-allowed;  
  box-shadow: none;  
- transform: none;  
  }  
   
  .badge-year {  
  background: var(--tag-bg);  
  color: var(--text-muted);  
- padding: 2px 7px;  
- border-radius: 7px;  
- font-weight: 700;  
- font-size: 0.62rem;  
+ padding: 2px 5px;  
+ border-radius: 5px;  
+ font-weight: 600;  
+ font-size: 0.63rem;  
  border: 1px solid var(--border);  
  }  
    
- .status-msg { text-align: center; color: var(--text-muted); font-size: 0.78rem; padding: 20px 0; font-weight: 500; }  
+ .status-msg { text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 12px 0; }  
   
  .queue-header {  
  display: flex;  
@@ -502,59 +465,51 @@
  gap: 6px;  
  flex-shrink: 0;  
  }  
- .queue-title { font-size: 0.82rem; font-weight: 900; color: var(--text); text-transform: uppercase; letter-spacing: 0.6px; }  
+ .queue-title { font-size: 0.8rem; font-weight: 700; color: var(--text); text-transform: uppercase; letter-spacing: 0.5px; }  
    
  .queue-actions {  
  display: flex;  
- gap: 5px;  
+ gap: 4px;  
  flex-wrap: wrap;  
  }  
   
  .dj-mode-btn, .admin-mode-btn, .toggle-requests-btn, .save-list-btn, .history-list-btn, .pdf-btn, .clear-queue-btn {  
- padding: 5px 9px;  
- border-radius: 9px;  
+ padding: 4px 7px;  
+ border-radius: 6px;  
  font-size: 0.68rem;  
- font-weight: 800;  
+ font-weight: 700;  
  cursor: pointer;  
  -webkit-appearance: none;  
  white-space: nowrap;  
  touch-action: manipulation;  
- transition: all 0.2s ease;  
- border: 1px solid transparent;  
  }  
   
- .dj-mode-btn { background: var(--badge-bg); color: #ffffff; }  
- .dj-mode-btn:hover { filter: brightness(1.1); }  
- .dj-mode-btn.active { background: var(--danger); box-shadow: 0 0 10px rgba(239, 68, 68, 0.5); }  
+ .dj-mode-btn { background: var(--badge-bg); color: #ffffff; border: none; }  
+ .dj-mode-btn.active { background: var(--danger); box-shadow: 0 0 8px rgba(239, 68, 68, 0.6); }  
 
- .admin-mode-btn { background: var(--success); color: #ffffff; }  
- .admin-mode-btn:hover { filter: brightness(1.1); }  
- .admin-mode-btn.active { background: var(--danger); box-shadow: 0 0 10px rgba(239, 68, 68, 0.5); }  
+ .admin-mode-btn { background: var(--success); color: #ffffff; border: none; }  
+ .admin-mode-btn.active { background: var(--danger); box-shadow: 0 0 8px rgba(239, 68, 68, 0.6); }  
    
- .toggle-requests-btn { background: var(--success); color: #ffffff; }  
+ .toggle-requests-btn { background: var(--success); color: #ffffff; border: none; }  
  .toggle-requests-btn.off { background: var(--danger); }  
   
- .save-list-btn { background: var(--success); color: #ffffff; }  
- .history-list-btn { background: var(--count-bg); color: #000000; }  
- .pdf-btn { background: var(--success); color: #ffffff; display: flex; align-items: center; gap: 3px; }  
- .clear-queue-btn { background: transparent; border-color: var(--danger); color: var(--danger); }  
- .clear-queue-btn:hover { background: rgba(239, 68, 68, 0.1); }  
+ .save-list-btn { background: var(--success); color: #ffffff; border: none; }  
+ .history-list-btn { background: var(--count-bg); color: #000000; border: none; }  
+ .pdf-btn { background: var(--success); color: #ffffff; border: none; display: flex; align-items: center; gap: 3px; }  
+ .clear-queue-btn { background: transparent; border: 1px solid var(--danger); color: var(--danger); }  
   
  .queue-item {  
  display: flex;  
  gap: 10px;  
  background: var(--item-bg);  
- border: 1px solid var(--border);  
- padding: 9px 12px;  
- border-radius: 16px;  
+ padding: 8px 10px;  
+ border-radius: 10px;  
  align-items: center;  
- margin-bottom: 5px;  
+ border: 1px solid var(--border);  
+ margin-bottom: 6px;  
  flex-shrink: 0;  
  text-align: left;  
- transition: all 0.2s ease;  
- }  
- .queue-item:hover {  
- background: var(--item-hover);  
+ transition: opacity 0.2s;  
  }  
    
  .queue-item.dj-active {  
@@ -563,65 +518,65 @@
  }  
   
  .queue-item.played {  
- opacity: 0.5;  
+ opacity: 0.55;  
  border-color: var(--success);  
- background: rgba(16, 185, 129, 0.04);  
+ background: rgba(16, 185, 129, 0.05);  
  }  
  .queue-item.played .song-title {  
  text-decoration: line-through;  
  color: var(--text-muted);  
  }  
   
- .queue-item img { width: 38px !important; height: 38px !important; min-width: 38px; border-radius: 9px; object-fit: cover; cursor: pointer; flex-shrink: 0; touch-action: manipulation; box-shadow: 0 3px 10px rgba(0,0,0,0.3); }  
- .requester-tag { font-size: 0.64rem; color: var(--accent); font-weight: 800; margin-top: 2px; }  
+ .queue-item img { width: 38px !important; height: 38px !important; min-width: 38px; border-radius: 8px; object-fit: cover; cursor: pointer; flex-shrink: 0; touch-action: manipulation; }  
+ .requester-tag { font-size: 0.65rem; color: var(--accent); font-weight: 700; margin-top: 2px; }  
   
  .badge-count {  
  background: var(--count-bg);  
  color: #000000;  
- padding: 2px 7px;  
- border-radius: 7px;  
- font-weight: 900;  
- font-size: 0.64rem;  
+ padding: 2px 5px;  
+ border-radius: 6px;  
+ font-weight: 800;  
+ font-size: 0.65rem;  
  text-align: center;  
  white-space: nowrap;  
- box-shadow: 0 0 8px rgba(245, 158, 11, 0.35);  
+ box-shadow: 0 0 6px rgba(245, 158, 11, 0.4);  
  }  
   
  .dj-row-controls {  
  display: flex;  
  gap: 6px;  
  align-items: center;  
- margin-top: 5px;  
+ margin-top: 4px;  
  }  
   
  .played-checkbox-label {  
- font-size: 0.66rem;  
+ font-size: 0.68rem;  
  color: var(--success);  
- font-weight: 800;  
+ font-weight: 700;  
  display: flex;  
  align-items: center;  
- gap: 4px;  
+ gap: 3px;  
  cursor: pointer;  
- background: rgba(16, 185, 129, 0.08);  
- padding: 2px 7px;  
- border-radius: 7px;  
- border: 1px solid rgba(16, 185, 129, 0.3);  
+ background: rgba(16, 185, 129, 0.1);  
+ padding: 2px 6px;  
+ border-radius: 4px;  
+ border: 1px solid var(--success);  
  }  
  .played-checkbox-label input {  
  accent-color: var(--success);  
  cursor: pointer;  
- width: 13px;  
- height: 13px;  
+ width: 12px;  
+ height: 12px;  
  }  
   
  .delete-song-btn {  
  background: var(--danger);  
  color: white;  
  border: none;  
- padding: 2px 7px;  
- border-radius: 7px;  
- font-size: 0.64rem;  
- font-weight: 800;  
+ padding: 2px 5px;  
+ border-radius: 4px;  
+ font-size: 0.62rem;  
+ font-weight: 700;  
  cursor: pointer;  
  -webkit-appearance: none;  
  touch-action: manipulation;  
@@ -632,44 +587,51 @@
  justify-content: space-between;  
  align-items: center;  
  margin-bottom: 8px;  
- padding: 6px 12px;  
+ padding: 5px 10px;  
  background: var(--item-bg);  
  border: 1px solid var(--border);  
- border-radius: 12px;  
+ border-radius: 10px;  
  flex-shrink: 0;  
  }  
  .page-btn {  
  background: var(--accent);  
  border: none;  
  color: var(--accent-text);  
- padding: 5px 10px;  
- border-radius: 8px;  
- font-size: 0.7rem;  
- font-weight: 800;  
+ padding: 4px 8px;  
+ border-radius: 6px;  
+ font-size: 0.72rem;  
+ font-weight: 700;  
  cursor: pointer;  
  -webkit-appearance: none;  
- box-shadow: 0 0 8px var(--glow-accent);  
+ box-shadow: 0 0 6px var(--glow-accent);  
  touch-action: manipulation;  
  }  
  .page-btn:disabled { opacity: 0.3; cursor: not-allowed; box-shadow: none; background: var(--tag-bg); color: var(--text-muted); }  
- .page-info { font-size: 0.7rem; color: var(--text); font-weight: 900; }  
+ .page-info { font-size: 0.72rem; color: var(--text); font-weight: 800; }  
   
  .footer {  
- position: absolute;  
- bottom: 62px;  
- left: 0;  
- right: 0;  
+ margin-top: 8px;  
+ padding-top: 8px;  
+ border-top: 1px solid var(--border);  
  text-align: center;  
- font-size: 0.64rem;  
+ font-size: 0.68rem;  
  color: var(--text-muted);  
- letter-spacing: 0.4px;  
- pointer-events: none;  
- opacity: 0.8;  
+ letter-spacing: 0.5px;  
+ line-height: 1.3;  
+ flex-shrink: 0;  
  }  
- .footer strong { color: var(--accent); font-weight: 800; }  
+ .footer strong { color: var(--accent); }  
  .visitor-counter {  
- display: none;  
+ display: inline-block;  
+ margin-top: 3px;  
+ font-size: 0.63rem;  
+ background: var(--tag-bg);  
+ border: 1px solid var(--border);  
+ padding: 2px 6px;  
+ border-radius: 20px;  
+ color: var(--text-muted);  
  }  
+ .visitor-counter span { color: var(--accent); font-weight: 800; }  
   
  .modal {  
  display: none;  
@@ -680,95 +642,81 @@
  align-items: center;  
  z-index: 1000;  
  padding: 16px;  
- -webkit-backdrop-filter: blur(16px);  
- backdrop-filter: blur(16px);  
+ -webkit-backdrop-filter: blur(10px);  
+ backdrop-filter: blur(10px);  
  overflow-y: auto;  
  -webkit-overflow-scrolling: touch;  
  }  
  .modal-content {  
  background: var(--card-bg);  
  border: 1px solid var(--border);  
- border-radius: 28px;  
- padding: 20px;  
+ border-radius: 20px;  
+ padding: 18px;  
  max-width: 400px;  
  width: 100%;  
  text-align: center;  
- box-shadow: 0 30px 60px rgba(0,0,0,0.8), 0 0 40px var(--glow-accent);  
- max-height: 90vh;  
+ box-shadow: 0 25px 50px rgba(0,0,0,0.6), 0 0 30px var(--glow-accent);  
+ max-height: 85vh;  
  overflow-y: auto;  
  -webkit-overflow-scrolling: touch;  
  margin: auto;  
- -webkit-backdrop-filter: blur(25px);  
- backdrop-filter: blur(25px);  
  }  
- .modal-content img { width: 100%; aspect-ratio: 1/1; border-radius: 16px; object-fit: cover; margin-bottom: 12px; border: 1px solid var(--border); touch-action: manipulation; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }  
- .modal-title { font-size: 1rem; font-weight: 900; color: var(--text); margin-bottom: 3px; }  
- .modal-artist { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px; font-weight: 600; }  
+ .modal-content img { width: 100%; aspect-ratio: 1/1; border-radius: 12px; object-fit: cover; margin-bottom: 10px; border: 1px solid var(--border); touch-action: manipulation; }  
+ .modal-title { font-size: 0.95rem; font-weight: 800; color: var(--text); margin-bottom: 3px; }  
+ .modal-artist { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px; }  
   
  .dj-stats {  
  display: flex;  
  justify-content: space-around;  
  background: var(--item-bg);  
  border: 1px solid var(--border);  
- border-radius: 12px;  
- padding: 8px;  
- margin-bottom: 12px;  
+ border-radius: 10px;  
+ padding: 6px;  
+ margin-bottom: 10px;  
  }  
  .stat-box { display: flex; flex-direction: column; align-items: center; }  
- .stat-label { font-size: 0.62rem; color: var(--text-muted); text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px; }  
- .stat-value { font-size: 0.92rem; font-weight: 900; color: var(--accent); margin-top: 2px; }  
+ .stat-label { font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }  
+ .stat-value { font-size: 0.9rem; font-weight: 900; color: var(--accent); }  
   
  .tap-btn {  
  background: var(--tag-bg);  
  border: 1px dashed var(--accent);  
  color: var(--text);  
- padding: 8px 12px;  
- border-radius: 10px;  
+ padding: 7px 10px;  
+ border-radius: 8px;  
  font-size: 0.72rem;  
- font-weight: 700;  
+ font-weight: 600;  
  cursor: pointer;  
- margin-bottom: 12px;  
+ margin-bottom: 10px;  
  width: 100%;  
  -webkit-appearance: none;  
  touch-action: manipulation;  
- transition: all 0.2s ease;  
  }  
- .tap-btn:hover { background: var(--instructions-bg); }  
   
- audio { width: 100%; height: 38px; margin-bottom: 12px; border-radius: 8px; }  
- .modal-actions { display: flex; flex-direction: column; gap: 8px; }  
+ audio { width: 100%; height: 36px; margin-bottom: 10px; border-radius: 6px; }  
+ .modal-actions { display: flex; flex-direction: column; gap: 6px; }  
   
  .spotify-btn, .tidal-btn, .youtube-btn, .back-btn {  
  display: flex; align-items: center; justify-content: center; gap: 8px;  
- padding: 11px 16px; border-radius: 12px; font-weight: 800; font-size: 0.82rem; text-decoration: none; cursor: pointer;  
+ padding: 10px 14px; border-radius: 10px; font-weight: 700; font-size: 0.85rem; text-decoration: none; cursor: pointer;  
  -webkit-appearance: none;  
  touch-action: manipulation;  
- transition: all 0.2s ease;  
- border: 1px solid transparent;  
  }  
  .spotify-btn { background: var(--spotify); color: #ffffff; }  
- .spotify-btn:hover { filter: brightness(1.15); transform: translateY(-1px); }  
- .tidal-btn { background: var(--tidal); color: #ffffff; border-color: var(--border); }  
- .tidal-btn:hover { background: #1c1c1c; transform: translateY(-1px); }  
+ .tidal-btn { background: var(--tidal); color: #ffffff; border: 1px solid var(--border); }  
  .youtube-btn { background: var(--youtube); color: #ffffff; }  
- .youtube-btn:hover { filter: brightness(1.15); transform: translateY(-1px); }  
- .back-btn { background: var(--tag-bg); color: var(--text); border-color: var(--border); width: 100%; }  
- .back-btn:hover { background: var(--border); transform: translateY(-1px); }  
+ .back-btn { background: var(--tag-bg); color: var(--text); border: 1px solid var(--border); width: 100%; }  
   
  .history-item-card {  
  background: var(--item-bg);  
  border: 1px solid var(--border);  
- border-radius: 12px;  
- padding: 10px 12px;  
+ border-radius: 10px;  
+ padding: 10px;  
  margin-bottom: 8px;  
  text-align: left;  
  display: flex;  
  flex-direction: column;  
  gap: 6px;  
- transition: all 0.2s ease;  
- }  
- .history-item-card:hover {  
- background: var(--item-hover);  
  }  
  .history-item-header {  
  display: flex;  
@@ -776,39 +724,26 @@
  align-items: center;  
  cursor: pointer;  
  }  
- .history-item-title { font-weight: 900; font-size: 0.84rem; color: var(--text); }  
- .history-item-date { font-size: 0.68rem; color: var(--text-muted); margin-top: 2px; font-weight: 600; }  
+ .history-item-title { font-weight: 800; font-size: 0.85rem; color: var(--text); }  
+ .history-item-date { font-size: 0.7rem; color: var(--text-muted); }  
  .history-actions { display: flex; gap: 6px; justify-content: flex-end; }  
- .history-view-btn { background: var(--badge-bg); color: #fff; border: none; padding: 5px 10px; border-radius: 8px; font-size: 0.68rem; font-weight: 800; cursor: pointer; touch-action: manipulation; transition: filter 0.2s; }  
- .history-view-btn:hover { filter: brightness(1.1); }  
+ .history-view-btn { background: var(--badge-bg); color: #fff; border: none; padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; cursor: pointer; touch-action: manipulation; }  
   
- /* --- ESTILOS PANEL MODO ADMIN & DJ PROFESIONAL --- */  
- .admin-section-title {  
- font-size: 0.72rem;  
- font-weight: 800;  
- color: var(--accent);  
- text-transform: uppercase;  
- letter-spacing: 0.8px;  
- margin: 10px 0 6px 0;  
- display: flex;  
- align-items: center;  
- gap: 6px;  
- }  
-  
+ /* --- ESTILOS PANEL MODO ADMIN --- */  
  .admin-panel-grid {  
  display: grid;  
  grid-template-columns: repeat(4, 1fr);  
  gap: 8px;  
- margin-bottom: 10px;  
+ margin-bottom: 12px;  
  }  
   
  .color-circle-btn {  
  aspect-ratio: 1/1;  
  border-radius: 50%;  
- border: 3px solid rgba(255,255,255,0.25);  
+ border: 3px solid rgba(255,255,255,0.3);  
  cursor: pointer;  
- box-shadow: 0 4px 12px rgba(0,0,0,0.4);  
- transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;  
+ box-shadow: 0 4px 10px rgba(0,0,0,0.4);  
+ transition: transform 0.1s ease, filter 0.1s ease, box-shadow 0.2s ease, border-color 0.2s ease;  
  -webkit-appearance: none;  
  touch-action: manipulation;  
  position: relative;  
@@ -817,8 +752,8 @@
 
  .color-circle-btn.active {  
  border-color: #ffffff;  
- transform: scale(1.1);  
- box-shadow: 0 0 18px #ffffff, 0 4px 12px rgba(0,0,0,0.7);  
+ transform: scale(1.08);  
+ box-shadow: 0 0 16px #ffffff, 0 4px 12px rgba(0,0,0,0.6);  
  }  
  .color-circle-btn.active::after {  
  content: '✓';  
@@ -827,7 +762,7 @@
  left: 50%;  
  transform: translate(-50%, -50%);  
  color: #000000;  
- font-size: 1rem;  
+ font-size: 1.1rem;  
  font-weight: 900;  
  text-shadow: 0 0 4px #fff, 0 0 8px #fff;  
  }  
@@ -835,26 +770,22 @@
  .admin-action-row {  
  display: flex;  
  gap: 8px;  
- margin-bottom: 8px;  
+ margin-bottom: 10px;  
  }  
   
  .admin-action-btn {  
  flex: 1;  
- padding: 11px;  
- border-radius: 12px;  
- font-weight: 900;  
- font-size: 0.74rem;  
+ padding: 12px;  
+ border-radius: 10px;  
+ font-weight: 800;  
+ font-size: 0.8rem;  
  text-transform: uppercase;  
  border: 2px solid transparent;  
  cursor: pointer;  
- box-shadow: 0 4px 12px rgba(0,0,0,0.3);  
+ box-shadow: 0 4px 10px rgba(0,0,0,0.3);  
  -webkit-appearance: none;  
  touch-action: manipulation;  
  transition: all 0.2s ease;  
- display: flex;  
- align-items: center;  
- justify-content: center;  
- gap: 6px;  
  }  
  .btn-flash { background: #ffffff; color: #000000; }  
  .btn-flash.active { border-color: #00f3ff; box-shadow: 0 0 20px #ffffff; transform: scale(1.02); }  
@@ -892,26 +823,26 @@
  bottom: max(35px, env(safe-area-inset-bottom));  
  left: 50%;  
  transform: translateX(-50%);  
- background: rgba(0, 0, 0, 0.9);  
- border: 1px solid rgba(255, 255, 255, 0.4);  
+ background: rgba(0, 0, 0, 0.8);  
+ border: 1px solid rgba(255, 255, 255, 0.35);  
  color: #ffffff;  
- padding: 10px 20px;  
+ padding: 9px 18px;  
  border-radius: 20px;  
- font-size: 0.72rem;  
- font-weight: 800;  
+ font-size: 0.75rem;  
+ font-weight: 700;  
  letter-spacing: 0.5px;  
  text-transform: uppercase;  
  pointer-events: none;  
  opacity: 0;  
  transition: opacity 0.2s ease;  
- -webkit-backdrop-filter: blur(10px);  
- backdrop-filter: blur(10px);  
+ -webkit-backdrop-filter: blur(6px);  
+ backdrop-filter: blur(6px);  
  }  
  #room-light-overlay.show-notice #room-light-notice {  
  opacity: 1;  
  }  
 
- /* --- PANTALLA STANDBY OPTIMIZADA --- */  
+ /* --- PANTALLA STANDBY OPTIMIZADA (LOGO ARRIBA) --- */  
  #standby-screen {  
  position: fixed;  
  top: 0;  
@@ -919,7 +850,7 @@
  width: 100vw;  
  height: 100vh;  
  height: 100dvh;  
- background: #040508;  
+ background: #05050a;  
  z-index: 9999;  
  display: none;  
  overflow: hidden;  
@@ -938,7 +869,7 @@
  top: -25%;  
  left: -25%;  
  pointer-events: none;  
- opacity: 0.22;  
+ opacity: 0.25;  
  background: radial-gradient(circle, rgba(255, 0, 128, 0.15) 0%, rgba(0, 243, 255, 0.1) 50%, transparent 80%);  
  will-change: transform;  
  animation: pulseBg 8s ease-in-out infinite alternate;  
@@ -956,11 +887,12 @@
  pointer-events: none;  
  }  
   
+ /* --- LOGO FLOTANTE CSS POSICIONADO ARRIBA --- */  
  #bouncing-logo {  
  position: absolute;  
  top: 28%;  
  left: 50%;  
- width: 150px;  
+ width: 160px;  
  height: auto;  
  z-index: 1;  
  pointer-events: none;  
@@ -973,8 +905,8 @@
  }  
   
  @keyframes floatLogoTop {  
- 0% { transform: translate(-50%, -50%) translateY(-12px) scale(0.96); }  
- 100% { transform: translate(-50%, -50%) translateY(12px) scale(1.02); }  
+ 0% { transform: translate(-50%, -50%) translateY(-15px) scale(0.96); }  
+ 100% { transform: translate(-50%, -50%) translateY(15px) scale(1.02); }  
  }  
   
  #bouncing-logo img {  
@@ -987,6 +919,7 @@
  display: block;  
  }  
   
+ /* --- TEXTOS CENTRALES STANDBY --- */  
  .standby-content {  
  position: absolute;  
  top: 60%;  
@@ -1000,7 +933,7 @@
  }  
   
  .standby-title {  
- font-size: clamp(1.7rem, 5vw, 2.6rem);  
+ font-size: clamp(1.8rem, 5.5vw, 2.8rem);  
  font-weight: 900;  
  color: #fff;  
  text-transform: uppercase;  
@@ -1011,7 +944,7 @@
  }  
   
  .standby-subtitle {  
- font-size: clamp(0.9rem, 2.8vw, 1.15rem);  
+ font-size: clamp(0.95rem, 3vw, 1.2rem);  
  color: #00f3ff;  
  text-shadow: 0 0 8px #00f3ff;  
  letter-spacing: 1px;  
@@ -1022,6 +955,7 @@
  to { text-shadow: 0 0 20px #00f3ff, 0 0 30px #00f3ff, 0 0 50px #00f3ff; }  
  }  
   
+ /* --- VÚMETROS SIMPLIFICADOS --- */  
  .equalizer-container {  
  position: absolute;  
  bottom: max(16px, env(safe-area-inset-bottom));  
@@ -1031,18 +965,18 @@
  display: flex;  
  align-items: flex-end;  
  justify-content: center;  
- gap: 4px;  
- height: 50px;  
+ gap: 5px;  
+ height: 60px;  
  width: 90%;  
- max-width: 450px;  
+ max-width: 500px;  
  pointer-events: none;  
  }  
   
  .eq-bar {  
  flex: 1;  
  background: linear-gradient(to top, #ff007f, #00f3ff);  
- border-radius: 3px 3px 0 0;  
- box-shadow: 0 0 6px rgba(0, 243, 255, 0.4);  
+ border-radius: 4px 4px 0 0;  
+ box-shadow: 0 0 8px rgba(0, 243, 255, 0.4);  
  animation: bounceEq 1.5s ease-in-out infinite alternate;  
  will-change: height;  
  }  
@@ -1059,8 +993,8 @@
  .eq-bar:nth-child(10) { animation-duration: 0.6s; }  
   
  @keyframes bounceEq {  
- 0% { height: 6px; opacity: 0.4; }  
- 100% { height: 35px; opacity: 0.9; }  
+ 0% { height: 8px; opacity: 0.4; }  
+ 100% { height: 40px; opacity: 0.9; }  
  }  
   
  @media print {  
@@ -1069,7 +1003,6 @@
  overflow: visible !important;  
  background: #ffffff !important;  
  color: #000000 !important;  
- padding: 0 !important;  
  }  
  body * { visibility: hidden; }  
  #tabQueue, #tabQueue * { visibility: visible; }  
@@ -1112,7 +1045,7 @@
  <img src="logo.jpg" alt="We Love The Remember" class="app-logo">  
  <div class="header-row">  
  <h1>WE LOVE LIVE MUSIC</h1>  
- <button class="theme-btn" id="themeToggle">☀️ Tema</button>  
+ <button class="theme-btn" id="themeToggle">☀️ Modo Claro</button>  
  </div>  
  </div>  
    
@@ -1121,27 +1054,17 @@
  <div class="instructions-box">  
  <div class="instructions-title">🎧 ¡Envía tus peticiones al DJ!</div>  
  <div class="instructions-text">  
- Busca tu canción preferida y pulsa <strong>"Pedir"</strong>. Se agregará al instante a la sala.  
+ Busca tu canción preferida y, una vez la localices, pulsa sobre el botón <strong>"Pedir"</strong>. Se agregará al instante a la lista de peticiones de sala.  
  <div class="aviso-evento">  
- <strong>IMPORTANTE:</strong> Por favor, peticiones acordes al evento en curso.  
+ <strong>IMPORTANTE:</strong> Por favor, las peticiones que se realicen deben ser acordes al evento que se está realizando.  
  </div>  
  </div>  
  </div>  
   
- <!-- DOCK DE NAVEGACIÓN INFERIOR (ESTILO APP MODERNA) -->  
  <div class="tabs">  
- <button class="tab-btn highlight-animated active" onclick="switchTab('search', true)">  
-   <span>✨</span>  
-   <span>Buscar</span>  
- </button>  
- <button class="tab-btn queue-tab-btn" id="queueTabBtn" onclick="switchTab('queue', true)">  
-   <span>📻</span>  
-   <span>Peticiones</span>  
- </button>  
- <button class="tab-btn" id="adminTabBtn" style="display: none;" onclick="switchTab('admin', true)">  
-   <span>💡</span>  
-   <span>Sala / Admin</span>  
- </button>  
+ <button class="tab-btn highlight-animated active" onclick="switchTab('search', true)">✨ Busca y Añade</button>  
+ <button class="tab-btn queue-tab-btn" id="queueTabBtn" onclick="switchTab('queue', true)">📻 Lista Peticiones</button>  
+ <button class="tab-btn" id="adminTabBtn" style="display: none;" onclick="switchTab('admin', true)">💡 Admin</button>  
  </div>  
   
  <div id="tabSearch" class="tab-content active">  
@@ -1183,28 +1106,15 @@
  </div>  
  </div>  
 
- <!-- PESTAÑA MODO ADMIN & DJ PROFESIONAL -->  
+ <!-- PESTAÑA MODO ADMIN DE SALA -->  
  <div id="tabAdmin" class="tab-content">  
  <div class="queue-header">  
- <span class="queue-title">Panel de Control Profesional</span>  
+ <span class="queue-title">Efectos de Sala (Admin)</span>  
  </div>  
- <div class="results" style="padding-top: 4px;">  
-  
- <div class="admin-section-title">🔒 Seguridad y Modos de Cabina</div>  
- <div class="admin-action-row">  
- <button class="admin-action-btn" style="background: var(--badge-bg); color: #fff;" onclick="toggleDjMode()">🎧 Salir Modo DJ</button>  
- <button class="admin-action-btn" style="background: var(--success); color: #fff;" onclick="toggleRequestsState()" id="adminPanelToggleReq">🔒 Abrir / Cerrar Peticiones</button>  
- </div>  
-
- <div class="admin-section-title">💾 Gestión de Sesiones y Histórico</div>  
- <div class="admin-action-row">  
- <button class="admin-action-btn" style="background: var(--success); color: #fff;" onclick="saveCurrentList()">💾 Guardar Sesión Actual</button>  
- <button class="admin-action-btn" style="background: var(--count-bg); color: #000;" onclick="openHistoryModal()">📁 Ver Historial Guardado</button>  
- </div>  
-
- <div class="admin-section-title">✨ Iluminación Global de Sala (Sync Inmediato)</div>  
- <div class="instructions-box" style="margin-bottom: 8px;">  
- <div class="instructions-text">Pulsa cualquier color, flash o ráfaga para sincronizar las pantallas de todos los dispositivos conectados en la sala al instante.</div>  
+ <div class="results" style="padding-top: 6px;">  
+ <div class="instructions-box" style="margin-bottom: 10px;">  
+ <div class="instructions-title">✨ Control Lumínico Global</div>  
+ <div class="instructions-text">Pulsa cualquier color, flash estroboscópico o ráfaga para sincronizar las pantallas de todos los asistentes in la sala al instante.</div>  
  </div>  
 
  <div class="admin-panel-grid">  
@@ -1219,16 +1129,19 @@
  </div>  
 
  <div class="admin-action-row">  
- <button class="admin-action-btn btn-flash" data-effect-type="flash" data-effect-val="flash" onclick="setAdminEffect('flash', 'flash')">⚡ Flash Estrobo</button>  
- <button class="admin-action-btn btn-burst" data-effect-type="burst" data-effect-val="burst" onclick="setAdminEffect('burst', 'burst')">💥 Ráfaga RGB</button>  
+ <button class="admin-action-btn btn-flash" data-effect-type="flash" data-effect-val="flash" onclick="setAdminEffect('flash', 'flash')">⚡ Flash Blanco (Estrobo)</button>  
+ <button class="admin-action-btn btn-burst" data-effect-type="burst" data-effect-val="burst" onclick="setAdminEffect('burst', 'burst')">💥 Ráfaga Color</button>  
  </div>  
 
- <button class="admin-action-btn btn-reset-light" onclick="setAdminEffect('off', '')">🛑 Apagar Efectos / Sala Normal</button>  
+ <button class="admin-action-btn btn-reset-light" onclick="setAdminEffect('off', '')">🛑 Apagar Efectos / Normal</button>  
  </div>  
  </div>  
   
  <footer class="footer">  
  App creada por <strong>We Love The Remember Studios</strong>  
+ <div class="visitor-counter">  
+ 👀 Visitas: <span id="visitorCount">...</span>  
+ </div>  
  </footer>  
  </div>  
   
@@ -1286,7 +1199,7 @@
  <div class="modal-title" id="historyModalTitle">📁 Histórico de Sesiones</div>  
  <div class="modal-artist" id="historyModalSubtitle" style="margin-bottom: 12px;">Listas guardadas en la base de datos</div>  
    
- <div id="savedListsContainer" style="margin-bottom: 14px; max-height: 50vh; overflow-y: auto;">  
+ <div id="savedListsContainer" style="margin-bottom: 16px; max-height: 50vh; overflow-y: auto;">  
  <p class="status-msg">Cargando histórico...</p>  
  </div>  
   
@@ -1294,7 +1207,7 @@
  </div>  
  </div>  
   
- <!-- PANTALLA STANDBY DE BIENVENIDA -->  
+ <!-- PANTALLA STANDBY DE BIENVENIDA (ACTIVA AL INICIAR) -->  
  <div id="standby-screen" class="active">  
  <div class="laser-background"></div>  
  <div class="strobe-overlay"></div>  
@@ -1434,8 +1347,7 @@
   
  statsRef.on('value', (snapshot) => {  
  const count = snapshot.val() || 0;  
- const visitorEl = document.getElementById('visitorCount');  
- if (visitorEl) visitorEl.textContent = count.toLocaleString();  
+ document.getElementById('visitorCount').textContent = count.toLocaleString();  
  });  
   
  queueRef.on('value', (snapshot) => {  
@@ -1458,6 +1370,7 @@
  });  
  });  
   
+ // --- WAKE LOCK API PERSISTENTE ---  
  let wakeLock = null;  
 
  async function requestWakeLock() {  
@@ -1485,9 +1398,11 @@
  });  
  });  
 
+ // --- CONTROLADOR DE MODO STANDBY DINÁMICO ---  
  let standbyTimer;  
   
  function getStandbyDelay() {  
+ // Público: 30 segundos (30000 ms) | Modo DJ / Admin: 2 minutos (120000 ms)  
  return (isDjModeActive || isAdminModeActive) ? 120000 : 30000;  
  }  
   
@@ -1506,6 +1421,7 @@
  if (standbyScreen && standbyScreen.classList.contains('active')) {  
  standbyScreen.classList.remove('active');  
    
+ // Cerrar cualquier modal abierto al salir del standby para volver exactamente a la pantalla principal previa  
  const imageModal = document.getElementById('imageModal');  
  const historyModal = document.getElementById('historyModal');  
  if (imageModal.style.display === 'flex') {  
@@ -1529,12 +1445,14 @@
  standbyTimer = setTimeout(showStandby, getStandbyDelay());  
  }  
   
+ // Eventos amplios optimizados para captar cualquier interacción real sin bloquear el scroll  
  ['click', 'touchstart', 'pointerdown', 'keydown'].forEach(event => {  
  window.addEventListener(event, hideStandby, { passive: true });  
  });  
   
  resetStandbyTimer();  
 
+ // --- APLICAR EFECTOS DE ADMIN CON BOTÓN ACTIVO ---  
  function setAdminEffect(type, value) {  
  adminEffectRef.set({ type: type, value: value });  
  }  
@@ -1631,7 +1549,7 @@
  document.getElementById('historyListBtn').style.display = 'inline-block';  
  document.getElementById('clearQueueBtn').style.display = 'inline-block';  
  document.getElementById('queueHeaderTitle').textContent = "Control DJ";  
- alert("¡Modo DJ activado! 🎧");  
+ alert("¡Modo DJ activado con éxito! 🎧 (Standby ajustado a 2 minutos)");  
  resetStandbyTimer();  
  renderQueuePage();  
  } else {  
@@ -1648,7 +1566,7 @@
  document.getElementById('clearQueueBtn').style.display = 'none';  
  }  
  document.getElementById('queueHeaderTitle').textContent = "Lista Peticiones";  
- alert("Modo DJ desactivado.");  
+ alert("Modo DJ desactivado. (Standby ajustado a 30 segundos)");  
  resetStandbyTimer();  
  renderQueuePage();  
  }  
@@ -1656,7 +1574,7 @@
 
  async function toggleAdminMode() {  
  if (!isAdminModeActive) {  
- const pass = prompt("Introduce la contraseña de Administrador (Sala / Admin):");  
+ const pass = prompt("Introduce la contraseña de Administrador (Modo Admin):");  
  if (pass === null) return;  
   
  const encodedInput = btoa(pass.trim());  
@@ -1665,9 +1583,9 @@
  isAdminModeActive = true;  
  document.getElementById('adminModeToggleBtn').textContent = "🚪 Salir Admin";  
  document.getElementById('adminModeToggleBtn').classList.add('active');  
- document.getElementById('adminTabBtn').style.display = 'flex';  
+ document.getElementById('adminTabBtn').style.display = 'block';  
  switchTab('admin', true);  
- alert("¡Panel de Control Profesional activado! 💡");  
+ alert("¡Modo Admin activado con éxito! 💡");  
  resetStandbyTimer();  
  } else {  
  alert("Contraseña incorrecta.");  
@@ -1678,12 +1596,13 @@
  document.getElementById('adminModeToggleBtn').classList.remove('active');  
  document.getElementById('adminTabBtn').style.display = 'none';  
  switchTab('search', true);  
- alert("Panel Admin desactivado.");  
+ alert("Modo Admin desactivado.");  
  resetStandbyTimer();  
  }  
  }  
   
  function toggleRequestsState() {  
+ if (!isDjModeActive) return;  
  const newState = !areRequestsOpen;  
  settingsRef.set(newState).then(() => {  
  alert(newState ? "¡Peticiones ABIERTAS para el público! 🟢" : "¡Peticiones DESACTIVADAS para el público! 🔴");  
@@ -1693,7 +1612,6 @@
  function updateNeonBannerUI() {  
  const banner = document.getElementById('neonBanner');  
  const toggleBtn = document.getElementById('toggleRequestsBtn');  
- const adminToggleReq = document.getElementById('adminPanelToggleReq');  
   
  if (areRequestsOpen) {  
  banner.className = "neon-banner enabled";  
@@ -1702,7 +1620,6 @@
  toggleBtn.textContent = "🔒 Peticiones: ON";  
  toggleBtn.classList.remove('off');  
  }  
- if (adminToggleReq) adminToggleReq.textContent = "🔒 Cerrar Peticiones (Público)";  
  } else {  
  banner.className = "neon-banner disabled";  
  banner.textContent = "⛔ PETICIONES DESACTIVADAS TEMPORALMENTE";  
@@ -1710,10 +1627,9 @@
  toggleBtn.textContent = "🔓 Peticiones: OFF";  
  toggleBtn.classList.add('off');  
  }  
- if (adminToggleReq) adminToggleReq.textContent = "🔓 Abrir Peticiones (Público)";  
  }  
   
- document.querySelectorAll('.request-btn, .vote-btn').forEach(btn => {  
+ document.querySelectorAll('.request-btn').forEach(btn => {  
  if (!areRequestsOpen) {  
  btn.disabled = true;  
  btn.title = "Las peticiones están desactivadas por el DJ";  
@@ -1725,12 +1641,13 @@
  }  
   
  function saveCurrentList() {  
+ if (!isDjModeActive) return;  
  if (globalQueueItems.length === 0) {  
  alert("No hay peticiones en la lista para guardar.");  
  return;  
  }  
   
- const listName = prompt("Introduce un nombre para guardar esta sesión (ej: Sesión Remember 2026):");  
+ const listName = prompt("Introduce un nombre para guardar esta sesión (ej: Sesión Plaza Toros):");  
  if (!listName || listName.trim() === "") return;  
   
  const cleanName = listName.trim();  
@@ -1750,6 +1667,7 @@
  }  
   
  function openHistoryModal() {  
+ if (!isDjModeActive) return;  
  const container = document.getElementById('savedListsContainer');  
  const modalTitle = document.getElementById('historyModalTitle');  
  const modalSubtitle = document.getElementById('historyModalSubtitle');  
@@ -1761,7 +1679,7 @@
  modalSubtitle.textContent = "Listas guardadas en la base de datos";  
  backBtn.textContent = "Cerrar";  
   
- container.innerHTML = '<p class="status-msg">Cargando histórico...</p>';  
+ container.innerHTML = '<p class="status-msg">Cargando listas guardadas...</p>';  
  historyModal.style.display = 'flex';  
  history.pushState({ modalOpen: true }, '', '');  
   
@@ -1883,12 +1801,14 @@
   
  function toggleSongPlayed(songId, currentStatus, event) {  
  if (event) event.stopPropagation();  
+ if (!isDjModeActive) return;  
  db.ref('welove_live_music_queue/' + songId).update({  
  played: !currentStatus  
  });  
  }  
   
  async function clearQueueSecure() {  
+ if (!isDjModeActive) return;  
  if (confirm("¿Estás completamente seguro de borrar TODAS las peticiones de la sala?")) {  
  queueRef.remove().then(() => {  
  currentPage = 1;  
@@ -1904,12 +1824,14 @@
  if (tabName === 'search') {  
  document.querySelectorAll('.tab-btn')[0].classList.add('active');  
  document.getElementById('tabSearch').classList.add('active');  
+ document.body.classList.remove('queue-tab-active');  
  if (pushState) {  
  history.pushState({ page: 'search' }, '', '');  
  }  
  } else if (tabName === 'queue') {  
  document.querySelectorAll('.tab-btn')[1].classList.add('active');  
  document.getElementById('tabQueue').classList.add('active');  
+ document.body.classList.add('queue-tab-active');  
    
  hasUnreadRequests = false;  
  document.getElementById('queueTabBtn').classList.remove('has-new');  
@@ -1921,6 +1843,7 @@
  const adminBtn = document.getElementById('adminTabBtn');  
  if (adminBtn) adminBtn.classList.add('active');  
  document.getElementById('tabAdmin').classList.add('active');  
+ document.body.classList.add('queue-tab-active');  
  if (pushState) {  
  history.pushState({ page: 'admin' }, '', '');  
  }  
@@ -2174,6 +2097,7 @@
  });  
  }  
   
+ // --- SISTEMA DE ALERTA Y VIBRACIÓN MÁS FUERTE PARA EL DJ ---  
  function triggerDjAlert(reasonText) {  
  if (!isDjModeActive) return;  
 
@@ -2185,13 +2109,16 @@
 
  try {  
  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();  
+   
  [0, 0.25, 0.5].forEach((delay) => {  
  const osc = audioCtx.createOscillator();  
  const gain = audioCtx.createGain();  
  osc.type = 'square';  
  osc.frequency.setValueAtTime(880, audioCtx.currentTime + delay);  
+   
  gain.gain.setValueAtTime(0.4, audioCtx.currentTime + delay);  
  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + delay + 0.18);  
+   
  osc.connect(gain);  
  gain.connect(audioCtx.destination);  
  osc.start(audioCtx.currentTime + delay);  
@@ -2431,9 +2358,9 @@
  const btnTitleAttr = !areRequestsOpen ? 'title="Las peticiones están desactivadas por el DJ"' : '';  
   
  if (existingQueueItem) {  
- modalActionContainer.innerHTML = `<button class="vote-btn" style="width: 100%; padding: 11px; font-size: 0.84rem;" ${disabledAttr} ${btnTitleAttr} onclick="voteSong('${songKey}', '${safeTitle}'); closeModal(true);">🔥 Votar esta canción (+1)</button>`;  
+ modalActionContainer.innerHTML = `<button class="vote-btn" style="width: 100%; padding: 10px; font-size: 0.85rem;" ${disabledAttr} ${btnTitleAttr} onclick="voteSong('${songKey}', '${safeTitle}'); closeModal(true);">🔥 Votar esta canción (+1)</button>`;  
  } else {  
- modalActionContainer.innerHTML = `<button class="request-btn" style="width: 100%; padding: 11px; font-size: 0.84rem;" ${disabledAttr} ${btnTitleAttr} onclick="requestSong('${safeTitle}', '${safeArtist}', '${artwork100}', '${audioUrl || ''}', '${genre}', '${year}'); closeModal(true);">➕ Pedir esta canción al DJ</button>`;  
+ modalActionContainer.innerHTML = `<button class="request-btn" style="width: 100%; padding: 10px; font-size: 0.85rem;" ${disabledAttr} ${btnTitleAttr} onclick="requestSong('${safeTitle}', '${safeArtist}', '${artwork100}', '${audioUrl || ''}', '${genre}', '${year}'); closeModal(true);">➕ Pedir esta canción al DJ</button>`;  
  }  
   
  if (!window.history.state || !window.history.state.modalOpen) {  
