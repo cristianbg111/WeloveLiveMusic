@@ -1208,7 +1208,7 @@
  </div>  
   
  <!-- PANTALLA STANDBY OPTIMIZADA -->  
- <div id="standby-screen" class="active">  
+ <div id="standby-screen">  
  <div class="laser-background"></div>  
  <div class="strobe-overlay"></div>  
   
@@ -1370,16 +1370,18 @@
  });  
  });  
   
- // --- WAKE LOCK API ---  
+ // --- WAKE LOCK API PERSISTENTE ---  
  let wakeLock = null;  
 
  async function requestWakeLock() {  
  if ('wakeLock' in navigator) {  
  try {  
+ if (wakeLock === null) {  
  wakeLock = await navigator.wakeLock.request('screen');  
  wakeLock.addEventListener('release', () => {  
  wakeLock = null;  
  });  
+ }  
  } catch (err) {}  
  }  
  }  
@@ -1388,9 +1390,9 @@
  requestWakeLock();  
  });  
 
- ['visibilitychange', 'touchstart', 'click', 'mousemove'].forEach(event => {  
+ ['visibilitychange', 'touchstart', 'click', 'mousemove', 'pointerdown'].forEach(event => {  
  document.addEventListener(event, async () => {  
- if (wakeLock === null && document.visibilityState === 'visible') {  
+ if (document.visibilityState === 'visible') {  
  await requestWakeLock();  
  }  
  });  
@@ -1400,7 +1402,8 @@
  let standbyTimer;  
   
  function getStandbyDelay() {  
- return (isDjModeActive || isAdminModeActive) ? 180000 : 60000;  
+ // Público: 30 segundos (30000 ms) | Modo DJ / Admin: 2 minutos (120000 ms)  
+ return (isDjModeActive || isAdminModeActive) ? 120000 : 30000;  
  }  
   
  function showStandby() {  
@@ -1417,8 +1420,20 @@
  const standbyScreen = document.getElementById('standby-screen');  
  if (standbyScreen && standbyScreen.classList.contains('active')) {  
  standbyScreen.classList.remove('active');  
+   
+ // Cerrar cualquier modal abierto al salir del standby para volver exactamente a la pantalla principal previa  
+ const imageModal = document.getElementById('imageModal');  
+ const historyModal = document.getElementById('historyModal');  
+ if (imageModal.style.display === 'flex') {  
+ closeModal(false);  
+ }  
+ if (historyModal.style.display === 'flex') {  
+ historyModal.style.display = 'none';  
+ document.body.style.overflow = '';  
+ }  
  }  
  resetStandbyTimer();  
+ requestWakeLock();  
 
  if (latestAdminEffectData) {  
  applyAdminEffectLocally(latestAdminEffectData);  
@@ -1430,8 +1445,9 @@
  standbyTimer = setTimeout(showStandby, getStandbyDelay());  
  }  
   
- ['click', 'mousemove', 'touchstart', 'keypress', 'scroll'].forEach(event => {  
- window.addEventListener(event, hideStandby, true);  
+ // Eventos amplios optimizados para captar cualquier interacción real sin bloquear el scroll  
+ ['click', 'touchstart', 'pointerdown', 'keydown'].forEach(event => {  
+ window.addEventListener(event, hideStandby, { passive: true });  
  });  
   
  resetStandbyTimer();  
@@ -1533,7 +1549,7 @@
  document.getElementById('historyListBtn').style.display = 'inline-block';  
  document.getElementById('clearQueueBtn').style.display = 'inline-block';  
  document.getElementById('queueHeaderTitle').textContent = "Control DJ";  
- alert("¡Modo DJ activado con éxito! 🎧 (Standby ajustado a 3 minutos)");  
+ alert("¡Modo DJ activado con éxito! 🎧 (Standby ajustado a 2 minutos)");  
  resetStandbyTimer();  
  renderQueuePage();  
  } else {  
@@ -1550,7 +1566,7 @@
  document.getElementById('clearQueueBtn').style.display = 'none';  
  }  
  document.getElementById('queueHeaderTitle').textContent = "Lista Peticiones";  
- alert("Modo DJ desactivado.");  
+ alert("Modo DJ desactivado. (Standby ajustado a 30 segundos)");  
  resetStandbyTimer();  
  renderQueuePage();  
  }  
