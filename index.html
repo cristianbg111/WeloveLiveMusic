@@ -112,46 +112,6 @@
  margin: auto;  
  z-index: 2;  
  position: relative;  
- transition: max-width 0.3s ease;  
- }  
-
- /* --- ESTILOS MODO PC / TABLET ACTIVADO --- */  
- body.pc-mode-active .card {  
- max-width: 1050px !important;  
- height: 95vh;  
- }  
-
- body.pc-mode-active .tabs {  
- display: none !important; /* Oculta pestañas móviles al ver todo en paralelo */  
- }  
-
- body.pc-mode-active .tab-content {  
- display: flex !important;  
- flex: 1;  
- min-height: 0;  
- }  
-
- body.pc-mode-active .pc-workspace {  
- display: grid;  
- grid-template-columns: 1fr 1fr;  
- gap: 16px;  
- flex: 1;  
- min-height: 0;  
- overflow: hidden;  
- }  
-
- body.pc-mode-active .pc-column {  
- display: flex;  
- flex-direction: column;  
- min-height: 0;  
- background: var(--item-bg);  
- border: 1px solid var(--border);  
- border-radius: 14px;  
- padding: 12px;  
- }  
-
- .pc-workspace {  
- display: contents;  
  }  
   
  .brand-header {  
@@ -195,12 +155,6 @@
  width: 100%;  
  gap: 12px;  
  }  
-
- .header-controls {  
- display: flex;  
- gap: 6px;  
- align-items: center;  
- }  
   
  h1 {   
  font-size: 1rem;   
@@ -212,7 +166,7 @@
  margin: 0;  
  }  
    
- .theme-btn, .pc-toggle-btn {  
+ .theme-btn {  
  background: var(--tag-bg);  
  border: 1px solid var(--border);  
  color: var(--text);  
@@ -223,12 +177,6 @@
  white-space: nowrap;  
  -webkit-appearance: none;  
  touch-action: manipulation;  
- }  
-
- .pc-toggle-btn {  
- background: var(--badge-bg);  
- color: #ffffff;  
- border-color: var(--badge-bg);  
  }  
   
  .neon-banner {  
@@ -1069,7 +1017,7 @@
  max-height: none !important;  
  overflow: visible !important;  
  }  
- .queue-actions, .theme-btn, .pc-toggle-btn, .tabs, .search-box, .footer, .pagination, .delete-song-btn, .dj-row-controls, .neon-banner, .brand-header, #standby-screen { display: none !important; }  
+ .queue-actions, .theme-btn, .tabs, .search-box, .footer, .pagination, .delete-song-btn, .dj-row-controls, .neon-banner, .brand-header, #standby-screen { display: none !important; }  
  .results {  
  max-height: none !important;  
  overflow: visible !important;  
@@ -1097,10 +1045,7 @@
  <img src="logo.jpg" alt="We Love The Remember" class="app-logo">  
  <div class="header-row">  
  <h1>WE LOVE LIVE MUSIC</h1>  
- <div class="header-controls">  
- <button class="pc-toggle-btn" id="pcToggleBtn" onclick="togglePcMode()">🖥️ PC / 📱 Móvil</button>  
- <button class="theme-btn" id="themeToggle">☀️ Claro</button>  
- </div>  
+ <button class="theme-btn" id="themeToggle">☀️ Modo Claro</button>  
  </div>  
  </div>  
    
@@ -1121,11 +1066,8 @@
  <button class="tab-btn queue-tab-btn" id="queueTabBtn" onclick="switchTab('queue', true)">📻 Lista Peticiones</button>  
  <button class="tab-btn" id="adminTabBtn" style="display: none;" onclick="switchTab('admin', true)">💡 Admin</button>  
  </div>  
-
- <!-- CONTENEDOR ADAPTABLE PARA MODO PC / TABLET -->
- <div class="pc-workspace">  
   
- <div id="tabSearch" class="tab-content active pc-column">  
+ <div id="tabSearch" class="tab-content active">  
  <form class="search-box" id="searchForm" action="javascript:void(0);">  
  <input type="text" id="songInput" placeholder="Ej: U2, Queen, Estopa..." autocomplete="off" spellcheck="false" enterkeyhint="search" />  
  <button type="submit" class="search-btn" id="searchBtn">🔍</button>  
@@ -1139,7 +1081,7 @@
  <div id="results" class="results"></div>  
  </div>  
   
- <div id="tabQueue" class="tab-content pc-column">  
+ <div id="tabQueue" class="tab-content">  
  <div class="queue-header">  
  <span class="queue-title" id="queueHeaderTitle">Lista Peticiones</span>  
  <div class="queue-actions">  
@@ -1164,8 +1106,6 @@
  </div>  
  </div>  
 
- </div><!-- Fin pc-workspace -->  
-  
  <!-- PESTAÑA MODO ADMIN DE SALA -->  
  <div id="tabAdmin" class="tab-content">  
  <div class="queue-header">  
@@ -1174,7 +1114,7 @@
  <div class="results" style="padding-top: 6px;">  
  <div class="instructions-box" style="margin-bottom: 10px;">  
  <div class="instructions-title">✨ Control Lumínico Global</div>  
- <div class="instructions-text">Pulsa cualquier color, flash estroboscópico o ráfaga para sincronizar las pantallas de todos los asistentes en la sala al instante.</div>  
+ <div class="instructions-text">Pulsa cualquier color, flash estroboscópico o ráfaga para sincronizar las pantallas de todos los asistentes in la sala al instante.</div>  
  </div>  
 
  <div class="admin-panel-grid">  
@@ -1343,13 +1283,6 @@
  const savedTheme = localStorage.getItem('theme') || 'dark';  
  document.documentElement.setAttribute('data-theme', savedTheme);  
  updateThemeButton(savedTheme);  
-
- // Cargar preferencia de Modo PC guardada
- const savedPcMode = localStorage.getItem('pc_mode') === 'true';
- if (savedPcMode) {
-     document.body.classList.add('pc-mode-active');
-     document.getElementById('pcToggleBtn').textContent = "📱 Modo Móvil";
- }  
   
  document.getElementById('themeToggle').addEventListener('click', toggleTheme);  
    
@@ -1401,7 +1334,7 @@
   
  const queueTab = document.getElementById('tabQueue');  
  const adminTab = document.getElementById('tabAdmin');  
- if (!document.body.classList.contains('pc-mode-active') && (queueTab.classList.contains('active') || (adminTab && adminTab.classList.contains('active')))) {  
+ if (queueTab.classList.contains('active') || (adminTab && adminTab.classList.contains('active'))) {  
  switchTab('search', false);  
  return;  
  }  
@@ -1436,13 +1369,6 @@
  updateAdminButtonsUI(val);  
  });  
  });  
-
- // --- FUNCIÓN PARA ALTERNAR MODO PC / TABLET ---
- function togglePcMode() {
- const isPcActive = document.body.classList.toggle('pc-mode-active');
- localStorage.setItem('pc_mode', isPcActive);
- document.getElementById('pcToggleBtn').textContent = isPcActive ? "📱 Modo Móvil" : "🖥️ PC / 📱 Móvil";
- }  
   
  // --- WAKE LOCK API PERSISTENTE ---  
  let wakeLock = null;  
@@ -1476,6 +1402,7 @@
  let standbyTimer;  
   
  function getStandbyDelay() {  
+ // Público: 30 segundos (30000 ms) | Modo DJ / Admin: 2 minutos (120000 ms)  
  return (isDjModeActive || isAdminModeActive) ? 120000 : 30000;  
  }  
   
@@ -1492,7 +1419,9 @@
  function hideStandby() {  
  const standbyScreen = document.getElementById('standby-screen');  
  if (standbyScreen && standbyScreen.classList.contains('active')) {  
- standbyScreen.classList.remove('active');   
+ standbyScreen.classList.remove('active');  
+   
+ // Cerrar cualquier modal abierto al salir del standby para volver exactamente a la pantalla principal previa  
  const imageModal = document.getElementById('imageModal');  
  const historyModal = document.getElementById('historyModal');  
  if (imageModal.style.display === 'flex') {  
@@ -1516,12 +1445,14 @@
  standbyTimer = setTimeout(showStandby, getStandbyDelay());  
  }  
   
+ // Eventos amplios optimizados para captar cualquier interacción real sin bloquear el scroll  
  ['click', 'touchstart', 'pointerdown', 'keydown'].forEach(event => {  
  window.addEventListener(event, hideStandby, { passive: true });  
  });  
   
  resetStandbyTimer();  
 
+ // --- APLICAR EFECTOS DE ADMIN CON BOTÓN ACTIVO ---  
  function setAdminEffect(type, value) {  
  adminEffectRef.set({ type: type, value: value });  
  }  
@@ -2166,6 +2097,7 @@
  });  
  }  
   
+ // --- SISTEMA DE ALERTA Y VIBRACIÓN MÁS FUERTE PARA EL DJ ---  
  function triggerDjAlert(reasonText) {  
  if (!isDjModeActive) return;  
 
