@@ -81,7 +81,7 @@
  height: 100%;  
  overflow: hidden;  
  }  
-   
+  
  body {  
  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;  
  background: var(--bg);  
@@ -1328,7 +1328,7 @@
  }  
   
  if (modal.style.display === 'flex') {  
- closeModal(false); // Cierra sin volver a hacer history.back() ya que el popstate ya lo hizo  
+ closeModal(false);   
  return;  
  }  
   
@@ -1759,8 +1759,11 @@
  openHistoryModal();  
  } else {  
  historyModal.style.display = 'none';  
+ document.body.style.overflow = '';  
  if (window.history.state && window.history.state.modalOpen) {  
+ try {  
  window.history.back();  
+ } catch (e) {}  
  }  
  }  
  }  
@@ -2392,13 +2395,19 @@
   
  function closeModal(shouldBack = true) {  
  const audioElement = document.getElementById('modalAudio');  
+ if (audioElement) {  
  audioElement.pause();  
  audioElement.src = '';  
+ }  
+  
  document.getElementById('imageModal').style.display = 'none';  
  document.getElementById('historyModal').style.display = 'none';  
+ document.body.style.overflow = '';  
   
  if (shouldBack && window.history.state && window.history.state.modalOpen) {  
+ try {  
  window.history.back();  
+ } catch (e) {}  
  }  
  }  
   
