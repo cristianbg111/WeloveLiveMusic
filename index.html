@@ -1133,7 +1133,7 @@
   
  <div id="tabQueue" class="tab-content">  
  <div class="queue-header">  
- <span class="queue-title" id="queueHeaderTitle">Lista Peticiones</span>  
+ <span class="queue-title" id="queueHeaderTitle">Peticiones del público</span>  
  <div class="queue-actions">  
  <button class="dj-mode-btn" id="djModeToggleBtn" onclick="toggleDjMode()">🎧 DJ</button>  
  <button class="admin-mode-btn" id="adminModeToggleBtn" onclick="toggleAdminMode()">💡 Admin</button>  
@@ -1189,8 +1189,8 @@
 
  <!-- BARRA DE PESTAÑAS INFERIOR (ESTILO APP MODERNA) -->  
  <div class="tabs">  
- <button class="tab-btn highlight-animated active" onclick="switchTab('search', true)">✨ Busca y Añade</button>  
- <button class="tab-btn queue-tab-btn" id="queueTabBtn" onclick="switchTab('queue', true)">📻 Lista Peticiones</button>  
+ <button class="tab-btn highlight-animated active" onclick="switchTab('search', true)">🔍 Busca tu canción</button>  
+ <button class="tab-btn queue-tab-btn" id="queueTabBtn" onclick="switchTab('queue', true)">📻 Peticiones del público</button>  
  <button class="tab-btn" id="adminTabBtn" style="display: none;" onclick="switchTab('admin', true)">💡 Admin</button>  
  </div>  
   
@@ -1695,7 +1695,7 @@
  document.getElementById('historyListBtn').style.display = 'none';  
  document.getElementById('clearQueueBtn').style.display = 'none';  
  }  
- document.getElementById('queueHeaderTitle').textContent = "Lista Peticiones";  
+ document.getElementById('queueHeaderTitle').textContent = "Peticiones del público";  
  alert("Modo DJ desactivado.");  
  resetStandbyTimer();  
  renderQueuePage();  
