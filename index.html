@@ -1114,7 +1114,7 @@
  <div class="results" style="padding-top: 6px;">  
  <div class="instructions-box" style="margin-bottom: 10px;">  
  <div class="instructions-title">✨ Control Lumínico Global</div>  
- <div class="instructions-text">Pulsa cualquier color, flash estroboscópico o ráfaga para sincronizar las pantallas de todos los asistentes en la sala al instante.</div>  
+ <div class="instructions-text">Pulsa cualquier color, flash estroboscópico o ráfaga para sincronizar las pantallas de todos los asistentes in la sala al instante.</div>  
  </div>  
 
  <div class="admin-panel-grid">  
@@ -1298,8 +1298,8 @@
  });  
   
  document.getElementById('tapBtn').addEventListener('click', tapTempo);  
- document.getElementById('backModalBtn').addEventListener('click', closeModal);  
- document.getElementById('imageModal').addEventListener('click', closeModal);  
+ document.getElementById('backModalBtn').addEventListener('click', () => closeModal(true));  
+ document.getElementById('imageModal').addEventListener('click', () => closeModal(true));  
  document.getElementById('historyModal').addEventListener('click', closeHistoryModal);  
  document.getElementById('modalTidalBtn').addEventListener('click', openTidalApp);  
  document.getElementById('modalYoutubeBtn').addEventListener('click', openYoutubeApp);  
@@ -1328,7 +1328,7 @@
  }  
   
  if (modal.style.display === 'flex') {  
- closeModal(false);  
+ closeModal(false); // Cierra sin volver a hacer history.back() ya que el popstate ya lo hizo  
  return;  
  }  
   
@@ -1338,8 +1338,6 @@
  switchTab('search', false);  
  return;  
  }  
-  
- window.location.reload();  
  });  
   
  if (!sessionStorage.getItem('visited_live')) {  
@@ -2341,9 +2339,9 @@
  const btnTitleAttr = !areRequestsOpen ? 'title="Las peticiones están desactivadas por el DJ"' : '';  
   
  if (existingQueueItem) {  
- modalActionContainer.innerHTML = `<button class="vote-btn" style="width: 100%; padding: 10px; font-size: 0.85rem;" ${disabledAttr} ${btnTitleAttr} onclick="voteSong('${songKey}', '${safeTitle}'); closeModal();">🔥 Votar esta canción (+1)</button>`;  
+ modalActionContainer.innerHTML = `<button class="vote-btn" style="width: 100%; padding: 10px; font-size: 0.85rem;" ${disabledAttr} ${btnTitleAttr} onclick="voteSong('${songKey}', '${safeTitle}'); closeModal(true);">🔥 Votar esta canción (+1)</button>`;  
  } else {  
- modalActionContainer.innerHTML = `<button class="request-btn" style="width: 100%; padding: 10px; font-size: 0.85rem;" ${disabledAttr} ${btnTitleAttr} onclick="requestSong('${safeTitle}', '${safeArtist}', '${artwork100}', '${audioUrl || ''}', '${genre}', '${year}'); closeModal();">➕ Pedir esta canción al DJ</button>`;  
+ modalActionContainer.innerHTML = `<button class="request-btn" style="width: 100%; padding: 10px; font-size: 0.85rem;" ${disabledAttr} ${btnTitleAttr} onclick="requestSong('${safeTitle}', '${safeArtist}', '${artwork100}', '${audioUrl || ''}', '${genre}', '${year}'); closeModal(true);">➕ Pedir esta canción al DJ</button>`;  
  }  
   
  history.pushState({ modalOpen: true }, '', '');  
@@ -2392,14 +2390,14 @@
  }  
  }  
   
- function closeModal(updateHistory = true) {  
+ function closeModal(shouldBack = true) {  
  const audioElement = document.getElementById('modalAudio');  
  audioElement.pause();  
  audioElement.src = '';  
  document.getElementById('imageModal').style.display = 'none';  
  document.getElementById('historyModal').style.display = 'none';  
   
- if (updateHistory && window.history.state && window.history.state.modalOpen) {  
+ if (shouldBack && window.history.state && window.history.state.modalOpen) {  
  window.history.back();  
  }  
  }  
