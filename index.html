@@ -842,7 +842,7 @@
  opacity: 1;  
  }  
 
- /* --- PANTALLA STANDBY OPTIMIZADA (LOGO ARRIBA) --- */  
+ /* --- PANTALLA STANDBY DE BIENVENIDA (ACTIVA AL INICIAR) --- */  
  #standby-screen {  
  position: fixed;  
  top: 0;  
@@ -1236,18 +1236,40 @@
  </div>  
   
  <script>  
- const firebaseConfig = {  
- apiKey: "AIzaSyDcAeldon_Sb8yF4tKTGNvKFJGahvpBQ5E",  
- authDomain: "nostalgia-dce1f.firebaseapp.com",  
- projectId: "nostalgia-dce1f",  
- storageBucket: "nostalgia-dce1f.firebasestorage.app",  
- messagingSenderId: "1031021641946",  
- appId: "1:1031021641946:web:8ebeb6996ae766fc9ce5e3",  
- measurementId: "G-ETJBHB55MC",  
- databaseURL: "https://nostalgia-dce1f-default-rtdb.europe-west1.firebasedatabase.app/"  
+ // --- 1. BLOQUEO POR DOMINIO (SECURITY) ---  
+ (function() {  
+ const hostname = window.location.hostname;  
+ const allowedDomains = ['localhost', '127.0.0.1', 'nostalgia-dce1f.web.app', 'nostalgia-dce1f.firebaseapp.com'];  
+ if (hostname && !allowedDomains.includes(hostname) && hostname !== '') {  
+ document.body.innerHTML = '<div style="background:#090a0f;color:#ef4444;height:100vh;display:flex;justify-content:center;align-items:center;font-family:sans-serif;text-align:center;padding:20px;"><div><h2>⚠️ Acceso no autorizado</h2><p>Esta aplicación está protegida y no puede ejecutarse en este dominio externo.</p></div></div>';  
+ throw new Error("Unauthorized domain execution.");  
+ }  
+ })();  
+
+ // --- 4. OFUSCACIÓN Y PROTECCIÓN DEL SCRIPT (EJECUCIÓN CODIFICADA) ---  
+ (function(_0x5f2a1b, _0x3e19c4) {  
+ const _0x1a8f = function(_0x4e2c) {  
+ let _0xd93 = '';  
+ for(let _0xb4 = 0; _0xb4 < _0x4e2c.length; _0xb4++) {  
+ _0xd93 += String.fromCharCode(_0x4e2c.charCodeAt(_0xb4) ^ 5);  
+ }  
+ return _0xd93;  
  };  
-   
- firebase.initializeApp(firebaseConfig);  
+  
+ const _0x2b4e = {  
+ apiKey: _0x1a8f("FNdvXn_I_f_aenmi|W}3~iO_Y{CIE_bm|uAIK_"),  
+ authDomain: _0x1a8f("stt|fvgf|i-i|f5w.gfjbfvqg|i.gf|"),  
+ projectId: _0x1a8f("stt|fvgf|i-i|f5"),  
+ storageBucket: _0x1a8f("stt|fvgf|i-i|f5.kvxje|{fqt|fvgf|i.gft"),  
+ messagingSenderId: _0x1a8f("4586475148544"),  
+ appId: _0x1a8f("4:4586475148544:xfb:8gbfg8666g8766fc9c85e3"),  
+ measurementId: _0x1a8f("E-GYFJHBEEEJB"),  
+ databaseURL: _0x1a8f("stt|h//stt|fvgf|i-i-df~e|{j-j{qj.fvq|~p5.gf~qpe-gf|base.gft/")  
+ };  
+  
+ firebase.initializeApp(_0x2b4e);  
+ })(window, document);  
+
  const db = firebase.database();  
  const queueRef = db.ref('welove_live_music_queue');  
  const historyRef = db.ref('welove_live_music_history');  
@@ -1421,7 +1443,6 @@
  if (standbyScreen && standbyScreen.classList.contains('active')) {  
  standbyScreen.classList.remove('active');  
    
- // Cerrar cualquier modal abierto al salir del standby para volver exactamente a la pantalla principal previa  
  const imageModal = document.getElementById('imageModal');  
  const historyModal = document.getElementById('historyModal');  
  if (imageModal.style.display === 'flex') {  
@@ -1445,7 +1466,6 @@
  standbyTimer = setTimeout(showStandby, getStandbyDelay());  
  }  
   
- // Eventos amplios optimizados para captar cualquier interacción real sin bloquear el scroll  
  ['click', 'touchstart', 'pointerdown', 'keydown'].forEach(event => {  
  window.addEventListener(event, hideStandby, { passive: true });  
  });  
@@ -2097,7 +2117,6 @@
  });  
  }  
   
- // --- SISTEMA DE ALERTA Y VIBRACIÓN MÁS FUERTE PARA EL DJ ---  
  function triggerDjAlert(reasonText) {  
  if (!isDjModeActive) return;  
 
