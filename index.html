@@ -94,7 +94,7 @@
  align-items: center;  
  height: 100vh;  
  height: 100dvh;  
- padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));  
+ padding: max(8px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));  
  overflow: hidden;  
  }  
   
@@ -102,7 +102,7 @@
  background: var(--card-bg);  
  border: 1px solid var(--border);  
  border-radius: 20px;  
- padding: 18px;  
+ padding: 14px;  
  max-width: 500px;  
  width: 100%;  
  max-height: 100%;  
@@ -118,8 +118,8 @@
  display: flex;  
  flex-direction: column;  
  align-items: center;  
- gap: 6px;  
- margin-bottom: 6px;  
+ gap: 4px;  
+ margin-bottom: 4px;  
  flex-shrink: 0;  
  text-align: center;  
  transition: all 0.3s ease;  
@@ -127,9 +127,9 @@
   
  .app-logo {  
  width: 100%;  
- max-width: 260px;  
+ max-width: 240px;  
  height: auto;  
- max-height: 95px;  
+ max-height: 80px;  
  object-fit: contain;  
  border-radius: 10px;  
  border: 1px solid var(--border);  
@@ -141,7 +141,7 @@
  }  
   
  body.queue-tab-active .app-logo {  
- max-height: 50px;  
+ max-height: 45px;  
  }  
   
  body.queue-tab-active .instructions-box {  
@@ -157,7 +157,7 @@
  }  
   
  h1 {   
- font-size: 1rem;   
+ font-size: 0.95rem;   
  font-weight: 800;   
  color: var(--text);   
  letter-spacing: 0.5px;  
@@ -170,10 +170,10 @@
  background: var(--tag-bg);  
  border: 1px solid var(--border);  
  color: var(--text);  
- padding: 4px 8px;  
+ padding: 3px 7px;  
  border-radius: 8px;  
  cursor: pointer;  
- font-size: 0.72rem;  
+ font-size: 0.7rem;  
  white-space: nowrap;  
  -webkit-appearance: none;  
  touch-action: manipulation;  
@@ -181,14 +181,14 @@
   
  .neon-banner {  
  width: 100%;  
- padding: 8px 12px;  
- border-radius: 10px;  
- font-size: 0.75rem;  
+ padding: 6px 10px;  
+ border-radius: 8px;  
+ font-size: 0.72rem;  
  font-weight: 800;  
  text-align: center;  
  text-transform: uppercase;  
  letter-spacing: 1px;  
- margin-bottom: 10px;  
+ margin-bottom: 6px;  
  flex-shrink: 0;  
  transition: all 0.3s ease;  
  }  
@@ -217,16 +217,16 @@
  .instructions-box {  
  background: var(--instructions-bg);  
  border: 1px solid var(--instructions-border);  
- border-radius: 10px;  
- padding: 8px 10px;  
- margin-bottom: 10px;  
+ border-radius: 8px;  
+ padding: 6px 8px;  
+ margin-bottom: 6px;  
  box-shadow: inset 0 0 10px var(--instructions-bg);  
  flex-shrink: 0;  
  transition: all 0.3s ease;  
  }  
   
  .instructions-title {  
- font-size: 0.78rem;  
+ font-size: 0.74rem;  
  font-weight: 800;  
  color: var(--accent);  
  text-transform: uppercase;  
@@ -238,27 +238,27 @@
  }  
   
  .instructions-text {  
- font-size: 0.72rem;  
+ font-size: 0.68rem;  
  color: var(--text);  
- line-height: 1.3;  
+ line-height: 1.25;  
  font-weight: 500;  
  }  
   
  .aviso-evento {  
- margin-top: 8px;  
- padding-top: 6px;  
+ margin-top: 4px;  
+ padding-top: 4px;  
  border-top: 1px dashed var(--instructions-border);  
  color: var(--count-bg);  
- font-size: 0.69rem;  
+ font-size: 0.65rem;  
  font-weight: 600;  
  }  
   
  .tabs {  
  display: flex;  
  gap: 8px;  
- margin-bottom: 10px;  
+ margin-bottom: 6px;  
  border-bottom: 1px solid var(--border);  
- padding-bottom: 6px;  
+ padding-bottom: 4px;  
  flex-shrink: 0;  
  position: relative;  
  }  
@@ -290,10 +290,10 @@
  background: var(--tag-bg);  
  border: 1px solid var(--border);  
  color: var(--text-muted);  
- padding: 7px;  
- border-radius: 10px;  
+ padding: 6px;  
+ border-radius: 8px;  
  font-weight: 700;  
- font-size: 0.73rem;  
+ font-size: 0.7rem;  
  cursor: pointer;  
  text-align: center;  
  text-transform: uppercase;  
@@ -332,17 +332,26 @@
  }  
  .tab-content.active { display: flex; }  
   
+ /* --- BARRA DE BÚSQUEDA CON BOTÓN X DE LIMPIEZA --- */  
  .search-box {  
  display: flex;  
- gap: 8px;  
- margin-bottom: 8px;  
+ gap: 6px;  
+ margin-bottom: 6px;  
  flex-shrink: 0;  
+ align-items: center;  
+ }  
+  
+ .search-input-wrapper {  
+ position: relative;  
+ flex: 1;  
+ display: flex;  
+ align-items: center;  
  }  
   
  input {  
- flex: 1;  
- padding: 9px 12px;  
- border-radius: 10px;  
+ width: 100%;  
+ padding: 7px 32px 7px 10px;  
+ border-radius: 8px;  
  border: 1px solid var(--input-border);  
  background: var(--input-bg);  
  color: var(--text);  
@@ -355,66 +364,85 @@
  box-shadow: 0 0 8px var(--glow-accent);  
  }  
   
+ .clear-search-btn {  
+ position: absolute;  
+ right: 8px;  
+ background: transparent;  
+ border: none;  
+ color: var(--text-muted);  
+ font-size: 0.9rem;  
+ font-weight: 800;  
+ cursor: pointer;  
+ padding: 4px;  
+ display: none;  
+ -webkit-appearance: none;  
+ touch-action: manipulation;  
+ }  
+ .clear-search-btn:hover {  
+ color: var(--accent);  
+ }  
+  
  .search-btn {  
  background: var(--accent);  
  color: var(--accent-text);  
  border: none;  
- padding: 9px 14px;  
- border-radius: 10px;  
+ padding: 7px 12px;  
+ border-radius: 8px;  
  font-weight: 700;  
  cursor: pointer;  
- font-size: 0.85rem;  
+ font-size: 0.8rem;  
  -webkit-appearance: none;  
  touch-action: manipulation;  
  box-shadow: 0 0 10px var(--glow-accent);  
  }  
   
- .history-section { margin-bottom: 8px; flex-shrink: 0; }  
- .history-title { font-size: 0.68rem; color: var(--text-muted); margin-bottom: 3px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }  
- .history-tags { display: flex; flex-wrap: wrap; gap: 5px; }  
+ .history-section { margin-bottom: 6px; flex-shrink: 0; }  
+ .history-title { font-size: 0.65rem; color: var(--text-muted); margin-bottom: 2px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }  
+ .history-tags { display: flex; flex-wrap: wrap; gap: 4px; }  
  .tag {  
  background: var(--tag-bg);  
  border: 1px solid var(--border);  
  color: var(--text);  
- padding: 4px 7px;  
- border-radius: 6px;  
- font-size: 0.7rem;  
+ padding: 3px 6px;  
+ border-radius: 5px;  
+ font-size: 0.68rem;  
  cursor: pointer;  
  -webkit-appearance: none;  
  touch-action: manipulation;  
  }  
   
+ /* Contenedor general de resultados en pestaña o vacío */  
  .results {   
  display: flex;   
  flex-direction: column;   
- gap: 8px;   
+ gap: 5px;   
  flex: 1;  
  overflow-y: auto;   
  -webkit-overflow-scrolling: touch;   
  overscroll-behavior-y: contain;  
- padding-right: 4px;  
- padding-bottom: 10px;  
+ padding-right: 2px;  
+ padding-bottom: 4px;  
  }  
    
  .song-item {  
  display: flex;  
- gap: 10px;  
+ gap: 8px;  
  background: var(--item-bg);  
- padding: 8px 10px;  
- border-radius: 10px;  
+ padding: 5px 8px;  
+ border-radius: 8px;  
  align-items: center;  
  border: 1px solid var(--border);  
  flex-shrink: 0;  
  }  
- .song-item img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; cursor: pointer; flex-shrink: 0; touch-action: manipulation; }  
+ .song-item img { width: 34px; height: 34px; border-radius: 6px; object-fit: cover; cursor: pointer; flex-shrink: 0; touch-action: manipulation; }  
  .song-info { flex: 1; overflow: hidden; cursor: pointer; min-width: 0; touch-action: manipulation; }  
- .song-title { font-weight: 700; font-size: 0.83rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }  
- .song-artist { font-size: 0.73rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }  
+ .song-title { font-weight: 700; font-size: 0.8rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }  
+ .song-artist { font-size: 0.68rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }  
    
  .action-buttons {  
  display: flex;  
  flex-direction: column;  
- gap: 3px;  
+ gap: 2px;  
  align-items: flex-end;  
  flex-shrink: 0;  
  }  
@@ -423,10 +451,10 @@
  background: var(--accent);  
  color: var(--accent-text);  
  border: none;  
- padding: 5px 8px;  
- border-radius: 6px;  
+ padding: 4px 7px;  
+ border-radius: 5px;  
  font-weight: 700;  
- font-size: 0.68rem;  
+ font-size: 0.65rem;  
  cursor: pointer;  
  white-space: nowrap;  
  box-shadow: 0 0 6px var(--glow-accent);  
@@ -448,24 +476,24 @@
  .badge-year {  
  background: var(--tag-bg);  
  color: var(--text-muted);  
- padding: 2px 5px;  
- border-radius: 5px;  
+ padding: 1px 4px;  
+ border-radius: 4px;  
  font-weight: 600;  
- font-size: 0.63rem;  
+ font-size: 0.6rem;  
  border: 1px solid var(--border);  
  }  
    
- .status-msg { text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 12px 0; }  
+ .status-msg { text-align: center; color: var(--text-muted); font-size: 0.75rem; padding: 10px 0; }  
   
  .queue-header {  
  display: flex;  
  justify-content: space-between;  
  align-items: center;  
- margin-bottom: 8px;  
+ margin-bottom: 6px;  
  gap: 6px;  
  flex-shrink: 0;  
  }  
- .queue-title { font-size: 0.8rem; font-weight: 700; color: var(--text); text-transform: uppercase; letter-spacing: 0.5px; }  
+ .queue-title { font-size: 0.78rem; font-weight: 700; color: var(--text); text-transform: uppercase; letter-spacing: 0.5px; }  
    
  .queue-actions {  
  display: flex;  
@@ -474,9 +502,9 @@
  }  
   
  .dj-mode-btn, .admin-mode-btn, .toggle-requests-btn, .save-list-btn, .history-list-btn, .pdf-btn, .clear-queue-btn {  
- padding: 4px 7px;  
- border-radius: 6px;  
- font-size: 0.68rem;  
+ padding: 3px 6px;  
+ border-radius: 5px;  
+ font-size: 0.65rem;  
  font-weight: 700;  
  cursor: pointer;  
  -webkit-appearance: none;  
@@ -500,13 +528,13 @@
   
  .queue-item {  
  display: flex;  
- gap: 10px;  
+ gap: 8px;  
  background: var(--item-bg);  
- padding: 8px 10px;  
- border-radius: 10px;  
+ padding: 5px 8px;  
+ border-radius: 8px;  
  align-items: center;  
  border: 1px solid var(--border);  
- margin-bottom: 6px;  
+ margin-bottom: 5px;  
  flex-shrink: 0;  
  text-align: left;  
  transition: opacity 0.2s;  
@@ -527,16 +555,16 @@
  color: var(--text-muted);  
  }  
   
- .queue-item img { width: 38px !important; height: 38px !important; min-width: 38px; border-radius: 8px; object-fit: cover; cursor: pointer; flex-shrink: 0; touch-action: manipulation; }  
- .requester-tag { font-size: 0.65rem; color: var(--accent); font-weight: 700; margin-top: 2px; }  
+ .queue-item img { width: 34px !important; height: 34px !important; min-width: 34px; border-radius: 6px; object-fit: cover; cursor: pointer; flex-shrink: 0; touch-action: manipulation; }  
+ .requester-tag { font-size: 0.62rem; color: var(--accent); font-weight: 700; margin-top: 1px; }  
   
  .badge-count {  
  background: var(--count-bg);  
  color: #000000;  
- padding: 2px 5px;  
- border-radius: 6px;  
+ padding: 1px 4px;  
+ border-radius: 5px;  
  font-weight: 800;  
- font-size: 0.65rem;  
+ font-size: 0.62rem;  
  text-align: center;  
  white-space: nowrap;  
  box-shadow: 0 0 6px rgba(245, 158, 11, 0.4);  
@@ -544,13 +572,13 @@
   
  .dj-row-controls {  
  display: flex;  
- gap: 6px;  
+ gap: 5px;  
  align-items: center;  
- margin-top: 4px;  
+ margin-top: 3px;  
  }  
   
  .played-checkbox-label {  
- font-size: 0.68rem;  
+ font-size: 0.65rem;  
  color: var(--success);  
  font-weight: 700;  
  display: flex;  
@@ -558,24 +586,24 @@
  gap: 3px;  
  cursor: pointer;  
  background: rgba(16, 185, 129, 0.1);  
- padding: 2px 6px;  
+ padding: 1px 5px;  
  border-radius: 4px;  
  border: 1px solid var(--success);  
  }  
  .played-checkbox-label input {  
  accent-color: var(--success);  
  cursor: pointer;  
- width: 12px;  
- height: 12px;  
+ width: 11px;  
+ height: 11px;  
  }  
   
  .delete-song-btn {  
  background: var(--danger);  
  color: white;  
  border: none;  
- padding: 2px 5px;  
+ padding: 1px 4px;  
  border-radius: 4px;  
- font-size: 0.62rem;  
+ font-size: 0.6rem;  
  font-weight: 700;  
  cursor: pointer;  
  -webkit-appearance: none;  
@@ -586,20 +614,20 @@
  display: flex;  
  justify-content: space-between;  
  align-items: center;  
- margin-bottom: 8px;  
- padding: 5px 10px;  
+ margin-bottom: 6px;  
+ padding: 4px 8px;  
  background: var(--item-bg);  
  border: 1px solid var(--border);  
- border-radius: 10px;  
+ border-radius: 8px;  
  flex-shrink: 0;  
  }  
  .page-btn {  
  background: var(--accent);  
  border: none;  
  color: var(--accent-text);  
- padding: 4px 8px;  
- border-radius: 6px;  
- font-size: 0.72rem;  
+ padding: 3px 7px;  
+ border-radius: 5px;  
+ font-size: 0.7rem;  
  font-weight: 700;  
  cursor: pointer;  
  -webkit-appearance: none;  
@@ -607,27 +635,27 @@
  touch-action: manipulation;  
  }  
  .page-btn:disabled { opacity: 0.3; cursor: not-allowed; box-shadow: none; background: var(--tag-bg); color: var(--text-muted); }  
- .page-info { font-size: 0.72rem; color: var(--text); font-weight: 800; }  
+ .page-info { font-size: 0.7rem; color: var(--text); font-weight: 800; }  
   
  .footer {  
- margin-top: 8px;  
- padding-top: 8px;  
+ margin-top: 6px;  
+ padding-top: 6px;  
  border-top: 1px solid var(--border);  
  text-align: center;  
- font-size: 0.68rem;  
+ font-size: 0.65rem;  
  color: var(--text-muted);  
  letter-spacing: 0.5px;  
- line-height: 1.3;  
+ line-height: 1.2;  
  flex-shrink: 0;  
  }  
  .footer strong { color: var(--accent); }  
  .visitor-counter {  
  display: inline-block;  
- margin-top: 3px;  
- font-size: 0.63rem;  
+ margin-top: 2px;  
+ font-size: 0.6rem;  
  background: var(--tag-bg);  
  border: 1px solid var(--border);  
- padding: 2px 6px;  
+ padding: 1px 5px;  
  border-radius: 20px;  
  color: var(--text-muted);  
  }  
@@ -651,7 +679,7 @@
  background: var(--card-bg);  
  border: 1px solid var(--border);  
  border-radius: 20px;  
- padding: 18px;  
+ padding: 16px;  
  max-width: 400px;  
  width: 100%;  
  text-align: center;  
@@ -661,44 +689,60 @@
  -webkit-overflow-scrolling: touch;  
  margin: auto;  
  }  
- .modal-content img { width: 100%; aspect-ratio: 1/1; border-radius: 12px; object-fit: cover; margin-bottom: 10px; border: 1px solid var(--border); touch-action: manipulation; }  
- .modal-title { font-size: 0.95rem; font-weight: 800; color: var(--text); margin-bottom: 3px; }  
- .modal-artist { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px; }  
+
+ /* --- NUEVA VENTANA GRANDE DE RESULTADOS DE BÚSQUEDA --- */  
+ .search-modal-content {  
+ background: var(--card-bg);  
+ border: 1px solid var(--border);  
+ border-radius: 20px;  
+ padding: 16px;  
+ max-width: 480px;  
+ width: 100%;  
+ height: 85vh;  
+ display: flex;  
+ flex-direction: column;  
+ box-shadow: 0 25px 50px rgba(0,0,0,0.6), 0 0 30px var(--glow-accent);  
+ margin: auto;  
+ }  
+  
+ .modal-content img { width: 100%; aspect-ratio: 1/1; border-radius: 12px; object-fit: cover; margin-bottom: 8px; border: 1px solid var(--border); touch-action: manipulation; }  
+ .modal-title { font-size: 0.9rem; font-weight: 800; color: var(--text); margin-bottom: 2px; }  
+ .modal-artist { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px; }  
   
  .dj-stats {  
  display: flex;  
  justify-content: space-around;  
  background: var(--item-bg);  
  border: 1px solid var(--border);  
- border-radius: 10px;  
- padding: 6px;  
- margin-bottom: 10px;  
+ border-radius: 8px;  
+ padding: 5px;  
+ margin-bottom: 8px;  
  }  
  .stat-box { display: flex; flex-direction: column; align-items: center; }  
- .stat-label { font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }  
- .stat-value { font-size: 0.9rem; font-weight: 900; color: var(--accent); }  
+ .stat-label { font-size: 0.58rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }  
+ .stat-value { font-size: 0.85rem; font-weight: 900; color: var(--accent); }  
   
  .tap-btn {  
  background: var(--tag-bg);  
  border: 1px dashed var(--accent);  
  color: var(--text);  
- padding: 7px 10px;  
+ padding: 6px 8px;  
  border-radius: 8px;  
- font-size: 0.72rem;  
+ font-size: 0.7rem;  
  font-weight: 600;  
  cursor: pointer;  
- margin-bottom: 10px;  
+ margin-bottom: 8px;  
  width: 100%;  
  -webkit-appearance: none;  
  touch-action: manipulation;  
  }  
   
- audio { width: 100%; height: 36px; margin-bottom: 10px; border-radius: 6px; }  
- .modal-actions { display: flex; flex-direction: column; gap: 6px; }  
+ audio { width: 100%; height: 32px; margin-bottom: 8px; border-radius: 6px; }  
+ .modal-actions { display: flex; flex-direction: column; gap: 5px; }  
   
  .spotify-btn, .tidal-btn, .youtube-btn, .back-btn {  
  display: flex; align-items: center; justify-content: center; gap: 8px;  
- padding: 10px 14px; border-radius: 10px; font-weight: 700; font-size: 0.85rem; text-decoration: none; cursor: pointer;  
+ padding: 8px 12px; border-radius: 8px; font-weight: 700; font-size: 0.8rem; text-decoration: none; cursor: pointer;  
  -webkit-appearance: none;  
  touch-action: manipulation;  
  }  
@@ -710,13 +754,13 @@
  .history-item-card {  
  background: var(--item-bg);  
  border: 1px solid var(--border);  
- border-radius: 10px;  
- padding: 10px;  
- margin-bottom: 8px;  
+ border-radius: 8px;  
+ padding: 8px;  
+ margin-bottom: 6px;  
  text-align: left;  
  display: flex;  
  flex-direction: column;  
- gap: 6px;  
+ gap: 5px;  
  }  
  .history-item-header {  
  display: flex;  
@@ -724,17 +768,17 @@
  align-items: center;  
  cursor: pointer;  
  }  
- .history-item-title { font-weight: 800; font-size: 0.85rem; color: var(--text); }  
- .history-item-date { font-size: 0.7rem; color: var(--text-muted); }  
- .history-actions { display: flex; gap: 6px; justify-content: flex-end; }  
- .history-view-btn { background: var(--badge-bg); color: #fff; border: none; padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; cursor: pointer; touch-action: manipulation; }  
+ .history-item-title { font-weight: 800; font-size: 0.8rem; color: var(--text); }  
+ .history-item-date { font-size: 0.68rem; color: var(--text-muted); }  
+ .history-actions { display: flex; gap: 5px; justify-content: flex-end; }  
+ .history-view-btn { background: var(--badge-bg); color: #fff; border: none; padding: 3px 7px; border-radius: 5px; font-size: 0.68rem; font-weight: 700; cursor: pointer; touch-action: manipulation; }  
   
  /* --- ESTILOS PANEL MODO ADMIN --- */  
  .admin-panel-grid {  
  display: grid;  
  grid-template-columns: repeat(4, 1fr);  
- gap: 8px;  
- margin-bottom: 12px;  
+ gap: 6px;  
+ margin-bottom: 10px;  
  }  
   
  .color-circle-btn {  
@@ -762,23 +806,23 @@
  left: 50%;  
  transform: translate(-50%, -50%);  
  color: #000000;  
- font-size: 1.1rem;  
+ font-size: 1rem;  
  font-weight: 900;  
  text-shadow: 0 0 4px #fff, 0 0 8px #fff;  
  }  
   
  .admin-action-row {  
  display: flex;  
- gap: 8px;  
- margin-bottom: 10px;  
+ gap: 6px;  
+ margin-bottom: 8px;  
  }  
   
  .admin-action-btn {  
  flex: 1;  
- padding: 12px;  
- border-radius: 10px;  
+ padding: 10px;  
+ border-radius: 8px;  
  font-weight: 800;  
- font-size: 0.8rem;  
+ font-size: 0.75rem;  
  text-transform: uppercase;  
  border: 2px solid transparent;  
  cursor: pointer;  
@@ -793,7 +837,7 @@
  .btn-burst { background: linear-gradient(135deg, #ff007f, #00f3ff, #ffe600, #8b5cf6); color: #ffffff; animation: neonGlow 3s ease infinite; }  
  .btn-burst.active { border-color: #ffffff; box-shadow: 0 0 20px #00f3ff; transform: scale(1.02); }  
 
- .btn-reset-light { background: var(--danger); color: #ffffff; width: 100%; margin-top: 4px; }  
+ .btn-reset-light { background: var(--danger); color: #ffffff; width: 100%; margin-top: 3px; }  
 
  /* --- CAPA DE LUZ GLOBAL DE SALA --- */  
  #room-light-overlay {  
@@ -826,9 +870,9 @@
  background: rgba(0, 0, 0, 0.8);  
  border: 1px solid rgba(255, 255, 255, 0.35);  
  color: #ffffff;  
- padding: 9px 18px;  
+ padding: 8px 16px;  
  border-radius: 20px;  
- font-size: 0.75rem;  
+ font-size: 0.72rem;  
  font-weight: 700;  
  letter-spacing: 0.5px;  
  text-transform: uppercase;  
@@ -1069,7 +1113,10 @@
   
  <div id="tabSearch" class="tab-content active">  
  <form class="search-box" id="searchForm" action="javascript:void(0);">  
+ <div class="search-input-wrapper">  
  <input type="text" id="songInput" placeholder="Ej: U2, Queen, Estopa..." autocomplete="off" spellcheck="false" enterkeyhint="search" />  
+ <button type="button" id="clearSearchBtn" class="clear-search-btn" title="Limpiar búsqueda">✕</button>  
+ </div>  
  <button type="submit" class="search-btn" id="searchBtn">🔍</button>  
  </form>  
   
@@ -1078,7 +1125,9 @@
  <div class="history-tags" id="historyTags"></div>  
  </div>  
   
- <div id="results" class="results"></div>  
+ <div style="flex: 1; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 0.78rem; text-align: center; padding: 20px;">  
+ 💡 Introduce un artista o canción arriba y pulsa la lupa para ver la lista completa en pantalla grande.  
+ </div>  
  </div>  
   
  <div id="tabQueue" class="tab-content">  
@@ -1111,8 +1160,8 @@
  <div class="queue-header">  
  <span class="queue-title">Efectos de Sala (Admin)</span>  
  </div>  
- <div class="results" style="padding-top: 6px;">  
- <div class="instructions-box" style="margin-bottom: 10px;">  
+ <div class="results" style="padding-top: 4px;">  
+ <div class="instructions-box" style="margin-bottom: 8px;">  
  <div class="instructions-title">✨ Control Lumínico Global</div>  
  <div class="instructions-text">Pulsa cualquier color, flash estroboscópico o ráfaga para sincronizar las pantallas de todos los asistentes in la sala al instante.</div>  
  </div>  
@@ -1145,6 +1194,19 @@
  </footer>  
  </div>  
   
+ <!-- NUEVA VENTANA MODAL PARA RESULTADOS DE BÚSQUEDA EN GRANDE -->  
+ <div class="modal" id="searchModal">  
+ <div class="search-modal-content" onclick="event.stopPropagation()">  
+ <div class="queue-header" style="margin-bottom: 8px;">  
+ <span class="queue-title" id="searchModalTitle">🎵 Resultados de Búsqueda</span>  
+ <button class="page-btn" onclick="closeSearchModal()">✕ Cerrar</button>  
+ </div>  
+ <div id="searchModalResults" class="results">  
+ <p class="status-msg">Cargando...</p>  
+ </div>  
+ </div>  
+ </div>  
+
  <div class="modal" id="imageModal">  
  <div class="modal-content" onclick="event.stopPropagation()">  
  <img id="modalImg" src="" alt="Portada HD">  
@@ -1168,7 +1230,7 @@
  <audio id="modalAudio" controls playsinline></audio>  
  </div>  
   
- <div id="modalActionContainer" style="margin-bottom: 10px;"></div>  
+ <div id="modalActionContainer" style="margin-bottom: 8px;"></div>  
   
  <div class="modal-actions">  
  <a id="modalSpotifyBtn" href="#" target="_blank" class="spotify-btn">  
@@ -1197,9 +1259,9 @@
  <div class="modal" id="historyModal">  
  <div class="modal-content" onclick="event.stopPropagation()">  
  <div class="modal-title" id="historyModalTitle">📁 Histórico de Sesiones</div>  
- <div class="modal-artist" id="historyModalSubtitle" style="margin-bottom: 12px;">Listas guardadas en la base de datos</div>  
+ <div class="modal-artist" id="historyModalSubtitle" style="margin-bottom: 10px;">Listas guardadas en la base de datos</div>  
    
- <div id="savedListsContainer" style="margin-bottom: 16px; max-height: 50vh; overflow-y: auto;">  
+ <div id="savedListsContainer" style="margin-bottom: 12px; max-height: 50vh; overflow-y: auto;">  
  <p class="status-msg">Cargando histórico...</p>  
  </div>  
   
@@ -1287,7 +1349,19 @@
  document.getElementById('themeToggle').addEventListener('click', toggleTheme);  
    
  const songInput = document.getElementById('songInput');  
- songInput.addEventListener('input', handleInput);  
+ const clearSearchBtn = document.getElementById('clearSearchBtn');  
+
+ songInput.addEventListener('input', () => {  
+ toggleClearButton();  
+ handleInput();  
+ });  
+
+ clearSearchBtn.addEventListener('click', () => {  
+ songInput.value = '';  
+ toggleClearButton();  
+ closeSearchModal();  
+ songInput.focus();  
+ });  
   
  document.getElementById('searchForm').addEventListener('submit', (e) => {  
  if (e) e.preventDefault();  
@@ -1301,6 +1375,7 @@
  document.getElementById('backModalBtn').addEventListener('click', () => closeModal(true));  
  document.getElementById('imageModal').addEventListener('click', () => closeModal(true));  
  document.getElementById('historyModal').addEventListener('click', closeHistoryModal);  
+ document.getElementById('searchModal').addEventListener('click', closeSearchModal);  
  document.getElementById('modalTidalBtn').addEventListener('click', openTidalApp);  
  document.getElementById('modalYoutubeBtn').addEventListener('click', openYoutubeApp);  
 
@@ -1316,7 +1391,13 @@
  window.addEventListener('popstate', (event) => {  
  const modal = document.getElementById('imageModal');  
  const historyModal = document.getElementById('historyModal');  
+ const searchModal = document.getElementById('searchModal');  
    
+ if (searchModal.style.display === 'flex') {  
+ closeSearchModal();  
+ return;  
+ }  
+
  if (historyModal.style.display === 'flex' && historyModal.dataset.viewingList === 'true') {  
  openHistoryModal();  
  return;  
@@ -1370,6 +1451,16 @@
  });  
  });  
   
+ function toggleClearButton() {  
+ const songInput = document.getElementById('songInput');  
+ const clearBtn = document.getElementById('clearSearchBtn');  
+ if (songInput.value.length > 0) {  
+ clearBtn.style.display = 'block';  
+ } else {  
+ clearBtn.style.display = 'none';  
+ }  
+ }  
+
  // --- WAKE LOCK API PERSISTENTE ---  
  let wakeLock = null;  
 
@@ -1402,7 +1493,6 @@
  let standbyTimer;  
   
  function getStandbyDelay() {  
- // Público: 30 segundos (30000 ms) | Modo DJ / Admin: 2 minutos (120000 ms)  
  return (isDjModeActive || isAdminModeActive) ? 120000 : 30000;  
  }  
   
@@ -1419,16 +1509,19 @@
  function hideStandby() {  
  const standbyScreen = document.getElementById('standby-screen');  
  if (standbyScreen && standbyScreen.classList.contains('active')) {  
- standbyScreen.classList.remove('active');  
-   
- // Cerrar cualquier modal abierto al salir del standby para volver exactamente a la pantalla principal previa  
+ standbyScreen.classList.remove('active');   
  const imageModal = document.getElementById('imageModal');  
  const historyModal = document.getElementById('historyModal');  
+ const searchModal = document.getElementById('searchModal');  
  if (imageModal.style.display === 'flex') {  
  closeModal(false);  
  }  
  if (historyModal.style.display === 'flex') {  
  historyModal.style.display = 'none';  
+ document.body.style.overflow = '';  
+ }  
+ if (searchModal.style.display === 'flex') {  
+ searchModal.style.display = 'none';  
  document.body.style.overflow = '';  
  }  
  }  
@@ -1440,19 +1533,12 @@
  }  
  }  
   
- function resetStandbyTimer() {  
- clearTimeout(standbyTimer);  
- standbyTimer = setTimeout(showStandby, getStandbyDelay());  
- }  
-  
- // Eventos amplios optimizados para captar cualquier interacción real sin bloquear el scroll  
  ['click', 'touchstart', 'pointerdown', 'keydown'].forEach(event => {  
  window.addEventListener(event, hideStandby, { passive: true });  
  });  
   
  resetStandbyTimer();  
 
- // --- APLICAR EFECTOS DE ADMIN CON BOTÓN ACTIVO ---  
  function setAdminEffect(type, value) {  
  adminEffectRef.set({ type: type, value: value });  
  }  
@@ -1537,7 +1623,6 @@
  if (!isDjModeActive) {  
  const pass = prompt("Introduce la contraseña de Administrador (Modo DJ):");  
  if (pass === null) return;  
-  
  const encodedInput = btoa(pass.trim());  
   
  if (encodedInput === CORRECT_PASSWORD_ENCODED) {  
@@ -1549,7 +1634,7 @@
  document.getElementById('historyListBtn').style.display = 'inline-block';  
  document.getElementById('clearQueueBtn').style.display = 'inline-block';  
  document.getElementById('queueHeaderTitle').textContent = "Control DJ";  
- alert("¡Modo DJ activado con éxito! 🎧 (Standby ajustado a 2 minutos)");  
+ alert("¡Modo DJ activado con éxito! 🎧");  
  resetStandbyTimer();  
  renderQueuePage();  
  } else {  
@@ -1566,7 +1651,7 @@
  document.getElementById('clearQueueBtn').style.display = 'none';  
  }  
  document.getElementById('queueHeaderTitle').textContent = "Lista Peticiones";  
- alert("Modo DJ desactivado. (Standby ajustado a 30 segundos)");  
+ alert("Modo DJ desactivado.");  
  resetStandbyTimer();  
  renderQueuePage();  
  }  
@@ -1576,7 +1661,6 @@
  if (!isAdminModeActive) {  
  const pass = prompt("Introduce la contraseña de Administrador (Modo Admin):");  
  if (pass === null) return;  
-  
  const encodedInput = btoa(pass.trim());  
   
  if (encodedInput === CORRECT_PASSWORD_ENCODED) {  
@@ -1783,6 +1867,17 @@
  }  
  }  
  }  
+
+ function closeSearchModal() {  
+ const searchModal = document.getElementById('searchModal');  
+ searchModal.style.display = 'none';  
+ document.body.style.overflow = '';  
+ if (window.history.state && window.history.state.modalOpen) {  
+ try {  
+ window.history.back();  
+ } catch (e) {}  
+ }  
+ }  
   
  function deleteHistoryList(listId, listName) {  
  if (confirm(`¿Seguro que quieres eliminar la lista guardada "${listName}"?`)) {  
@@ -1872,13 +1967,12 @@
  const query = document.getElementById('songInput').value.trim();  
    
  if (query.length < 2) {  
- document.getElementById('results').innerHTML = '';  
  return;  
  }  
   
  const cleanKey = query.toLowerCase();  
  if (searchCache.has(cleanKey)) {  
- renderResults(searchCache.get(cleanKey), query);  
+ renderSearchModalResults(searchCache.get(cleanKey), query);  
  return;  
  }  
   
@@ -1888,27 +1982,34 @@
  }  
   
  async function executeSearch(query) {  
- const resultsDiv = document.getElementById('results');  
+ const searchModalResults = document.getElementById('searchModalResults');  
+ const searchModalTitle = document.getElementById('searchModalTitle');  
  const cleanKey = query.toLowerCase();  
   
+ searchModalTitle.textContent = `🎵 Resultados para: "${query}"`;  
+ searchModalResults.innerHTML = '<p class="status-msg">Buscando coincidencias...</p>';  
+ document.getElementById('searchModal').style.display = 'flex';  
+ if (!window.history.state || !window.history.state.modalOpen) {  
+ history.pushState({ modalOpen: true }, '', '');  
+ }  
+  
  if (searchCache.has(cleanKey)) {  
- renderResults(searchCache.get(cleanKey), query);  
+ renderSearchModalResults(searchCache.get(cleanKey), query);  
  return;  
  }  
   
- resultsDiv.innerHTML = '<p class="status-msg">Buscando coincidencias...</p>';  
  currentSearchId++;  
  const thisSearchId = currentSearchId;  
  const cleanQuery = encodeURIComponent(cleanKey);  
   
  try {  
- const res = await fetch(`https://itunes.apple.com/search?term=${cleanQuery}&limit=15&entity=song`);  
+ const res = await fetch(`https://itunes.apple.com/search?term=${cleanQuery}&limit=25&entity=song`);  
  if (res.ok) {  
  const data = await res.json();  
  if (thisSearchId === currentSearchId) {  
  const results = data.results || [];  
  searchCache.set(cleanKey, results);  
- renderResults(results, query);  
+ renderSearchModalResults(results, query);  
  return;  
  }  
  }  
@@ -1918,7 +2019,7 @@
  }  
   
  function executeJSONP(cleanQuery, cleanKey, originalQuery, thisSearchId) {  
- const resultsDiv = document.getElementById('results');  
+ const searchModalResults = document.getElementById('searchModalResults');  
  const callbackName = 'cb_' + Date.now() + '_' + Math.floor(Math.random() * 1000);  
  const oldScript = document.getElementById('jsonp_itunes');  
  if (oldScript) oldScript.remove();  
@@ -1931,26 +2032,26 @@
  if (thisSearchId === currentSearchId) {  
  const results = (data && data.results) ? data.results : [];  
  searchCache.set(cleanKey, results);  
- renderResults(results, originalQuery);  
+ renderSearchModalResults(results, originalQuery);  
  }  
  };  
   
  const script = document.createElement('script');  
  script.id = 'jsonp_itunes';  
- script.src = `https://itunes.apple.com/search?term=${cleanQuery}&limit=15&entity=song&callback=${callbackName}`;  
+ script.src = `https://itunes.apple.com/search?term=${cleanQuery}&limit=25&entity=song&callback=${callbackName}`;  
  script.onerror = function() {  
  delete window[callbackName];  
  if (thisSearchId === currentSearchId) {  
- resultsDiv.innerHTML = '<p class="status-msg">Error de conexión. Pulsa 🔍 para reintentar.</p>';  
+ searchModalResults.innerHTML = '<p class="status-msg">Error de conexión. Vuelve a pulsar 🔍 para reintentar.</p>';  
  }  
  };  
  document.body.appendChild(script);  
  }  
   
- function renderResults(results, query) {  
- const resultsDiv = document.getElementById('results');  
+ function renderSearchModalResults(results, query) {  
+ const searchModalResults = document.getElementById('searchModalResults');  
  if (!results || results.length === 0) {  
- resultsDiv.innerHTML = '<p class="status-msg">No se encontraron coincidencias.</p>';  
+ searchModalResults.innerHTML = '<p class="status-msg">No se encontraron coincidencias.</p>';  
  return;  
  }  
   
@@ -1962,7 +2063,7 @@
  return Number(yearA) - Number(yearB);  
  });  
   
- resultsDiv.innerHTML = results.map((song) => {  
+ searchModalResults.innerHTML = results.map((song) => {  
  const releaseDate = song.releaseDate ? new Date(song.releaseDate) : null;  
  const year = releaseDate && !isNaN(releaseDate) ? releaseDate.getFullYear() : 'N/D';  
  const artwork100 = song.artworkUrl100 || 'https://via.placeholder.com/100?text=Sin+Imagen';  
@@ -2064,7 +2165,9 @@
   
  alert(`¡Petición enviada al DJ correctamente! 🎧🔥`);  
  const query = document.getElementById('songInput').value.trim();  
- if (query) executeSearch(query);  
+ if (query && searchCache.has(query.toLowerCase())) {  
+ renderSearchModalResults(searchCache.get(query.toLowerCase()), query);  
+ }  
  }  
   
  function voteSong(songKey, title) {  
@@ -2092,12 +2195,13 @@
  });  
  alert(`¡Voto sumado con éxito para "${title}"! 🔥`);  
  const query = document.getElementById('songInput').value.trim();  
- if (query) executeSearch(query);  
+ if (query && searchCache.has(query.toLowerCase())) {  
+ renderSearchModalResults(searchCache.get(query.toLowerCase()), query);  
+ }  
  }  
  });  
  }  
   
- // --- SISTEMA DE ALERTA Y VIBRACIÓN MÁS FUERTE PARA EL DJ ---  
  function triggerDjAlert(reasonText) {  
  if (!isDjModeActive) return;  
 
@@ -2109,16 +2213,13 @@
 
  try {  
  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();  
-   
  [0, 0.25, 0.5].forEach((delay) => {  
  const osc = audioCtx.createOscillator();  
  const gain = audioCtx.createGain();  
  osc.type = 'square';  
  osc.frequency.setValueAtTime(880, audioCtx.currentTime + delay);  
-   
  gain.gain.setValueAtTime(0.4, audioCtx.currentTime + delay);  
  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + delay + 0.18);  
-   
  osc.connect(gain);  
  gain.connect(audioCtx.destination);  
  osc.start(audioCtx.currentTime + delay);  
@@ -2177,7 +2278,6 @@
  lastQueueLength = items.length;  
   
  globalQueueItems = items;  
-   
  const totalPages = Math.ceil(globalQueueItems.length / itemsPerPage) || 1;  
  if (currentPage > totalPages) currentPage = totalPages;  
   
@@ -2185,7 +2285,7 @@
    
  const query = document.getElementById('songInput').value.trim();  
  if (query && searchCache.has(query.toLowerCase())) {  
- renderResults(searchCache.get(query.toLowerCase()), query);  
+ renderSearchModalResults(searchCache.get(query.toLowerCase()), query);  
  }  
  }  
   
@@ -2358,9 +2458,9 @@
  const btnTitleAttr = !areRequestsOpen ? 'title="Las peticiones están desactivadas por el DJ"' : '';  
   
  if (existingQueueItem) {  
- modalActionContainer.innerHTML = `<button class="vote-btn" style="width: 100%; padding: 10px; font-size: 0.85rem;" ${disabledAttr} ${btnTitleAttr} onclick="voteSong('${songKey}', '${safeTitle}'); closeModal(true);">🔥 Votar esta canción (+1)</button>`;  
+ modalActionContainer.innerHTML = `<button class="vote-btn" style="width: 100%; padding: 8px; font-size: 0.8rem;" ${disabledAttr} ${btnTitleAttr} onclick="voteSong('${songKey}', '${safeTitle}'); closeModal(true);">🔥 Votar esta canción (+1)</button>`;  
  } else {  
- modalActionContainer.innerHTML = `<button class="request-btn" style="width: 100%; padding: 10px; font-size: 0.85rem;" ${disabledAttr} ${btnTitleAttr} onclick="requestSong('${safeTitle}', '${safeArtist}', '${artwork100}', '${audioUrl || ''}', '${genre}', '${year}'); closeModal(true);">➕ Pedir esta canción al DJ</button>`;  
+ modalActionContainer.innerHTML = `<button class="request-btn" style="width: 100%; padding: 8px; font-size: 0.8rem;" ${disabledAttr} ${btnTitleAttr} onclick="requestSong('${safeTitle}', '${safeArtist}', '${artwork100}', '${audioUrl || ''}', '${genre}', '${year}'); closeModal(true);">➕ Pedir esta canción al DJ</button>`;  
  }  
   
  if (!window.history.state || !window.history.state.modalOpen) {  
@@ -2420,6 +2520,8 @@
   
  document.getElementById('imageModal').style.display = 'none';  
  document.getElementById('historyModal').style.display = 'none';  
+ document.body.style.overflow = '',  
+  
  document.body.style.overflow = '';  
   
  if (shouldBack && window.history.state && window.history.state.modalOpen) {  
@@ -2455,6 +2557,7 @@
   
  function searchFromHistory(query) {  
  document.getElementById('songInput').value = query;  
+ toggleClearButton();  
  executeSearch(query);  
  }  
  </script>  
