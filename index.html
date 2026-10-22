@@ -253,12 +253,14 @@
  font-weight: 600;  
  }  
   
+ /* --- BARRA DE PESTAÑAS INFERIOR (ESTILO PÍLDORA MODERNO) --- */  
  .tabs {  
  display: flex;  
  gap: 8px;  
- margin-bottom: 10px;  
- border-bottom: 1px solid var(--border);  
- padding-bottom: 6px;  
+ margin-top: 8px;  
+ margin-bottom: 6px;  
+ border-top: 1px solid var(--border);  
+ padding-top: 10px;  
  flex-shrink: 0;  
  position: relative;  
  }  
@@ -269,8 +271,8 @@
  .queue-tab-btn.has-new::after {  
  content: '';  
  position: absolute;  
- top: 4px;  
- right: 6px;  
+ top: 6px;  
+ right: 10px;  
  width: 8px;  
  height: 8px;  
  background: var(--danger);  
@@ -290,22 +292,30 @@
  background: var(--tag-bg);  
  border: 1px solid var(--border);  
  color: var(--text-muted);  
- padding: 7px;  
- border-radius: 10px;  
- font-weight: 700;  
- font-size: 0.73rem;  
+ padding: 10px 14px;  
+ border-radius: 50px;  
+ font-weight: 800;  
+ font-size: 0.72rem;  
  cursor: pointer;  
  text-align: center;  
  text-transform: uppercase;  
- letter-spacing: 0.5px;  
+ letter-spacing: 0.8px;  
  -webkit-appearance: none;  
+ transition: all 0.25s ease;  
+ box-shadow: 0 2px 6px rgba(0,0,0,0.2);  
+ }  
+  
+ .tab-btn:hover {  
+ border-color: var(--accent);  
+ color: var(--text);  
  }  
   
  .tab-btn.active {  
  background: var(--accent);  
  color: var(--accent-text);  
  border-color: var(--accent);  
- box-shadow: 0 0 12px var(--glow-accent);  
+ box-shadow: 0 0 14px var(--glow-accent), 0 4px 10px rgba(0,0,0,0.3);  
+ transform: translateY(-1px);  
  }  
   
  @keyframes neonGlow {  
@@ -610,8 +620,8 @@
  .page-info { font-size: 0.72rem; color: var(--text); font-weight: 800; }  
   
  .footer {  
- margin-top: 8px;  
- padding-top: 8px;  
+ margin-top: 4px;  
+ padding-top: 6px;  
  border-top: 1px solid var(--border);  
  text-align: center;  
  font-size: 0.68rem;  
@@ -1061,12 +1071,6 @@
  </div>  
  </div>  
   
- <div class="tabs">  
- <button class="tab-btn highlight-animated active" onclick="switchTab('search', true)">✨ Busca y Añade</button>  
- <button class="tab-btn queue-tab-btn" id="queueTabBtn" onclick="switchTab('queue', true)">📻 Lista Peticiones</button>  
- <button class="tab-btn" id="adminTabBtn" style="display: none;" onclick="switchTab('admin', true)">💡 Admin</button>  
- </div>  
-  
  <div id="tabSearch" class="tab-content active">  
  <form class="search-box" id="searchForm" action="javascript:void(0);">  
  <input type="text" id="songInput" placeholder="Ej: U2, Queen, Estopa..." autocomplete="off" spellcheck="false" enterkeyhint="search" />  
@@ -1083,7 +1087,7 @@
   
  <div id="tabQueue" class="tab-content">  
  <div class="queue-header">  
- <span class="queue-title" id="queueHeaderTitle">Lista Peticiones</span>  
+ <span class="queue-title" id="queueHeaderTitle">Peticiones del público</span>  
  <div class="queue-actions">  
  <button class="dj-mode-btn" id="djModeToggleBtn" onclick="toggleDjMode()">🎧 DJ</button>  
  <button class="admin-mode-btn" id="adminModeToggleBtn" onclick="toggleAdminMode()">💡 Admin</button>  
@@ -1135,6 +1139,13 @@
 
  <button class="admin-action-btn btn-reset-light" onclick="setAdminEffect('off', '')">🛑 Apagar Efectos / Normal</button>  
  </div>  
+ </div>  
+
+ <!-- BARRA DE PESTAÑAS INFERIOR (ESTILO PÍLDORA MODERNO) -->  
+ <div class="tabs">  
+ <button class="tab-btn highlight-animated active" onclick="switchTab('search', true)">🔍 Busca tu canción</button>  
+ <button class="tab-btn queue-tab-btn" id="queueTabBtn" onclick="switchTab('queue', true)">📻 Peticiones del público</button>  
+ <button class="tab-btn" id="adminTabBtn" style="display: none;" onclick="switchTab('admin', true)">💡 Admin</button>  
  </div>  
   
  <footer class="footer">  
@@ -1402,7 +1413,6 @@
  let standbyTimer;  
   
  function getStandbyDelay() {  
- // Público: 30 segundos (30000 ms) | Modo DJ / Admin: 2 minutos (120000 ms)  
  return (isDjModeActive || isAdminModeActive) ? 120000 : 30000;  
  }  
   
@@ -1421,7 +1431,6 @@
  if (standbyScreen && standbyScreen.classList.contains('active')) {  
  standbyScreen.classList.remove('active');  
    
- // Cerrar cualquier modal abierto al salir del standby para volver exactamente a la pantalla principal previa  
  const imageModal = document.getElementById('imageModal');  
  const historyModal = document.getElementById('historyModal');  
  if (imageModal.style.display === 'flex') {  
@@ -1445,14 +1454,12 @@
  standbyTimer = setTimeout(showStandby, getStandbyDelay());  
  }  
   
- // Eventos amplios optimizados para captar cualquier interacción real sin bloquear el scroll  
  ['click', 'touchstart', 'pointerdown', 'keydown'].forEach(event => {  
  window.addEventListener(event, hideStandby, { passive: true });  
  });  
   
  resetStandbyTimer();  
 
- // --- APLICAR EFECTOS DE ADMIN CON BOTÓN ACTIVO ---  
  function setAdminEffect(type, value) {  
  adminEffectRef.set({ type: type, value: value });  
  }  
@@ -1537,9 +1544,9 @@
  if (!isDjModeActive) {  
  const pass = prompt("Introduce la contraseña de Administrador (Modo DJ):");  
  if (pass === null) return;  
-  
+   
  const encodedInput = btoa(pass.trim());  
-  
+   
  if (encodedInput === CORRECT_PASSWORD_ENCODED) {  
  isDjModeActive = true;  
  document.getElementById('djModeToggleBtn').textContent = "🚪 Salir DJ";  
@@ -1565,7 +1572,7 @@
  document.getElementById('historyListBtn').style.display = 'none';  
  document.getElementById('clearQueueBtn').style.display = 'none';  
  }  
- document.getElementById('queueHeaderTitle').textContent = "Lista Peticiones";  
+ document.getElementById('queueHeaderTitle').textContent = "Peticiones del público";  
  alert("Modo DJ desactivado. (Standby ajustado a 30 segundos)");  
  resetStandbyTimer();  
  renderQueuePage();  
@@ -1576,9 +1583,9 @@
  if (!isAdminModeActive) {  
  const pass = prompt("Introduce la contraseña de Administrador (Modo Admin):");  
  if (pass === null) return;  
-  
+   
  const encodedInput = btoa(pass.trim());  
-  
+   
  if (encodedInput === CORRECT_PASSWORD_ENCODED) {  
  isAdminModeActive = true;  
  document.getElementById('adminModeToggleBtn').textContent = "🚪 Salir Admin";  
