@@ -1025,7 +1025,7 @@
  opacity: 1;  
  }  
 
- /* --- PANTALLA STANDBY OPTIMIZADA (LOGO ARRIBA) --- */  
+ /* --- PANTALLA STANDBY OPTIMIZADA (BLOQUEADA POR DEFECTO PARA EVITAR CLICS FANTASMAS) --- */  
  #standby-screen {  
  position: fixed;  
  top: 0;  
@@ -1035,14 +1035,17 @@
  height: 100dvh;  
  background: #05050a;  
  z-index: 9999;  
- display: none;  
+ display: block;  
+ pointer-events: none; /* Crucial: no interrumpe clics cuando está oculto */  
+ opacity: 0;  
+ transition: opacity 0.25s ease;  
  overflow: hidden;  
- cursor: pointer;  
  box-sizing: border-box;  
  }  
   
  #standby-screen.active {  
- display: block;  
+ opacity: 1;  
+ pointer-events: auto; /* Solo permite clics cuando está realmente visible */  
  }  
   
  .laser-background {  
@@ -1083,7 +1086,7 @@
  filter: drop-shadow(0 0 15px rgba(236, 72, 153, 0.6));  
  transform: translate(-50%, -50%);  
  will-change: transform;  
- display: none;  
+ display: block;  
  animation: floatLogoTop 5s ease-in-out infinite alternate;  
  }  
   
@@ -1608,7 +1611,7 @@
  });  
  });  
 
- // --- CONTROLADOR DE MODO STANDBY DINÁMICO (CORREGIDO PARA EVITAR APERTURA DE BÚSQUEDA) ---  
+ // --- CONTROLADOR DE MODO STANDBY DINÁMICO (CORREGIDO CON GESTIÓN DE EVENTOS LOCALES) ---  
  let standbyTimer;  
   
  function getStandbyDelay() {  
@@ -1628,6 +1631,9 @@
  function hideStandby(e) {  
  const standbyScreen = document.getElementById('standby-screen');  
  if (standbyScreen && standbyScreen.classList.contains('active')) {  
+ // Comprobamos si el clic viene directo del standby o de sus hijos  
+ if (e && !standbyScreen.contains(e.target)) return;  
+  
  standbyScreen.classList.remove('active');  
    
  if (e) {  
@@ -1668,8 +1674,20 @@
  standbyTimer = setTimeout(showStandby, getStandbyDelay());  
  }  
   
+ // Únicamente escuchamos el evento directamente sobre el standby screen para evitar falsos positivos globales  
+ const standbyEl = document.getElementById('standby-screen');  
+ ['click', 'touchstart', 'pointerdown'].forEach(event => {  
+ standbyEl.addEventListener(event, hideStandby, { capture: true, passive: false });  
+ });  
+
+ // Actividad general de usuario para reiniciar el temporizador  
  ['click', 'touchstart', 'pointerdown', 'keydown'].forEach(event => {  
- window.addEventListener(event, hideStandby, { capture: true, passive: false });  
+ window.addEventListener(event, () => {  
+ const standbyScreen = document.getElementById('standby-screen');  
+ if (!standbyScreen.classList.contains('active')) {  
+ resetStandbyTimer();  
+ }  
+ }, { passive: true });  
  });  
   
  resetStandbyTimer();  
