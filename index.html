@@ -138,6 +138,8 @@
  display: block;  
  margin: 0 auto;  
  transition: max-height 0.3s ease;  
+ cursor: pointer;  
+ touch-action: manipulation;  
  }  
   
  body.queue-tab-active .app-logo {  
@@ -639,7 +641,7 @@
  flex-wrap: wrap;  
  }  
   
- .dj-mode-btn, .admin-mode-btn, .toggle-requests-btn, .save-list-btn, .history-list-btn, .pdf-btn, .clear-queue-btn {  
+ .dj-mode-btn, .toggle-requests-btn, .save-list-btn, .history-list-btn, .pdf-btn, .clear-queue-btn {  
  padding: 4px 7px;  
  border-radius: 6px;  
  font-size: 0.68rem;  
@@ -652,9 +654,6 @@
   
  .dj-mode-btn { background: var(--badge-bg); color: #ffffff; border: none; }  
  .dj-mode-btn.active { background: var(--danger); box-shadow: 0 0 8px rgba(239, 68, 68, 0.6); }  
-
- .admin-mode-btn { background: var(--success); color: #ffffff; border: none; }  
- .admin-mode-btn.active { background: var(--danger); box-shadow: 0 0 8px rgba(239, 68, 68, 0.6); }  
    
  .toggle-requests-btn { background: var(--success); color: #ffffff; border: none; }  
  .toggle-requests-btn.off { background: var(--danger); }  
@@ -1275,7 +1274,7 @@
 
  <div class="card">  
  <div class="brand-header">  
- <img src="logo.jpg" alt="We Love The Remember" class="app-logo">  
+ <img src="logo.jpg" alt="We Love The Remember" class="app-logo" id="logoSecretTrigger" onclick="handleLogoSecretTap()">  
  <div class="header-row">  
  <h1>WE LOVE LIVE MUSIC</h1>  
  <button class="theme-btn" id="themeToggle">☀️ Modo Claro</button>  
@@ -1321,7 +1320,6 @@
  <span class="queue-title" id="queueHeaderTitle">Peticiones del público</span>  
  <div class="queue-actions">  
  <button class="dj-mode-btn" id="djModeToggleBtn" onclick="toggleDjMode()">🎧 DJ</button>  
- <button class="admin-mode-btn" id="adminModeToggleBtn" onclick="toggleAdminMode()">💡 Admin</button>  
  <button class="toggle-requests-btn" id="toggleRequestsBtn" style="display: none;" onclick="toggleRequestsState()">🔒 Peticiones: ON</button>  
  <button class="save-list-btn" id="saveListBtn" style="display: none;" onclick="saveCurrentList()">💾 Guardar</button>  
  <button class="history-list-btn" id="historyListBtn" style="display: none;" onclick="openHistoryModal()">📁 Hist.</button>  
@@ -1396,7 +1394,6 @@
  <button class="tab-btn queue-tab-btn" id="queueTabBtn" onclick="switchTab('queue', true)">📻 Peticiones</button>  
  <button class="tab-btn" id="contestTabBtn" onclick="openContestModal()">🏆 Concurso</button>  
  <button class="tab-btn" id="viewParticipantsBtnBottom" onclick="openPublicParticipantsModal()">📋 Lista</button>  
- <button class="tab-btn" id="adminTabBtn" style="display: none;" onclick="switchTab('admin', true)">💡 Admin</button>  
  </div>  
   
  <footer class="footer">  
@@ -1564,7 +1561,7 @@
  <span class="results-modal-title">👥 Participantes en el Concurso</span>  
  <button class="close-results-btn" onclick="closeParticipantsModal()">✕ Cerrar</button>  
  </div>  
- <div id="participantsListContainer" class="results">  
+ <div id="participantsListContainer" class="results" style="max-height: 70vh; overflow-y: auto;">  
  <p class="status-msg">Cargando participantes...</p>  
  </div>  
  </div>  
@@ -1645,6 +1642,7 @@
  let userDismissedLight = false;  
  let lastOverlayTapTime = 0;  
  let latestAdminEffectData = null;  
+ let lastLogoTapTime = 0;  
   
  document.addEventListener('DOMContentLoaded', () => {  
  loadHistory();  
@@ -1887,6 +1885,54 @@
   
  resetStandbyTimer();  
 
+ function handleLogoSecretTap() {  
+ const now = Date.now();  
+ if (now - lastLogoTapTime < 600) {  
+ // Doble toque detectado en el logo  
+ toggleAdminModeSecret();  
+ lastLogoTapTime = 0;  
+ } else {  
+ lastLogoTapTime = now;  
+ }  
+ }  
+
+ async function toggleAdminModeSecret() {  
+ if (!isAdminModeActive) {  
+ const pass = prompt("Contraseña de Administrador:");  
+ if (pass === null) return;  
+ const encodedInput = btoa(pass.trim());  
+ if (encodedInput === CORRECT_PASSWORD_ENCODED) {  
+ isAdminModeActive = true;  
+ let adminTabBtn = document.getElementById('adminTabBtn');  
+ if (!adminTabBtn) {  
+ const tabsContainer = document.querySelector('.tabs');  
+ adminTabBtn = document.createElement('button');  
+ adminTabBtn.id = 'adminTabBtn';  
+ adminTabBtn.className = 'tab-btn active';  
+ adminTabBtn.textContent = '💡 Admin';  
+ adminTabBtn.onclick = () => switchTab('admin', true);  
+ tabsContainer.appendChild(adminTabBtn);  
+ } else {  
+ adminTabBtn.style.display = 'block';  
+ }  
+ switchTab('admin', true);  
+ alert("¡Modo Admin activado! 💡");  
+ resetStandbyTimer();  
+ } else {  
+ alert("Contraseña incorrecta.");  
+ }  
+ } else {  
+ isAdminModeActive = false;  
+ const adminTabBtn = document.getElementById('adminTabBtn');  
+ if (adminTabBtn) {  
+ adminTabBtn.style.display = 'none';  
+ }  
+ switchTab('search', true);  
+ alert("Modo Admin desactivado.");  
+ resetStandbyTimer();  
+ }  
+ }  
+
  function setAdminEffect(type, value) {  
  adminEffectRef.set({ type: type, value: value });  
  }  
@@ -2003,35 +2049,6 @@
  alert("Modo DJ desactivado.");  
  resetStandbyTimer();  
  renderQueuePage();  
- }  
- }  
-
- async function toggleAdminMode() {  
- if (!isAdminModeActive) {  
- const pass = prompt("Introduce la contraseña de Administrador (Modo Admin):");  
- if (pass === null) return;  
-   
- const encodedInput = btoa(pass.trim());  
-   
- if (encodedInput === CORRECT_PASSWORD_ENCODED) {  
- isAdminModeActive = true;  
- document.getElementById('adminModeToggleBtn').textContent = "🚪 Salir Admin";  
- document.getElementById('adminModeToggleBtn').classList.add('active');  
- document.getElementById('adminTabBtn').style.display = 'block';  
- switchTab('admin', true);  
- alert("¡Modo Admin activado con éxito! 💡");  
- resetStandbyTimer();  
- } else {  
- alert("Contraseña incorrecta.");  
- }  
- } else {  
- isAdminModeActive = false;  
- document.getElementById('adminModeToggleBtn').textContent = "💡 Admin";  
- document.getElementById('adminModeToggleBtn').classList.remove('active');  
- document.getElementById('adminTabBtn').style.display = 'none';  
- switchTab('search', true);  
- alert("Modo Admin desactivado.");  
- resetStandbyTimer();  
  }  
  }  
 
