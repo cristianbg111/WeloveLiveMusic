@@ -1352,7 +1352,7 @@
  <div class="modal-content" onclick="event.stopPropagation()">  
    
  <!-- BOTÓN VOLVER DESTACADO ARRIBA -->  
- <button class="back-btn-top" onclick="closeModal(true)">⬅️ Volver a Resultados</button>  
+ <button class="back-btn-top" onclick="closeModal()">⬅️ Volver a Resultados</button>  
 
  <img id="modalImg" src="" alt="Portada HD">  
  <div class="modal-title" id="modalTitle"></div>  
@@ -1535,7 +1535,7 @@
   
  document.getElementById('tapBtn').addEventListener('click', tapTempo);  
  document.getElementById('imageModal').addEventListener('click', (e) => {  
- if (e.target === document.getElementById('imageModal')) closeModal(true);  
+ if (e.target === document.getElementById('imageModal')) closeModal();  
  });  
  document.getElementById('manualModal').addEventListener('click', closeManualModal);  
  document.getElementById('searchResultsModal').addEventListener('click', closeSearchResultsModal);  
@@ -1549,47 +1549,6 @@
  e.preventDefault();  
  handleOverlayDoubleTap(e);  
  }, { passive: false });  
-  
- history.replaceState({ page: 'search' }, '', '');  
-  
- window.addEventListener('popstate', (event) => {  
- const modal = document.getElementById('imageModal');  
- const manualModal = document.getElementById('manualModal');  
- const searchResultsModal = document.getElementById('searchResultsModal');  
- const historyModal = document.getElementById('historyModal');  
-   
- if (manualModal.style.display === 'flex') {  
- closeManualModal();  
- return;  
- }  
-
- if (historyModal.style.display === 'flex' && historyModal.dataset.viewingList === 'true') {  
- openHistoryModal();  
- return;  
- }  
-  
- if (historyModal.style.display === 'flex') {  
- closeHistoryModal();  
- return;  
- }  
-  
- if (modal.style.display === 'flex') {  
- closeModal(false);   
- return;  
- }  
-
- if (searchResultsModal.style.display === 'flex') {  
- closeSearchResultsModal();  
- return;  
- }  
-  
- const queueTab = document.getElementById('tabQueue');  
- const adminTab = document.getElementById('tabAdmin');  
- if (queueTab.classList.contains('active') || (adminTab && adminTab.classList.contains('active'))) {  
- switchTab('search', false);  
- return;  
- }  
- });  
   
  if (!sessionStorage.getItem('visited_live')) {  
  sessionStorage.setItem('visited_live', 'true');  
@@ -1682,7 +1641,7 @@
  const searchResultsModal = document.getElementById('searchResultsModal');  
  const historyModal = document.getElementById('historyModal');  
  if (imageModal.style.display === 'flex') {  
- closeModal(false);  
+ imageModal.style.display = 'none';  
  }  
  if (manualModal.style.display === 'flex') {  
  manualModal.style.display = 'none';  
@@ -1943,7 +1902,6 @@
   
  container.innerHTML = '<p class="status-msg">Cargando listas guardadas...</p>';  
  historyModal.style.display = 'flex';  
- history.pushState({ modalOpen: true }, '', '');  
   
  historyRef.once('value', (snapshot) => {  
  const data = snapshot.val();  
@@ -2038,11 +1996,6 @@
  } else {  
  historyModal.style.display = 'none';  
  document.body.style.overflow = '';  
- if (window.history.state && window.history.state.modalOpen) {  
- try {  
- window.history.back();  
- } catch (e) {}  
- }  
  }  
  }  
   
@@ -2087,9 +2040,6 @@
  document.querySelectorAll('.tab-btn')[0].classList.add('active');  
  document.getElementById('tabSearch').classList.add('active');  
  document.body.classList.remove('queue-tab-active');  
- if (pushState) {  
- history.pushState({ page: 'search' }, '', '');  
- }  
  } else if (tabName === 'queue') {  
  document.querySelectorAll('.tab-btn')[1].classList.add('active');  
  document.getElementById('tabQueue').classList.add('active');  
@@ -2097,18 +2047,11 @@
    
  hasUnreadRequests = false;  
  document.getElementById('queueTabBtn').classList.remove('has-new');  
-  
- if (pushState) {  
- history.pushState({ page: 'queue' }, '', '');  
- }  
  } else if (tabName === 'admin') {  
  const adminBtn = document.getElementById('adminTabBtn');  
  if (adminBtn) adminBtn.classList.add('active');  
  document.getElementById('tabAdmin').classList.add('active');  
  document.body.classList.add('queue-tab-active');  
- if (pushState) {  
- history.pushState({ page: 'admin' }, '', '');  
- }  
  }  
 
  adminEffectRef.once('value', (snapshot) => {  
@@ -2242,20 +2185,13 @@
  }  
  modal.style.display = 'flex';  
  setTimeout(() => modalInput.focus(), 100);  
- if (!window.history.state || !window.history.state.searchResultsOpen) {  
- history.pushState({ searchResultsOpen: true }, '', '');  
- }  
  }  
 
  function closeSearchResultsModal() {  
  const modal = document.getElementById('searchResultsModal');  
  if (modal.style.display === 'flex') {  
  modal.style.display = 'none';  
- if (window.history.state && window.history.state.searchResultsOpen) {  
- try {  
- window.history.back();  
- } catch (e) {}  
- }  
+ document.body.style.overflow = '';  
  }  
  }  
 
@@ -2339,9 +2275,6 @@
   
  const manualModal = document.getElementById('manualModal');  
  manualModal.style.display = 'flex';  
- if (!window.history.state || !window.history.state.modalOpen) {  
- history.pushState({ modalOpen: true }, '', '');  
- }  
  setTimeout(() => document.getElementById('manualTitleInput').focus(), 100);  
  }  
   
@@ -2349,11 +2282,6 @@
  const manualModal = document.getElementById('manualModal');  
  if (manualModal.style.display === 'flex') {  
  manualModal.style.display = 'none';  
- if (window.history.state && window.history.state.modalOpen) {  
- try {  
- window.history.back();  
- } catch (e) {}  
- }  
  }  
  }  
   
@@ -2769,12 +2697,11 @@
  const btnTitleAttr = !areRequestsOpen ? 'title="Las peticiones están desactivadas por el DJ"' : '';  
   
  if (existingQueueItem) {  
- modalActionContainer.innerHTML = `<button class="vote-btn" style="width: 100%; padding: 10px; font-size: 0.85rem;" ${disabledAttr} ${btnTitleAttr} onclick="voteSong('${songKey}', '${safeTitle}'); closeModal(true);">🔥 Votar esta canción (+1)</button>`;  
+ modalActionContainer.innerHTML = `<button class="vote-btn" style="width: 100%; padding: 10px; font-size: 0.85rem;" ${disabledAttr} ${btnTitleAttr} onclick="voteSong('${songKey}', '${safeTitle}'); closeModal();">🔥 Votar esta canción (+1)</button>`;  
  } else {  
- modalActionContainer.innerHTML = `<button class="request-btn" style="width: 100%; padding: 10px; font-size: 0.85rem;" ${disabledAttr} ${btnTitleAttr} onclick="requestSong('${safeTitle}', '${safeArtist}', '${artwork100}', '${audioUrl || ''}', '${genre}', '${year}'); closeModal(true);">➕ Pedir esta canción al DJ</button>`;  
+ modalActionContainer.innerHTML = `<button class="request-btn" style="width: 100%; padding: 10px; font-size: 0.85rem;" ${disabledAttr} ${btnTitleAttr} onclick="requestSong('${safeTitle}', '${safeArtist}', '${artwork100}', '${audioUrl || ''}', '${genre}', '${year}'); closeModal();">➕ Pedir esta canción al DJ</button>`;  
  }  
   
- history.pushState({ modalOpen: true }, '', '');  
  document.getElementById('imageModal').style.display = 'flex';  
  }  
   
@@ -2820,21 +2747,13 @@
  }  
  }  
   
- function closeModal(shouldBack = true) {  
+ function closeModal() {  
  const audioElement = document.getElementById('modalAudio');  
  if (audioElement) {  
  audioElement.pause();  
  audioElement.src = '';  
  }  
-  
  document.getElementById('imageModal').style.display = 'none';  
- document.body.style.overflow = '';  
-  
- if (shouldBack) {  
- try {  
- window.history.back();  
- } catch (e) {}  
- }  
  }  
   
  function saveToHistory(query) {  
