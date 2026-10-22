@@ -704,7 +704,7 @@
  padding: 18px;  
  max-width: 480px;  
  width: 100%;  
- height: 85vh;  
+ height: 88vh;  
  display: flex;  
  flex-direction: column;  
  box-shadow: 0 25px 50px rgba(0,0,0,0.6), 0 0 30px var(--glow-accent);  
@@ -714,11 +714,11 @@
  display: flex;  
  justify-content: space-between;  
  align-items: center;  
- margin-bottom: 12px;  
+ margin-bottom: 10px;  
  flex-shrink: 0;  
  }  
  .results-modal-title {  
- font-size: 0.9rem;  
+ font-size: 0.85rem;  
  font-weight: 800;  
  color: var(--text);  
  text-transform: uppercase;  
@@ -1219,13 +1219,21 @@
  </footer>  
  </div>  
   
- <!-- MODAL GRANDE PARA MOSTRAR RESULTADOS DE BÚSQUEDA -->  
+ <!-- MODAL GRANDE PARA MOSTRAR RESULTADOS DE BÚSQUEDA (CON BARRA DE BÚSQUEDA INTEGRADA) -->  
  <div class="modal" id="searchResultsModal">  
  <div class="results-modal-content" onclick="event.stopPropagation()">  
  <div class="results-modal-header">  
- <span class="results-modal-title" id="resultsModalTitle">Resultados de Búsqueda</span>  
+ <span class="results-modal-title">Resultados de Búsqueda</span>  
  <button class="close-results-btn" onclick="closeSearchResultsModal()">✕ Cerrar</button>  
  </div>  
+
+ <!-- BARRA DE BÚSQUEDA DENTRO DEL MODAL -->  
+ <form class="search-box" id="modalSearchForm" action="javascript:void(0);" style="margin-bottom: 8px;">  
+ <input type="text" id="modalSongInput" placeholder="Modificar búsqueda..." autocomplete="off" spellcheck="false" enterkeyhint="search" />  
+ <button type="button" class="clear-search-btn" id="modalClearSearchBtn" onclick="modalClearSearchInput()" title="Borrar texto" style="display: block;">✕</button>  
+ <button type="submit" class="search-btn" id="modalSearchBtn">🔍</button>  
+ </form>  
+
  <div id="modalResultsList" class="results">  
  <p class="status-msg">Cargando...</p>  
  </div>  
@@ -1343,6 +1351,7 @@
  const adminEffectRef = db.ref('welove_live_music_settings/adminEffect');  
   
  let debounceTimer;  
+ let modalDebounceTimer;  
  let tapTimes = [];  
  let currentSearchTerm = '';  
  let currentSearchId = 0;  
@@ -1375,12 +1384,23 @@
    
  const songInput = document.getElementById('songInput');  
  songInput.addEventListener('input', handleInput);  
+
+ const modalSongInput = document.getElementById('modalSongInput');  
+ modalSongInput.addEventListener('input', handleModalInput);  
   
  document.getElementById('searchForm').addEventListener('submit', (e) => {  
  if (e) e.preventDefault();  
  songInput.blur();  
  clearTimeout(debounceTimer);  
  const query = songInput.value.trim();  
+ if (query) executeSearch(query);  
+ });  
+
+ document.getElementById('modalSearchForm').addEventListener('submit', (e) => {  
+ if (e) e.preventDefault();  
+ modalSongInput.blur();  
+ clearTimeout(modalDebounceTimer);  
+ const query = modalSongInput.value.trim();  
  if (query) executeSearch(query);  
  });  
   
@@ -1966,11 +1986,16 @@
  clearTimeout(debounceTimer);  
  const query = document.getElementById('songInput').value.trim();  
  const clearBtn = document.getElementById('clearSearchBtn');  
+ const modalSongInput = document.getElementById('modalSongInput');  
+  
+ modalSongInput.value = query;  
   
  if (query.length > 0) {  
  clearBtn.style.display = 'block';  
+ document.getElementById('modalClearSearchBtn').style.display = 'block';  
  } else {  
  clearBtn.style.display = 'none';  
+ document.getElementById('modalClearSearchBtn').style.display = 'none';  
  closeSearchResultsModal();  
  return;  
  }  
@@ -1990,12 +2015,53 @@
  }, 500);  
  }  
 
- function clearSearchInput() {  
+ function handleModalInput() {  
+ clearTimeout(modalDebounceTimer);  
+ const query = document.getElementById('modalSongInput').value.trim();  
  const songInput = document.getElementById('songInput');  
- songInput.value = '';  
+ const modalClearBtn = document.getElementById('modalClearSearchBtn');  
+  
+ songInput.value = query;  
+  
+ if (query.length > 0) {  
+ modalClearBtn.style.display = 'block';  
+ document.getElementById('clearSearchBtn').style.display = 'block';  
+ } else {  
+ modalClearBtn.style.display = 'none';  
  document.getElementById('clearSearchBtn').style.display = 'none';  
  closeSearchResultsModal();  
+ return;  
+ }  
+  
+ if (query.length < 2) {  
+ return;  
+ }  
+  
+ const cleanKey = query.toLowerCase();  
+ if (searchCache.has(cleanKey)) {  
+ renderResults(searchCache.get(cleanKey), query);  
+ return;  
+ }  
+  
+ modalDebounceTimer = setTimeout(() => {  
+ executeSearch(query);  
+ }, 500);  
+ }  
+
+ function clearSearchInput() {  
+ const songInput = document.getElementById('songInput');  
+ const modalSongInput = document.getElementById('modalSongInput');  
+ songInput.value = '';  
+ modalSongInput.value = '';  
+ document.getElementById('clearSearchBtn').style.display = 'none';  
+ document.getElementById('modalClearSearchBtn').style.display = 'none';  
+ closeSearchResultsModal();  
  songInput.focus();  
+ }  
+
+ function modalClearSearchInput() {  
+ clearSearchInput();  
+ document.getElementById('modalSongInput').focus();  
  }  
   
  async function executeSearch(query) {  
@@ -2059,7 +2125,8 @@
   
  function openSearchResultsModal(query) {  
  const modal = document.getElementById('searchResultsModal');  
- document.getElementById('resultsModalTitle').textContent = `Resultados para: "${query}"`;  
+ document.getElementById('modalSongInput').value = query;  
+ document.getElementById('modalClearSearchBtn').style.display = query ? 'block' : 'none';  
  modal.style.display = 'flex';  
  if (!window.history.state || !window.history.state.modalOpen) {  
  history.pushState({ modalOpen: true }, '', '');  
