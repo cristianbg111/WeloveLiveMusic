@@ -253,7 +253,7 @@
  font-weight: 600;  
  }  
   
- /* --- BARRA DE NAVEGACIÓN INFERIOR MODERNA (TIPO PÍLDORA) --- */  
+ /* --- BARRA DE NAVEGACIÓN INFERIOR (PÍLDORAS) --- */  
  .tabs {  
  display: flex;  
  gap: 8px;  
@@ -293,7 +293,7 @@
  border: 1px solid var(--border);  
  color: var(--text-muted);  
  padding: 9px 14px;  
- border-radius: 50px; /* Estilo píldora / ovalado profesional */  
+ border-radius: 50px;  
  font-weight: 800;  
  font-size: 0.72rem;  
  cursor: pointer;  
@@ -342,7 +342,7 @@
  }  
  .tab-content.active { display: flex; }  
   
- /* --- BARRA DE BÚSQUEDA CON BOTÓN X DE LIMPIEZA --- */  
+ /* --- BARRA DE BÚSQUEDA --- */  
  .search-box {  
  display: flex;  
  gap: 6px;  
@@ -870,7 +870,7 @@
  display: block;  
  }  
 
- /* AVISO TÁCTIL EN EL OVERLAY PARA DOBLE PULSACIÓN */  
+ /* AVISO TÁCTIL EN EL OVERLAY */  
  #room-light-notice {  
  position: absolute;  
  bottom: max(35px, env(safe-area-inset-bottom));  
@@ -895,7 +895,7 @@
  opacity: 1;  
  }  
 
- /* --- PANTALLA STANDBY OPTIMIZADA (LOGO ARRIBA) --- */  
+ /* --- PANTALLA STANDBY --- */  
  #standby-screen {  
  position: fixed;  
  top: 0;  
@@ -940,7 +940,6 @@
  pointer-events: none;  
  }  
   
- /* --- LOGO FLOTANTE CSS POSICIONADO ARRIBA --- */  
  #bouncing-logo {  
  position: absolute;  
  top: 28%;  
@@ -972,7 +971,6 @@
  display: block;  
  }  
   
- /* --- TEXTOS CENTRALES STANDBY --- */  
  .standby-content {  
  position: absolute;  
  top: 60%;  
@@ -1008,7 +1006,6 @@
  to { text-shadow: 0 0 20px #00f3ff, 0 0 30px #00f3ff, 0 0 50px #00f3ff; }  
  }  
   
- /* --- VÚMETROS SIMPLIFICADOS --- */  
  .equalizer-container {  
  position: absolute;  
  bottom: max(16px, env(safe-area-inset-bottom));  
@@ -1164,7 +1161,7 @@
  <div class="results" style="padding-top: 4px;">  
  <div class="instructions-box" style="margin-bottom: 8px;">  
  <div class="instructions-title">✨ Control Lumínico Global</div>  
- <div class="instructions-text">Pulsa cualquier color, flash estroboscópico o ráfaga para sincronizar las pantallas de todos los asistentes in la sala al instante.</div>  
+ <div class="instructions-text">Pulsa cualquier color, flash estroboscópico o ráfaga para sincronizar las pantallas de todos los asistentes en la sala al instante.</div>  
  </div>  
 
  <div class="admin-panel-grid">  
@@ -1187,7 +1184,7 @@
  </div>  
  </div>  
 
- <!-- BARRA DE PESTAÑAS INFERIOR (ESTILO APP MODERNA) -->  
+ <!-- BARRA DE PESTAÑAS INFERIOR (ESTILO PÍLDORA) -->  
  <div class="tabs">  
  <button class="tab-btn highlight-animated active" onclick="switchTab('search', true)">🔍 Busca tu canción</button>  
  <button class="tab-btn queue-tab-btn" id="queueTabBtn" onclick="switchTab('queue', true)">📻 Peticiones del público</button>  
@@ -1202,7 +1199,7 @@
  </footer>  
  </div>  
   
- <!-- VENTANA GRANDE DE RESULTADOS DE BÚSQUEDA CON BARRA Y BOTÓN X -->  
+ <!-- VENTANA GRANDE DE RESULTADOS DE BÚSQUEDA -->  
  <div class="modal" id="searchModal">  
  <div class="search-modal-content" onclick="event.stopPropagation()">  
  <div class="queue-header" style="margin-bottom: 6px;">  
@@ -1286,7 +1283,7 @@
  </div>  
  </div>  
   
- <!-- PANTALLA STANDBY DE BIENVENIDA (ACTIVA AL INICIAR) -->  
+ <!-- PANTALLA STANDBY DE BIENVENIDA -->  
  <div id="standby-screen" class="active">  
  <div class="laser-background"></div>  
  <div class="strobe-overlay"></div>  
@@ -1506,7 +1503,7 @@
  }  
  }  
 
- // --- WAKE LOCK API PERSISTENTE ---  
+ // --- WAKE LOCK API PERSISTENTE (EVITA APAGADO DE PANTALLA) ---  
  let wakeLock = null;  
 
  async function requestWakeLock() {  
@@ -1526,7 +1523,7 @@
  requestWakeLock();  
  });  
 
- ['visibilitychange', 'touchstart', 'click', 'mousemove', 'pointerdown', 'scroll'].forEach(event => {  
+ ['visibilitychange', 'touchstart', 'click', 'mousemove', 'pointerdown', 'scroll', 'keydown'].forEach(event => {  
  document.addEventListener(event, async () => {  
  if (document.visibilityState === 'visible') {  
  await requestWakeLock();  
@@ -1534,7 +1531,7 @@
  });  
  });  
 
- // --- CONTROLADOR DE MODO STANDBY DINÁMICO ---  
+ // --- CONTROLADOR DE MODO STANDBY ---  
  let standbyTimer;  
   
  function getStandbyDelay() {  
