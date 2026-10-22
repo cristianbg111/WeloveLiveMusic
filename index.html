@@ -863,6 +863,31 @@
  .spotify-btn { background: var(--spotify); color: #ffffff; }  
  .tidal-btn { background: var(--tidal); color: #ffffff; border: 1px solid var(--border); }  
  .youtube-btn { background: var(--youtube); color: #ffffff; }  
+   
+ /* --- BOTÓN VOLVER DESTACADO ARRIBA EN EL MODAL DE PREVISUALIZACIÓN --- */  
+ .back-btn-top {  
+ background: var(--accent);  
+ color: var(--accent-text);  
+ border: none;  
+ width: 100%;  
+ padding: 12px 14px;  
+ border-radius: 10px;  
+ font-weight: 800;  
+ font-size: 0.9rem;  
+ text-transform: uppercase;  
+ letter-spacing: 0.5px;  
+ cursor: pointer;  
+ box-shadow: 0 0 12px var(--glow-accent);  
+ margin-bottom: 12px;  
+ display: flex;  
+ align-items: center;  
+ justify-content: center;  
+ gap: 8px;  
+ }  
+ .back-btn-top:active {  
+ transform: scale(0.98);  
+ }  
+
  .back-btn { background: var(--tag-bg); color: var(--text); border: 1px solid var(--border); width: 100%; }  
   
  .history-item-card {  
@@ -1325,6 +1350,10 @@
  <!-- MODAL DE DETALLE / PREVISUALIZACIÓN -->  
  <div class="modal" id="imageModal">  
  <div class="modal-content" onclick="event.stopPropagation()">  
+   
+ <!-- BOTÓN VOLVER DESTACADO ARRIBA -->  
+ <button class="back-btn-top" onclick="closeModal(true)">⬅️ Volver a Resultados</button>  
+
  <img id="modalImg" src="" alt="Portada HD">  
  <div class="modal-title" id="modalTitle"></div>  
  <div class="modal-artist" id="modalArtist"></div>  
@@ -1367,7 +1396,6 @@
  </svg>  
  Buscar en YouTube  
  </a>  
- <button class="back-btn" id="backModalBtn">⬅️ Volver</button>  
  </div>  
  </div>  
  </div>  
@@ -1391,7 +1419,7 @@
 
  <div class="manual-form-group" style="margin-bottom: 16px;">  
  <label class="manual-form-label">Tu Nombre o Alias</label>  
- <input type="text" id="manualUserйнаInput" class="manual-form-input" placeholder="Ej: Cristian" required autocomplete="off" />  
+ <input type="text" id="manualUserInput" class="manual-form-input" placeholder="Ej: Cristian" required autocomplete="off" />  
  </div>  
 
  <div class="modal-actions">  
@@ -1506,8 +1534,9 @@
  });  
   
  document.getElementById('tapBtn').addEventListener('click', tapTempo);  
- document.getElementById('backModalBtn').addEventListener('click', () => closeModal(true));  
- document.getElementById('imageModal').addEventListener('click', () => closeModal(true));  
+ document.getElementById('imageModal').addEventListener('click', (e) => {  
+ if (e.target === document.getElementById('imageModal')) closeModal(true);  
+ });  
  document.getElementById('manualModal').addEventListener('click', closeManualModal);  
  document.getElementById('searchResultsModal').addEventListener('click', closeSearchResultsModal);  
  document.getElementById('historyModal').addEventListener('click', closeHistoryModal);  
@@ -1620,7 +1649,7 @@
  });  
  });  
 
- // --- CONTROLADOR DE MODO STANDBY DINÁMICO ---  
+ // --- CONTROLADOR DE MODO STANDBY DINÁMICO (CON CONSUMO DE EVENTO INICIAL) ---  
  let standbyTimer;  
   
  function getStandbyDelay() {  
@@ -1637,11 +1666,18 @@
  }  
  }  
   
- function hideStandby() {  
+ function hideStandby(e) {  
  const standbyScreen = document.getElementById('standby-screen');  
  if (standbyScreen && standbyScreen.classList.contains('active')) {  
  standbyScreen.classList.remove('active');  
    
+ // Consumir el evento para que no active elementos inferiores al salir del standby  
+ if (e) {  
+ e.preventDefault();  
+ e.stopPropagation();  
+ if (e.stopImmediatePropagation) e.stopImmediatePropagation();  
+ }  
+
  const imageModal = document.getElementById('imageModal');  
  const manualModal = document.getElementById('manualModal');  
  const searchResultsModal = document.getElementById('searchResultsModal');  
@@ -1675,7 +1711,7 @@
  }  
   
  ['click', 'touchstart', 'pointerdown', 'keydown'].forEach(event => {  
- window.addEventListener(event, hideStandby, { passive: true });  
+ window.addEventListener(event, hideStandby, { capture: true, passive: false });  
  });  
   
  resetStandbyTimer();  
@@ -2207,8 +2243,8 @@
  }  
  modal.style.display = 'flex';  
  setTimeout(() => modalInput.focus(), 100);  
- if (!window.history.state || !window.history.state.modalOpen) {  
- history.pushState({ modalOpen: true }, '', '');  
+ if (!window.history.state || !window.history.state.searchResultsOpen) {  
+ history.pushState({ searchResultsOpen: true }, '', '');  
  }  
  }  
 
@@ -2216,7 +2252,7 @@
  const modal = document.getElementById('searchResultsModal');  
  if (modal.style.display === 'flex') {  
  modal.style.display = 'none';  
- if (window.history.state && window.history.state.modalOpen) {  
+ if (window.history.state && window.history.state.searchResultsOpen) {  
  try {  
  window.history.back();  
  } catch (e) {}  
@@ -2300,7 +2336,7 @@
   
  document.getElementById('manualArtistInput').value = defaultQuery || '';  
  document.getElementById('manualTitleInput').value = '';  
- document.getElementById('manualUserйнаInput').value = '';  
+ document.getElementById('manualUserInput').value = '';  
   
  const manualModal = document.getElementById('manualModal');  
  manualModal.style.display = 'flex';  
@@ -2328,7 +2364,7 @@
   
  const artistName = document.getElementById('manualArtistInput').value.trim();  
  const songTitle = document.getElementById('manualTitleInput').value.trim();  
- const requesterName = document.getElementById('manualUserйнаInput').value.trim();  
+ const requesterName = document.getElementById('manualUserInput').value.trim();  
   
  if (!artistName || !songTitle || !requesterName) {  
  alert("Por favor, rellena todos los campos.");  
