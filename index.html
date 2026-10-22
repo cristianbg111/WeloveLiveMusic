@@ -546,6 +546,35 @@
  letter-spacing: 0.5px;  
  box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);  
  }  
+
+ /* --- MODAL DE FORMULARIO MANUAL UNIFICADO --- */  
+ .manual-form-group {  
+ display: flex;  
+ flex-direction: column;  
+ gap: 4px;  
+ text-align: left;  
+ margin-bottom: 10px;  
+ }  
+ .manual-form-label {  
+ font-size: 0.72rem;  
+ font-weight: 700;  
+ color: var(--accent);  
+ text-transform: uppercase;  
+ }  
+ .manual-form-input {  
+ width: 100%;  
+ padding: 10px 12px;  
+ border-radius: 10px;  
+ border: 1px solid var(--input-border);  
+ background: var(--input-bg);  
+ color: var(--text);  
+ font-size: 16px !important;  
+ outline: none;  
+ }  
+ .manual-form-input:focus {  
+ border-color: var(--accent);  
+ box-shadow: 0 0 8px var(--glow-accent);  
+ }  
   
  .queue-header {  
  display: flex;  
@@ -1293,6 +1322,7 @@
  </div>  
  </div>  
 
+ <!-- MODAL DE DETALLE / PREVISUALIZACIÓN -->  
  <div class="modal" id="imageModal">  
  <div class="modal-content" onclick="event.stopPropagation()">  
  <img id="modalImg" src="" alt="Portada HD">  
@@ -1339,6 +1369,36 @@
  </a>  
  <button class="back-btn" id="backModalBtn">⬅️ Volver</button>  
  </div>  
+ </div>  
+ </div>  
+
+ <!-- MODAL DE INSERCIÓN MANUAL UNIFICADA -->  
+ <div class="modal" id="manualModal">  
+ <div class="modal-content" onclick="event.stopPropagation()">  
+ <div class="modal-title">➕ Añadir Canción Manualmente</div>  
+ <div class="modal-artist" style="margin-bottom: 12px;">Introduce los datos de la canción que no encuentras</div>  
+  
+ <form id="manualRequestForm" onsubmit="submitManualRequest(event)">  
+ <div class="manual-form-group">  
+ <label class="manual-form-label">Artista</label>  
+ <input type="text" id="manualArtistInput" class="manual-form-input" placeholder="Ej: Chimo Bayo" required autocomplete="off" />  
+ </div>  
+  
+ <div class="manual-form-group">  
+ <label class="manual-form-label">Nombre de la Canción</label>  
+ <input type="text" id="manualTitleInput" class="manual-form-input" placeholder="Ej: Asi Esta Bien" required autocomplete="off" />  
+ </div>  
+
+ <div class="manual-form-group" style="margin-bottom: 16px;">  
+ <label class="manual-form-label">Tu Nombre o Alias</label>  
+ <input type="text" id="manualUserйнаInput" class="manual-form-input" placeholder="Ej: Cristian" required autocomplete="off" />  
+ </div>  
+
+ <div class="modal-actions">  
+ <button type="submit" class="request-btn" style="width: 100%; padding: 12px; font-size: 0.85rem;">Enviar Petición al DJ</button>  
+ <button type="button" class="back-btn" onclick="closeManualModal()">Cancelar</button>  
+ </div>  
+ </form>  
  </div>  
  </div>  
   
@@ -1448,6 +1508,7 @@
  document.getElementById('tapBtn').addEventListener('click', tapTempo);  
  document.getElementById('backModalBtn').addEventListener('click', () => closeModal(true));  
  document.getElementById('imageModal').addEventListener('click', () => closeModal(true));  
+ document.getElementById('manualModal').addEventListener('click', closeManualModal);  
  document.getElementById('searchResultsModal').addEventListener('click', closeSearchResultsModal);  
  document.getElementById('historyModal').addEventListener('click', closeHistoryModal);  
  document.getElementById('modalTidalBtn').addEventListener('click', openTidalApp);  
@@ -1464,9 +1525,15 @@
   
  window.addEventListener('popstate', (event) => {  
  const modal = document.getElementById('imageModal');  
+ const manualModal = document.getElementById('manualModal');  
  const searchResultsModal = document.getElementById('searchResultsModal');  
  const historyModal = document.getElementById('historyModal');  
    
+ if (manualModal.style.display === 'flex') {  
+ closeManualModal();  
+ return;  
+ }  
+
  if (searchResultsModal.style.display === 'flex') {  
  closeSearchResultsModal();  
  return;  
@@ -1576,10 +1643,14 @@
  standbyScreen.classList.remove('active');  
    
  const imageModal = document.getElementById('imageModal');  
+ const manualModal = document.getElementById('manualModal');  
  const searchResultsModal = document.getElementById('searchResultsModal');  
  const historyModal = document.getElementById('historyModal');  
  if (imageModal.style.display === 'flex') {  
  closeModal(false);  
+ }  
+ if (manualModal.style.display === 'flex') {  
+ manualModal.style.display = 'none';  
  }  
  if (searchResultsModal.style.display === 'flex') {  
  searchResultsModal.style.display = 'none';  
@@ -2114,7 +2185,7 @@
  document.getElementById('modalResultsList').innerHTML = `  
  <div class="manual-fallback-box">  
  <div class="manual-fallback-text">⚠️ No se han encontrado resultados o la canción no está disponible.</div>  
- <button class="manual-trigger-btn" onclick="openManualRequestPrompt('${originalQuery}')">➕ Introducir manualmente</button>  
+ <button class="manual-trigger-btn" onclick="openManualModalWithQuery('${originalQuery}')">➕ Introducir manualmente</button>  
  </div>  
  `;  
  }  
@@ -2160,7 +2231,7 @@
  resultsDiv.innerHTML = `  
  <div class="manual-fallback-box">  
  <div class="manual-fallback-text">⚠️ Esa canción no está disponible o no se encuentra en el catálogo.</div>  
- <button class="manual-trigger-btn" onclick="openManualRequestPrompt('${query}')">➕ Introducir manualmente</button>  
+ <button class="manual-trigger-btn" onclick="openManualModalWithQuery('${query}')">➕ Introducir manualmente</button>  
  </div>  
  `;  
  return;  
@@ -2177,7 +2248,7 @@
  resultsDiv.innerHTML = `  
  <div class="manual-fallback-box" style="margin-bottom: 12px; background: rgba(139, 92, 246, 0.1); border-color: var(--badge-bg);">  
  <div class="manual-fallback-text">¿No encuentras la versión exacta que buscas?</div>  
- <button class="manual-trigger-btn" style="background: var(--badge-bg);" onclick="openManualRequestPrompt('${query}')">➕ Introducir manualmente</button>  
+ <button class="manual-trigger-btn" style="background: var(--badge-bg);" onclick="openManualModalWithQuery('${query}')">➕ Introducir manualmente</button>  
  </div>  
  ` + results.map((song) => {  
  const releaseDate = song.releaseDate ? new Date(song.releaseDate) : null;  
@@ -2220,36 +2291,47 @@
  }).join('');  
  }  
   
- // --- FUNCIÓN DE INSERCIÓN MANUAL ---  
- function openManualRequestPrompt(defaultQuery) {  
+ // --- FUNCIONES DE INSERCIÓN MANUAL UNIFICADA ---  
+ function openManualModalWithQuery(defaultQuery) {  
  if (!areRequestsOpen) {  
  alert("⚠️ En este momento las peticiones están desactivadas por el DJ.");  
  return;  
  }  
   
+ document.getElementById('manualArtistInput').value = defaultQuery || '';  
+ document.getElementById('manualTitleInput').value = '';  
+ document.getElementById('manualUserйнаInput').value = '';  
+  
+ const manualModal = document.getElementById('manualModal');  
+ manualModal.style.display = 'flex';  
+ if (!window.history.state || !window.history.state.modalOpen) {  
+ history.pushState({ modalOpen: true }, '', '');  
+ }  
+ setTimeout(() => document.getElementById('manualTitleInput').focus(), 100);  
+ }  
+  
+ function closeManualModal() {  
+ const manualModal = document.getElementById('manualModal');  
+ if (manualModal.style.display === 'flex') {  
+ manualModal.style.display = 'none';  
+ if (window.history.state && window.history.state.modalOpen) {  
+ try {  
+ window.history.back();  
+ } catch (e) {}  
+ }  
+ }  
+ }  
+  
+ function submitManualRequest(event) {  
+ event.preventDefault();  
  if (!checkRateLimit()) return;  
   
- let artistName = prompt("Introduce el nombre del Artista:", defaultQuery || "");  
- if (artistName === null) return;  
- artistName = artistName.trim();  
- if (!artistName) {  
- alert("El artista no puede estar vacío.");  
- return;  
- }  
+ const artistName = document.getElementById('manualArtistInput').value.trim();  
+ const songTitle = document.getElementById('manualTitleInput').value.trim();  
+ const requesterName = document.getElementById('manualUserйнаInput').value.trim();  
   
- let songTitle = prompt("Introduce el nombre de la Canción:");  
- if (songTitle === null) return;  
- songTitle = songTitle.trim();  
- if (!songTitle) {  
- alert("El nombre de la canción no puede estar vacío.");  
- return;  
- }  
-  
- let requesterName = prompt("Introduce tu nombre o alias para la petición:");  
- if (requesterName === null) return;  
- requesterName = requesterName.trim();  
- if (!requesterName) {  
- alert("Debes introducir un nombre o alias.");  
+ if (!artistName || !songTitle || !requesterName) {  
+ alert("Por favor, rellena todos los campos.");  
  return;  
  }  
   
@@ -2288,6 +2370,7 @@
  });  
   
  alert(`¡Petición manual de "${songTitle}" enviada al DJ correctamente! 🎧🔥`);  
+ closeManualModal();  
  closeSearchResultsModal();  
  switchTab('queue', true);  
  }  
