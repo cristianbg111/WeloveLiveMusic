@@ -196,6 +196,28 @@
  }  
  .user-badge-bar span { color: var(--accent); }  
 
+ /* --- BANNER GANADOR EN DIRECTO --- */  
+ .winner-banner {  
+ background: linear-gradient(135deg, #f59e0b, #ec4899);  
+ border: 2px solid #ffffff;  
+ color: #ffffff;  
+ padding: 10px 12px;  
+ border-radius: 12px;  
+ font-size: 0.85rem;  
+ font-weight: 900;  
+ text-align: center;  
+ text-transform: uppercase;  
+ letter-spacing: 0.5px;  
+ margin-bottom: 8px;  
+ box-shadow: 0 0 20px rgba(245, 158, 11, 0.8);  
+ animation: pulseWinner 1.5s infinite alternate;  
+ flex-shrink: 0;  
+ }  
+ @keyframes pulseWinner {  
+ 0% { transform: scale(1); box-shadow: 0 0 10px rgba(245, 158, 11, 0.6); }  
+ 100% { transform: scale(1.02); box-shadow: 0 0 25px rgba(236, 72, 153, 0.9); }  
+ }  
+
  .neon-banner {  
  width: 100%;  
  padding: 8px 12px;  
@@ -375,6 +397,14 @@
  border-color: var(--accent);  
  box-shadow: 0 0 14px var(--glow-accent), 0 4px 10px rgba(0,0,0,0.3);  
  transform: translateY(-1px);  
+ }  
+
+ .tab-btn:disabled, .tab-btn.disabled {  
+ opacity: 0.4;  
+ cursor: not-allowed;  
+ filter: grayscale(1);  
+ box-shadow: none;  
+ transform: none !important;  
  }  
   
  .tab-content {   
@@ -1252,10 +1282,15 @@
  </div>  
  </div>  
   
+ <!-- BANNER GANADOR EN DIRECTO (GLOBAL PARA TODOS) -->  
+ <div class="winner-banner" id="winnerBanner" style="display: none;">  
+ 🏆 ¡GANADOR DEL SORTEO: <span id="winnerNameDisplay">---</span>! 🏆  
+ </div>  
+
  <!-- BARRA DE USUARIO IDENTIFICADO EN PEQUEÑO -->  
  <div class="user-badge-bar" id="userBadgeBar" style="display: none;">  
  <span>👤 Participante: <strong id="currentUserNameDisplay"></strong></span>  
- <button class="theme-btn" style="padding: 2px 6px; font-size: 0.65rem;" onclick="openContestModal()">Cambiar</button>  
+ <button class="theme-btn" style="padding: 2px 6px; font-size: 0.65rem;" onclick="openContestModal()">Ya inscrito</button>  
  </div>  
    
  <div id="neonBanner" class="neon-banner enabled">🟢 Peticiones de canciones: ABIERTAS</div>  
@@ -1323,7 +1358,7 @@
  </div>  
 
  <div style="margin-bottom: 12px;">  
- <button class="admin-action-btn" id="toggleContestBtnAdmin" style="background: var(--success); color: #fff; width: 100%;" onclick="toggleContestState()">🔒 Botón Sorteo: ABIIERTO</button>  
+ <button class="admin-action-btn" id="toggleContestBtnAdmin" style="background: var(--success); color: #fff; width: 100%;" onclick="toggleContestState()">🔒 Botón Sorteo: ABIERTO</button>  
  </div>  
 
  <div class="instructions-box" style="margin-bottom: 10px;">  
@@ -1581,6 +1616,7 @@
  const adminEffectRef = db.ref('welove_live_music_settings/adminEffect');  
  const contestRef = db.ref('welove_live_music_contest');  
  const contestOpenRef = db.ref('welove_live_music_settings/contestOpen');  
+ const winnerRef = db.ref('welove_live_music_settings/currentWinner');  
   
  let modalDebounceTimer;  
  let tapTimes = [];  
@@ -1669,6 +1705,9 @@
  for (let key in data) {  
  globalContestParticipants.push({ id: key, ...data[key] });  
  }  
+ } else {  
+ localStorage.removeItem('user_contest_name');  
+ checkSavedUserBadge();  
  }  
  document.getElementById('participantCountBadge').textContent = globalContestParticipants.length;  
  });  
@@ -1683,6 +1722,18 @@
  const isOpen = snapshot.val();  
  isContestOpen = (isOpen !== null) ? isOpen : true;  
  updateContestButtonUI();  
+ });  
+
+ winnerRef.on('value', (snapshot) => {  
+ const winnerName = snapshot.val();  
+ const banner = document.getElementById('winnerBanner');  
+ const nameSpan = document.getElementById('winnerNameDisplay');  
+ if (winnerName) {  
+ nameSpan.textContent = winnerName.toUpperCase();  
+ banner.style.display = 'block';  
+ } else {  
+ banner.style.display = 'none';  
+ }  
  });  
 
  adminEffectRef.on('value', (snapshot) => {  
@@ -1987,6 +2038,11 @@
  alert("⛔ El sorteo está desactivado temporalmente por el DJ.");  
  return;  
  }  
+ const savedName = localStorage.getItem('user_contest_name');  
+ if (savedName && !isAdminModeActive && !isDjModeActive) {  
+ alert(`⚠️ Ya estás participando en el sorteo con el nombre "${savedName}". No puedes registrarte de nuevo desde este dispositivo.`);  
+ return;  
+ }  
  const contestModal = document.getElementById('contestModal');  
  contestModal.style.display = 'flex';  
  history.pushState({ screen: 'contestModal' }, '', '');  
@@ -2050,25 +2106,42 @@
  if (!isAdminModeActive && !isDjModeActive) return;  
  const newState = !isContestOpen;  
  contestOpenRef.set(newState).then(() => {  
- alert(newState ? "¡Sorteo ABIIERTO para el público! 🟢" : "¡Sorteo CERRADO para el público! ⛔");  
+ if (!newState) {  
+ winnerRef.remove(); // Borra el ganador al cerrar  
+ }  
+ alert(newState ? "¡Sorteo ABIERTO para el público! 🟢" : "¡Sorteo CERRADO para el público! ⛔");  
  });  
  }  
 
  function updateContestButtonUI() {  
  const btn = document.getElementById('toggleContestBtnAdmin');  
  const contestTabBtn = document.getElementById('contestTabBtn');  
+ const contestModal = document.getElementById('contestModal');  
+
  if (isContestOpen) {  
  if (btn) {  
  btn.textContent = "🔒 Botón Sorteo: ABIERTO";  
  btn.style.background = "var(--success)";  
  }  
- if (contestTabBtn) contestTabBtn.style.opacity = '1';  
+ if (contestTabBtn) {  
+ contestTabBtn.removeAttribute('disabled');  
+ contestTabBtn.classList.remove('disabled');  
+ contestTabBtn.title = "";  
+ }  
  } else {  
  if (btn) {  
  btn.textContent = "🔓 Botón Sorteo: CERRADO";  
  btn.style.background = "var(--danger)";  
  }  
- if (contestTabBtn) contestTabBtn.style.opacity = '0.5';  
+ if (contestTabBtn) {  
+ contestTabBtn.setAttribute('disabled', 'true');  
+ contestTabBtn.classList.add('disabled');  
+ contestTabBtn.title = "El sorteo está cerrado por el DJ";  
+ }  
+ if (contestModal && contestModal.style.display === 'flex') {  
+ closeContestModal();  
+ alert("⚠️ El administrador ha cerrado el sorteo en este momento.");  
+ }  
  }  
  }  
 
@@ -2134,7 +2207,10 @@
  function clearContestParticipants() {  
  if (confirm("¿Estás seguro de borrar toda la lista de participantes del concurso?")) {  
  contestRef.remove().then(() => {  
- alert("Lista de participantes borrada.");  
+ winnerRef.remove();  
+ localStorage.removeItem('user_contest_name');  
+ checkSavedUserBadge();  
+ alert("Lista de participantes borrada y bloqueos de dispositivos reseteados.");  
  closeParticipantsModal();  
  });  
  }  
@@ -2156,7 +2232,8 @@
  } else {  
  clearInterval(interval);  
  const winner = globalContestParticipants[Math.floor(Math.random() * globalContestParticipants.length)];  
- alert(`🎉🎊 ¡TENEMOS GANADOR / A! 🎊🎉\n\nEl premio es para:\n⭐ ${winner.name.toUpperCase()} ⭐\n\n¡Felicidades!`);  
+ winnerRef.set(winner.name);  
+ alert(`🎉🎊 ¡TENEMOS GANADOR / A! 🎊🎉\n\nEl premio es para:\n⭐ ${winner.name.toUpperCase()} ⭐\n\n¡Felicidades! Se ha publicado en las pantallas de la sala.`);  
  }  
  }, 1000);  
  }  
