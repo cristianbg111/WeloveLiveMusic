@@ -1590,9 +1590,14 @@
  const searchResultsModal = document.getElementById('searchResultsModal');  
  const historyModal = document.getElementById('historyModal');  
 
- // Si hay algún modal abierto, cerrarlo y volver a la pantalla principal
- if (imageModal.style.display === 'flex' || manualModal.style.display === 'flex' || searchResultsModal.style.display === 'flex' || historyModal.style.display === 'flex') {  
+ // 1. Si el modal de detalle del disco está abierto, cerrarlo y dejar abierto el de resultados de búsqueda
+ if (imageModal.style.display === 'flex') {  
  closeModal();  
+ return;  
+ }  
+
+ // 2. Si hay otros modales abiertos, cerrarlos y volver a la pantalla principal
+ if (manualModal.style.display === 'flex' || searchResultsModal.style.display === 'flex' || historyModal.style.display === 'flex') {  
  closeManualModal();  
  closeSearchResultsModal();  
  closeHistoryModal();  
@@ -1601,7 +1606,7 @@
  return;  
  }  
 
- // Si estamos en otra pestaña (como Peticiones o Admin), volver a la principal (Inicio)
+ // 3. Si estamos en otra pestaña (como Peticiones o Admin), volver a la principal (Inicio)
  const activeTabSearch = document.getElementById('tabSearch');  
  if (!activeTabSearch.classList.contains('active')) {  
  switchTab('search', false);  
@@ -1609,7 +1614,7 @@
  return;  
  }  
 
- // Si ya estamos en la pantalla principal (Inicio) y pulsa atrás, preguntar si desea salir de la app
+ // 4. Si ya estamos en la pantalla principal (Inicio) y pulsa atrás, preguntar si desea salir de la app
  if (confirm("¿Estás seguro de que quieres salir de la aplicación?")) {  
  window.history.go(-1);  
  } else {  
@@ -1889,7 +1894,6 @@
  }  
  }  
   
- // Actualizar también los botones en tiempo real si el modal de resultados o detalle está abierto  
  const query = document.getElementById('modalSongInput').value.trim();  
  if (query && searchCache.has(query.toLowerCase()) && document.getElementById('searchResultsModal').style.display === 'flex') {  
  renderResults(searchCache.get(query.toLowerCase()), query);  
