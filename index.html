@@ -1590,7 +1590,7 @@
  const searchResultsModal = document.getElementById('searchResultsModal');  
  const historyModal = document.getElementById('historyModal');  
 
- // Si hay algún modal abierto, cerrarlo y volver a la pantalla principal de búsqueda
+ // Si hay algún modal abierto, cerrarlo y volver a la pantalla principal
  if (imageModal.style.display === 'flex' || manualModal.style.display === 'flex' || searchResultsModal.style.display === 'flex' || historyModal.style.display === 'flex') {  
  closeModal();  
  closeManualModal();  
@@ -1609,7 +1609,7 @@
  return;  
  }  
 
- // Si ya estamos en la pantalla principal y pulsa atrás, preguntar si desea salir de la app
+ // Si ya estamos en la pantalla principal (Inicio) y pulsa atrás, preguntar si desea salir de la app
  if (confirm("¿Estás seguro de que quieres salir de la aplicación?")) {  
  window.history.go(-1);  
  } else {  
@@ -1872,7 +1872,6 @@
  function updateNeonBannerUI() {  
  const banner = document.getElementById('neonBanner');  
  const toggleBtn = document.getElementById('toggleRequestsBtn');  
- const searchTriggerBtn = document.getElementById('mainSearchTriggerBtn');  
   
  if (areRequestsOpen) {  
  banner.className = "neon-banner enabled";  
@@ -1881,10 +1880,6 @@
  toggleBtn.textContent = "🔒 Peticiones: ON";  
  toggleBtn.classList.remove('off');  
  }  
- if (searchTriggerBtn) {  
- searchTriggerBtn.disabled = false;  
- searchTriggerBtn.style.opacity = '1';  
- }  
  } else {  
  banner.className = "neon-banner disabled";  
  banner.textContent = "⛔ PETICIONES DESACTIVADAS TEMPORALMENTE";  
@@ -1892,21 +1887,13 @@
  toggleBtn.textContent = "🔓 Peticiones: OFF";  
  toggleBtn.classList.add('off');  
  }  
- if (searchTriggerBtn) {  
- searchTriggerBtn.disabled = true;  
- searchTriggerBtn.style.opacity = '0.6';  
- }  
  }  
   
- document.querySelectorAll('.request-btn').forEach(btn => {  
- if (!areRequestsOpen) {  
- btn.disabled = true;  
- btn.title = "Las peticiones están desactivadas por el DJ";  
- } else {  
- btn.disabled = false;  
- btn.title = "";  
+ // Actualizar también los botones en tiempo real si el modal de resultados o detalle está abierto  
+ const query = document.getElementById('modalSongInput').value.trim();  
+ if (query && searchCache.has(query.toLowerCase()) && document.getElementById('searchResultsModal').style.display === 'flex') {  
+ renderResults(searchCache.get(query.toLowerCase()), query);  
  }  
- });  
  }  
   
  function saveCurrentList() {  
@@ -2224,19 +2211,8 @@
  }  
   
  function openSearchResultsModal(query) {  
- if (!areRequestsOpen) {  
- alert("⚠️ En este momento las peticiones están desactivadas por el DJ.");  
- return;  
- }  
  const modal = document.getElementById('searchResultsModal');  
- const modalTitle = document.getElementById('searchResultsModalTitle');  
  const modalInput = document.getElementById('modalSongInput');  
- 
- if (!areRequestsOpen) {  
- modalTitle.textContent = "Resultados (Peticiones Cerradas)";  
- } else {  
- modalTitle.textContent = "Resultados de Búsqueda";  
- }  
 
  if (query) {  
  modalInput.value = query;  
@@ -2245,7 +2221,7 @@
  } else {  
  modalInput.value = '';  
  document.getElementById('modalClearSearchBtn').style.display = 'none';  
- document.getElementById('modalResultsList').innerHTML = areRequestsOpen ? '<p class="status-msg">Escribe algo arriba para buscar canciones...</p>' : '<p class="status-msg" style="color:var(--danger)">⛔ Las peticiones están desactivadas temporalmente por el DJ.</p>';  
+ document.getElementById('modalResultsList').innerHTML = '<p class="status-msg">Escribe algo arriba para buscar canciones...</p>';  
  }  
  modal.style.display = 'flex';  
  history.pushState({ screen: 'searchModal' }, '', '');  
@@ -2263,18 +2239,18 @@
  function renderResults(results, query) {  
  const resultsDiv = document.getElementById('modalResultsList');  
 
+ let closedNoticeHtml = '';  
  if (!areRequestsOpen) {  
- resultsDiv.innerHTML = `  
- <div class="manual-fallback-box" style="border-color: var(--danger); background: rgba(239, 68, 68, 0.1);">  
- <div class="manual-fallback-text" style="color: var(--danger);">⛔ PETICIONES DESACTIVADAS</div>  
- <div class="manual-fallback-text">El DJ ha desactivado temporalmente las peticiones de canciones para este evento.</div>  
+ closedNoticeHtml = `  
+ <div class="manual-fallback-box" style="border-color: var(--danger); background: rgba(239, 68, 68, 0.1); margin-bottom: 12px;">  
+ <div class="manual-fallback-text" style="color: var(--danger);">⛔ PETICIONES DE CANCIONES DESACTIVADAS</div>  
+ <div class="manual-fallback-text">Puedes buscar y previsualizar canciones libremente, pero el DJ ha cerrado temporalmente la recepción de nuevas peticiones.</div>  
  </div>  
  `;  
- return;  
  }  
 
  if (!results || results.length === 0) {  
- resultsDiv.innerHTML = `  
+ resultsDiv.innerHTML = closedNoticeHtml + `  
  <div class="manual-fallback-box">  
  <div class="manual-fallback-text">⚠️ Esa canción no está disponible o no se encuentra en el catálogo.</div>  
  <button class="manual-trigger-btn" onclick="openManualModalWithQuery('${query}')">➕ Introducir manualmente</button>  
@@ -2291,7 +2267,7 @@
  return Number(yearA) - Number(yearB);  
  });  
   
- resultsDiv.innerHTML = `  
+ resultsDiv.innerHTML = closedNoticeHtml + `  
  <div class="manual-fallback-box" style="margin-bottom: 12px; background: rgba(139, 92, 246, 0.1); border-color: var(--badge-bg);">  
  <div class="manual-fallback-text">¿No encuentras la versión exacta que buscas?</div>  
  <button class="manual-trigger-btn" style="background: var(--badge-bg);" onclick="openManualModalWithQuery('${query}')">➕ Introducir manualmente</button>  
