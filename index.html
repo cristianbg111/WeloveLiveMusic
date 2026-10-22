@@ -1636,6 +1636,9 @@
  if (e.stopImmediatePropagation) e.stopImmediatePropagation();  
  }  
 
+ // Forzar siempre la pestaña inicial de búsqueda / información al salir del standby
+ switchTab('search', false);
+
  const imageModal = document.getElementById('imageModal');  
  const manualModal = document.getElementById('manualModal');  
  const searchResultsModal = document.getElementById('searchResultsModal');  
