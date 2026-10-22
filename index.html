@@ -253,7 +253,7 @@
  font-weight: 600;  
  }  
   
- /* --- BOTÓN GRANDE PRINCIPAL DE BÚSQUEDA --- */  
+ /* --- BOTÓN GRANDE PRINCIPAL DE BÚSQUEDA (CON EFECTO NEÓN LLAMATIVO) --- */  
  .big-search-trigger-container {  
  display: flex;  
  flex-direction: column;  
@@ -264,24 +264,32 @@
  gap: 12px;  
  }  
 
+ @keyframes neonGlow {  
+ 0% { background-position: 0% 50%; box-shadow: 0 0 15px rgba(236, 72, 153, 0.6); }  
+ 50% { background-position: 100% 50%; box-shadow: 0 0 25px rgba(139, 92, 246, 0.9), 0 0 10px rgba(236, 72, 153, 0.9); }  
+ 100% { background-position: 0% 50%; box-shadow: 0 0 15px rgba(236, 72, 153, 0.6); }  
+ }  
+
  .big-search-btn {  
  width: 100%;  
  padding: 28px 16px;  
- background: linear-gradient(135deg, var(--accent), #8b5cf6);  
+ background: linear-gradient(270deg, #ec4899, #8b5cf6, #3b82f6, #ec4899);  
+ background-size: 300% 300%;  
  color: #ffffff;  
- border: none;  
+ border: 2px solid rgba(255, 255, 255, 0.4);  
  border-radius: 16px;  
  font-size: 1.05rem;  
  font-weight: 900;  
  text-transform: uppercase;  
  letter-spacing: 1px;  
  cursor: pointer;  
- box-shadow: 0 10px 25px var(--glow-accent), 0 4px 10px rgba(0,0,0,0.3);  
+ box-shadow: 0 0 20px var(--glow-accent), 0 6px 15px rgba(0,0,0,0.4);  
  transition: transform 0.15s ease, box-shadow 0.15s ease;  
  text-align: center;  
  -webkit-appearance: none;  
  touch-action: manipulation;  
  animation: neonGlow 4s ease infinite;  
+ text-shadow: 0 2px 4px rgba(0,0,0,0.4);  
  }  
  .big-search-btn:active {  
  transform: scale(0.97);  
@@ -350,21 +358,6 @@
  border-color: var(--accent);  
  box-shadow: 0 0 14px var(--glow-accent), 0 4px 10px rgba(0,0,0,0.3);  
  transform: translateY(-1px);  
- }  
-  
- @keyframes neonGlow {  
- 0% { background-position: 0% 50%; box-shadow: 0 0 8px rgba(236, 72, 153, 0.5); }  
- 50% { background-position: 100% 50%; box-shadow: 0 0 16px rgba(139, 92, 246, 0.8), 0 0 6px rgba(236, 72, 153, 0.8); }  
- 100% { background-position: 0% 50%; box-shadow: 0 0 8px rgba(236, 72, 153, 0.5); }  
- }  
-  
- .tab-btn.highlight-animated {  
- background: linear-gradient(270deg, #ec4899, #8b5cf6, #3b82f6, #ec4899);  
- background-size: 300% 300%;  
- color: #ffffff !important;  
- border-color: rgba(255, 255, 255, 0.3) !important;  
- animation: neonGlow 4s ease infinite;  
- text-shadow: 0 1px 2px rgba(0,0,0,0.3);  
  }  
   
  .tab-content {   
@@ -1234,7 +1227,7 @@
 
  <!-- BARRA DE PESTAÑAS INFERIOR (ESTILO PÍLDORA MODERNO) -->  
  <div class="tabs">  
- <button class="tab-btn highlight-animated active" onclick="switchTab('search', true)">🔍 Busca tu canción</button>  
+ <button class="tab-btn active" onclick="switchTab('search', true)">🏠 Inicio</button>  
  <button class="tab-btn queue-tab-btn" id="queueTabBtn" onclick="switchTab('queue', true)">📻 Peticiones del público</button>  
  <button class="tab-btn" id="adminTabBtn" style="display: none;" onclick="switchTab('admin', true)">💡 Admin</button>  
  </div>  
