@@ -253,7 +253,7 @@
  font-weight: 600;  
  }  
   
- /* --- BOTÓN GRANDE PRINCIPAL DE BÚSQUEDA (CON EFECTO NEÓN LLAMATIVO) --- */  
+ /* --- BOTÓN GRANDE PRINCIPAL DE BÚSQUEDA --- */  
  .big-search-trigger-container {  
  display: flex;  
  flex-direction: column;  
@@ -295,7 +295,7 @@
  transform: scale(0.97);  
  }  
   
- /* --- BARRA DE PESTAÑAS INFERIOR (ESTILO PÍLDORA MODERNO) --- */  
+ /* --- BARRA DE PESTAÑAS INFERIOR --- */  
  .tabs {  
  display: flex;  
  gap: 8px;  
@@ -514,6 +514,38 @@
  }  
    
  .status-msg { text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 12px 0; }  
+
+ /* --- CAJA DE AVISO Y BOTÓN DE INSERCIÓN MANUAL --- */  
+ .manual-fallback-box {  
+ background: rgba(239, 68, 68, 0.1);  
+ border: 1px dashed var(--danger);  
+ border-radius: 12px;  
+ padding: 14px;  
+ text-align: center;  
+ margin: 10px 0;  
+ display: flex;  
+ flex-direction: column;  
+ gap: 8px;  
+ }  
+ .manual-fallback-text {  
+ font-size: 0.78rem;  
+ color: var(--text);  
+ font-weight: 600;  
+ line-height: 1.4;  
+ }  
+ .manual-trigger-btn {  
+ background: var(--danger);  
+ color: #ffffff;  
+ border: none;  
+ padding: 10px 14px;  
+ border-radius: 8px;  
+ font-size: 0.78rem;  
+ font-weight: 800;  
+ cursor: pointer;  
+ text-transform: uppercase;  
+ letter-spacing: 0.5px;  
+ box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);  
+ }  
   
  .queue-header {  
  display: flex;  
@@ -1225,7 +1257,7 @@
  </div>  
  </div>  
 
- <!-- BARRA DE PESTAÑAS INFERIOR (ESTILO PÍLDORA MODERNO) -->  
+ <!-- BARRA DE PESTAÑAS INFERIOR -->  
  <div class="tabs">  
  <button class="tab-btn active" onclick="switchTab('search', true)">🏠 Inicio</button>  
  <button class="tab-btn queue-tab-btn" id="queueTabBtn" onclick="switchTab('queue', true)">📻 Peticiones del público</button>  
@@ -1240,7 +1272,7 @@
  </footer>  
  </div>  
   
- <!-- MODAL GRANDE PARA MOSTRAR RESULTADOS DE BÚSQUEDA (CON BARRA DE BÚSQUEDA INTEGRADA) -->  
+ <!-- MODAL GRANDE PARA RESULTADOS DE BÚSQUEDA -->  
  <div class="modal" id="searchResultsModal">  
  <div class="results-modal-content" onclick="event.stopPropagation()">  
  <div class="results-modal-header">  
@@ -1323,7 +1355,7 @@
  </div>  
  </div>  
   
- <!-- PANTALLA STANDBY DE BIENVENIDA (ACTIVA AL INICIAR) -->  
+ <!-- PANTALLA STANDBY DE BIENVENIDA -->  
  <div id="standby-screen" class="active">  
  <div class="laser-background"></div>  
  <div class="strobe-overlay"></div>  
@@ -2079,7 +2111,12 @@
  script.onerror = function() {  
  delete window[callbackName];  
  if (thisSearchId === currentSearchId) {  
- document.getElementById('modalResultsList').innerHTML = '<p class="status-msg">Error de conexión. Pulsa 🔍 para reintentar.</p>';  
+ document.getElementById('modalResultsList').innerHTML = `  
+ <div class="manual-fallback-box">  
+ <div class="manual-fallback-text">⚠️ No se han encontrado resultados o la canción no está disponible.</div>  
+ <button class="manual-trigger-btn" onclick="openManualRequestPrompt('${originalQuery}')">➕ Introducir manualmente</button>  
+ </div>  
+ `;  
  }  
  };  
  document.body.appendChild(script);  
@@ -2120,7 +2157,12 @@
  const resultsDiv = document.getElementById('modalResultsList');  
 
  if (!results || results.length === 0) {  
- resultsDiv.innerHTML = '<p class="status-msg">No se encontraron coincidencias.</p>';  
+ resultsDiv.innerHTML = `  
+ <div class="manual-fallback-box">  
+ <div class="manual-fallback-text">⚠️ Esa canción no está disponible o no se encuentra en el catálogo.</div>  
+ <button class="manual-trigger-btn" onclick="openManualRequestPrompt('${query}')">➕ Introducir manualmente</button>  
+ </div>  
+ `;  
  return;  
  }  
   
@@ -2132,7 +2174,12 @@
  return Number(yearA) - Number(yearB);  
  });  
   
- resultsDiv.innerHTML = results.map((song) => {  
+ resultsDiv.innerHTML = `  
+ <div class="manual-fallback-box" style="margin-bottom: 12px; background: rgba(139, 92, 246, 0.1); border-color: var(--badge-bg);">  
+ <div class="manual-fallback-text">¿No encuentras la versión exacta que buscas?</div>  
+ <button class="manual-trigger-btn" style="background: var(--badge-bg);" onclick="openManualRequestPrompt('${query}')">➕ Introducir manualmente</button>  
+ </div>  
+ ` + results.map((song) => {  
  const releaseDate = song.releaseDate ? new Date(song.releaseDate) : null;  
  const year = releaseDate && !isNaN(releaseDate) ? releaseDate.getFullYear() : 'N/D';  
  const artwork100 = song.artworkUrl100 || 'https://via.placeholder.com/100?text=Sin+Imagen';  
@@ -2171,6 +2218,78 @@
  </div>  
  `;  
  }).join('');  
+ }  
+  
+ // --- FUNCIÓN DE INSERCIÓN MANUAL ---  
+ function openManualRequestPrompt(defaultQuery) {  
+ if (!areRequestsOpen) {  
+ alert("⚠️ En este momento las peticiones están desactivadas por el DJ.");  
+ return;  
+ }  
+  
+ if (!checkRateLimit()) return;  
+  
+ let artistName = prompt("Introduce el nombre del Artista:", defaultQuery || "");  
+ if (artistName === null) return;  
+ artistName = artistName.trim();  
+ if (!artistName) {  
+ alert("El artista no puede estar vacío.");  
+ return;  
+ }  
+  
+ let songTitle = prompt("Introduce el nombre de la Canción:");  
+ if (songTitle === null) return;  
+ songTitle = songTitle.trim();  
+ if (!songTitle) {  
+ alert("El nombre de la canción no puede estar vacío.");  
+ return;  
+ }  
+  
+ let requesterName = prompt("Introduce tu nombre o alias para la petición:");  
+ if (requesterName === null) return;  
+ requesterName = requesterName.trim();  
+ if (!requesterName) {  
+ alert("Debes introducir un nombre o alias.");  
+ return;  
+ }  
+  
+ const songKey = btoa(unescape(encodeURIComponent(songTitle + " - " + artistName)))  
+ .replace(/[/+:=]/g, '_');  
+  
+ const songRef = db.ref('welove_live_music_queue/' + songKey);  
+ const defaultPlaceholderImg = 'https://via.placeholder.com/100?text=Live+Music';  
+  
+ songRef.once('value', (snapshot) => {  
+ if (snapshot.exists()) {  
+ const data = snapshot.val();  
+ const newCount = Number(data.count || 1) + 1;  
+ const updatedUsers = data.users ? `${data.users}, ${requesterName}` : requesterName;  
+  
+ songRef.update({  
+ count: newCount,  
+ users: updatedUsers,  
+ timestamp: Date.now()  
+ });  
+ } else {  
+ songRef.set({  
+ title: songTitle,  
+ artist: artistName,  
+ artwork: defaultPlaceholderImg,  
+ previewAudio: '',  
+ genre: 'Live Music (Manual)',  
+ year: 'N/D',  
+ user: requesterName,  
+ users: requesterName,  
+ count: 1,  
+ played: false,  
+ timestamp: Date.now()  
+ });  
+ }  
+ });  
+  
+ alert(`¡Petición manual de "${songTitle}" enviada al DJ correctamente! 🎧🔥`);  
+ closeSearchResultsModal();  
+ switchTab('queue', true);  
  }  
   
  function checkRateLimit() {  
