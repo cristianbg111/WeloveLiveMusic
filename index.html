@@ -1611,7 +1611,7 @@
  });  
  });  
 
- // --- CONTROLADOR DE MODO STANDBY DINÁMICO (aislado estrictamente) ---  
+ // --- CONTROLADOR DE MODO STANDBY DINÁMICO (blindado contra clics fantasmas) ---  
  let standbyTimer;  
   
  function getStandbyDelay() {  
@@ -1621,6 +1621,7 @@
  function showStandby() {  
  const standbyScreen = document.getElementById('standby-screen');  
  if (standbyScreen) {  
+ standbyScreen.style.pointerEvents = 'auto';  
  standbyScreen.classList.add('active');  
  }  
  if (latestAdminEffectData) {  
@@ -1631,33 +1632,29 @@
  function hideStandby(e) {  
  const standbyScreen = document.getElementById('standby-screen');  
  if (standbyScreen && standbyScreen.classList.contains('active')) {  
- // Consumir el evento por completo para evitar clics fantasmas en la interfaz de abajo  
+ // Bloquear de forma absoluta la propagación del toque  
  if (e) {  
  e.preventDefault();  
  e.stopPropagation();  
  if (e.stopImmediatePropagation) e.stopImmediatePropagation();  
  }  
   
+ // Desactivar inmediatamente los eventos táctiles de la capa de standby  
+ standbyScreen.style.pointerEvents = 'none';  
  standbyScreen.classList.remove('active');  
 
+ // Retraso de seguridad para limpiar cualquier modal fantasma secundario  
+ setTimeout(() => {  
  const imageModal = document.getElementById('imageModal');  
  const manualModal = document.getElementById('manualModal');  
  const searchResultsModal = document.getElementById('searchResultsModal');  
  const historyModal = document.getElementById('historyModal');  
- if (imageModal.style.display === 'flex') {  
- imageModal.style.display = 'none';  
- }  
- if (manualModal.style.display === 'flex') {  
- manualModal.style.display = 'none';  
- }  
- if (searchResultsModal.style.display === 'flex') {  
- searchResultsModal.style.display = 'none';  
+ if (imageModal) imageModal.style.display = 'none';  
+ if (manualModal) manualModal.style.display = 'none';  
+ if (searchResultsModal) searchResultsModal.style.display = 'none';  
+ if (historyModal) historyModal.style.display = 'none';  
  document.body.style.overflow = '';  
- }  
- if (historyModal.style.display === 'flex') {  
- historyModal.style.display = 'none';  
- document.body.style.overflow = '';  
- }  
+ }, 50);  
  }  
  resetStandbyTimer();  
  requestWakeLock();  
@@ -1672,7 +1669,7 @@
  standbyTimer = setTimeout(showStandby, getStandbyDelay());  
  }  
   
- // Escuchar clics única y exclusivamente en el contenedor de standby en fase de captura  
+ // Escuchar clics única y exclusivamente en el contenedor de standby en fase de captura (capture: true)  
  const standbyEl = document.getElementById('standby-screen');  
  ['click', 'touchstart', 'pointerdown'].forEach(event => {  
  standbyEl.addEventListener(event, hideStandby, { capture: true, passive: false });  
