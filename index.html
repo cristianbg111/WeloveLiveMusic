@@ -1681,7 +1681,7 @@
  document.getElementById('queueHeaderTitle').textContent = "Control DJ";  
  alert("¡Modo DJ activado con éxito! 🎧");  
  resetStandbyTimer();  
- renderQueuePage();  
+ renderQueuePage(); // <-- Fuerza renderizado inmediato al activar  
  } else {  
  alert("Contraseña incorrecta.");  
  }  
@@ -1698,7 +1698,7 @@
  document.getElementById('queueHeaderTitle').textContent = "Peticiones del público";  
  alert("Modo DJ desactivado.");  
  resetStandbyTimer();  
- renderQueuePage();  
+ renderQueuePage(); // <-- Fuerza renderizado inmediato al desactivar  
  }  
  }  
 
