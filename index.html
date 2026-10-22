@@ -1526,7 +1526,7 @@
  requestWakeLock();  
  });  
 
- ['visibilitychange', 'touchstart', 'click', 'mousemove', 'pointerdown'].forEach(event => {  
+ ['visibilitychange', 'touchstart', 'click', 'mousemove', 'pointerdown', 'scroll'].forEach(event => {  
  document.addEventListener(event, async () => {  
  if (document.visibilityState === 'visible') {  
  await requestWakeLock();  
@@ -1681,7 +1681,7 @@
  document.getElementById('queueHeaderTitle').textContent = "Control DJ";  
  alert("¡Modo DJ activado con éxito! 🎧");  
  resetStandbyTimer();  
- renderQueuePage(); // <-- Fuerza renderizado inmediato al activar  
+ renderQueuePage();  
  } else {  
  alert("Contraseña incorrecta.");  
  }  
@@ -1698,7 +1698,7 @@
  document.getElementById('queueHeaderTitle').textContent = "Peticiones del público";  
  alert("Modo DJ desactivado.");  
  resetStandbyTimer();  
- renderQueuePage(); // <-- Fuerza renderizado inmediato al desactivar  
+ renderQueuePage();  
  }  
  }  
 
@@ -2328,7 +2328,11 @@
   
  if (!data) {  
  globalQueueItems = [];  
+ if (isDjModeActive) {  
+ queueResults.innerHTML = '<p class="status-msg">Modo DJ activo. No hay peticiones en la sala todavía.</p>';  
+ } else {  
  queueResults.innerHTML = '<p class="status-msg">No hay peticiones en la sala todavía.</p>';  
+ }  
  paginationDiv.style.display = 'none';  
  lastQueueLength = 0;  
  return;  
@@ -2391,7 +2395,11 @@
  const nextBtn = document.getElementById('nextPageBtn');  
   
  if (globalQueueItems.length === 0) {  
+ if (isDjModeActive) {  
+ queueResults.innerHTML = '<p class="status-msg">Modo DJ activo. No hay peticiones en la sala todavía.</p>';  
+ } else {  
  queueResults.innerHTML = '<p class="status-msg">No hay peticiones en la sala todavía.</p>';  
+ }  
  paginationDiv.style.display = 'none';  
  return;  
  }  
