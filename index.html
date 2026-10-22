@@ -344,14 +344,15 @@
   
  .search-box {  
  display: flex;  
- gap: 8px;  
+ gap: 6px;  
  margin-bottom: 8px;  
  flex-shrink: 0;  
+ position: relative;  
  }  
   
  input {  
  flex: 1;  
- padding: 9px 12px;  
+ padding: 9px 36px 9px 12px;  
  border-radius: 10px;  
  border: 1px solid var(--input-border);  
  background: var(--input-bg);  
@@ -365,6 +366,26 @@
  box-shadow: 0 0 8px var(--glow-accent);  
  }  
   
+ .clear-search-btn {  
+ position: absolute;  
+ right: 48px;  
+ top: 50%;  
+ transform: translateY(-50%);  
+ background: transparent;  
+ border: none;  
+ color: var(--text-muted);  
+ font-size: 1rem;  
+ font-weight: 700;  
+ cursor: pointer;  
+ padding: 4px 8px;  
+ display: none;  
+ z-index: 5;  
+ touch-action: manipulation;  
+ }  
+ .clear-search-btn:hover {  
+ color: var(--danger);  
+ }  
+
  .search-btn {  
  background: var(--accent);  
  color: var(--accent-text);  
@@ -674,6 +695,45 @@
  .modal-content img { width: 100%; aspect-ratio: 1/1; border-radius: 12px; object-fit: cover; margin-bottom: 10px; border: 1px solid var(--border); touch-action: manipulation; }  
  .modal-title { font-size: 0.95rem; font-weight: 800; color: var(--text); margin-bottom: 3px; }  
  .modal-artist { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px; }  
+
+ /* --- MODAL GRANDE PARA RESULTADOS DE BÚSQUEDA --- */  
+ .results-modal-content {  
+ background: var(--card-bg);  
+ border: 1px solid var(--border);  
+ border-radius: 20px;  
+ padding: 18px;  
+ max-width: 480px;  
+ width: 100%;  
+ height: 85vh;  
+ display: flex;  
+ flex-direction: column;  
+ box-shadow: 0 25px 50px rgba(0,0,0,0.6), 0 0 30px var(--glow-accent);  
+ margin: auto;  
+ }  
+ .results-modal-header {  
+ display: flex;  
+ justify-content: space-between;  
+ align-items: center;  
+ margin-bottom: 12px;  
+ flex-shrink: 0;  
+ }  
+ .results-modal-title {  
+ font-size: 0.9rem;  
+ font-weight: 800;  
+ color: var(--text);  
+ text-transform: uppercase;  
+ letter-spacing: 0.5px;  
+ }  
+ .close-results-btn {  
+ background: var(--tag-bg);  
+ border: 1px solid var(--border);  
+ color: var(--text);  
+ padding: 5px 10px;  
+ border-radius: 8px;  
+ font-size: 0.75rem;  
+ font-weight: 700;  
+ cursor: pointer;  
+ }  
   
  .dj-stats {  
  display: flex;  
@@ -1074,6 +1134,7 @@
  <div id="tabSearch" class="tab-content active">  
  <form class="search-box" id="searchForm" action="javascript:void(0);">  
  <input type="text" id="songInput" placeholder="Ej: U2, Queen, Estopa..." autocomplete="off" spellcheck="false" enterkeyhint="search" />  
+ <button type="button" class="clear-search-btn" id="clearSearchBtn" onclick="clearSearchInput()" title="Borrar texto">✕</button>  
  <button type="submit" class="search-btn" id="searchBtn">🔍</button>  
  </form>  
   
@@ -1082,7 +1143,9 @@
  <div class="history-tags" id="historyTags"></div>  
  </div>  
   
- <div id="results" class="results"></div>  
+ <div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 20px 0;">  
+ Introduce el artista o título arriba para buscar canciones y abrirlas en grande.  
+ </div>  
  </div>  
   
  <div id="tabQueue" class="tab-content">  
@@ -1156,6 +1219,19 @@
  </footer>  
  </div>  
   
+ <!-- MODAL GRANDE PARA MOSTRAR RESULTADOS DE BÚSQUEDA -->  
+ <div class="modal" id="searchResultsModal">  
+ <div class="results-modal-content" onclick="event.stopPropagation()">  
+ <div class="results-modal-header">  
+ <span class="results-modal-title" id="resultsModalTitle">Resultados de Búsqueda</span>  
+ <button class="close-results-btn" onclick="closeSearchResultsModal()">✕ Cerrar</button>  
+ </div>  
+ <div id="modalResultsList" class="results">  
+ <p class="status-msg">Cargando...</p>  
+ </div>  
+ </div>  
+ </div>  
+
  <div class="modal" id="imageModal">  
  <div class="modal-content" onclick="event.stopPropagation()">  
  <img id="modalImg" src="" alt="Portada HD">  
@@ -1311,6 +1387,7 @@
  document.getElementById('tapBtn').addEventListener('click', tapTempo);  
  document.getElementById('backModalBtn').addEventListener('click', () => closeModal(true));  
  document.getElementById('imageModal').addEventListener('click', () => closeModal(true));  
+ document.getElementById('searchResultsModal').addEventListener('click', closeSearchResultsModal);  
  document.getElementById('historyModal').addEventListener('click', closeHistoryModal);  
  document.getElementById('modalTidalBtn').addEventListener('click', openTidalApp);  
  document.getElementById('modalYoutubeBtn').addEventListener('click', openYoutubeApp);  
@@ -1326,8 +1403,14 @@
   
  window.addEventListener('popstate', (event) => {  
  const modal = document.getElementById('imageModal');  
+ const searchResultsModal = document.getElementById('searchResultsModal');  
  const historyModal = document.getElementById('historyModal');  
    
+ if (searchResultsModal.style.display === 'flex') {  
+ closeSearchResultsModal();  
+ return;  
+ }  
+
  if (historyModal.style.display === 'flex' && historyModal.dataset.viewingList === 'true') {  
  openHistoryModal();  
  return;  
@@ -1432,9 +1515,14 @@
  standbyScreen.classList.remove('active');  
    
  const imageModal = document.getElementById('imageModal');  
+ const searchResultsModal = document.getElementById('searchResultsModal');  
  const historyModal = document.getElementById('historyModal');  
  if (imageModal.style.display === 'flex') {  
  closeModal(false);  
+ }  
+ if (searchResultsModal.style.display === 'flex') {  
+ searchResultsModal.style.display = 'none';  
+ document.body.style.overflow = '';  
  }  
  if (historyModal.style.display === 'flex') {  
  historyModal.style.display = 'none';  
@@ -1877,9 +1965,17 @@
  function handleInput() {  
  clearTimeout(debounceTimer);  
  const query = document.getElementById('songInput').value.trim();  
-   
+ const clearBtn = document.getElementById('clearSearchBtn');  
+  
+ if (query.length > 0) {  
+ clearBtn.style.display = 'block';  
+ } else {  
+ clearBtn.style.display = 'none';  
+ closeSearchResultsModal();  
+ return;  
+ }  
+  
  if (query.length < 2) {  
- document.getElementById('results').innerHTML = '';  
  return;  
  }  
   
@@ -1893,9 +1989,16 @@
  executeSearch(query);  
  }, 500);  
  }  
+
+ function clearSearchInput() {  
+ const songInput = document.getElementById('songInput');  
+ songInput.value = '';  
+ document.getElementById('clearSearchBtn').style.display = 'none';  
+ closeSearchResultsModal();  
+ songInput.focus();  
+ }  
   
  async function executeSearch(query) {  
- const resultsDiv = document.getElementById('results');  
  const cleanKey = query.toLowerCase();  
   
  if (searchCache.has(cleanKey)) {  
@@ -1903,13 +2006,14 @@
  return;  
  }  
   
- resultsDiv.innerHTML = '<p class="status-msg">Buscando coincidencias...</p>';  
+ openSearchResultsModal(query);  
+ document.getElementById('modalResultsList').innerHTML = '<p class="status-msg">Buscando coincidencias...</p>';  
  currentSearchId++;  
  const thisSearchId = currentSearchId;  
  const cleanQuery = encodeURIComponent(cleanKey);  
   
  try {  
- const res = await fetch(`https://itunes.apple.com/search?term=${cleanQuery}&limit=15&entity=song`);  
+ const res = await fetch(`https://itunes.apple.com/search?term=${cleanQuery}&limit=30&entity=song`);  
  if (res.ok) {  
  const data = await res.json();  
  if (thisSearchId === currentSearchId) {  
@@ -1925,7 +2029,6 @@
  }  
   
  function executeJSONP(cleanQuery, cleanKey, originalQuery, thisSearchId) {  
- const resultsDiv = document.getElementById('results');  
  const callbackName = 'cb_' + Date.now() + '_' + Math.floor(Math.random() * 1000);  
  const oldScript = document.getElementById('jsonp_itunes');  
  if (oldScript) oldScript.remove();  
@@ -1944,18 +2047,41 @@
   
  const script = document.createElement('script');  
  script.id = 'jsonp_itunes';  
- script.src = `https://itunes.apple.com/search?term=${cleanQuery}&limit=15&entity=song&callback=${callbackName}`;  
+ script.src = `https://itunes.apple.com/search?term=${cleanQuery}&limit=30&entity=song&callback=${callbackName}`;  
  script.onerror = function() {  
  delete window[callbackName];  
  if (thisSearchId === currentSearchId) {  
- resultsDiv.innerHTML = '<p class="status-msg">Error de conexión. Pulsa 🔍 para reintentar.</p>';  
+ document.getElementById('modalResultsList').innerHTML = '<p class="status-msg">Error de conexión. Pulsa 🔍 para reintentar.</p>';  
  }  
  };  
  document.body.appendChild(script);  
  }  
   
+ function openSearchResultsModal(query) {  
+ const modal = document.getElementById('searchResultsModal');  
+ document.getElementById('resultsModalTitle').textContent = `Resultados para: "${query}"`;  
+ modal.style.display = 'flex';  
+ if (!window.history.state || !window.history.state.modalOpen) {  
+ history.pushState({ modalOpen: true }, '', '');  
+ }  
+ }  
+
+ function closeSearchResultsModal() {  
+ const modal = document.getElementById('searchResultsModal');  
+ if (modal.style.display === 'flex') {  
+ modal.style.display = 'none';  
+ if (window.history.state && window.history.state.modalOpen) {  
+ try {  
+ window.history.back();  
+ } catch (e) {}  
+ }  
+ }  
+ }  
+
  function renderResults(results, query) {  
- const resultsDiv = document.getElementById('results');  
+ const resultsDiv = document.getElementById('modalResultsList');  
+ openSearchResultsModal(query);  
+
  if (!results || results.length === 0) {  
  resultsDiv.innerHTML = '<p class="status-msg">No se encontraron coincidencias.</p>';  
  return;  
@@ -2071,7 +2197,9 @@
   
  alert(`¡Petición enviada al DJ correctamente! 🎧🔥`);  
  const query = document.getElementById('songInput').value.trim();  
- if (query) executeSearch(query);  
+ if (query && searchCache.has(query.toLowerCase())) {  
+ renderResults(searchCache.get(query.toLowerCase()), query);  
+ }  
  }  
   
  function voteSong(songKey, title) {  
@@ -2099,7 +2227,9 @@
  });  
  alert(`¡Voto sumado con éxito para "${title}"! 🔥`);  
  const query = document.getElementById('songInput').value.trim();  
- if (query) executeSearch(query);  
+ if (query && searchCache.has(query.toLowerCase())) {  
+ renderResults(searchCache.get(query.toLowerCase()), query);  
+ }  
  }  
  });  
  }  
@@ -2191,7 +2321,7 @@
  renderQueuePage();  
    
  const query = document.getElementById('songInput').value.trim();  
- if (query && searchCache.has(query.toLowerCase())) {  
+ if (query && searchCache.has(query.toLowerCase()) && document.getElementById('searchResultsModal').style.display === 'flex') {  
  renderResults(searchCache.get(query.toLowerCase()), query);  
  }  
  }  
@@ -2462,6 +2592,7 @@
   
  function searchFromHistory(query) {  
  document.getElementById('songInput').value = query;  
+ document.getElementById('clearSearchBtn').style.display = 'block';  
  executeSearch(query);  
  }  
  </script>  
