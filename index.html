@@ -1307,7 +1307,7 @@
   
  <div id="tabSearch" class="tab-content active">  
  <div class="big-search-trigger-container">  
- <button class="big-search-btn" id="mainSearchTriggerBtn" onclick="openSearchResultsModal('')">🔍 ¡ENCUENTRA TU CANCIÓN PREFERIDA!</button>  
+ <button class="big-search-btn" id="mainSearchTriggerBtn" onclick="openSearchResultsModal('')">🔍 Pide tu canción al DJ!</button>  
  </div>  
   
  <div class="history-section" id="historySection" style="display: none;">  
@@ -1357,8 +1357,12 @@
  <button class="admin-action-btn" style="background: var(--accent); color: #fff;" onclick="runLuckyDraw()">🎉 ¡Sortear Premio!</button>  
  </div>  
 
- <div style="margin-bottom: 12px;">  
+ <div style="margin-bottom: 8px;">  
  <button class="admin-action-btn" id="toggleContestBtnAdmin" style="background: var(--success); color: #fff; width: 100%;" onclick="toggleContestState()">🔒 Botón Sorteo: ABIERTO</button>  
+ </div>  
+
+ <div style="margin-bottom: 12px;">  
+ <button class="admin-action-btn" style="background: var(--danger); color: #fff; width: 100%;" onclick="clearContestParticipants()">🗑️ Borrar lista de participantes</button>  
  </div>  
 
  <div class="instructions-box" style="margin-bottom: 10px;">  
@@ -1563,7 +1567,6 @@
  <div id="participantsListContainer" class="results">  
  <p class="status-msg">Cargando participantes...</p>  
  </div>  
- <button class="back-btn" style="margin-top: 8px;" onclick="clearContestParticipants()">🗑️ Borrar lista de participantes</button>  
  </div>  
  </div>  
   
@@ -1814,11 +1817,11 @@
  });  
  });  
 
- // --- CONTROLADOR DE MODO STANDBY DINÁMICO ---  
+ // --- CONTROLADOR DE MODO STANDBY DINÁMICO (75 SEGUNDOS) ---  
  let standbyTimer;  
   
  function getStandbyDelay() {  
- return (isDjModeActive || isAdminModeActive) ? 120000 : 30000;  
+ return (isDjModeActive || isAdminModeActive) ? 120000 : 75000;  
  }  
   
  function showStandby() {  
