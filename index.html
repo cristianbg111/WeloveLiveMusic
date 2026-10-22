@@ -179,6 +179,23 @@
  touch-action: manipulation;  
  }  
   
+ /* --- ETIQUETA FLOTANTE DE USUARIO REGISTRADO --- */  
+ .user-badge-bar {  
+ display: flex;  
+ justify-content: space-between;  
+ align-items: center;  
+ background: rgba(139, 92, 246, 0.15);  
+ border: 1px solid var(--badge-bg);  
+ padding: 5px 10px;  
+ border-radius: 8px;  
+ font-size: 0.72rem;  
+ font-weight: 700;  
+ color: var(--text);  
+ margin-bottom: 8px;  
+ flex-shrink: 0;  
+ }  
+ .user-badge-bar span { color: var(--accent); }  
+
  .neon-banner {  
  width: 100%;  
  padding: 8px 12px;  
@@ -298,7 +315,7 @@
  /* --- BARRA DE PESTAÑAS INFERIOR --- */  
  .tabs {  
  display: flex;  
- gap: 6px;  
+ gap: 5px;  
  margin-top: 8px;  
  margin-bottom: 6px;  
  border-top: 1px solid var(--border);  
@@ -334,14 +351,14 @@
  background: var(--tag-bg);  
  border: 1px solid var(--border);  
  color: var(--text-muted);  
- padding: 10px 8px;  
+ padding: 10px 6px;  
  border-radius: 50px;  
  font-weight: 800;  
- font-size: 0.68rem;  
+ font-size: 0.63rem;  
  cursor: pointer;  
  text-align: center;  
  text-transform: uppercase;  
- letter-spacing: 0.5px;  
+ letter-spacing: 0.3px;  
  -webkit-appearance: none;  
  transition: all 0.25s ease;  
  box-shadow: 0 2px 6px rgba(0,0,0,0.2);  
@@ -1234,6 +1251,12 @@
  <button class="theme-btn" id="themeToggle">☀️ Modo Claro</button>  
  </div>  
  </div>  
+  
+ <!-- BARRA DE USUARIO IDENTIFICADO EN PEQUEÑO -->  
+ <div class="user-badge-bar" id="userBadgeBar" style="display: none;">  
+ <span>👤 Participante: <strong id="currentUserNameDisplay"></strong></span>  
+ <button class="theme-btn" style="padding: 2px 6px; font-size: 0.65rem;" onclick="openContestModal()">Cambiar</button>  
+ </div>  
    
  <div id="neonBanner" class="neon-banner enabled">🟢 Peticiones de canciones: ABIERTAS</div>  
   
@@ -1291,12 +1314,16 @@
  <div class="results" style="padding-top: 6px;">  
  <div class="instructions-box" style="margin-bottom: 10px; background: rgba(245, 158, 11, 0.1); border-color: var(--count-bg);">  
  <div class="instructions-title" style="color: var(--count-bg);">🎁 Sorteo y Concurso en Directo</div>  
- <div class="instructions-text">Aquí puedes ver la lista de asistentes registrados en el concurso y realizar el sorteo aleatorio para premiar a un ganador.</div>  
+ <div class="instructions-text">Gestiona las inscripciones y realiza el sorteo automático con cuenta atrás.</div>  
  </div>  
 
- <div style="display: flex; gap: 8px; margin-bottom: 12px;">  
+ <div style="display: flex; gap: 8px; margin-bottom: 8px;">  
  <button class="admin-action-btn" style="background: var(--count-bg); color: #000;" onclick="openContestParticipantsModal()">👥 Ver Participantes (<span id="participantCountBadge">0</span>)</button>  
  <button class="admin-action-btn" style="background: var(--accent); color: #fff;" onclick="runLuckyDraw()">🎉 ¡Sortear Premio!</button>  
+ </div>  
+
+ <div style="margin-bottom: 12px;">  
+ <button class="admin-action-btn" id="toggleContestBtnAdmin" style="background: var(--success); color: #fff; width: 100%;" onclick="toggleContestState()">🔒 Botón Sorteo: ABIIERTO</button>  
  </div>  
 
  <div class="instructions-box" style="margin-bottom: 10px;">  
@@ -1328,7 +1355,8 @@
  <div class="tabs">  
  <button class="tab-btn active" onclick="switchTab('search', true)">🏠 Inicio</button>  
  <button class="tab-btn queue-tab-btn" id="queueTabBtn" onclick="switchTab('queue', true)">📻 Peticiones</button>  
- <button class="tab-btn" onclick="openContestModal()">🏆 Concurso</button>  
+ <button class="tab-btn" id="contestTabBtn" onclick="openContestModal()">🏆 Concurso</button>  
+ <button class="tab-btn" id="viewParticipantsBtnBottom" onclick="openPublicParticipantsModal()">📋 Lista</button>  
  <button class="tab-btn" id="adminTabBtn" style="display: none;" onclick="switchTab('admin', true)">💡 Admin</button>  
  </div>  
   
@@ -1470,10 +1498,23 @@
  </div>  
 
  <div class="modal-actions">  
- <button type="submit" class="request-btn" style="width: 100%; padding: 12px; font-size: 0.85rem; background: var(--count-bg); color: #000;">🎁 ¡Participar en el Sorteo!</button>  
+ <button type="submit" id="submitContestBtn" class="request-btn" style="width: 100%; padding: 12px; font-size: 0.85rem; background: var(--count-bg); color: #000;">🎁 ¡Participar en el Sorteo!</button>  
  <button type="button" class="back-btn" onclick="closeContestModal()">Cerrar</button>  
  </div>  
  </form>  
+ </div>  
+ </div>  
+
+ <!-- MODAL PÚBLICO: LISTA DE PARTICIPANTES -->  
+ <div class="modal" id="publicParticipantsModal">  
+ <div class="results-modal-content" onclick="event.stopPropagation()">  
+ <div class="results-modal-header">  
+ <span class="results-modal-title">📋 Participantes Inscritos</span>  
+ <button class="close-results-btn" onclick="closePublicParticipantsModal()">✕ Cerrar</button>  
+ </div>  
+ <div id="publicParticipantsListContainer" class="results">  
+ <p class="status-msg">Cargando lista...</p>  
+ </div>  
  </div>  
  </div>  
 
@@ -1539,6 +1580,7 @@
  const statsRef = db.ref('welove_live_music_stats/visits');  
  const adminEffectRef = db.ref('welove_live_music_settings/adminEffect');  
  const contestRef = db.ref('welove_live_music_contest');  
+ const contestOpenRef = db.ref('welove_live_music_settings/contestOpen');  
   
  let modalDebounceTimer;  
  let tapTimes = [];  
@@ -1555,6 +1597,7 @@
  let isDjModeActive = false;  
  let isAdminModeActive = false;  
  let areRequestsOpen = true;  
+ let isContestOpen = true;  
  const CORRECT_PASSWORD_ENCODED = "amJkZWVqYXkx";  
   
  let lastQueueLength = 0;  
@@ -1566,6 +1609,7 @@
   
  document.addEventListener('DOMContentLoaded', () => {  
  loadHistory();  
+ checkSavedUserBadge();  
  const savedTheme = localStorage.getItem('theme') || 'dark';  
  document.documentElement.setAttribute('data-theme', savedTheme);  
  updateThemeButton(savedTheme);  
@@ -1592,6 +1636,7 @@
  document.getElementById('historyModal').addEventListener('click', closeHistoryModal);  
  document.getElementById('contestModal').addEventListener('click', closeContestModal);  
  document.getElementById('participantsModal').addEventListener('click', closeParticipantsModal);  
+ document.getElementById('publicParticipantsModal').addEventListener('click', closePublicParticipantsModal);  
  document.getElementById('modalTidalBtn').addEventListener('click', openTidalApp);  
  document.getElementById('modalYoutubeBtn').addEventListener('click', openYoutubeApp);  
 
@@ -1634,6 +1679,12 @@
  updateNeonBannerUI();  
  });  
 
+ contestOpenRef.on('value', (snapshot) => {  
+ const isOpen = snapshot.val();  
+ isContestOpen = (isOpen !== null) ? isOpen : true;  
+ updateContestButtonUI();  
+ });  
+
  adminEffectRef.on('value', (snapshot) => {  
  const val = snapshot.val();  
  latestAdminEffectData = val;  
@@ -1650,18 +1701,20 @@
  const historyModal = document.getElementById('historyModal');  
  const contestModal = document.getElementById('contestModal');  
  const participantsModal = document.getElementById('participantsModal');  
+ const publicParticipantsModal = document.getElementById('publicParticipantsModal');  
 
  if (imageModal.style.display === 'flex') {  
  closeModal();  
  return;  
  }  
 
- if (manualModal.style.display === 'flex' || searchResultsModal.style.display === 'flex' || historyModal.style.display === 'flex' || contestModal.style.display === 'flex' || participantsModal.style.display === 'flex') {  
+ if (manualModal.style.display === 'flex' || searchResultsModal.style.display === 'flex' || historyModal.style.display === 'flex' || contestModal.style.display === 'flex' || participantsModal.style.display === 'flex' || publicParticipantsModal.style.display === 'flex') {  
  closeManualModal();  
  closeSearchResultsModal();  
  closeHistoryModal();  
  closeContestModal();  
  closeParticipantsModal();  
+ closePublicParticipantsModal();  
  switchTab('search', false);  
  history.pushState({ screen: 'main' }, '', '');  
  return;  
@@ -1747,6 +1800,7 @@
  closeHistoryModal();  
  closeContestModal();  
  closeParticipantsModal();  
+ closePublicParticipantsModal();  
  document.body.style.overflow = '';  
  }, 50);  
  }  
@@ -1785,7 +1839,7 @@
 
  function updateAdminButtonsUI(effectData) {  
  document.querySelectorAll('.color-circle-btn, .admin-action-btn').forEach(btn => {  
- btn.classList.remove('active');  
+ if (btn.id !== 'toggleContestBtnAdmin') btn.classList.remove('active');  
  });  
 
  if (!effectData || effectData.type === 'off') return;  
@@ -1929,6 +1983,10 @@
 
  // --- FUNCIONES DE CONCURSO Y SORTEO ---  
  function openContestModal() {  
+ if (!isContestOpen && !isAdminModeActive && !isDjModeActive) {  
+ alert("⛔ El sorteo está desactivado temporalmente por el DJ.");  
+ return;  
+ }  
  const contestModal = document.getElementById('contestModal');  
  contestModal.style.display = 'flex';  
  history.pushState({ screen: 'contestModal' }, '', '');  
@@ -1942,19 +2000,105 @@
  }  
  }  
 
+ function checkSavedUserBadge() {  
+ const savedName = localStorage.getItem('user_contest_name');  
+ const badgeBar = document.getElementById('userBadgeBar');  
+ const nameSpan = document.getElementById('currentUserNameDisplay');  
+ if (savedName) {  
+ nameSpan.textContent = savedName;  
+ badgeBar.style.display = 'flex';  
+ } else {  
+ badgeBar.style.display = 'none';  
+ }  
+ }  
+
  function submitContestEntry(event) {  
  event.preventDefault();  
  const userName = document.getElementById('contestUserInput').value.trim();  
  if (!userName) return;  
+
+ contestRef.once('value', (snapshot) => {  
+ const data = snapshot.val() || {};  
+ let nameExists = false;  
+ for (let key in data) {  
+ if (data[key].name && data[key].name.toLowerCase() === userName.toLowerCase()) {  
+ nameExists = true;  
+ break;  
+ }  
+ }  
+
+ if (nameExists) {  
+ alert(`⚠️ El nombre o alias "${userName}" ya está registrado en el sorteo. Por favor, elige uno diferente.`);  
+ document.getElementById('contestUserInput').focus();  
+ return;  
+ }  
 
  const userKey = btoa(unescape(encodeURIComponent(userName))).replace(/[/+:=]/g, '_');  
  contestRef.child(userKey).set({  
  name: userName,  
  timestamp: Date.now()  
  }).then(() => {  
+ localStorage.setItem('user_contest_name', userName);  
+ checkSavedUserBadge();  
  alert(`¡Enhorabuena ${userName}! Ya estás participando en el sorteo de la sala. 🏆✨`);  
  closeContestModal();  
  });  
+ });  
+ }  
+
+ function toggleContestState() {  
+ if (!isAdminModeActive && !isDjModeActive) return;  
+ const newState = !isContestOpen;  
+ contestOpenRef.set(newState).then(() => {  
+ alert(newState ? "¡Sorteo ABIIERTO para el público! 🟢" : "¡Sorteo CERRADO para el público! ⛔");  
+ });  
+ }  
+
+ function updateContestButtonUI() {  
+ const btn = document.getElementById('toggleContestBtnAdmin');  
+ const contestTabBtn = document.getElementById('contestTabBtn');  
+ if (isContestOpen) {  
+ if (btn) {  
+ btn.textContent = "🔒 Botón Sorteo: ABIERTO";  
+ btn.style.background = "var(--success)";  
+ }  
+ if (contestTabBtn) contestTabBtn.style.opacity = '1';  
+ } else {  
+ if (btn) {  
+ btn.textContent = "🔓 Botón Sorteo: CERRADO";  
+ btn.style.background = "var(--danger)";  
+ }  
+ if (contestTabBtn) contestTabBtn.style.opacity = '0.5';  
+ }  
+ }  
+
+ function openPublicParticipantsModal() {  
+ const modal = document.getElementById('publicParticipantsModal');  
+ const container = document.getElementById('publicParticipantsListContainer');  
+
+ modal.style.display = 'flex';  
+ history.pushState({ screen: 'publicParticipantsModal' }, '', '');  
+
+ if (globalContestParticipants.length === 0) {  
+ container.innerHTML = '<p class="status-msg">No hay participantes apuntados todavía.</p>';  
+ return;  
+ }  
+
+ container.innerHTML = globalContestParticipants.map((p, index) => `  
+ <div class="queue-item">  
+ <div class="song-info">  
+ <div class="song-title">${index + 1}. ${p.name}</div>  
+ <div class="requester-tag">Participante activo en sala</div>  
+ </div>  
+ </div>  
+ `).join('');  
+ }  
+
+ function closePublicParticipantsModal() {  
+ const modal = document.getElementById('publicParticipantsModal');  
+ if (modal.style.display === 'flex') {  
+ modal.style.display = 'none';  
+ }  
  }  
 
  function openContestParticipantsModal() {  
@@ -2002,19 +2146,19 @@
  return;  
  }  
 
- // Efecto visual de sorteo aleatorio  
- let counter = 0;  
- const maxTaps = 15;  
+ let secondsLeft = 5;  
+ alert(`🎲 ¡Comienza el sorteo automático!\nCalculando ganador en ${secondsLeft} segundos...`);  
+
  const interval = setInterval(() => {  
- const randomParticipant = globalContestParticipants[Math.floor(Math.random() * globalContestParticipants.length)];  
- alert(`🎲 Sorteando... ¡${randomParticipant.name}!`);  
- counter++;  
- if (counter >= 3) {  
+ secondsLeft--;  
+ if (secondsLeft > 0) {  
+ console.log(`Sorteo en ${secondsLeft}...`);  
+ } else {  
  clearInterval(interval);  
  const winner = globalContestParticipants[Math.floor(Math.random() * globalContestParticipants.length)];  
  alert(`🎉🎊 ¡TENEMOS GANADOR / A! 🎊🎉\n\nEl premio es para:\n⭐ ${winner.name.toUpperCase()} ⭐\n\n¡Felicidades!`);  
  }  
- }, 600);  
+ }, 1000);  
  }  
   
  function toggleRequestsState() {  
