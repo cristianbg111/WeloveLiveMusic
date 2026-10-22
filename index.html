@@ -1563,11 +1563,6 @@
  return;  
  }  
 
- if (searchResultsModal.style.display === 'flex') {  
- closeSearchResultsModal();  
- return;  
- }  
-
  if (historyModal.style.display === 'flex' && historyModal.dataset.viewingList === 'true') {  
  openHistoryModal();  
  return;  
@@ -1580,6 +1575,11 @@
   
  if (modal.style.display === 'flex') {  
  closeModal(false);   
+ return;  
+ }  
+
+ if (searchResultsModal.style.display === 'flex') {  
+ closeSearchResultsModal();  
  return;  
  }  
   
@@ -1671,7 +1671,6 @@
  if (standbyScreen && standbyScreen.classList.contains('active')) {  
  standbyScreen.classList.remove('active');  
    
- // Consumir el evento para que no active elementos inferiores al salir del standby  
  if (e) {  
  e.preventDefault();  
  e.stopPropagation();  
@@ -2775,9 +2774,7 @@
  modalActionContainer.innerHTML = `<button class="request-btn" style="width: 100%; padding: 10px; font-size: 0.85rem;" ${disabledAttr} ${btnTitleAttr} onclick="requestSong('${safeTitle}', '${safeArtist}', '${artwork100}', '${audioUrl || ''}', '${genre}', '${year}'); closeModal(true);">➕ Pedir esta canción al DJ</button>`;  
  }  
   
- if (!window.history.state || !window.history.state.modalOpen) {  
  history.pushState({ modalOpen: true }, '', '');  
- }  
  document.getElementById('imageModal').style.display = 'flex';  
  }  
   
@@ -2831,10 +2828,9 @@
  }  
   
  document.getElementById('imageModal').style.display = 'none';  
- document.getElementById('historyModal').style.display = 'none';  
  document.body.style.overflow = '';  
   
- if (shouldBack && window.history.state && window.history.state.modalOpen) {  
+ if (shouldBack) {  
  try {  
  window.history.back();  
  } catch (e) {}  
