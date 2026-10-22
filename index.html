@@ -1025,16 +1025,17 @@
  opacity: 1;  
  }  
 
- /* --- PANTALLA STANDBY OPTIMIZADA (LOGO ARRIBA) --- */  
+ /* --- PANTALLA STANDBY OPTIMIZADA (COBERTURA TOTAL Y Z-INDEX MÁXIMO) --- */  
  #standby-screen {  
  position: fixed;  
  top: 0;  
  left: 0;  
  width: 100vw;  
+ width: 100dvh;  
  height: 100vh;  
  height: 100dvh;  
  background: #05050a;  
- z-index: 9999;  
+ z-index: 999999;  
  display: none;  
  overflow: hidden;  
  cursor: pointer;  
@@ -1520,6 +1521,9 @@
  document.documentElement.setAttribute('data-theme', savedTheme);  
  updateThemeButton(savedTheme);  
   
+ // FUERZA INICIAL: Al cargar la app por primera vez, se asegura de estar en la pantalla de inicio
+ switchTab('search', false);
+
  document.getElementById('themeToggle').addEventListener('click', toggleTheme);  
    
  const modalSongInput = document.getElementById('modalSongInput');  
@@ -1636,7 +1640,7 @@
  if (e.stopImmediatePropagation) e.stopImmediatePropagation();  
  }  
 
- // Forzar siempre la pestaña inicial de búsqueda / información al salir del standby
+ // Forzar siempre la pestaña de inicio exacta al salir del standby
  switchTab('search', false);
 
  const imageModal = document.getElementById('imageModal');  
