@@ -1407,7 +1407,7 @@
  </div>  
  <div class="queue-actions">  
  <button class="dj-mode-btn" id="djModeToggleBtn" onclick="toggleDjMode()">🎧 DJ</button>  
- <button class="toggle-requests-btn" id="toggleRequestsBtn" style="display: none;" onclick="toggleRequestsState()">🔒 Peticiones: ON</button>  
+ <button class="toggle-requests-btn off" id="toggleRequestsBtn" style="display: none;" onclick="toggleRequestsState()">🔒 Peticiones: OFF</button>  
  <button class="save-list-btn" id="saveListBtn" style="display: none;" onclick="saveCurrentList()">💾 Guardar</button>  
  <button class="history-list-btn" id="historyListBtn" style="display: none;" onclick="openHistoryModal()">📁 Histórico</button>  
  <button class="pdf-btn" onclick="exportQueueToPDF()">📄 PDF</button>  
@@ -2359,10 +2359,11 @@
  }  
   
  function toggleRequestsState() {  
- if (!isDjModeActive) return;  
  const newState = !areRequestsOpen;  
  settingsRef.set(newState).then(() => {  
  alert(newState ? "¡Peticiones ABIERTAS para el público! 🟢" : "¡Peticiones DESACTIVADAS para el público! ⛔");  
+ }).catch(err => {  
+ alert("Error al cambiar el estado de las peticiones en Firebase.");  
  });  
  }  
   
