@@ -539,6 +539,7 @@
  box-shadow: 0 0 6px var(--glow-accent);  
  -webkit-appearance: none;  
  touch-action: manipulation;  
+ pointer-events: auto !important;  
  }  
  .vote-btn {  
  background: var(--count-bg);  
@@ -594,6 +595,7 @@
  text-transform: uppercase;  
  letter-spacing: 0.5px;  
  box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);  
+ pointer-events: auto !important;  
  }  
 
  /* --- MODAL DE FORMULARIO MANUAL UNIFICADO --- */  
@@ -867,6 +869,7 @@
  font-size: 0.75rem;  
  font-weight: 700;  
  cursor: pointer;  
+ pointer-events: auto !important;  
  }  
   
  .dj-stats {  
@@ -905,6 +908,7 @@
  padding: 10px 14px; border-radius: 10px; font-weight: 700; font-size: 0.85rem; text-decoration: none; cursor: pointer;  
  -webkit-appearance: none;  
  touch-action: manipulation;  
+ pointer-events: auto !important;  
  }  
  .spotify-btn { background: var(--spotify); color: #ffffff; }  
  .tidal-btn { background: var(--tidal); color: #ffffff; border: 1px solid var(--border); }  
@@ -929,6 +933,7 @@
  align-items: center;  
  justify-content: center;  
  gap: 8px;  
+ pointer-events: auto !important;  
  }  
  .back-btn-top:active {  
  transform: scale(0.98);  
@@ -1071,7 +1076,7 @@
  opacity: 1;  
  }  
 
- /* --- PANTALLA STANDBY (INICIA ACTIVA POR DEFECTO AL ABRIR LA APP) --- */  
+ /* --- PANTALLA STANDBY (ACTIVA AL ABRIR) --- */  
  #standby-screen {  
  position: fixed;  
  top: 0;  
@@ -1081,7 +1086,7 @@
  height: 100dvh;  
  background: #05050a;  
  z-index: 9999;  
- display: block !important; /* Arranca visible de inmediato para mostrar la app bonita */  
+ display: block !important;  
  pointer-events: auto;  
  opacity: 1;  
  transition: opacity 0.35s ease;  
@@ -1648,7 +1653,6 @@
  let standbyTimer = null;  
   
  document.addEventListener('DOMContentLoaded', () => {  
- // --- APERTURA CON PANTALLA STANDBY ACTIVA Y BONITA ---  
  const standbyScreen = document.getElementById('standby-screen');  
  if (standbyScreen) {  
  standbyScreen.classList.remove('inactive');  
@@ -1662,7 +1666,6 @@
   
  document.getElementById('themeToggle').addEventListener('click', toggleTheme);  
 
- // --- CONFIGURACIÓN DE DOBLE TOQUE ROBUSTO PARA SAFARI/IPHONE EN EL LOGO ---  
  const handleLogoTap = (e) => {  
  if (e) {  
  e.preventDefault();  
@@ -1818,11 +1821,9 @@
  }  
  });  
 
- // Arrancar el temporizador de inactividad  
  resetStandbyTimer();  
  });  
   
- // --- WAKE LOCK API PERSISTENTE ---  
  let wakeLock = null;  
 
  async function requestWakeLock() {  
@@ -1850,7 +1851,6 @@
  });  
  });  
 
- // --- CONTROLADOR DE MODO STANDBY DINÁMICO (75 SEGUNDOS) ---  
  function getStandbyDelay() {  
  return (isDjModeActive || isAdminModeActive) ? 120000 : 75000;  
  }  
@@ -2073,7 +2073,6 @@
  }  
  }  
 
- // --- FUNCIONES DE CONCURSO Y SORTEO ---  
  function openContestModal() {  
  if (!isContestOpen && !isAdminModeActive && !isDjModeActive) {  
  alert("⛔ El sorteo está desactivado temporalmente por el DJ.");  
@@ -2283,7 +2282,7 @@
  if (!isDjModeActive) return;  
  const newState = !areRequestsOpen;  
  settingsRef.set(newState).then(() => {  
- alert(newState ? "¡Peticiones ABIERTAS para el público! 🟢" : "¡Peticiones DESACTIVADAS para el público! 🔴");  
+ alert(newState ? "¡Peticiones ABIERTAS para el público! 🟢" : "¡Peticiones DESACTIVADAS para el público! ⛔");  
  });  
  }  
   
@@ -3231,6 +3230,15 @@
  if (imageModal.style.display === 'flex') {  
  imageModal.style.display = 'none';  
  }  
+
+ // --- FORZAR REFREFCO DE CAPAS EN IOS SAFARI ---  
+ const resultsModal = document.getElementById('searchResultsModal');  
+ if (resultsModal.style.display === 'flex') {  
+ resultsModal.style.display = 'none';  
+ void resultsModal.offsetHeight; // Truco de reflow para WebKit  
+ resultsModal.style.display = 'flex';  
+ }  
+
  const query = document.getElementById('modalSongInput').value.trim();  
  if (query && searchCache.has(query.toLowerCase())) {  
  renderResults(searchCache.get(query.toLowerCase()), query);  
@@ -3244,6 +3252,14 @@
  audioElement.src = '';  
  }  
  document.getElementById('imageModal').style.display = 'none';  
+
+ const resultsModal = document.getElementById('searchResultsModal');  
+ if (resultsModal.style.display === 'flex') {  
+ resultsModal.style.display = 'none';  
+ void resultsModal.offsetHeight;  
+ resultsModal.style.display = 'flex';  
+ }  
+
  const query = document.getElementById('modalSongInput').value.trim();  
  if (query && searchCache.has(query.toLowerCase())) {  
  renderResults(searchCache.get(query.toLowerCase()), query);  
