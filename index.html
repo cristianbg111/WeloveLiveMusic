@@ -520,27 +520,35 @@
  .song-title { font-weight: 700; font-size: 0.83rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }  
  .song-artist { font-size: 0.73rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }  
    
+ /* --- ACCIONES Y BOTONES ADAPTADOS PARA IOS ANTIGUO --- */  
  .action-buttons {  
+ display: -webkit-flex;  
  display: flex;  
+ -webkit-flex-direction: column;  
  flex-direction: column;  
- gap: 3px;  
+ -webkit-align-items: flex-end;  
  align-items: flex-end;  
+ gap: 4px;  
+ -webkit-flex-shrink: 0;  
  flex-shrink: 0;  
+ min-width: 70px;  
+ z-index: 5;  
  }  
   
  .request-btn, .vote-btn {  
  background: var(--accent);  
  color: var(--accent-text);  
  border: none;  
- padding: 5px 8px;  
+ padding: 6px 10px;  
  border-radius: 6px;  
  font-weight: 700;  
- font-size: 0.68rem;  
+ font-size: 0.7rem;  
  cursor: pointer;  
  white-space: nowrap;  
  box-shadow: 0 0 6px var(--glow-accent);  
  -webkit-appearance: none;  
  touch-action: manipulation;  
+ display: inline-block;  
  }  
  .vote-btn {  
  background: var(--count-bg);  
@@ -557,10 +565,10 @@
  .badge-year {  
  background: var(--tag-bg);  
  color: var(--text-muted);  
- padding: 2px 5px;  
+ padding: 2px 6px;  
  border-radius: 5px;  
  font-weight: 600;  
- font-size: 0.63rem;  
+ font-size: 0.65rem;  
  border: 1px solid var(--border);  
  }  
    
@@ -1655,7 +1663,6 @@
   
  document.getElementById('themeToggle').addEventListener('click', toggleTheme);  
    
- // --- ASIGNACIÓN DE DOBLE TOQUE ROBUSTA CON POINTERDOWN PARA IOS Y ANDROID ---  
  const logoEl = document.getElementById('logoSecretTrigger');  
  if (logoEl) {  
  logoEl.addEventListener('pointerdown', (e) => {  
@@ -1899,7 +1906,6 @@
  function handleLogoSecretTap() {  
  const now = Date.now();  
  if (now - lastLogoTapTime < 600) {  
- // Doble toque detectado en el logo  
  toggleAdminModeSecret();  
  lastLogoTapTime = 0;  
  } else {  
@@ -2138,7 +2144,7 @@
  const newState = !isContestOpen;  
  contestOpenRef.set(newState).then(() => {  
  if (!newState) {  
- winnerRef.remove(); // Borra el ganador al cerrar  
+ winnerRef.remove();  
  }  
  alert(newState ? "¡Sorteo ABIERTO para el público! 🟢" : "¡Sorteo CERRADO para el público! ⛔");  
  });  
