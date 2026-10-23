@@ -180,6 +180,8 @@
  -webkit-appearance: none;  
  touch-action: manipulation;  
  pointer-events: auto !important;  
+ position: relative;  
+ z-index: 5;  
  }  
   
  /* --- ETIQUETA FLOTANTE DE USUARIO REGISTRADO --- */  
@@ -333,6 +335,8 @@
  animation: neonGlow 4s ease infinite;  
  text-shadow: 0 2px 4px rgba(0,0,0,0.4);  
  pointer-events: auto !important;  
+ position: relative;  
+ z-index: 5;  
  }  
  .big-search-btn:active {  
  transform: scale(0.97);  
@@ -348,10 +352,13 @@
  padding-top: 10px;  
  flex-shrink: 0;  
  position: relative;  
+ z-index: 10;  
+ pointer-events: auto !important;  
  }  
   
  .queue-tab-btn {  
  position: relative;  
+ pointer-events: auto !important;  
  }  
  .queue-tab-btn.has-new::after {  
  content: '';  
@@ -389,6 +396,9 @@
  transition: all 0.25s ease;  
  box-shadow: 0 2px 6px rgba(0,0,0,0.2);  
  pointer-events: auto !important;  
+ position: relative;  
+ z-index: 10;  
+ touch-action: manipulation;  
  }  
   
  .tab-btn:hover {  
@@ -439,6 +449,7 @@
  font-size: 16px !important;  
  outline: none;  
  -webkit-appearance: none;  
+ pointer-events: auto !important;  
  }  
  input:focus {   
  border-color: var(--accent);   
@@ -479,6 +490,8 @@
  touch-action: manipulation;  
  box-shadow: 0 0 10px var(--glow-accent);  
  pointer-events: auto !important;  
+ position: relative;  
+ z-index: 5;  
  }  
   
  .history-section { margin-bottom: 8px; flex-shrink: 0; }  
@@ -507,6 +520,7 @@
  overscroll-behavior-y: contain;  
  padding-right: 4px;  
  padding-bottom: 10px;  
+ pointer-events: auto !important;  
  }  
    
  .song-item {  
@@ -518,9 +532,10 @@
  align-items: center;  
  border: 1px solid var(--border);  
  flex-shrink: 0;  
+ pointer-events: auto !important;  
  }  
- .song-item img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; cursor: pointer; flex-shrink: 0; touch-action: manipulation; }  
- .song-info { flex: 1; overflow: hidden; cursor: pointer; min-width: 0; touch-action: manipulation; }  
+ .song-item img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; cursor: pointer; flex-shrink: 0; touch-action: manipulation; pointer-events: auto !important; }  
+ .song-info { flex: 1; overflow: hidden; cursor: pointer; min-width: 0; touch-action: manipulation; pointer-events: auto !important; }  
  .song-title { font-weight: 700; font-size: 0.83rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }  
  .song-artist { font-size: 0.73rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }  
    
@@ -530,6 +545,7 @@
  gap: 3px;  
  align-items: flex-end;  
  flex-shrink: 0;  
+ pointer-events: auto !important;  
  }  
   
  .request-btn, .vote-btn {  
@@ -546,6 +562,8 @@
  -webkit-appearance: none;  
  touch-action: manipulation;  
  pointer-events: auto !important;  
+ position: relative;  
+ z-index: 5;  
  }  
  .vote-btn {  
  background: var(--count-bg);  
@@ -582,6 +600,7 @@
  display: flex;  
  flex-direction: column;  
  gap: 8px;  
+ pointer-events: auto !important;  
  }  
  .manual-fallback-text {  
  font-size: 0.78rem;  
@@ -602,6 +621,8 @@
  letter-spacing: 0.5px;  
  box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);  
  pointer-events: auto !important;  
+ position: relative;  
+ z-index: 5;  
  }  
 
  /* --- MODAL DE FORMULARIO MANUAL UNIFICADO --- */  
@@ -627,6 +648,7 @@
  color: var(--text);  
  font-size: 16px !important;  
  outline: none;  
+ pointer-events: auto !important;  
  }  
  .manual-form-input:focus {  
  border-color: var(--accent);  
@@ -639,6 +661,7 @@
  gap: 8px;  
  margin-bottom: 8px;  
  flex-shrink: 0;  
+ pointer-events: auto !important;  
  }  
 
  .queue-header-top {  
@@ -655,6 +678,9 @@
  grid-template-columns: repeat(3, 1fr);  
  gap: 5px;  
  width: 100%;  
+ pointer-events: auto !important;  
+ position: relative;  
+ z-index: 5;  
  }  
   
  .dj-mode-btn, .toggle-requests-btn, .save-list-btn, .history-list-btn, .pdf-btn, .clear-queue-btn {  
@@ -669,6 +695,8 @@
  pointer-events: auto !important;  
  text-align: center;  
  border: none;  
+ position: relative;  
+ z-index: 5;  
  }  
   
  .dj-mode-btn { background: var(--badge-bg); color: #ffffff; }  
@@ -694,6 +722,7 @@
  flex-shrink: 0;  
  text-align: left;  
  transition: opacity 0.2s;  
+ pointer-events: auto !important;  
  }  
    
  .queue-item.dj-active {  
@@ -711,7 +740,7 @@
  color: var(--text-muted);  
  }  
   
- .queue-item img { width: 38px !important; height: 38px !important; min-width: 38px; border-radius: 8px; object-fit: cover; cursor: pointer; flex-shrink: 0; touch-action: manipulation; }  
+ .queue-item img { width: 38px !important; height: 38px !important; min-width: 38px; border-radius: 8px; object-fit: cover; cursor: pointer; flex-shrink: 0; touch-action: manipulation; pointer-events: auto !important; }  
  .requester-tag { font-size: 0.65rem; color: var(--accent); font-weight: 700; margin-top: 2px; }  
   
  .badge-count {  
@@ -731,6 +760,7 @@
  gap: 6px;  
  align-items: center;  
  margin-top: 4px;  
+ pointer-events: auto !important;  
  }  
   
  .played-checkbox-label {  
@@ -746,12 +776,15 @@
  border-radius: 4px;  
  border: 1px solid var(--success);  
  pointer-events: auto !important;  
+ position: relative;  
+ z-index: 5;  
  }  
  .played-checkbox-label input {  
  accent-color: var(--success);  
  cursor: pointer;  
  width: 12px;  
  height: 12px;  
+ pointer-events: auto !important;  
  }  
   
  .delete-song-btn {  
@@ -766,6 +799,8 @@
  -webkit-appearance: none;  
  touch-action: manipulation;  
  pointer-events: auto !important;  
+ position: relative;  
+ z-index: 5;  
  }  
   
  .pagination {  
@@ -778,6 +813,7 @@
  border: 1px solid var(--border);  
  border-radius: 10px;  
  flex-shrink: 0;  
+ pointer-events: auto !important;  
  }  
  .page-btn {  
  background: var(--accent);  
@@ -792,6 +828,8 @@
  box-shadow: 0 0 6px var(--glow-accent);  
  touch-action: manipulation;  
  pointer-events: auto !important;  
+ position: relative;  
+ z-index: 5;  
  }  
  .page-btn:disabled { opacity: 0.3; cursor: not-allowed; box-shadow: none; background: var(--tag-bg); color: var(--text-muted); }  
  .page-info { font-size: 0.72rem; color: var(--text); font-weight: 800; }  
@@ -833,6 +871,7 @@
  backdrop-filter: blur(10px);  
  overflow-y: auto;  
  -webkit-overflow-scrolling: touch;  
+ pointer-events: auto !important;  
  }  
  .modal-content {  
  background: var(--card-bg);  
@@ -847,8 +886,9 @@
  overflow-y: auto;  
  -webkit-overflow-scrolling: touch;  
  margin: auto;  
+ pointer-events: auto !important;  
  }  
- .modal-content img { width: 100%; aspect-ratio: 1/1; border-radius: 12px; object-fit: cover; margin-bottom: 10px; border: 1px solid var(--border); touch-action: manipulation; }  
+ .modal-content img { width: 100%; aspect-ratio: 1/1; border-radius: 12px; object-fit: cover; margin-bottom: 10px; border: 1px solid var(--border); touch-action: manipulation; pointer-events: auto !important; }  
  .modal-title { font-size: 0.95rem; font-weight: 800; color: var(--text); margin-bottom: 3px; }  
  .modal-artist { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px; }  
 
@@ -865,6 +905,7 @@
  flex-direction: column;  
  box-shadow: 0 25px 50px rgba(0,0,0,0.6), 0 0 30px var(--glow-accent);  
  margin: auto;  
+ pointer-events: auto !important;  
  }  
  .results-modal-header {  
  display: flex;  
@@ -872,6 +913,7 @@
  align-items: center;  
  margin-bottom: 10px;  
  flex-shrink: 0;  
+ pointer-events: auto !important;  
  }  
  .results-modal-title {  
  font-size: 0.85rem;  
@@ -890,6 +932,8 @@
  font-weight: 700;  
  cursor: pointer;  
  pointer-events: auto !important;  
+ position: relative;  
+ z-index: 5;  
  }  
   
  .dj-stats {  
@@ -919,10 +963,12 @@
  -webkit-appearance: none;  
  touch-action: manipulation;  
  pointer-events: auto !important;  
+ position: relative;  
+ z-index: 5;  
  }  
   
- audio { width: 100%; height: 36px; margin-bottom: 10px; border-radius: 6px; }  
- .modal-actions { display: flex; flex-direction: column; gap: 6px; }  
+ audio { width: 100%; height: 36px; margin-bottom: 10px; border-radius: 6px; pointer-events: auto !important; }  
+ .modal-actions { display: flex; flex-direction: column; gap: 6px; pointer-events: auto !important; }  
   
  .spotify-btn, .tidal-btn, .youtube-btn, .back-btn {  
  display: flex; align-items: center; justify-content: center; gap: 8px;  
@@ -930,6 +976,8 @@
  -webkit-appearance: none;  
  touch-action: manipulation;  
  pointer-events: auto !important;  
+ position: relative;  
+ z-index: 5;  
  }  
  .spotify-btn { background: var(--spotify); color: #ffffff; }  
  .tidal-btn { background: var(--tidal); color: #ffffff; border: 1px solid var(--border); }  
@@ -955,12 +1003,14 @@
  justify-content: center;  
  gap: 8px;  
  pointer-events: auto !important;  
+ position: relative;  
+ z-index: 5;  
  }  
  .back-btn-top:active {  
  transform: scale(0.98);  
  }  
 
- .back-btn { background: var(--tag-bg); color: var(--text); border: 1px solid var(--border); width: 100%; }  
+ .back-btn { background: var(--tag-bg); color: var(--text); border: 1px solid var(--border); width: 100%; pointer-events: auto !important; position: relative; z-index: 5; }  
   
  .history-item-card {  
  background: var(--item-bg);  
@@ -972,17 +1022,19 @@
  display: flex;  
  flex-direction: column;  
  gap: 6px;  
+ pointer-events: auto !important;  
  }  
  .history-item-header {  
  display: flex;  
  justify-content: space-between;  
  align-items: center;  
  cursor: pointer;  
+ pointer-events: auto !important;  
  }  
  .history-item-title { font-weight: 800; font-size: 0.85rem; color: var(--text); }  
  .history-item-date { font-size: 0.7rem; color: var(--text-muted); }  
- .history-actions { display: flex; gap: 6px; justify-content: flex-end; }  
- .history-view-btn { background: var(--badge-bg); color: #fff; border: none; padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; cursor: pointer; touch-action: manipulation; pointer-events: auto !important; }  
+ .history-actions { display: flex; gap: 6px; justify-content: flex-end; pointer-events: auto !important; }  
+ .history-view-btn { background: var(--badge-bg); color: #fff; border: none; padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; cursor: pointer; touch-action: manipulation; pointer-events: auto !important; position: relative; z-index: 5; }  
   
  /* --- ESTILOS PANEL MODO ADMIN --- */  
  .admin-panel-grid {  
@@ -1003,6 +1055,7 @@
  touch-action: manipulation;  
  position: relative;  
  pointer-events: auto !important;  
+ z-index: 5;  
  }  
  .color-circle-btn:active { transform: scale(0.9); }  
 
@@ -1043,6 +1096,8 @@
  touch-action: manipulation;  
  transition: all 0.2s ease;  
  pointer-events: auto !important;  
+ position: relative;  
+ z-index: 5;  
  }  
  .btn-flash { background: #ffffff; color: #000000; }  
  .btn-flash.active { border-color: #00f3ff; box-shadow: 0 0 20px #ffffff; transform: scale(1.02); }  
