@@ -179,6 +179,7 @@
  white-space: nowrap;  
  -webkit-appearance: none;  
  touch-action: manipulation;  
+ pointer-events: auto !important;  
  }  
   
  /* --- ETIQUETA FLOTANTE DE USUARIO REGISTRADO --- */  
@@ -331,6 +332,7 @@
  touch-action: manipulation;  
  animation: neonGlow 4s ease infinite;  
  text-shadow: 0 2px 4px rgba(0,0,0,0.4);  
+ pointer-events: auto !important;  
  }  
  .big-search-btn:active {  
  transform: scale(0.97);  
@@ -386,6 +388,7 @@
  -webkit-appearance: none;  
  transition: all 0.25s ease;  
  box-shadow: 0 2px 6px rgba(0,0,0,0.2);  
+ pointer-events: auto !important;  
  }  
   
  .tab-btn:hover {  
@@ -457,6 +460,7 @@
  display: none;  
  z-index: 5;  
  touch-action: manipulation;  
+ pointer-events: auto !important;  
  }  
  .clear-search-btn:hover {  
  color: var(--danger);  
@@ -474,6 +478,7 @@
  -webkit-appearance: none;  
  touch-action: manipulation;  
  box-shadow: 0 0 10px var(--glow-accent);  
+ pointer-events: auto !important;  
  }  
   
  .history-section { margin-bottom: 8px; flex-shrink: 0; }  
@@ -489,6 +494,7 @@
  cursor: pointer;  
  -webkit-appearance: none;  
  touch-action: manipulation;  
+ pointer-events: auto !important;  
  }  
   
  .results {   
@@ -629,41 +635,52 @@
   
  .queue-header {  
  display: flex;  
- justify-content: space-between;  
- align-items: center;  
+ flex-direction: column;  
+ gap: 8px;  
  margin-bottom: 8px;  
- gap: 6px;  
  flex-shrink: 0;  
  }  
+
+ .queue-header-top {  
+ display: flex;  
+ justify-content: space-between;  
+ align-items: center;  
+ width: 100%;  
+ }  
+  
  .queue-title { font-size: 0.8rem; font-weight: 700; color: var(--text); text-transform: uppercase; letter-spacing: 0.5px; }  
    
  .queue-actions {  
- display: flex;  
- gap: 4px;  
- flex-wrap: wrap;  
+ display: grid;  
+ grid-template-columns: repeat(3, 1fr);  
+ gap: 5px;  
+ width: 100%;  
  }  
   
  .dj-mode-btn, .toggle-requests-btn, .save-list-btn, .history-list-btn, .pdf-btn, .clear-queue-btn {  
- padding: 4px 7px;  
- border-radius: 6px;  
- font-size: 0.68rem;  
- font-weight: 700;  
+ padding: 8px 6px;  
+ border-radius: 8px;  
+ font-size: 0.72rem;  
+ font-weight: 800;  
  cursor: pointer;  
  -webkit-appearance: none;  
  white-space: nowrap;  
  touch-action: manipulation;  
+ pointer-events: auto !important;  
+ text-align: center;  
+ border: none;  
  }  
   
- .dj-mode-btn { background: var(--badge-bg); color: #ffffff; border: none; }  
+ .dj-mode-btn { background: var(--badge-bg); color: #ffffff; }  
  .dj-mode-btn.active { background: var(--danger); box-shadow: 0 0 8px rgba(239, 68, 68, 0.6); }  
    
- .toggle-requests-btn { background: var(--success); color: #ffffff; border: none; }  
+ .toggle-requests-btn { background: var(--success); color: #ffffff; }  
  .toggle-requests-btn.off { background: var(--danger); }  
   
- .save-list-btn { background: var(--success); color: #ffffff; border: none; }  
- .history-list-btn { background: var(--count-bg); color: #000000; border: none; }  
- .pdf-btn { background: var(--success); color: #ffffff; border: none; display: flex; align-items: center; gap: 3px; }  
- .clear-queue-btn { background: transparent; border: 1px solid var(--danger); color: var(--danger); }  
+ .save-list-btn { background: var(--success); color: #ffffff; }  
+ .history-list-btn { background: var(--count-bg); color: #000000; }  
+ .pdf-btn { background: var(--success); color: #ffffff; display: flex; align-items: center; justify-content: center; gap: 3px; }  
+ .clear-queue-btn { background: transparent; border: 1px solid var(--danger) !important; color: var(--danger); }  
   
  .queue-item {  
  display: flex;  
@@ -728,6 +745,7 @@
  padding: 2px 6px;  
  border-radius: 4px;  
  border: 1px solid var(--success);  
+ pointer-events: auto !important;  
  }  
  .played-checkbox-label input {  
  accent-color: var(--success);  
@@ -740,13 +758,14 @@
  background: var(--danger);  
  color: white;  
  border: none;  
- padding: 2px 5px;  
+ padding: 4px 8px;  
  border-radius: 4px;  
- font-size: 0.62rem;  
+ font-size: 0.68rem;  
  font-weight: 700;  
  cursor: pointer;  
  -webkit-appearance: none;  
  touch-action: manipulation;  
+ pointer-events: auto !important;  
  }  
   
  .pagination {  
@@ -772,6 +791,7 @@
  -webkit-appearance: none;  
  box-shadow: 0 0 6px var(--glow-accent);  
  touch-action: manipulation;  
+ pointer-events: auto !important;  
  }  
  .page-btn:disabled { opacity: 0.3; cursor: not-allowed; box-shadow: none; background: var(--tag-bg); color: var(--text-muted); }  
  .page-info { font-size: 0.72rem; color: var(--text); font-weight: 800; }  
@@ -898,6 +918,7 @@
  width: 100%;  
  -webkit-appearance: none;  
  touch-action: manipulation;  
+ pointer-events: auto !important;  
  }  
   
  audio { width: 100%; height: 36px; margin-bottom: 10px; border-radius: 6px; }  
@@ -961,7 +982,7 @@
  .history-item-title { font-weight: 800; font-size: 0.85rem; color: var(--text); }  
  .history-item-date { font-size: 0.7rem; color: var(--text-muted); }  
  .history-actions { display: flex; gap: 6px; justify-content: flex-end; }  
- .history-view-btn { background: var(--badge-bg); color: #fff; border: none; padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; cursor: pointer; touch-action: manipulation; }  
+ .history-view-btn { background: var(--badge-bg); color: #fff; border: none; padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; cursor: pointer; touch-action: manipulation; pointer-events: auto !important; }  
   
  /* --- ESTILOS PANEL MODO ADMIN --- */  
  .admin-panel-grid {  
@@ -981,6 +1002,7 @@
  -webkit-appearance: none;  
  touch-action: manipulation;  
  position: relative;  
+ pointer-events: auto !important;  
  }  
  .color-circle-btn:active { transform: scale(0.9); }  
 
@@ -1020,6 +1042,7 @@
  -webkit-appearance: none;  
  touch-action: manipulation;  
  transition: all 0.2s ease;  
+ pointer-events: auto !important;  
  }  
  .btn-flash { background: #ffffff; color: #000000; }  
  .btn-flash.active { border-color: #00f3ff; box-shadow: 0 0 20px #ffffff; transform: scale(1.02); }  
@@ -1324,14 +1347,16 @@
   
  <div id="tabQueue" class="tab-content">  
  <div class="queue-header">  
+ <div class="queue-header-top">  
  <span class="queue-title" id="queueHeaderTitle">Peticiones del público</span>  
+ </div>  
  <div class="queue-actions">  
  <button class="dj-mode-btn" id="djModeToggleBtn" onclick="toggleDjMode()">🎧 DJ</button>  
  <button class="toggle-requests-btn" id="toggleRequestsBtn" style="display: none;" onclick="toggleRequestsState()">🔒 Peticiones: ON</button>  
  <button class="save-list-btn" id="saveListBtn" style="display: none;" onclick="saveCurrentList()">💾 Guardar</button>  
- <button class="history-list-btn" id="historyListBtn" style="display: none;" onclick="openHistoryModal()">📁 Hist.</button>  
+ <button class="history-list-btn" id="historyListBtn" style="display: none;" onclick="openHistoryModal()">📁 Histórico</button>  
  <button class="pdf-btn" onclick="exportQueueToPDF()">📄 PDF</button>  
- <button class="clear-queue-btn" id="clearQueueBtn" style="display: none;" onclick="clearQueueSecure()">🗑️</button>  
+ <button class="clear-queue-btn" id="clearQueueBtn" style="display: none;" onclick="clearQueueSecure()">🗑️ Borrar</button>  
  </div>  
  </div>  
   
@@ -3231,11 +3256,10 @@
  imageModal.style.display = 'none';  
  }  
 
- // --- FORZAR REFREFCO DE CAPAS EN IOS SAFARI ---  
  const resultsModal = document.getElementById('searchResultsModal');  
  if (resultsModal.style.display === 'flex') {  
  resultsModal.style.display = 'none';  
- void resultsModal.offsetHeight; // Truco de reflow para WebKit  
+ void resultsModal.offsetHeight;  
  resultsModal.style.display = 'flex';  
  }  
 
