@@ -1071,7 +1071,7 @@
  opacity: 1;  
  }  
 
- /* --- PANTALLA STANDBY OPTIMIZADA (BLOQUEADA POR DEFECTO) --- */  
+ /* --- PANTALLA STANDBY (INICIA OCULTA POR DEFECTO PARA EVITAR PANTALLA NEGRA) --- */  
  #standby-screen {  
  position: fixed;  
  top: 0;  
@@ -1569,8 +1569,8 @@
  </div>  
  </div>  
   
- <!-- PANTALLA STANDBY DE BIENVENIDA -->  
- <div id="standby-screen">  
+ <!-- PANTALLA STANDBY DE BIENVENIDA (INICIA CON .hidden PARA NO BLOQUEAR) -->  
+ <div id="standby-screen" class="hidden">  
  <div class="laser-background"></div>  
  <div class="strobe-overlay"></div>  
   
@@ -1655,7 +1655,7 @@
   
  document.getElementById('themeToggle').addEventListener('click', toggleTheme);  
 
- // --- CONFIGURACIÓN DE DOBLE TOQUE ROBUSTO PARA SAFARI/IPHONE EN EL LOGO DE LA APP Y STANDBY ---  
+ // --- CONFIGURACIÓN DE DOBLE TOQUE ROBUSTO PARA SAFARI/IPHONE EN EL LOGO ---  
  const handleLogoTap = (e) => {  
  if (e) {  
  e.preventDefault();  
@@ -3225,7 +3225,6 @@
  if (imageModal.style.display === 'flex') {  
  imageModal.style.display = 'none';  
  }  
- // Refrescamos los resultados activos para garantizar que los botones "Pedir" queden operativos y sin bloqueos en Safari  
  const query = document.getElementById('modalSongInput').value.trim();  
  if (query && searchCache.has(query.toLowerCase())) {  
  renderResults(searchCache.get(query.toLowerCase()), query);  
