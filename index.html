@@ -1071,7 +1071,7 @@
  opacity: 1;  
  }  
 
- /* --- PANTALLA STANDBY (INICIA CON DISPLAY NONE ABSOLUTO) --- */  
+ /* --- PANTALLA STANDBY (INICIA ACTIVA POR DEFECTO AL ABRIR LA APP) --- */  
  #standby-screen {  
  position: fixed;  
  top: 0;  
@@ -1081,18 +1081,17 @@
  height: 100dvh;  
  background: #05050a;  
  z-index: 9999;  
- display: none !important; /* Forzado absoluto para que nunca bloquee el arranque */  
- pointer-events: none;  
- opacity: 0;  
- transition: opacity 0.25s ease;  
+ display: block !important; /* Arranca visible de inmediato para mostrar la app bonita */  
+ pointer-events: auto;  
+ opacity: 1;  
+ transition: opacity 0.35s ease;  
  overflow: hidden;  
  box-sizing: border-box;  
  }  
   
- #standby-screen.active {  
- display: block !important;  
- pointer-events: auto;  
- opacity: 1;  
+ #standby-screen.inactive {  
+ opacity: 0;  
+ pointer-events: none;  
  }  
   
  .laser-background {  
@@ -1570,7 +1569,7 @@
  </div>  
  </div>  
   
- <!-- PANTALLA STANDBY DE BIENVENIDA -->  
+ <!-- PANTALLA STANDBY DE BIENVENIDA (ACTIVA AL ABRIR) -->  
  <div id="standby-screen">  
  <div class="laser-background"></div>  
  <div class="strobe-overlay"></div>  
@@ -1649,11 +1648,10 @@
  let standbyTimer = null;  
   
  document.addEventListener('DOMContentLoaded', () => {  
- // --- APERTURA LIMPIA ABSOLUTA ---  
- // Nos aseguramos de que el standby esté completamente apagado al arrancar  
+ // --- APERTURA CON PANTALLA STANDBY ACTIVA Y BONITA ---  
  const standbyScreen = document.getElementById('standby-screen');  
  if (standbyScreen) {  
- standbyScreen.classList.remove('active');  
+ standbyScreen.classList.remove('inactive');  
  }  
 
  loadHistory();  
@@ -1820,8 +1818,8 @@
  }  
  });  
 
- // Arrancar el temporizador de inactividad de forma segura con 1.5s de margen de carga  
- setTimeout(resetStandbyTimer, 1500);  
+ // Arrancar el temporizador de inactividad  
+ resetStandbyTimer();  
  });  
   
  // --- WAKE LOCK API PERSISTENTE ---  
@@ -1860,7 +1858,7 @@
  function showStandby() {  
  const standbyScreen = document.getElementById('standby-screen');  
  if (standbyScreen) {  
- standbyScreen.classList.add('active');  
+ standbyScreen.classList.remove('inactive');  
  }  
  if (latestAdminEffectData) {  
  applyAdminEffectLocally(latestAdminEffectData);  
@@ -1869,14 +1867,14 @@
   
  function hideStandby(e) {  
  const standbyScreen = document.getElementById('standby-screen');  
- if (standbyScreen && standbyScreen.classList.contains('active')) {  
+ if (standbyScreen && !standbyScreen.classList.contains('inactive')) {  
  if (e) {  
  e.preventDefault();  
  e.stopPropagation();  
  if (e.stopImmediatePropagation) e.stopImmediatePropagation();  
  }  
   
- standbyScreen.classList.remove('active');  
+ standbyScreen.classList.add('inactive');  
 
  setTimeout(() => {  
  closeModal();  
@@ -1910,7 +1908,7 @@
  ['click', 'touchstart', 'pointerdown', 'keydown'].forEach(event => {  
  window.addEventListener(event, () => {  
  const standbyScreen = document.getElementById('standby-screen');  
- if (!standbyScreen.classList.contains('active')) {  
+ if (standbyScreen.classList.contains('inactive')) {  
  resetStandbyTimer();  
  }  
  }, { passive: true });  
@@ -2008,7 +2006,7 @@
  const isInAdminTab = adminTab && adminTab.classList.contains('active');  
 
  const standbyScreen = document.getElementById('standby-screen');  
- const isStandbyActive = standbyScreen.classList.contains('active');  
+ const isStandbyActive = !standbyScreen.classList.contains('inactive');  
 
  if (!effectData || effectData.type === 'off' || (isInAdminTab && !isStandbyActive) || userDismissedLight) {  
  overlay.classList.remove('active', 'show-notice');  
@@ -2901,7 +2899,7 @@
  count: newCount,  
  users: updatedUsers  
  });  
- alert(`¡Voto sumado con éxito para "${title}"! 🔥`);  
+ alert(`🔥 ¡Voto sumado con éxito para "${title}"!`);  
  const query = document.getElementById('modalSongInput').value.trim();  
  if (query && searchCache.has(query.toLowerCase())) {  
  renderResults(searchCache.get(query.toLowerCase()), query);  
