@@ -2809,11 +2809,11 @@
  function checkRateLimit() {  
  const lastRequestTime = localStorage.getItem('last_request_timestamp');  
  const now = Date.now();  
- const cooldownTime = 15000;  
+ const cooldownTime = 3000; // Reducido a 3 segundos para mayor agilidad  
   
  if (lastRequestTime && (now - lastRequestTime < cooldownTime)) {  
  const remainingSeconds = Math.ceil((cooldownTime - (now - lastRequestTime)) / 1000);  
- alert(`⏳ Por favor, espera ${remainingSeconds} segundos antes de realizar otra petición.`);  
+ alert(`⏳ Espera ${remainingSeconds}s para hacer otra petición.`);  
  return false;  
  }  
  localStorage.setItem('last_request_timestamp', now);  
