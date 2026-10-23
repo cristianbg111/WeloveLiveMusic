@@ -1407,7 +1407,7 @@
  </div>  
  <div class="queue-actions">  
  <button class="dj-mode-btn" id="djModeToggleBtn" onclick="toggleDjMode()">🎧 DJ</button>  
- <button class="toggle-requests-btn off" id="toggleRequestsBtn" style="display: none;" onclick="toggleRequestsState(event)">🔒 Peticiones: OFF</button>  
+ <button class="toggle-requests-btn off" id="toggleRequestsBtn" style="display: none;">🔒 Peticiones: OFF</button>  
  <button class="save-list-btn" id="saveListBtn" style="display: none;" onclick="saveCurrentList()">💾 Guardar</button>  
  <button class="history-list-btn" id="historyListBtn" style="display: none;" onclick="openHistoryModal()">📁 Histórico</button>  
  <button class="pdf-btn" onclick="exportQueueToPDF()">📄 PDF</button>  
@@ -1767,6 +1767,14 @@
  const standbyLogo = document.getElementById('bouncing-logo');  
  standbyLogo.addEventListener('touchend', handleLogoTap, { passive: false });  
  standbyLogo.addEventListener('click', handleLogoTap);  
+
+ // Enlace explícito y seguro para el botón de Peticiones ON/OFF
+ const toggleReqBtn = document.getElementById('toggleRequestsBtn');
+ toggleReqBtn.addEventListener('click', toggleRequestsState);
+ toggleReqBtn.addEventListener('touchend', (e) => {
+ e.preventDefault();
+ toggleRequestsState(e);
+ }, { passive: false });
    
  const modalSongInput = document.getElementById('modalSongInput');  
  modalSongInput.addEventListener('input', handleModalInput);  
