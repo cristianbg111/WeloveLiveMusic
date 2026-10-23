@@ -140,8 +140,6 @@
  transition: max-height 0.3s ease;  
  cursor: pointer;  
  touch-action: manipulation;  
- -webkit-user-select: none;  
- user-select: none;  
  }  
   
  body.queue-tab-active .app-logo {  
@@ -520,35 +518,27 @@
  .song-title { font-weight: 700; font-size: 0.83rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }  
  .song-artist { font-size: 0.73rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }  
    
- /* --- ACCIONES Y BOTONES ADAPTADOS PARA IOS ANTIGUO --- */  
  .action-buttons {  
- display: -webkit-flex;  
  display: flex;  
- -webkit-flex-direction: column;  
  flex-direction: column;  
- -webkit-align-items: flex-end;  
+ gap: 3px;  
  align-items: flex-end;  
- gap: 4px;  
- -webkit-flex-shrink: 0;  
  flex-shrink: 0;  
- min-width: 70px;  
- z-index: 5;  
  }  
   
  .request-btn, .vote-btn {  
  background: var(--accent);  
  color: var(--accent-text);  
  border: none;  
- padding: 6px 10px;  
+ padding: 5px 8px;  
  border-radius: 6px;  
  font-weight: 700;  
- font-size: 0.7rem;  
+ font-size: 0.68rem;  
  cursor: pointer;  
  white-space: nowrap;  
  box-shadow: 0 0 6px var(--glow-accent);  
  -webkit-appearance: none;  
  touch-action: manipulation;  
- display: inline-block;  
  }  
  .vote-btn {  
  background: var(--count-bg);  
@@ -565,10 +555,10 @@
  .badge-year {  
  background: var(--tag-bg);  
  color: var(--text-muted);  
- padding: 2px 6px;  
+ padding: 2px 5px;  
  border-radius: 5px;  
  font-weight: 600;  
- font-size: 0.65rem;  
+ font-size: 0.63rem;  
  border: 1px solid var(--border);  
  }  
    
@@ -1662,15 +1652,31 @@
  updateThemeButton(savedTheme);  
   
  document.getElementById('themeToggle').addEventListener('click', toggleTheme);  
-   
- const logoEl = document.getElementById('logoSecretTrigger');  
- if (logoEl) {  
- logoEl.addEventListener('pointerdown', (e) => {  
- e.preventDefault();  
- handleLogoSecretTap();  
- });  
- }  
 
+ // --- CONFIGURACIÓN DE DOBLE TOQUE ROBUSTO PARA SAFARI/IPHONE EN EL LOGO ---  
+ const logoEl = document.getElementById('logoSecretTrigger');  
+ logoEl.addEventListener('touchend', (e) => {  
+ e.preventDefault(); // Evita el retraso táctil y comportamientos nativos de imagen en Safari  
+ const now = Date.now();  
+ if (now - lastLogoTapTime < 600) {  
+ toggleAdminModeSecret();  
+ lastLogoTapTime = 0;  
+ } else {  
+ lastLogoTapTime = now;  
+ }  
+ }, { passive: false });  
+
+ // Fallback para escritorio (clic normal)  
+ logoEl.addEventListener('click', (e) => {  
+ const now = Date.now();  
+ if (now - lastLogoTapTime < 600) {  
+ toggleAdminModeSecret();  
+ lastLogoTapTime = 0;  
+ } else {  
+ lastLogoTapTime = now;  
+ }  
+ });  
+   
  const modalSongInput = document.getElementById('modalSongInput');  
  modalSongInput.addEventListener('input', handleModalInput);  
 
@@ -1774,7 +1780,7 @@
  const publicParticipantsModal = document.getElementById('publicParticipantsModal');  
 
  if (imageModal.style.display === 'flex') {  
- closeModal();  
+ closeModalFromPopState();  
  return;  
  }  
 
@@ -1786,21 +1792,21 @@
  closeParticipantsModal();  
  closePublicParticipantsModal();  
  switchTab('search', false);  
- history.pushState({ screen: 'main' }, '', '');  
+ history.replaceState({ screen: 'main' }, '', '');  
  return;  
  }  
 
  const activeTabSearch = document.getElementById('tabSearch');  
  if (!activeTabSearch.classList.contains('active')) {  
  switchTab('search', false);  
- history.pushState({ screen: 'main' }, '', '');  
+ history.replaceState({ screen: 'main' }, '', '');  
  return;  
  }  
 
  if (confirm("¿Estás seguro de que quieres salir de la aplicación?")) {  
  window.history.go(-1);  
  } else {  
- history.pushState({ screen: 'main' }, '', '');  
+ history.replaceState({ screen: 'main' }, '', '');  
  }  
  });  
  });  
@@ -1902,16 +1908,6 @@
  });  
   
  resetStandbyTimer();  
-
- function handleLogoSecretTap() {  
- const now = Date.now();  
- if (now - lastLogoTapTime < 600) {  
- toggleAdminModeSecret();  
- lastLogoTapTime = 0;  
- } else {  
- lastLogoTapTime = now;  
- }  
- }  
 
  async function toggleAdminModeSecret() {  
  if (!isAdminModeActive) {  
@@ -2809,11 +2805,11 @@
  function checkRateLimit() {  
  const lastRequestTime = localStorage.getItem('last_request_timestamp');  
  const now = Date.now();  
- const cooldownTime = 3000; // Reducido a 3 segundos para mayor agilidad  
+ const cooldownTime = 15000;  
   
  if (lastRequestTime && (now - lastRequestTime < cooldownTime)) {  
  const remainingSeconds = Math.ceil((cooldownTime - (now - lastRequestTime)) / 1000);  
- alert(`⏳ Espera ${remainingSeconds}s para hacer otra petición.`);  
+ alert(`⏳ Por favor, espera ${remainingSeconds} segundos antes de realizar otra petición.`);  
  return false;  
  }  
  localStorage.setItem('last_request_timestamp', now);  
@@ -3218,6 +3214,19 @@
  }  
   
  function closeModal() {  
+ const audioElement = document.getElementById('modalAudio');  
+ if (audioElement) {  
+ audioElement.pause();  
+ audioElement.src = '';  
+ }  
+ const imageModal = document.getElementById('imageModal');  
+ if (imageModal.style.display === 'flex') {  
+ imageModal.style.display = 'none';  
+ history.back();  
+ }  
+ }  
+
+ function closeModalFromPopState() {  
  const audioElement = document.getElementById('modalAudio');  
  if (audioElement) {  
  audioElement.pause();  
