@@ -140,6 +140,8 @@
  transition: max-height 0.3s ease;  
  cursor: pointer;  
  touch-action: manipulation;  
+ -webkit-user-select: none;  
+ user-select: none;  
  }  
   
  body.queue-tab-active .app-logo {  
@@ -1274,7 +1276,7 @@
 
  <div class="card">  
  <div class="brand-header">  
- <img src="logo.jpg" alt="We Love The Remember" class="app-logo" id="logoSecretTrigger" onclick="handleLogoSecretTap()">  
+ <img src="logo.jpg" alt="We Love The Remember" class="app-logo" id="logoSecretTrigger">  
  <div class="header-row">  
  <h1>WE LOVE LIVE MUSIC</h1>  
  <button class="theme-btn" id="themeToggle">☀️ Modo Claro</button>  
@@ -1653,6 +1655,15 @@
   
  document.getElementById('themeToggle').addEventListener('click', toggleTheme);  
    
+ // --- ASIGNACIÓN DE DOBLE TOQUE ROBUSTA CON POINTERDOWN PARA IOS Y ANDROID ---  
+ const logoEl = document.getElementById('logoSecretTrigger');  
+ if (logoEl) {  
+ logoEl.addEventListener('pointerdown', (e) => {  
+ e.preventDefault();  
+ handleLogoSecretTap();  
+ });  
+ }  
+
  const modalSongInput = document.getElementById('modalSongInput');  
  modalSongInput.addEventListener('input', handleModalInput);  
 
