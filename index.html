@@ -1071,7 +1071,7 @@
  opacity: 1;  
  }  
 
- /* --- PANTALLA STANDBY --- */  
+ /* --- PANTALLA STANDBY (INICIA CON DISPLAY NONE ABSOLUTO) --- */  
  #standby-screen {  
  position: fixed;  
  top: 0;  
@@ -1081,17 +1081,18 @@
  height: 100dvh;  
  background: #05050a;  
  z-index: 9999;  
- display: block;  
- pointer-events: auto;  
- opacity: 1;  
+ display: none !important; /* Forzado absoluto para que nunca bloquee el arranque */  
+ pointer-events: none;  
+ opacity: 0;  
  transition: opacity 0.25s ease;  
  overflow: hidden;  
  box-sizing: border-box;  
  }  
   
- #standby-screen.hidden {  
- opacity: 0;  
- pointer-events: none;  
+ #standby-screen.active {  
+ display: block !important;  
+ pointer-events: auto;  
+ opacity: 1;  
  }  
   
  .laser-background {  
@@ -1570,7 +1571,7 @@
  </div>  
   
  <!-- PANTALLA STANDBY DE BIENVENIDA -->  
- <div id="standby-screen" class="hidden">  
+ <div id="standby-screen">  
  <div class="laser-background"></div>  
  <div class="strobe-overlay"></div>  
   
@@ -1648,11 +1649,11 @@
  let standbyTimer = null;  
   
  document.addEventListener('DOMContentLoaded', () => {  
- // --- CORRECCIÓN CRÍTICA DE APERTURA ---  
- // Asegurar de forma absoluta que la pantalla de standby arranca oculta e inactiva  
+ // --- APERTURA LIMPIA ABSOLUTA ---  
+ // Nos aseguramos de que el standby esté completamente apagado al arrancar  
  const standbyScreen = document.getElementById('standby-screen');  
  if (standbyScreen) {  
- standbyScreen.classList.add('hidden');  
+ standbyScreen.classList.remove('active');  
  }  
 
  loadHistory();  
@@ -1819,8 +1820,8 @@
  }  
  });  
 
- // Iniciar el temporizador de inactividad de forma segura con un pequeño retardo de arranque  
- setTimeout(resetStandbyTimer, 1000);  
+ // Arrancar el temporizador de inactividad de forma segura con 1.5s de margen de carga  
+ setTimeout(resetStandbyTimer, 1500);  
  });  
   
  // --- WAKE LOCK API PERSISTENTE ---  
@@ -1859,7 +1860,7 @@
  function showStandby() {  
  const standbyScreen = document.getElementById('standby-screen');  
  if (standbyScreen) {  
- standbyScreen.classList.remove('hidden');  
+ standbyScreen.classList.add('active');  
  }  
  if (latestAdminEffectData) {  
  applyAdminEffectLocally(latestAdminEffectData);  
@@ -1868,14 +1869,14 @@
   
  function hideStandby(e) {  
  const standbyScreen = document.getElementById('standby-screen');  
- if (standbyScreen && !standbyScreen.classList.contains('hidden')) {  
+ if (standbyScreen && standbyScreen.classList.contains('active')) {  
  if (e) {  
  e.preventDefault();  
  e.stopPropagation();  
  if (e.stopImmediatePropagation) e.stopImmediatePropagation();  
  }  
   
- standbyScreen.classList.add('hidden');  
+ standbyScreen.classList.remove('active');  
 
  setTimeout(() => {  
  closeModal();  
@@ -1909,7 +1910,7 @@
  ['click', 'touchstart', 'pointerdown', 'keydown'].forEach(event => {  
  window.addEventListener(event, () => {  
  const standbyScreen = document.getElementById('standby-screen');  
- if (standbyScreen.classList.contains('hidden')) {  
+ if (!standbyScreen.classList.contains('active')) {  
  resetStandbyTimer();  
  }  
  }, { passive: true });  
@@ -2007,7 +2008,7 @@
  const isInAdminTab = adminTab && adminTab.classList.contains('active');  
 
  const standbyScreen = document.getElementById('standby-screen');  
- const isStandbyActive = !standbyScreen.classList.contains('hidden');  
+ const isStandbyActive = standbyScreen.classList.contains('active');  
 
  if (!effectData || effectData.type === 'off' || (isInAdminTab && !isStandbyActive) || userDismissedLight) {  
  overlay.classList.remove('active', 'show-notice');  
