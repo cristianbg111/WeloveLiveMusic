@@ -1071,7 +1071,7 @@
  opacity: 1;  
  }  
 
- /* --- PANTALLA STANDBY (INICIA OCULTA POR DEFECTO PARA EVITAR PANTALLA NEGRA) --- */  
+ /* --- PANTALLA STANDBY --- */  
  #standby-screen {  
  position: fixed;  
  top: 0;  
@@ -1569,7 +1569,7 @@
  </div>  
  </div>  
   
- <!-- PANTALLA STANDBY DE BIENVENIDA (INICIA CON .hidden PARA NO BLOQUEAR) -->  
+ <!-- PANTALLA STANDBY DE BIENVENIDA -->  
  <div id="standby-screen" class="hidden">  
  <div class="laser-background"></div>  
  <div class="strobe-overlay"></div>  
@@ -1645,8 +1645,16 @@
  let lastOverlayTapTime = 0;  
  let latestAdminEffectData = null;  
  let lastLogoTapTime = 0;  
+ let standbyTimer = null;  
   
  document.addEventListener('DOMContentLoaded', () => {  
+ // --- CORRECCIÓN CRÍTICA DE APERTURA ---  
+ // Asegurar de forma absoluta que la pantalla de standby arranca oculta e inactiva  
+ const standbyScreen = document.getElementById('standby-screen');  
+ if (standbyScreen) {  
+ standbyScreen.classList.add('hidden');  
+ }  
+
  loadHistory();  
  checkSavedUserBadge();  
  const savedTheme = localStorage.getItem('theme') || 'dark';  
@@ -1810,6 +1818,9 @@
  history.replaceState({ screen: 'main' }, '', '');  
  }  
  });  
+
+ // Iniciar el temporizador de inactividad de forma segura con un pequeño retardo de arranque  
+ setTimeout(resetStandbyTimer, 1000);  
  });  
   
  // --- WAKE LOCK API PERSISTENTE ---  
@@ -1841,8 +1852,6 @@
  });  
 
  // --- CONTROLADOR DE MODO STANDBY DINÁMICO (75 SEGUNDOS) ---  
- let standbyTimer;  
-  
  function getStandbyDelay() {  
  return (isDjModeActive || isAdminModeActive) ? 120000 : 75000;  
  }  
@@ -1905,8 +1914,6 @@
  }  
  }, { passive: true });  
  });  
-  
- resetStandbyTimer();  
 
  async function toggleAdminModeSecret() {  
  if (!isAdminModeActive) {  
