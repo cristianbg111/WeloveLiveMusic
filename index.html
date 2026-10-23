@@ -1082,16 +1082,16 @@
  background: #05050a;  
  z-index: 9999;  
  display: block;  
- pointer-events: none;  
- opacity: 0;  
+ pointer-events: auto;  
+ opacity: 1;  
  transition: opacity 0.25s ease;  
  overflow: hidden;  
  box-sizing: border-box;  
  }  
   
- #standby-screen.active {  
- opacity: 1;  
- pointer-events: auto;  
+ #standby-screen.hidden {  
+ opacity: 0;  
+ pointer-events: none;  
  }  
   
  .laser-background {  
@@ -1127,13 +1127,14 @@
  width: 160px;  
  height: auto;  
  z-index: 1;  
- pointer-events: none;  
+ pointer-events: auto;  
  opacity: 0.75;  
  filter: drop-shadow(0 0 15px rgba(236, 72, 153, 0.6));  
  transform: translate(-50%, -50%);  
  will-change: transform;  
  display: block;  
  animation: floatLogoTop 5s ease-in-out infinite alternate;  
+ cursor: pointer;  
  }  
   
  @keyframes floatLogoTop {  
@@ -1149,6 +1150,7 @@
  border: 1px solid rgba(255, 255, 255, 0.25);  
  background: #000;  
  display: block;  
+ pointer-events: auto;  
  }  
   
  /* --- TEXTOS CENTRALES STANDBY --- */  
@@ -1365,7 +1367,7 @@
 
  <div class="instructions-box" style="margin-bottom: 10px;">  
  <div class="instructions-title">✨ Control Lumínico Global</div>  
- <div class="instructions-text">Pulsa cualquier color, flash estroboscópico o ráfaga para sincronizar las pantallas de todos los asistentes en la sala al instante.</div>  
+ <div class="instructions-text">Pulsa cualquier color, flash estroboscópico o ráfaga para sincronizar las pantallas de todos los asistentes in situ al instante.</div>  
  </div>  
 
  <div class="admin-panel-grid">  
@@ -1568,11 +1570,11 @@
  </div>  
   
  <!-- PANTALLA STANDBY DE BIENVENIDA -->  
- <div id="standby-screen" class="active">  
+ <div id="standby-screen">  
  <div class="laser-background"></div>  
  <div class="strobe-overlay"></div>  
   
- <div id="bouncing-logo" style="display: block;">  
+ <div id="bouncing-logo">  
  <img src="logo.jpg" alt="Logo Flotante Arriba">  
  </div>  
    
@@ -1653,10 +1655,12 @@
   
  document.getElementById('themeToggle').addEventListener('click', toggleTheme);  
 
- // --- CONFIGURACIÓN DE DOBLE TOQUE ROBUSTO PARA SAFARI/IPHONE EN EL LOGO ---  
- const logoEl = document.getElementById('logoSecretTrigger');  
- logoEl.addEventListener('touchend', (e) => {  
- e.preventDefault(); // Evita el retraso táctil y comportamientos nativos de imagen en Safari  
+ // --- CONFIGURACIÓN DE DOBLE TOQUE ROBUSTO PARA SAFARI/IPHONE EN EL LOGO DE LA APP Y STANDBY ---  
+ const handleLogoTap = (e) => {  
+ if (e) {  
+ e.preventDefault();  
+ e.stopPropagation();  
+ }  
  const now = Date.now();  
  if (now - lastLogoTapTime < 600) {  
  toggleAdminModeSecret();  
@@ -1664,18 +1668,15 @@
  } else {  
  lastLogoTapTime = now;  
  }  
- }, { passive: false });  
+ };  
 
- // Fallback para escritorio (clic normal)  
- logoEl.addEventListener('click', (e) => {  
- const now = Date.now();  
- if (now - lastLogoTapTime < 600) {  
- toggleAdminModeSecret();  
- lastLogoTapTime = 0;  
- } else {  
- lastLogoTapTime = now;  
- }  
- });  
+ const logoEl = document.getElementById('logoSecretTrigger');  
+ logoEl.addEventListener('touchend', handleLogoTap, { passive: false });  
+ logoEl.addEventListener('click', handleLogoTap);  
+
+ const standbyLogo = document.getElementById('bouncing-logo');  
+ standbyLogo.addEventListener('touchend', handleLogoTap, { passive: false });  
+ standbyLogo.addEventListener('click', handleLogoTap);  
    
  const modalSongInput = document.getElementById('modalSongInput');  
  modalSongInput.addEventListener('input', handleModalInput);  
@@ -1849,8 +1850,7 @@
  function showStandby() {  
  const standbyScreen = document.getElementById('standby-screen');  
  if (standbyScreen) {  
- standbyScreen.style.pointerEvents = 'auto';  
- standbyScreen.classList.add('active');  
+ standbyScreen.classList.remove('hidden');  
  }  
  if (latestAdminEffectData) {  
  applyAdminEffectLocally(latestAdminEffectData);  
@@ -1859,15 +1859,14 @@
   
  function hideStandby(e) {  
  const standbyScreen = document.getElementById('standby-screen');  
- if (standbyScreen && standbyScreen.classList.contains('active')) {  
+ if (standbyScreen && !standbyScreen.classList.contains('hidden')) {  
  if (e) {  
  e.preventDefault();  
  e.stopPropagation();  
  if (e.stopImmediatePropagation) e.stopImmediatePropagation();  
  }  
   
- standbyScreen.style.pointerEvents = 'none';  
- standbyScreen.classList.remove('active');  
+ standbyScreen.classList.add('hidden');  
 
  setTimeout(() => {  
  closeModal();  
@@ -1901,7 +1900,7 @@
  ['click', 'touchstart', 'pointerdown', 'keydown'].forEach(event => {  
  window.addEventListener(event, () => {  
  const standbyScreen = document.getElementById('standby-screen');  
- if (!standbyScreen.classList.contains('active')) {  
+ if (standbyScreen.classList.contains('hidden')) {  
  resetStandbyTimer();  
  }  
  }, { passive: true });  
@@ -2000,7 +1999,10 @@
  const adminTab = document.getElementById('tabAdmin');  
  const isInAdminTab = adminTab && adminTab.classList.contains('active');  
 
- if (!effectData || effectData.type === 'off' || (isInAdminTab && !document.getElementById('standby-screen').classList.contains('active')) || userDismissedLight) {  
+ const standbyScreen = document.getElementById('standby-screen');  
+ const isStandbyActive = !standbyScreen.classList.contains('hidden');  
+
+ if (!effectData || effectData.type === 'off' || (isInAdminTab && !isStandbyActive) || userDismissedLight) {  
  overlay.classList.remove('active', 'show-notice');  
  overlay.style.backgroundColor = '';  
  return;  
@@ -3222,7 +3224,11 @@
  const imageModal = document.getElementById('imageModal');  
  if (imageModal.style.display === 'flex') {  
  imageModal.style.display = 'none';  
- history.back();  
+ }  
+ // Refrescamos los resultados activos para garantizar que los botones "Pedir" queden operativos y sin bloqueos en Safari  
+ const query = document.getElementById('modalSongInput').value.trim();  
+ if (query && searchCache.has(query.toLowerCase())) {  
+ renderResults(searchCache.get(query.toLowerCase()), query);  
  }  
  }  
 
@@ -3233,6 +3239,10 @@
  audioElement.src = '';  
  }  
  document.getElementById('imageModal').style.display = 'none';  
+ const query = document.getElementById('modalSongInput').value.trim();  
+ if (query && searchCache.has(query.toLowerCase())) {  
+ renderResults(searchCache.get(query.toLowerCase()), query);  
+ }  
  }  
   
  function saveToHistory(query) {  
