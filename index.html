@@ -1405,9 +1405,14 @@
  <div class="queue-header-top">  
  <span class="queue-title" id="queueHeaderTitle">Peticiones del público</span>  
  </div>  
+
+ <!-- BANNER / BOTÓN DESTACADO PARA ACTIVAR O DESACTIVAR PETICIONES (VISIBLE EN MODO DJ) -->  
+ <div id="djToggleContainer" style="display: none; margin-bottom: 8px; width: 100%;">  
+ <button class="toggle-requests-btn off" id="toggleRequestsBtn" style="width: 100%; padding: 12px; font-size: 0.82rem; font-weight: 900; letter-spacing: 0.5px;">🔒 Peticiones: OFF</button>  
+ </div>  
+
  <div class="queue-actions">  
  <button class="dj-mode-btn" id="djModeToggleBtn" onclick="toggleDjMode()">🎧 DJ</button>  
- <button class="toggle-requests-btn off" id="toggleRequestsBtn" style="display: none;">🔒 Peticiones: OFF</button>  
  <button class="save-list-btn" id="saveListBtn" style="display: none;" onclick="saveCurrentList()">💾 Guardar</button>  
  <button class="history-list-btn" id="historyListBtn" style="display: none;" onclick="openHistoryModal()">📁 Histórico</button>  
  <button class="pdf-btn" onclick="exportQueueToPDF()">📄 PDF</button>  
@@ -1768,13 +1773,18 @@
  standbyLogo.addEventListener('touchend', handleLogoTap, { passive: false });  
  standbyLogo.addEventListener('click', handleLogoTap);  
 
- // Enlace explícito y seguro para el botón de Peticiones ON/OFF
+ // Enlace ultra seguro para el botón de Peticiones ON/OFF con aislamiento total
  const toggleReqBtn = document.getElementById('toggleRequestsBtn');
- toggleReqBtn.addEventListener('click', toggleRequestsState);
- toggleReqBtn.addEventListener('touchend', (e) => {
+ const handleRequestToggleAction = (e) => {
+ if (e) {
  e.preventDefault();
- toggleRequestsState(e);
- }, { passive: false });
+ e.stopPropagation();
+ if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+ }
+ toggleRequestsState();
+ };
+ toggleReqBtn.addEventListener('click', handleRequestToggleAction);
+ toggleReqBtn.addEventListener('touchend', handleRequestToggleAction, { passive: false });
    
  const modalSongInput = document.getElementById('modalSongInput');  
  modalSongInput.addEventListener('input', handleModalInput);  
@@ -2133,7 +2143,7 @@
  isDjModeActive = true;  
  document.getElementById('djModeToggleBtn').textContent = "🚪 Salir DJ";  
  document.getElementById('djModeToggleBtn').classList.add('active');  
- document.getElementById('toggleRequestsBtn').style.display = 'inline-block';  
+ document.getElementById('djToggleContainer').style.display = 'block';  
  document.getElementById('saveListBtn').style.display = 'inline-block';  
  document.getElementById('historyListBtn').style.display = 'inline-block';  
  document.getElementById('clearQueueBtn').style.display = 'inline-block';  
@@ -2149,7 +2159,7 @@
  document.getElementById('djModeToggleBtn').textContent = "🎧 DJ";  
  document.getElementById('djModeToggleBtn').classList.remove('active');  
  if (!isAdminModeActive) {  
- document.getElementById('toggleRequestsBtn').style.display = 'none';  
+ document.getElementById('djToggleContainer').style.display = 'none';  
  document.getElementById('saveListBtn').style.display = 'none';  
  document.getElementById('historyListBtn').style.display = 'none';  
  document.getElementById('clearQueueBtn').style.display = 'none';  
@@ -2366,11 +2376,7 @@
  }, 1000);  
  }  
   
- function toggleRequestsState(event) {  
- if (event) {  
- event.preventDefault();  
- event.stopPropagation();  
- }  
+ function toggleRequestsState() {  
  const newState = !areRequestsOpen;  
  settingsRef.set(newState).then(() => {  
  alert(newState ? "¡Peticiones ABIERTAS para el público! 🟢" : "¡Peticiones DESACTIVADAS para el público! ⛔");  
@@ -2387,15 +2393,17 @@
  banner.className = "neon-banner enabled";  
  banner.textContent = "🟢 Peticiones de canciones: ABIERTAS";  
  if (toggleBtn) {  
- toggleBtn.textContent = "🔒 Peticiones: ON";  
+ toggleBtn.textContent = "🔓 Peticiones: ABIERTAS (Toca para cerrar)";  
  toggleBtn.classList.remove('off');  
+ toggleBtn.style.background = "var(--success)";  
  }  
  } else {  
  banner.className = "neon-banner disabled";  
  banner.textContent = "⛔ PETICIONES DESACTIVADAS TEMPORALMENTE";  
  if (toggleBtn) {  
- toggleBtn.textContent = "🔓 Peticiones: OFF";  
+ toggleBtn.textContent = "🔒 Peticiones: CERRADAS (Toca para abrir)";  
  toggleBtn.classList.add('off');  
+ toggleBtn.style.background = "var(--danger)";  
  }  
  }  
   
