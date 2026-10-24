@@ -1768,7 +1768,6 @@
  standbyLogo.addEventListener('touchend', handleLogoTap, { passive: false });  
  standbyLogo.addEventListener('click', handleLogoTap);  
 
- // Enlace ultra seguro para el botón de Peticiones ON/OFF con aislamiento total
  const toggleReqBtn = document.getElementById('toggleRequestsBtn');
  const handleRequestToggleAction = (e) => {
  if (e) {
@@ -2027,7 +2026,6 @@
  adminTabBtn.style.display = 'block';  
  }  
 
- // Activar controles combinados de administrador y DJ en la cola
  document.getElementById('djToggleContainer').style.display = 'block';  
  document.getElementById('saveListBtn').style.display = 'inline-block';  
  document.getElementById('historyListBtn').style.display = 'inline-block';  
@@ -2049,7 +2047,6 @@
  adminTabBtn.style.display = 'none';  
  }  
 
- // Ocultar controles de DJ y Admin
  document.getElementById('djToggleContainer').style.display = 'none';  
  document.getElementById('saveListBtn').style.display = 'none';  
  document.getElementById('historyListBtn').style.display = 'none';  
@@ -3308,6 +3305,7 @@
  imageModal.style.display = 'none';  
  }  
 
+ // Forzar redibujado instantáneo de la modal de resultados inferior (Safari / iOS fix)
  const resultsModal = document.getElementById('searchResultsModal');  
  if (resultsModal.style.display === 'flex') {  
  resultsModal.style.display = 'none';  
