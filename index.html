@@ -1413,10 +1413,9 @@
 
  <div class="queue-actions">  
  <button class="dj-mode-btn" id="djModeToggleBtn" onclick="toggleDjMode()">🎧 DJ</button>  
- <button class="pdf-btn" id="publicPdfBtn" style="grid-column: span 2;" onclick="exportQueueToPDF()">📄 Descargar PDF</button>  
  <button class="save-list-btn" id="saveListBtn" style="display: none;" onclick="saveCurrentList()">💾 Guardar</button>  
  <button class="history-list-btn" id="historyListBtn" style="display: none;" onclick="openHistoryModal()">📁 Histórico</button>  
- <button class="pdf-btn" id="djPdfBtn" style="display: none;" onclick="exportQueueToPDF()">📄 PDF</button>  
+ <button class="pdf-btn" onclick="exportQueueToPDF()">📄 PDF</button>  
  <button class="clear-queue-btn" id="clearQueueBtn" style="display: none;" onclick="clearQueueSecure()">🗑️ Borrar</button>  
  </div>  
  </div>  
@@ -2147,8 +2146,6 @@
  document.getElementById('djToggleContainer').style.display = 'block';  
  document.getElementById('saveListBtn').style.display = 'inline-block';  
  document.getElementById('historyListBtn').style.display = 'inline-block';  
- document.getElementById('djPdfBtn').style.display = 'flex';  
- document.getElementById('publicPdfBtn').style.display = 'none';  
  document.getElementById('clearQueueBtn').style.display = 'inline-block';  
  document.getElementById('queueHeaderTitle').textContent = "Control DJ";  
  alert("¡Modo DJ activado con éxito! 🎧");  
@@ -2161,8 +2158,6 @@
  isDjModeActive = false;  
  document.getElementById('djModeToggleBtn').textContent = "🎧 DJ";  
  document.getElementById('djModeToggleBtn').classList.remove('active');  
- document.getElementById('publicPdfBtn').style.display = 'flex';  
- document.getElementById('djPdfBtn').style.display = 'none';  
  if (!isAdminModeActive) {  
  document.getElementById('djToggleContainer').style.display = 'none';  
  document.getElementById('saveListBtn').style.display = 'none';  
@@ -3365,7 +3360,7 @@
  resultsModal.style.display = 'flex';  
  }  
 
- const query = document.getElementById('modalSongInput`, `value.trim();  
+ const query = document.getElementById('modalSongInput').value.trim();  
  if (query && searchCache.has(query.toLowerCase())) {  
  renderResults(searchCache.get(query.toLowerCase()), query);  
  }  
@@ -3382,7 +3377,7 @@
   
  function loadHistory() {  
  const history = JSON.parse(localStorage.getItem('searchHistoryLive')) || [];  
- const section = `document.getElementById('historySection');  
+ const section = document.getElementById('historySection');  
  const tagsContainer = document.getElementById('historyTags');  
   
  if (history.length === 0) {  
