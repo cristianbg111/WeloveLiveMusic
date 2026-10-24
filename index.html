@@ -1435,12 +1435,11 @@
  <div class="results" style="padding-top: 6px;">  
  <div class="instructions-box" style="margin-bottom: 10px; background: rgba(245, 158, 11, 0.1); border-color: var(--count-bg);">  
  <div class="instructions-title" style="color: var(--count-bg);">🎁 Sorteo y Concurso en Directo</div>  
- <div class="instructions-text">Gestiona las inscripciones y realiza el sorteo automático con cuenta atrás.</div>  
+ <div class="instructions-text">Gestiona las inscripciones y realiza el sorteo automático con cuenta atrás. (<span id="participantCountBadge">0</span> participantes inscritos)</div>  
  </div>  
 
- <div style="display: flex; gap: 8px; margin-bottom: 8px;">  
- <button class="admin-action-btn" style="background: var(--count-bg); color: #000;" onclick="openContestParticipantsModal()">👥 Ver Participantes (<span id="participantCountBadge">0</span>)</button>  
- <button class="admin-action-btn" style="background: var(--accent); color: #fff;" onclick="runLuckyDraw()">🎉 ¡Sortear Premio!</button>  
+ <div style="margin-bottom: 8px;">  
+ <button class="admin-action-btn" style="background: var(--accent); color: #fff; width: 100%;" onclick="runLuckyDraw()">🎉 ¡Sortear Premio!</button>  
  </div>  
 
  <div style="margin-bottom: 8px;">  
@@ -1641,19 +1640,6 @@
  </div>  
  </div>  
  </div>  
-
- <!-- MODAL DE ADMIN: LISTA DE PARTICIPANTES -->  
- <div class="modal" id="participantsModal">  
- <div class="results-modal-content" onclick="event.stopPropagation()">  
- <div class="results-modal-header">  
- <span class="results-modal-title">👥 Participantes en el Concurso</span>  
- <button class="close-results-btn" onclick="closeParticipantsModal()">✕ Cerrar</button>  
- </div>  
- <div id="participantsListContainer" class="results" style="max-height: 70vh; overflow-y: auto;">  
- <p class="status-msg">Cargando participantes...</p>  
- </div>  
- </div>  
- </div>  
   
  <!-- PANTALLA STANDBY DE BIENVENIDA (ACTIVA AL ABRIR) -->  
  <div id="standby-screen">  
@@ -1768,17 +1754,17 @@
  standbyLogo.addEventListener('touchend', handleLogoTap, { passive: false });  
  standbyLogo.addEventListener('click', handleLogoTap);  
 
- const toggleReqBtn = document.getElementById('toggleRequestsBtn');
- const handleRequestToggleAction = (e) => {
- if (e) {
- e.preventDefault();
- e.stopPropagation();
- if (e.stopImmediatePropagation) e.stopImmediatePropagation();
- }
- toggleRequestsState();
- };
- toggleReqBtn.addEventListener('click', handleRequestToggleAction);
- toggleReqBtn.addEventListener('touchend', handleRequestToggleAction, { passive: false });
+ const toggleReqBtn = document.getElementById('toggleRequestsBtn');  
+ const handleRequestToggleAction = (e) => {  
+ if (e) {  
+ e.preventDefault();  
+ e.stopPropagation();  
+ if (e.stopImmediatePropagation) e.stopImmediatePropagation();  
+ }  
+ toggleRequestsState();  
+ };  
+ toggleReqBtn.addEventListener('click', handleRequestToggleAction);  
+ toggleReqBtn.addEventListener('touchend', handleRequestToggleAction, { passive: false });  
    
  const modalSongInput = document.getElementById('modalSongInput');  
  modalSongInput.addEventListener('input', handleModalInput);  
@@ -1799,7 +1785,6 @@
  document.getElementById('searchResultsModal').addEventListener('click', closeSearchResultsModal);  
  document.getElementById('historyModal').addEventListener('click', closeHistoryModal);  
  document.getElementById('contestModal').addEventListener('click', closeContestModal);  
- document.getElementById('participantsModal').addEventListener('click', closeParticipantsModal);  
  document.getElementById('publicParticipantsModal').addEventListener('click', closePublicParticipantsModal);  
  document.getElementById('modalTidalBtn').addEventListener('click', openTidalApp);  
  document.getElementById('modalYoutubeBtn').addEventListener('click', openYoutubeApp);  
@@ -1879,7 +1864,6 @@
  const searchResultsModal = document.getElementById('searchResultsModal');  
  const historyModal = document.getElementById('historyModal');  
  const contestModal = document.getElementById('contestModal');  
- const participantsModal = document.getElementById('participantsModal');  
  const publicParticipantsModal = document.getElementById('publicParticipantsModal');  
 
  if (imageModal.style.display === 'flex') {  
@@ -1887,12 +1871,11 @@
  return;  
  }  
 
- if (manualModal.style.display === 'flex' || searchResultsModal.style.display === 'flex' || historyModal.style.display === 'flex' || contestModal.style.display === 'flex' || participantsModal.style.display === 'flex' || publicParticipantsModal.style.display === 'flex') {  
+ if (manualModal.style.display === 'flex' || searchResultsModal.style.display === 'flex' || historyModal.style.display === 'flex' || contestModal.style.display === 'flex' || publicParticipantsModal.style.display === 'flex') {  
  closeManualModal();  
  closeSearchResultsModal();  
  closeHistoryModal();  
  closeContestModal();  
- closeParticipantsModal();  
  closePublicParticipantsModal();  
  switchTab('search', false);  
  history.replaceState({ screen: 'main' }, '', '');  
@@ -1974,7 +1957,6 @@
  closeSearchResultsModal();  
  closeHistoryModal();  
  closeContestModal();  
- closeParticipantsModal();  
  closePublicParticipantsModal();  
  document.body.style.overflow = '';  
  }, 50);  
@@ -2285,36 +2267,6 @@
  }  
  }  
 
- function openContestParticipantsModal() {  
- if (!isAdminModeActive) return;  
- const modal = document.getElementById('participantsModal');  
- const container = document.getElementById('participantsListContainer');  
-
- modal.style.display = 'flex';  
- history.pushState({ screen: 'participantsModal' }, '', '');  
-
- if (globalContestParticipants.length === 0) {  
- container.innerHTML = '<p class="status-msg">No hay participantes apuntados todavía.</p>';  
- return;  
- }  
-
- container.innerHTML = globalContestParticipants.map((p, index) => `  
- <div class="queue-item">  
- <div class="song-info">  
- <div class="song-title">${index + 1}. ${p.name}</div>  
- <div class="requester-tag">Registrado en directo</div>  
- </div>  
- </div>  
- `).join('');  
- }  
-
- function closeParticipantsModal() {  
- const modal = document.getElementById('participantsModal');  
- if (modal.style.display === 'flex') {  
- modal.style.display = 'none';  
- }  
- }  
-
  function clearContestParticipants() {  
  if (confirm("¿Estás seguro de borrar toda la lista de participantes del concurso?")) {  
  contestRef.remove().then(() => {  
@@ -2322,7 +2274,6 @@
  localStorage.removeItem('user_contest_name');  
  checkSavedUserBadge();  
  alert("Lista de participantes borrada y bloqueos de dispositivos reseteados.");  
- closeParticipantsModal();  
  });  
  }  
  }  
@@ -3305,7 +3256,6 @@
  imageModal.style.display = 'none';  
  }  
 
- // Forzar redibujado instantáneo de la modal de resultados inferior (Safari / iOS fix)
  const resultsModal = document.getElementById('searchResultsModal');  
  if (resultsModal.style.display === 'flex') {  
  resultsModal.style.display = 'none';  
