@@ -1913,7 +1913,7 @@
  }  
 
  if (confirm("¿Estás seguro de que quieres salir de la aplicación?")) {  
- window.history.go(-1);  
+ history.pushState({ screen: 'main' }, '', '');  
  } else {  
  history.replaceState({ screen: 'main' }, '', '');  
  }  
@@ -3397,4 +3397,4 @@
  }  
  </script>  
 </body>  
-</html>
+</html>  
