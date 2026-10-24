@@ -1439,7 +1439,7 @@
  </div>  
 
  <div style="margin-bottom: 8px;">  
- <button class="admin-action-btn" style="background: var(--accent); color: #fff; width: 100%;" onclick="runLuckyDraw()">🎉 ¡Sortear Premio!</button>  
+ <button class="admin-action-btn" id="runDrawBtn" style="background: var(--accent); color: #fff; width: 100%;">🎉 ¡Sortear Premio!</button>  
  </div>  
 
  <div style="margin-bottom: 8px;">  
@@ -1765,6 +1765,18 @@
  };  
  toggleReqBtn.addEventListener('click', handleRequestToggleAction);  
  toggleReqBtn.addEventListener('touchend', handleRequestToggleAction, { passive: false });  
+
+ const runDrawBtn = document.getElementById('runDrawBtn');  
+ const handleRunDrawAction = (e) => {  
+ if (e) {  
+ e.preventDefault();  
+ e.stopPropagation();  
+ if (e.stopImmediatePropagation) e.stopImmediatePropagation();  
+ }  
+ runLuckyDraw();  
+ };  
+ runDrawBtn.addEventListener('click', handleRunDrawAction);  
+ runDrawBtn.addEventListener('touchend', handleRunDrawAction, { passive: false });  
    
  const modalSongInput = document.getElementById('modalSongInput');  
  modalSongInput.addEventListener('input', handleModalInput);  
@@ -2049,7 +2061,7 @@
 
  function updateAdminButtonsUI(effectData) {  
  document.querySelectorAll('.color-circle-btn, .admin-action-btn').forEach(btn => {  
- if (btn.id !== 'toggleContestBtnAdmin') btn.classList.remove('active');  
+ if (btn.id !== 'toggleContestBtnAdmin' && btn.id !== 'runDrawBtn') btn.classList.remove('active');  
  });  
 
  if (!effectData || effectData.type === 'off') return;  
