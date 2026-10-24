@@ -1415,7 +1415,7 @@
  <button class="dj-mode-btn" id="djModeToggleBtn" onclick="toggleDjMode()">🎧 DJ</button>  
  <button class="save-list-btn" id="saveListBtn" style="display: none;" onclick="saveCurrentList()">💾 Guardar</button>  
  <button class="history-list-btn" id="historyListBtn" style="display: none;" onclick="openHistoryModal()">📁 Histórico</button>  
- <button class="pdf-btn" onclick="exportQueueToPDF()">📄 PDF</button>  
+ <button class="pdf-btn" id="pdfBtn" style="display: none;" onclick="exportQueueToPDF()">📄 PDF</button>  
  <button class="clear-queue-btn" id="clearQueueBtn" style="display: none;" onclick="clearQueueSecure()">🗑️ Borrar</button>  
  </div>  
  </div>  
@@ -2146,6 +2146,7 @@
  document.getElementById('djToggleContainer').style.display = 'block';  
  document.getElementById('saveListBtn').style.display = 'inline-block';  
  document.getElementById('historyListBtn').style.display = 'inline-block';  
+ document.getElementById('pdfBtn').style.display = 'inline-block';  
  document.getElementById('clearQueueBtn').style.display = 'inline-block';  
  document.getElementById('queueHeaderTitle').textContent = "Control DJ";  
  alert("¡Modo DJ activado con éxito! 🎧");  
@@ -2162,6 +2163,7 @@
  document.getElementById('djToggleContainer').style.display = 'none';  
  document.getElementById('saveListBtn').style.display = 'none';  
  document.getElementById('historyListBtn').style.display = 'none';  
+ document.getElementById('pdfBtn').style.display = 'none';  
  document.getElementById('clearQueueBtn').style.display = 'none';  
  }  
  document.getElementById('queueHeaderTitle').textContent = "Peticiones del público";  
