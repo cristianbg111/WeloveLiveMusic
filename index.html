@@ -675,7 +675,7 @@
    
  .queue-actions {  
  display: grid;  
- grid-template-columns: repeat(3, 1fr);  
+ grid-template-columns: repeat(4, 1fr);  
  gap: 5px;  
  width: 100%;  
  pointer-events: auto !important;  
@@ -683,7 +683,7 @@
  z-index: 5;  
  }  
   
- .dj-mode-btn, .toggle-requests-btn, .save-list-btn, .history-list-btn, .pdf-btn, .clear-queue-btn {  
+ .toggle-requests-btn, .save-list-btn, .history-list-btn, .pdf-btn, .clear-queue-btn {  
  padding: 8px 6px;  
  border-radius: 8px;  
  font-size: 0.72rem;  
@@ -698,9 +698,6 @@
  position: relative;  
  z-index: 5;  
  }  
-  
- .dj-mode-btn { background: var(--badge-bg); color: #ffffff; }  
- .dj-mode-btn.active { background: var(--danger); box-shadow: 0 0 8px rgba(239, 68, 68, 0.6); }  
    
  .toggle-requests-btn { background: var(--success); color: #ffffff; }  
  .toggle-requests-btn.off { background: var(--danger); }  
@@ -1406,13 +1403,12 @@
  <span class="queue-title" id="queueHeaderTitle">Peticiones del público</span>  
  </div>  
 
- <!-- BANNER / BOTÓN DESTACADO PARA ACTIVAR O DESACTIVAR PETICIONES (VISIBLE EN MODO DJ) -->  
+ <!-- BANNER / BOTÓN DESTACADO PARA ACTIVAR O DESACTIVAR PETICIONES (VISIBLE EN MODO ADMIN/DJ) -->  
  <div id="djToggleContainer" style="display: none; margin-bottom: 8px; width: 100%;">  
  <button class="toggle-requests-btn off" id="toggleRequestsBtn" style="width: 100%; padding: 12px; font-size: 0.82rem; font-weight: 900; letter-spacing: 0.5px;">🔒 Peticiones: OFF</button>  
  </div>  
 
  <div class="queue-actions">  
- <button class="dj-mode-btn" id="djModeToggleBtn" onclick="toggleDjMode()">🎧 DJ</button>  
  <button class="save-list-btn" id="saveListBtn" style="display: none;" onclick="saveCurrentList()">💾 Guardar</button>  
  <button class="history-list-btn" id="historyListBtn" style="display: none;" onclick="openHistoryModal()">📁 Histórico</button>  
  <button class="pdf-btn" id="pdfBtn" style="display: none;" onclick="exportQueueToPDF()">📄 PDF</button>  
@@ -1722,7 +1718,6 @@
  let currentPage = 1;  
  const itemsPerPage = 25;  
    
- let isDjModeActive = false;  
  let isAdminModeActive = false;  
  let areRequestsOpen = true;  
  let isContestOpen = true;  
@@ -1950,7 +1945,7 @@
  });  
 
  function getStandbyDelay() {  
- return (isDjModeActive || isAdminModeActive) ? 120000 : 75000;  
+ return isAdminModeActive ? 120000 : 75000;  
  }  
   
  function showStandby() {  
@@ -2031,9 +2026,19 @@
  } else {  
  adminTabBtn.style.display = 'block';  
  }  
+
+ // Activar controles combinados de administrador y DJ en la cola
+ document.getElementById('djToggleContainer').style.display = 'block';  
+ document.getElementById('saveListBtn').style.display = 'inline-block';  
+ document.getElementById('historyListBtn').style.display = 'inline-block';  
+ document.getElementById('pdfBtn').style.display = 'inline-block';  
+ document.getElementById('clearQueueBtn').style.display = 'inline-block';  
+ document.getElementById('queueHeaderTitle').textContent = "Control DJ / Admin";  
+
  switchTab('admin', true);  
- alert("¡Modo Admin activado! 💡");  
+ alert("¡Modo Administrador y DJ activados con éxito! 💡🎧");  
  resetStandbyTimer();  
+ renderQueuePage();  
  } else {  
  alert("Contraseña incorrecta.");  
  }  
@@ -2043,9 +2048,19 @@
  if (adminTabBtn) {  
  adminTabBtn.style.display = 'none';  
  }  
+
+ // Ocultar controles de DJ y Admin
+ document.getElementById('djToggleContainer').style.display = 'none';  
+ document.getElementById('saveListBtn').style.display = 'none';  
+ document.getElementById('historyListBtn').style.display = 'none';  
+ document.getElementById('pdfBtn').style.display = 'none';  
+ document.getElementById('clearQueueBtn').style.display = 'none';  
+ document.getElementById('queueHeaderTitle').textContent = "Peticiones del público";  
+
  switchTab('search', true);  
- alert("Modo Admin desactivado.");  
+ alert("Modo Administrador y DJ desactivados.");  
  resetStandbyTimer();  
+ renderQueuePage();  
  }  
  }  
 
@@ -2131,55 +2146,14 @@
  }, 150);  
  }  
  }  
-  
- async function toggleDjMode() {  
- if (!isDjModeActive) {  
- const pass = prompt("Introduce la contraseña de Administrador (Modo DJ):");  
- if (pass === null) return;  
-   
- const encodedInput = btoa(pass.trim());  
-   
- if (encodedInput === CORRECT_PASSWORD_ENCODED) {  
- isDjModeActive = true;  
- document.getElementById('djModeToggleBtn').textContent = "🚪 Salir DJ";  
- document.getElementById('djModeToggleBtn').classList.add('active');  
- document.getElementById('djToggleContainer').style.display = 'block';  
- document.getElementById('saveListBtn').style.display = 'inline-block';  
- document.getElementById('historyListBtn').style.display = 'inline-block';  
- document.getElementById('pdfBtn').style.display = 'inline-block';  
- document.getElementById('clearQueueBtn').style.display = 'inline-block';  
- document.getElementById('queueHeaderTitle').textContent = "Control DJ";  
- alert("¡Modo DJ activado con éxito! 🎧");  
- resetStandbyTimer();  
- renderQueuePage();  
- } else {  
- alert("Contraseña incorrecta.");  
- }  
- } else {  
- isDjModeActive = false;  
- document.getElementById('djModeToggleBtn').textContent = "🎧 DJ";  
- document.getElementById('djModeToggleBtn').classList.remove('active');  
- if (!isAdminModeActive) {  
- document.getElementById('djToggleContainer').style.display = 'none';  
- document.getElementById('saveListBtn').style.display = 'none';  
- document.getElementById('historyListBtn').style.display = 'none';  
- document.getElementById('pdfBtn').style.display = 'none';  
- document.getElementById('clearQueueBtn').style.display = 'none';  
- }  
- document.getElementById('queueHeaderTitle').textContent = "Peticiones del público";  
- alert("Modo DJ desactivado.");  
- resetStandbyTimer();  
- renderQueuePage();  
- }  
- }  
 
  function openContestModal() {  
- if (!isContestOpen && !isAdminModeActive && !isDjModeActive) {  
- alert("⛔ El sorteo está desactivado temporalmente por el DJ.");  
+ if (!isContestOpen && !isAdminModeActive) {  
+ alert("⛔ El sorteo está desactivado temporalmente por el Administrador.");  
  return;  
  }  
  const savedName = localStorage.getItem('user_contest_name');  
- if (savedName && !isAdminModeActive && !isDjModeActive) {  
+ if (savedName && !isAdminModeActive) {  
  alert(`⚠️ Ya estás participando en el sorteo con el nombre "${savedName}". No puedes registrarte de nuevo desde este dispositivo.`);  
  return;  
  }  
@@ -2243,7 +2217,7 @@
  }  
 
  function toggleContestState() {  
- if (!isAdminModeActive && !isDjModeActive) return;  
+ if (!isAdminModeActive) return;  
  const newState = !isContestOpen;  
  contestOpenRef.set(newState).then(() => {  
  if (!newState) {  
@@ -2276,7 +2250,7 @@
  if (contestTabBtn) {  
  contestTabBtn.setAttribute('disabled', 'true');  
  contestTabBtn.classList.add('disabled');  
- contestTabBtn.title = "El sorteo está cerrado por el DJ";  
+ contestTabBtn.title = "El sorteo está cerrado por el Administrador";  
  }  
  if (contestModal && contestModal.style.display === 'flex') {  
  closeContestModal();  
@@ -2315,7 +2289,7 @@
  }  
 
  function openContestParticipantsModal() {  
- if (!isAdminModeActive && !isDjModeActive) return;  
+ if (!isAdminModeActive) return;  
  const modal = document.getElementById('participantsModal');  
  const container = document.getElementById('participantsListContainer');  
 
@@ -2416,7 +2390,7 @@
  }  
   
  function saveCurrentList() {  
- if (!isDjModeActive) return;  
+ if (!isAdminModeActive) return;  
  if (globalQueueItems.length === 0) {  
  alert("No hay peticiones en la lista para guardar.");  
  return;  
@@ -2442,7 +2416,7 @@
  }  
   
  function openHistoryModal() {  
- if (!isDjModeActive) return;  
+ if (!isAdminModeActive) return;  
  const container = document.getElementById('savedListsContainer');  
  const modalTitle = document.getElementById('historyModalTitle');  
  const modalSubtitle = document.getElementById('historyModalSubtitle');  
@@ -2570,14 +2544,14 @@
   
  function toggleSongPlayed(songId, currentStatus, event) {  
  if (event) event.stopPropagation();  
- if (!isDjModeActive) return;  
+ if (!isAdminModeActive) return;  
  db.ref('welove_live_music_queue/' + songId).update({  
  played: !currentStatus  
  });  
  }  
   
  async function clearQueueSecure() {  
- if (!isDjModeActive) return;  
+ if (!isAdminModeActive) return;  
  if (confirm("¿Estás completamente seguro de borrar TODAS las peticiones de la sala?")) {  
  queueRef.remove().then(() => {  
  currentPage = 1;  
@@ -3011,7 +2985,7 @@
  }  
   
  function triggerDjAlert(reasonText) {  
- if (!isDjModeActive) return;  
+ if (!isAdminModeActive) return;  
 
  if ('vibrate' in navigator) {  
  try {  
@@ -3142,7 +3116,7 @@
  const playedClass = isPlayed ? ' played' : '';  
   
  let djControlsHtml = '';  
- if (isDjModeActive) {  
+ if (isAdminModeActive) {  
  djControlsHtml = `  
  <div class="dj-row-controls">  
  <label class="played-checkbox-label" onclick="event.stopPropagation()">  
@@ -3154,7 +3128,7 @@
  `;  
  }  
   
- const djClass = isDjModeActive ? ' dj-active' : '';  
+ const djClass = isAdminModeActive ? ' dj-active' : '';  
   
  return `  
  <div class="queue-item${djClass}${playedClass}">  
@@ -3270,7 +3244,7 @@
  const btnTitleAttr = !areRequestsOpen ? 'title="Las peticiones están desactivadas por el DJ"' : '';  
   
  if (!areRequestsOpen) {  
- modalActionContainer.innerHTML = `<button class="request-btn" style="width: 100%; padding: 10px; font-size: 0.85rem; background: var(--danger);" disabled title="Peticiones desactivadas">⛔ Peticiones Desactivadas por el DJ</button>`;  
+ modalActionContainer.innerHTML = `<button class="request-btn" style="width: 100%; padding: 10px; font-size: 0.85rem; background: var(--danger);" disabled title="Peticiones desactivadas">⛔ Peticiones Desactivadas por el Administrador</button>`;  
  } else if (existingQueueItem) {  
  modalActionContainer.innerHTML = `<button class="vote-btn" style="width: 100%; padding: 10px; font-size: 0.85rem;" ${disabledAttr} ${btnTitleAttr} onclick="voteSong('${songKey}', '${safeTitle}'); closeModal();">🔥 Votar esta canción (+1)</button>`;  
  } else {  
@@ -3397,4 +3371,4 @@
  }  
  </script>  
 </body>  
-</html>  
+</html>
