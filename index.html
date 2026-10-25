@@ -1322,13 +1322,16 @@
  .admin-panel-grid {  
  display: grid;  
  grid-template-columns: repeat(4, 1fr);  
- gap: 8px;  
+ gap: 12px;  
  margin-bottom: 12px;  
+ justify-items: center;  
+ align-items: center;  
  }  
   
  .color-circle-btn {  
- width: 100%;  
- aspect-ratio: 1/1;  
+ width: 48px;  
+ height: 48px;  
+ max-width: 100%;  
  border-radius: 50%;  
  border: 3px solid rgba(255,255,255,0.3);  
  cursor: pointer;  
@@ -1343,6 +1346,7 @@
  display: flex;  
  align-items: center;  
  justify-content: center;  
+ margin: auto;  
  }  
  .color-circle-btn:active { transform: scale(0.9); }  
 
@@ -1361,6 +1365,7 @@
  font-size: 1.1rem;  
  font-weight: 900;  
  text-shadow: 0 0 4px #fff, 0 0 8px #fff;  
+ pointer-events: none;  
  }  
   
  .admin-action-row {  
