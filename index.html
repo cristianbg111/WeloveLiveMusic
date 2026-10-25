@@ -1727,7 +1727,6 @@
  <div class="history-header-box" onclick="event.stopPropagation()">  
  <div class="history-modal-title" id="historyModalTitle">  
  <span>📁 Histórico de Sesiones</span>  
- <button class="history-pdf-btn" id="headerPdfBtn" style="display: none;" onclick="exportCurrentActiveListToPDF()">📄 PDF</button>  
  </div>  
  <div class="history-modal-subtitle" id="historyModalSubtitle">  
  Listas guardadas en la base de datos  
@@ -2526,13 +2525,11 @@
  const modalTitle = document.getElementById('historyModalTitle');  
  const modalSubtitle = document.getElementById('historyModalSubtitle');  
  const backBtn = document.getElementById('historyBackBtn');  
- const headerPdfBtn = document.getElementById('headerPdfBtn');  
    
  const historyModal = document.getElementById('historyModal');  
  historyModal.dataset.viewingList = 'false';  
  currentViewingListId = null;  
- modalTitle.innerHTML = "<span>📁 Histórico de Sesiones</span>";  
- if (headerPdfBtn) headerPdfBtn.style.display = 'none';  
+ modalTitle.innerHTML = `<span>📁 Histórico de Sesiones</span>`;  
  modalSubtitle.textContent = "Listas guardadas en la base de datos (pulsa en el nombre para verlas)";  
  backBtn.innerHTML = "⬅️ Cerrar Histórico";  
   
@@ -2603,7 +2600,6 @@
  const modalTitle = document.getElementById('historyModalTitle');  
  const modalSubtitle = document.getElementById('historyModalSubtitle');  
  const backBtn = document.getElementById('historyBackBtn');  
- const headerPdfBtn = document.getElementById('headerPdfBtn');  
  const historyModal = document.getElementById('historyModal');  
   
  historyModal.dataset.viewingList = 'true';  
@@ -2614,12 +2610,11 @@
  const listData = snapshot.val();  
  if (!listData || !listData.items || listData.items.length === 0) {  
  container.innerHTML = '<p class="status-msg">Esta lista está vacía.</p>';  
- if (headerPdfBtn) headerPdfBtn.style.display = 'none';  
  return;  
  }  
   
- modalTitle.innerHTML = `<span>🎵 ${listData.name}</span>`;  
- if (headerPdfBtn) headerPdfBtn.style.display = 'inline-block';  
+ // TÍTULO + BOTÓN PDF INTEGRADO EN LA CABECERA  
+ modalTitle.innerHTML = `<span>🎵 ${listData.name}</span> <button class="history-pdf-btn" id="headerPdfBtn" onclick="exportCurrentActiveListToPDF()">📄 PDF</button>`;  
  modalSubtitle.textContent = `Guardada el ${listData.date} (${listData.items.length} canciones)`;  
  backBtn.innerHTML = "⬅️ Volver a Listas Guardadas";  
   
@@ -2665,11 +2660,9 @@
  const previousHTML = container.innerHTML;  
  const modalTitle = document.getElementById('historyModalTitle');  
  const modalSubtitle = document.getElementById('historyModalSubtitle');  
- const headerPdfBtn = document.getElementById('headerPdfBtn');  
  const prevTitleHTML = modalTitle.innerHTML;  
  const prevSubText = modalSubtitle.textContent;  
 
- if (headerPdfBtn) headerPdfBtn.style.display = 'none';  
  modalTitle.innerHTML = `<span>🎵 ${listData.name} (${listData.date})</span>`;  
  modalSubtitle.textContent = `Listado oficial de canciones (${listData.items.length} temas)`;  
 
@@ -2700,7 +2693,6 @@
  setTimeout(() => {  
  modalTitle.innerHTML = prevTitleHTML;  
  modalSubtitle.textContent = prevSubText;  
- if (currentViewingListId && headerPdfBtn) headerPdfBtn.style.display = 'inline-block';  
  container.innerHTML = previousHTML;  
  }, 800);  
  });  
