@@ -1579,6 +1579,11 @@
  <button class="admin-action-btn" style="background: var(--danger); color: #fff; width: 100%;" onclick="clearContestParticipants()">🗑️ Borrar lista de participantes</button>  
  </div>  
 
+ <!-- NUEVO BOTÓN DE ESTADÍSTICAS GLOBALES -->  
+ <div style="margin-bottom: 12px;">  
+ <button class="admin-action-btn" style="background: linear-gradient(135deg, #3b82f6, #8b5cf6); color: #fff; width: 100%;" onclick="openGlobalStatsModal()">📊 Estadísticas de la Temporada</button>  
+ </div>  
+
  <div class="instructions-box" style="margin-bottom: 10px;">  
  <div class="instructions-title">✨ Control Lumínico Global</div>  
  <div class="instructions-text">Pulsa cualquier color, flash estroboscópico o ráfaga para sincronizar las pantallas de todos los asistentes in situ al instante.</div>  
@@ -1739,6 +1744,28 @@
   
  <button class="history-back-action-btn" id="historyBackBtn" ontouchend="handleHistoryBackAction(event)" onclick="handleHistoryBackAction(event)">  
  ⬅️ Cerrar Histórico  
+ </button>  
+ </div>  
+ </div>  
+
+ <!-- MODAL DE ESTADÍSTICAS GLOBALES -->  
+ <div class="modal" id="globalStatsModal" onclick="event.stopPropagation()">  
+ <div class="history-modal-content" onclick="event.stopPropagation()">  
+ <div class="history-header-box">  
+ <div class="history-modal-title">  
+ <span>📊 Estadísticas Globales</span>  
+ </div>  
+ <div class="history-modal-subtitle">  
+ Resumen de eventos, visitas y temazos del año  
+ </div>  
+ </div>  
+   
+ <div id="globalStatsContainer" class="saved-lists-scroll">  
+ <p class="status-msg">Calculando estadísticas...</p>  
+ </div>  
+  
+ <button class="history-back-action-btn" onclick="closeGlobalStatsModal()">  
+ ⬅️ Cerrar Estadísticas  
  </button>  
  </div>  
  </div>  
@@ -1921,6 +1948,7 @@
  document.getElementById('manualModal').addEventListener('click', closeManualModal);  
  document.getElementById('searchResultsModal').addEventListener('click', closeSearchResultsModal);  
  document.getElementById('historyModal').addEventListener('click', closeHistoryModal);  
+ document.getElementById('globalStatsModal').addEventListener('click', closeGlobalStatsModal);  
  document.getElementById('contestModal').addEventListener('click', closeContestModal);  
  document.getElementById('publicParticipantsModal').addEventListener('click', closePublicParticipantsModal);  
  document.getElementById('modalTidalBtn').addEventListener('click', openTidalApp);  
@@ -2004,6 +2032,7 @@
  const manualModal = document.getElementById('manualModal');  
  const searchResultsModal = document.getElementById('searchResultsModal');  
  const historyModal = document.getElementById('historyModal');  
+ const globalStatsModal = document.getElementById('globalStatsModal');  
  const contestModal = document.getElementById('contestModal');  
  const publicParticipantsModal = document.getElementById('publicParticipantsModal');  
 
@@ -2012,10 +2041,11 @@
  return;  
  }  
 
- if (manualModal.style.display === 'flex' || searchResultsModal.style.display === 'flex' || historyModal.style.display === 'flex' || contestModal.style.display === 'flex' || publicParticipantsModal.style.display === 'flex') {  
+ if (manualModal.style.display === 'flex' || searchResultsModal.style.display === 'flex' || historyModal.style.display === 'flex' || globalStatsModal.style.display === 'flex' || contestModal.style.display === 'flex' || publicParticipantsModal.style.display === 'flex') {  
  closeManualModal();  
  closeSearchResultsModal();  
  closeHistoryModal();  
+ closeGlobalStatsModal();  
  closeContestModal();  
  closePublicParticipantsModal();  
  switchTab('home', false);  
@@ -2097,6 +2127,7 @@
  closeManualModal();  
  closeSearchResultsModal();  
  closeHistoryModal();  
+ closeGlobalStatsModal();  
  closeContestModal();  
  closePublicParticipantsModal();  
  document.body.style.overflow = '';  
@@ -2442,6 +2473,105 @@
  }  
  }, 1000);  
  }  
+
+ /* --- LÓGICA DE ESTADÍSTICAS GLOBALES --- */  
+ function openGlobalStatsModal() {  
+ if (!isAdminModeActive) return;  
+ const modal = document.getElementById('globalStatsModal');  
+ const container = document.getElementById('globalStatsContainer');  
+  
+ container.innerHTML = '<p class="status-msg">Analizando datos del histórico y visitas...</p>';  
+ modal.style.display = 'flex';  
+ history.pushState({ screen: 'globalStatsModal' }, '', '');  
+
+ statsRef.once('value', (statsSnap) => {  
+ const totalVisits = statsSnap.val() || 0;  
+
+ historyRef.once('value', (historySnap) => {  
+ const histData = historySnap.val();  
+ if (!histData) {  
+ container.innerHTML = `  
+ <div class="instructions-box" style="margin-bottom: 10px;">  
+ <div class="instructions-title">📈 Resumen General</div>  
+ <div class="instructions-text">Visitas acumuladas en app: <strong>${totalVisits.toLocaleString()}</strong></div>  
+ <div class="instructions-text">Sesiones guardadas en histórico: <strong>0</strong></div>  
+ </div>  
+ <p class="status-msg">Todavía no hay listas guardadas en el histórico para analizar canciones o meses.</p>  
+ `;  
+ return;  
+ }  
+
+ let totalSessions = 0;  
+ let songCounts = {};  
+ let monthCounts = {};  
+
+ for (let key in histData) {  
+ totalSessions++;  
+ const session = histData[key];  
+   
+ // Extraer mes de la sesión  
+ if (session.date) {  
+ const parts = session.date.split('/');  
+ if (parts.length >= 2) {  
+ const monthYearKey = `${parts[1]}/${parts[2] ? parts[2].substring(0,4) : '2026'}`;  
+ monthCounts[monthYearKey] = (monthCounts[monthYearKey] || 0) + 1;  
+ }  
+ }  
+
+ // Analizar canciones de la sesión  
+ if (session.items && Array.isArray(session.items)) {  
+ session.items.forEach(song => {  
+ const songKey = `${song.title} - ${song.artist}`;  
+ if (!songCounts[songKey]) {  
+ songCounts[songKey] = {  
+ title: song.title,  
+ artist: song.artist,  
+ artwork: song.artwork || 'https://via.placeholder.com/100?text=Live',  
+ totalRequests: 0,  
+ timesPlayed: 0  
+ };  
+ }  
+ songCounts[songKey].totalRequests += Number(song.count || 1);  
+ if (song.played) songCounts[songKey].timesPlayed++;  
+ });  
+ }  
+ }  
+
+ // Ordenar canciones más pedidas  
+ let sortedSongs = Object.values(songCounts).sort((a, b) => b.totalRequests - a.totalRequests).slice(0, 5);  
+
+ // Renderizar estadísticas  
+ container.innerHTML = `  
+ <div class="instructions-box" style="margin-bottom: 12px; background: rgba(59, 130, 246, 0.1); border-color: #3b82f6;">  
+ <div class="instructions-title" style="color: #3b82f6;">🌐 Métricas Generales</div>  
+ <div class="instructions-text" style="font-size: 0.8rem; margin-top: 4px;">  
+ 👁️ Visitas totales a la plataforma: <strong>${totalVisits.toLocaleString()}</strong><br>  
+ 📁 Sesiones musicales guardadas: <strong>${totalSessions}</strong>  
+ </div>  
+ </div>  
+
+ <div class="history-item-title" style="margin-bottom: 8px;">🏆 Top 5 Temas Más Pedidos del Año</div>  
+ ${sortedSongs.length > 0 ? sortedSongs.map((s, idx) => `  
+ <div class="song-item">  
+ <img src="${s.artwork}" alt="${s.title}">  
+ <div class="song-info">  
+ <div class="song-title">${idx + 1}. ${s.title}</div>  
+ <div class="song-artist">${s.artist}</div>  
+ <div class="requester-tag">🔥 ${s.totalRequests} peticiones globales</div>  
+ </div>  
+ </div>  
+ `).join('') : '<p class="status-msg">No hay datos de canciones suficientes.</p>'}  
+ `;  
+ });  
+ });  
+ }  
+
+ function closeGlobalStatsModal() {  
+ const modal = document.getElementById('globalStatsModal');  
+ if (modal.style.display === 'flex') {  
+ modal.style.display = 'none';  
+ }  
+ }  
   
  function executeToggleRequests(e) {  
  if (e) {  
@@ -2613,7 +2743,6 @@
  return;  
  }  
   
- // TÍTULO + BOTÓN PDF INTEGRADO EN LA CABECERA  
  modalTitle.innerHTML = `<span>🎵 ${listData.name}</span> <button class="history-pdf-btn" id="headerPdfBtn" onclick="exportCurrentActiveListToPDF()">📄 PDF</button>`;  
  modalSubtitle.textContent = `Guardada el ${listData.date} (${listData.items.length} canciones)`;  
  backBtn.innerHTML = "⬅️ Volver a Listas Guardadas";  
