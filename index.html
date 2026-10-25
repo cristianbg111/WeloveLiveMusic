@@ -2191,7 +2191,6 @@
  document.getElementById('participantCountBadgeModal').textContent = countVal;  
  });  
 
- /* --- ESCUCHADOR EN TIEMPO REAL PARA LA ENCUESTA EXPRESS (4 OPCIONES) --- */  
  pollRef.on('value', (snapshot) => {  
  const pollData = snapshot.val();  
  const pollNotifBanner = document.getElementById('pollNotificationBanner');  
@@ -2482,7 +2481,6 @@
  }  
  }  
 
- /* --- FUNCIONES DE ENCUESTA EXPRESS (4 OPCIONES) --- */  
  function launchExpressPoll() {  
  if (!isAdminModeActive) return;  
  const question = document.getElementById('adminPollQuestion').value.trim() || '¿Qué estilo ponemos ahora?';  
@@ -2491,7 +2489,6 @@
  const opt3 = document.getElementById('adminPollOpt3').value.trim() || 'Opción 3';  
  const opt4 = document.getElementById('adminPollOpt4').value.trim() || 'Opción 4';  
 
- // Limpiamos el voto local para permitir que todos vuelvan a votar en la nueva encuesta  
  localStorage.removeItem('user_poll_vote');  
 
  pollRef.set({  
@@ -2790,6 +2787,11 @@
  function runLuckyDraw() {  
  if (globalContestParticipants.length === 0) {  
  alert("⚠️ No hay ningún participante registrado en el concurso todavía.");  
+ return;  
+ }  
+
+ // 🛑 SE AÑADE LA CONFIRMACIÓN AQUÍ PARA EVITAR PULSACIONES ACCIDENTALES  
+ if (!confirm("¿Estás seguro de que quieres realizar el sorteo y sacar al ganador ahora?")) {  
  return;  
  }  
 
