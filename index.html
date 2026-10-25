@@ -1734,7 +1734,7 @@
  </div>  
   
  <footer class="footer">  
- App creada por[cite: 1] <strong>We Love The Remember Studios</strong>[cite: 1]  
+ App creada por[cite: 1]<strong>We Love The Remember Studios</strong>[cite: 1] 
  <div class="visitor-counter">  
  👀 Visitas: <span id="visitorCount">...</span>  
  </div>  
@@ -1978,7 +1978,7 @@
  const contestRef = db.ref('welove_live_music_contest');  
  const contestOpenRef = db.ref('welove_live_music_settings/contestOpen');  
  const winnerRef = db.ref('welove_live_music_settings/currentWinner');  
- const pollRef = db.ref('welove_live_music_poll'); // Referencia para Encuesta Express
+ const pollRef = db.ref('welove_live_music_poll');  
   
  let modalDebounceTimer;  
  let tapTimes = [];  
@@ -2386,12 +2386,15 @@
  }  
  }  
 
- /* --- FUNCIONES DE ENCUESTA EXPRESS --- */  
+ /* --- FUNCIONES DE ENCUESTA EXPRESS (ACTUALIZADAS) --- */  
  function launchExpressPoll() {  
  if (!isAdminModeActive) return;  
  const question = document.getElementById('adminPollQuestion').value.trim() || '¿Qué queréis ahora?';  
  const opt1 = document.getElementById('adminPollOpt1').value.trim() || 'Opción 1';  
  const opt2 = document.getElementById('adminPollOpt2').value.trim() || 'Opción 2';  
+
+ // Limpiamos el voto local para permitir que todos vuelvan a votar en la nueva encuesta  
+ localStorage.removeItem('user_poll_vote');  
 
  pollRef.set({  
  active: true,  
@@ -2401,8 +2404,7 @@
  votes1: 0,  
  votes2: 0  
  }).then(() => {  
- localStorage.removeItem('user_poll_vote'); // Permitir votar al admin o resetear voto local  
- alert("🚀 ¡Encuesta lanzada a todos los móviles de la sala con éxito!");  
+ alert("🚀 ¡Encuesta lanzada a todos los móviles de la sala con éxito! Votos reseteados.");  
  });  
  }  
 
@@ -2717,7 +2719,7 @@
  <div class="instructions-text">Visitas acumuladas en app: <strong>${totalVisits.toLocaleString()}</strong></div>  
  <div class="instructions-text">Sesiones guardadas en histórico: <strong>0</strong></div>  
  </div>  
- <p class="status-msg">Todavía no hay listas guardadas trong el histórico para analizar canciones o meses.</p>  
+ <p class="status-msg">Todavía no hay listas guardadas en el histórico para analizar canciones o meses.</p>  
  `;  
  return;  
  }  
