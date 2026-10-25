@@ -127,9 +127,9 @@
   
  .app-logo {  
  width: 100%;  
- max-width: 220px;  
+ max-width: 200px;  
  height: auto;  
- max-height: 80px;  
+ max-height: 70px;  
  object-fit: contain;  
  border-radius: 10px;  
  border: 1px solid var(--border);  
@@ -1091,7 +1091,7 @@
  background: linear-gradient(135deg, var(--badge-bg), var(--accent));  
  color: #fff;  
  border: none;  
- padding: 7px 14px;  
+ padding: 8px 14px;  
  border-radius: 8px;  
  font-size: 0.75rem;  
  font-weight: 800;  
@@ -1101,7 +1101,7 @@
  touch-action: manipulation;  
  pointer-events: auto !important;  
  position: relative;  
- z-index: 10;  
+ z-index: 99;  
  box-shadow: 0 2px 8px var(--glow-accent);  
  }  
 
@@ -1109,7 +1109,7 @@
  background: var(--success);  
  color: #fff;  
  border: none;  
- padding: 7px 12px;  
+ padding: 8px 12px;  
  border-radius: 8px;  
  font-size: 0.75rem;  
  font-weight: 800;  
@@ -1119,14 +1119,14 @@
  touch-action: manipulation;  
  pointer-events: auto !important;  
  position: relative;  
- z-index: 10;  
+ z-index: 99;  
  }  
 
  .history-delete-btn {  
  background: rgba(239, 68, 68, 0.15);  
  border: 1px solid var(--danger);  
  color: var(--danger);  
- padding: 7px 12px;  
+ padding: 8px 12px;  
  border-radius: 8px;  
  font-size: 0.75rem;  
  font-weight: 800;  
@@ -1134,7 +1134,7 @@
  touch-action: manipulation;  
  pointer-events: auto !important;  
  position: relative;  
- z-index: 10;  
+ z-index: 99;  
  }  
 
  /* BOTÓN DE RETORNO ESTILO NEO-NEON PARA EL HISTÓRICO */  
@@ -1740,9 +1740,9 @@
  </div>  
   
  <!-- MODAL DE HISTÓRICO REDISEÑADO -->  
- <div class="modal" id="historyModal" data-viewing-list="false">  
+ <div class="modal" id="historyModal" data-viewing-list="false" onclick="event.stopPropagation()">  
  <div class="history-modal-content" onclick="event.stopPropagation()">  
- <div class="history-header-box">  
+ <div class="history-header-box" onclick="event.stopPropagation()">  
  <div class="history-modal-title" id="historyModalTitle">  
  📁 Histórico de Sesiones  
  </div>  
@@ -1751,7 +1751,7 @@
  </div>  
  </div>  
    
- <div id="savedListsContainer" class="saved-lists-scroll">  
+ <div id="savedListsContainer" class="saved-lists-scroll" onclick="event.stopPropagation()">  
  <p class="status-msg">Cargando histórico...</p>  
  </div>  
   
@@ -2568,18 +2568,18 @@
  const totalSongs = list.items ? list.items.length : 0;  
  const safeListName = (list.name || '').replace(/'/g, "\\'");  
  return `  
- <div class="history-item-card">  
- <div class="history-item-header">  
- <div style="flex: 1; cursor: pointer;" onclick="viewSavedList('${list.id}')">  
+ <div class="history-item-card" onclick="event.stopPropagation()">  
+ <div class="history-item-header" onclick="event.stopPropagation()">  
+ <div style="flex: 1; cursor: pointer;" onclick="viewSavedList('${list.id}'); event.stopPropagation();">  
  <div class="history-item-title">🎵 ${list.name}</div>  
  <div class="history-item-date">📅 ${list.date}</div>  
  </div>  
  <span class="history-badge-count">🎸 ${totalSongs} temas</span>  
  </div>  
- <div class="history-actions">  
- <button type="button" class="history-view-btn" onclick="viewSavedList('${list.id}')">👁️ Ver</button>  
- <button type="button" class="history-pdf-btn" onclick="exportSavedListToPDF('${list.id}')">📄 PDF</button>  
- <button type="button" class="history-delete-btn" onclick="deleteHistoryList('${list.id}', '${safeListName}')">🗑️ Borrar</button>  
+ <div class="history-actions" onclick="event.stopPropagation()">  
+ <button type="button" class="history-view-btn" ontouchend="viewSavedList('${list.id}'); event.preventDefault(); event.stopPropagation();" onclick="viewSavedList('${list.id}'); event.stopPropagation();">👁️ Ver</button>  
+ <button type="button" class="history-pdf-btn" ontouchend="exportSavedListToPDF('${list.id}'); event.preventDefault(); event.stopPropagation();" onclick="exportSavedListToPDF('${list.id}'); event.stopPropagation();">📄 PDF</button>  
+ <button type="button" class="history-delete-btn" ontouchend="deleteHistoryList('${list.id}', '${safeListName}'); event.preventDefault(); event.stopPropagation();" onclick="deleteHistoryList('${list.id}', '${safeListName}'); event.stopPropagation();">🗑️ Borrar</button>  
  </div>  
  </div>  
  `;  
@@ -2621,14 +2621,14 @@
  const isPlayedClass = item.played ? ' played' : '';  
   
  return `  
- <div class="queue-item${isPlayedClass}">  
- <img src="${artworkThumb}" alt="${item.title}" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}', '${year}')">  
- <div class="song-info" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}', '${year}')">  
+ <div class="queue-item${isPlayedClass}" onclick="event.stopPropagation()">  
+ <img src="${artworkThumb}" alt="${item.title}" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}', '${year}'); event.stopPropagation();">  
+ <div class="song-info" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}', '${year}'); event.stopPropagation();">  
  <div class="song-title">${index + 1}. ${item.title}</div>  
  <div class="song-artist">${item.artist}</div>  
  <div class="requester-tag">Pedido: ${displayUser} ${item.played ? '✅ [Pinchada]' : ''}</div>  
  </div>  
- <div class="action-buttons">  
+ <div class="action-buttons" onclick="event.stopPropagation()">  
  <span class="badge-count">🔥 ${count}</span>  
  <span class="badge-year">${year}</span>  
  </div>  
