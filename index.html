@@ -1044,7 +1044,6 @@
  display: flex;  
  justify-content: space-between;  
  align-items: flex-start;  
- cursor: pointer;  
  pointer-events: auto !important;  
  }  
 
@@ -1102,7 +1101,7 @@
  touch-action: manipulation;  
  pointer-events: auto !important;  
  position: relative;  
- z-index: 5;  
+ z-index: 10;  
  box-shadow: 0 2px 8px var(--glow-accent);  
  }  
 
@@ -1120,7 +1119,7 @@
  touch-action: manipulation;  
  pointer-events: auto !important;  
  position: relative;  
- z-index: 5;  
+ z-index: 10;  
  }  
 
  .history-delete-btn {  
@@ -1135,7 +1134,7 @@
  touch-action: manipulation;  
  pointer-events: auto !important;  
  position: relative;  
- z-index: 5;  
+ z-index: 10;  
  }  
 
  /* BOTÓN DE RETORNO ESTILO NEO-NEON PARA EL HISTÓRICO */  
@@ -2578,9 +2577,9 @@
  <span class="history-badge-count">🎸 ${totalSongs} temas</span>  
  </div>  
  <div class="history-actions">  
- <button class="history-view-btn" onclick="viewSavedList('${list.id}')">👁️ Ver</button>  
- <button class="history-pdf-btn" onclick="exportSavedListToPDF('${list.id}')">📄 PDF</button>  
- <button class="history-delete-btn" onclick="deleteHistoryList('${list.id}', '${safeListName}')">🗑️ Borrar</button>  
+ <button type="button" class="history-view-btn" onclick="viewSavedList('${list.id}')">👁️ Ver</button>  
+ <button type="button" class="history-pdf-btn" onclick="exportSavedListToPDF('${list.id}')">📄 PDF</button>  
+ <button type="button" class="history-delete-btn" onclick="deleteHistoryList('${list.id}', '${safeListName}')">🗑️ Borrar</button>  
  </div>  
  </div>  
  `;  
