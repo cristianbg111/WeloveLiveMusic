@@ -356,12 +356,6 @@
  border-color: var(--count-bg);  
  }  
 
- .dash-btn-participants {  
- background: rgba(139, 92, 246, 0.15);  
- color: #ffffff;  
- border-color: var(--badge-bg);  
- }  
-
  /* Notificación en botón de cola */  
  .dash-btn-queue.has-new::after {  
  content: '';  
@@ -1003,6 +997,7 @@
  letter-spacing: 0.8px;  
  display: flex;  
  align-items: center;  
+ justify-content: space-between;  
  gap: 8px;  
  }  
 
@@ -1034,6 +1029,7 @@
  transition: all 0.2s ease;  
  pointer-events: auto !important;  
  box-shadow: 0 4px 12px rgba(0,0,0,0.3);  
+ cursor: pointer;  
  }  
  .history-item-card:hover {  
  border-color: var(--accent);  
@@ -1085,24 +1081,6 @@
  border-top: 1px dashed var(--border);  
  padding-top: 8px;  
  pointer-events: auto !important;  
- }  
-
- .history-view-btn {  
- background: linear-gradient(135deg, var(--badge-bg), var(--accent));  
- color: #fff;  
- border: none;  
- padding: 8px 14px;  
- border-radius: 8px;  
- font-size: 0.75rem;  
- font-weight: 800;  
- cursor: pointer;  
- text-transform: uppercase;  
- letter-spacing: 0.5px;  
- touch-action: manipulation;  
- pointer-events: auto !important;  
- position: relative;  
- z-index: 999;  
- box-shadow: 0 2px 8px var(--glow-accent);  
  }  
 
  .history-pdf-btn {  
@@ -1535,10 +1513,6 @@
  <button class="dash-btn dash-btn-contest" id="dashContestBtn" onclick="openContestModal()">  
  🏆 Concurso / Sorteo Sala  
  </button>  
-
- <button class="dash-btn dash-btn-participants" onclick="openPublicParticipantsModal()">  
- 📋 Lista de Participantes (<span id="participantCountBadgeDash">0</span>)  
- </button>  
  </div>  
  </div>  
   
@@ -1591,6 +1565,10 @@
 
  <div style="margin-bottom: 8px;">  
  <button class="admin-action-btn" id="toggleContestBtnAdmin" style="background: var(--success); color: #fff; width: 100%;" onclick="toggleContestState()">🔒 Botón Sorteo: ABIERTO</button>  
+ </div>  
+
+ <div style="margin-bottom: 8px;">  
+ <button class="admin-action-btn" style="background: var(--badge-bg); color: #fff; width: 100%;" onclick="openPublicParticipantsModal()">📋 Ver lista de participantes (<span id="participantCountBadgeAdmin">0</span>)</button>  
  </div>  
 
  <div style="margin-bottom: 12px;">  
@@ -1744,7 +1722,8 @@
  <div class="history-modal-content" onclick="event.stopPropagation()">  
  <div class="history-header-box" onclick="event.stopPropagation()">  
  <div class="history-modal-title" id="historyModalTitle">  
- 📁 Histórico de Sesiones  
+ <span>📁 Histórico de Sesiones</span>  
+ <button class="history-pdf-btn" id="headerPdfBtn" style="display: none;" onclick="exportCurrentActiveListToPDF()">📄 PDF</button>  
  </div>  
  <div class="history-modal-subtitle" id="historyModalSubtitle">  
  Listas guardadas en la base de datos  
@@ -1775,6 +1754,7 @@
 
  <div class="modal-actions">  
  <button type="submit" id="submitContestBtn" class="request-btn" style="width: 100%; padding: 12px; font-size: 0.85rem; background: var(--count-bg); color: #000;">🎁 ¡Participar en el Sorteo!</button>  
+ <button type="button" class="dash-btn dash-btn-participants" style="padding: 10px; font-size: 0.78rem;" onclick="openPublicParticipantsModal()">📋 Ver Participantes (<span id="participantCountBadgeModal">0</span>)</button>  
  <button type="button" class="back-btn" onclick="closeContestModal()">Cerrar</button>  
  </div>  
  </form>  
@@ -1856,6 +1836,7 @@
  let globalContestParticipants = [];  
  let currentPage = 1;  
  const itemsPerPage = 25;  
+ let currentViewingListId = null;  
    
  let isAdminModeActive = false;  
  let areRequestsOpen = true;  
@@ -1977,7 +1958,9 @@
  }  
  const countVal = globalContestParticipants.length;  
  document.getElementById('participantCountBadge').textContent = countVal;  
- document.getElementById('participantCountBadgeDash').textContent = countVal;  
+ document.getElementById('participantCountBadgeModal').textContent = countVal;  
+ const adminBadge = document.getElementById('participantCountBadgeAdmin');  
+ if (adminBadge) adminBadge.textContent = countVal;  
  });  
   
  settingsRef.on('value', (snapshot) => {  
@@ -2539,11 +2522,14 @@
  const modalTitle = document.getElementById('historyModalTitle');  
  const modalSubtitle = document.getElementById('historyModalSubtitle');  
  const backBtn = document.getElementById('historyBackBtn');  
+ const headerPdfBtn = document.getElementById('headerPdfBtn');  
    
  const historyModal = document.getElementById('historyModal');  
  historyModal.dataset.viewingList = 'false';  
- modalTitle.innerHTML = "📁 Histórico de Sesiones";  
- modalSubtitle.textContent = "Listas guardadas en la base de datos";  
+ currentViewingListId = null;  
+ modalTitle.innerHTML = "<span>📁 Histórico de Sesiones</span>";  
+ if (headerPdfBtn) headerPdfBtn.style.display = 'none';  
+ modalSubtitle.textContent = "Listas guardadas en la base de datos (pulsa en el nombre para verlas)";  
  backBtn.innerHTML = "⬅️ Cerrar Histórico";  
   
  container.innerHTML = '<p class="status-msg">Cargando listas guardadas...</p>';  
@@ -2568,17 +2554,15 @@
  const totalSongs = list.items ? list.items.length : 0;  
  const safeListName = (list.name || '').replace(/'/g, "\\'");  
  return `  
- <div class="history-item-card" onclick="event.stopPropagation()">  
- <div class="history-item-header" onclick="event.stopPropagation()">  
- <div style="flex: 1; cursor: pointer;" onclick="viewSavedList('${list.id}'); event.stopPropagation();">  
+ <div class="history-item-card" onpointerdown="verListaDirecta(event, '${list.id}')">  
+ <div class="history-item-header">  
+ <div style="flex: 1;">  
  <div class="history-item-title">🎵 ${list.name}</div>  
  <div class="history-item-date">📅 ${list.date}</div>  
  </div>  
  <span class="history-badge-count">🎸 ${totalSongs} temas</span>  
  </div>  
  <div class="history-actions" onclick="event.stopPropagation()">  
- <button type="button" class="history-view-btn" onpointerdown="verListaDirecta(event, '${list.id}')">👁️ Ver</button>  
- <button type="button" class="history-pdf-btn" onpointerdown="pdfListaDirecta(event, '${list.id}')">📄 PDF</button>  
  <button type="button" class="history-delete-btn" onpointerdown="deleteHistoryListDirecta(event, '${list.id}', '${safeListName}')">🗑️ Borrar</button>  
  </div>  
  </div>  
@@ -2596,13 +2580,9 @@
  viewSavedList(listId);  
  }  
 
- function pdfListaDirecta(e, listId) {  
- if (e) {  
- e.preventDefault();  
- e.stopPropagation();  
- if (e.stopImmediatePropagation) e.stopImmediatePropagation();  
- }  
- exportSavedListToPDF(listId);  
+ function exportCurrentActiveListToPDF() {  
+ if (!currentViewingListId) return;  
+ exportSavedListToPDF(currentViewingListId);  
  }  
 
  function deleteHistoryListDirecta(e, listId, listName) {  
@@ -2619,19 +2599,23 @@
  const modalTitle = document.getElementById('historyModalTitle');  
  const modalSubtitle = document.getElementById('historyModalSubtitle');  
  const backBtn = document.getElementById('historyBackBtn');  
+ const headerPdfBtn = document.getElementById('headerPdfBtn');  
  const historyModal = document.getElementById('historyModal');  
   
  historyModal.dataset.viewingList = 'true';  
+ currentViewingListId = listId;  
  container.innerHTML = '<p class="status-msg">Cargando canciones...</p>';  
   
  historyRef.child(listId).once('value', (snapshot) => {  
  const listData = snapshot.val();  
  if (!listData || !listData.items || listData.items.length === 0) {  
  container.innerHTML = '<p class="status-msg">Esta lista está vacía.</p>';  
+ if (headerPdfBtn) headerPdfBtn.style.display = 'none';  
  return;  
  }  
   
- modalTitle.innerHTML = `🎵 ${listData.name}`;  
+ modalTitle.innerHTML = `<span>🎵 ${listData.name}</span>`;  
+ if (headerPdfBtn) headerPdfBtn.style.display = 'inline-block';  
  modalSubtitle.textContent = `Guardada el ${listData.date} (${listData.items.length} canciones)`;  
  backBtn.innerHTML = "⬅️ Volver a Listas Guardadas";  
   
@@ -2677,10 +2661,12 @@
  const previousHTML = container.innerHTML;  
  const modalTitle = document.getElementById('historyModalTitle');  
  const modalSubtitle = document.getElementById('historyModalSubtitle');  
+ const headerPdfBtn = document.getElementById('headerPdfBtn');  
  const prevTitleHTML = modalTitle.innerHTML;  
  const prevSubText = modalSubtitle.textContent;  
 
- modalTitle.innerHTML = `🎵 ${listData.name} (${listData.date})`;  
+ if (headerPdfBtn) headerPdfBtn.style.display = 'none';  
+ modalTitle.innerHTML = `<span>🎵 ${listData.name} (${listData.date})</span>`;  
  modalSubtitle.textContent = `Listado oficial de canciones (${listData.items.length} temas)`;  
 
  container.innerHTML = listData.items.map((item, index) => {  
@@ -2710,6 +2696,7 @@
  setTimeout(() => {  
  modalTitle.innerHTML = prevTitleHTML;  
  modalSubtitle.textContent = prevSubText;  
+ if (currentViewingListId && headerPdfBtn) headerPdfBtn.style.display = 'inline-block';  
  container.innerHTML = previousHTML;  
  }, 800);  
  });  
