@@ -1106,6 +1106,23 @@
  box-shadow: 0 2px 8px var(--glow-accent);  
  }  
 
+ .history-pdf-btn {  
+ background: var(--success);  
+ color: #fff;  
+ border: none;  
+ padding: 7px 12px;  
+ border-radius: 8px;  
+ font-size: 0.75rem;  
+ font-weight: 800;  
+ cursor: pointer;  
+ text-transform: uppercase;  
+ letter-spacing: 0.5px;  
+ touch-action: manipulation;  
+ pointer-events: auto !important;  
+ position: relative;  
+ z-index: 5;  
+ }  
+
  .history-delete-btn {  
  background: rgba(239, 68, 68, 0.15);  
  border: 1px solid var(--danger);  
@@ -1435,31 +1452,34 @@
  color: #000000 !important;  
  }  
  body * { visibility: hidden; }  
+ #historyModal, #historyModal * { visibility: visible; }  
  #tabQueue, #tabQueue * { visibility: visible; }  
- #tabQueue {   
- position: absolute !important;   
- left: 0 !important;   
- top: 0 !important;   
- width: 100% !important;   
- background: #ffffff !important;   
+ #historyModal {  
+ position: absolute !important;  
+ left: 0 !important;  
+ top: 0 !important;  
+ width: 100% !important;  
+ height: auto !important;  
+ background: #ffffff !important;  
  color: #000000 !important;  
  display: block !important;  
  max-height: none !important;  
  overflow: visible !important;  
  }  
- .queue-actions, .theme-btn, .dashboard-container, .search-box, .footer, .pagination, .delete-song-btn, .dj-row-controls, .neon-banner, .brand-header, #standby-screen { display: none !important; }  
- .results {  
+ .history-back-action-btn, .history-actions, .history-header-box .history-modal-subtitle, .queue-actions, .theme-btn, .dashboard-container, .search-box, .footer, .pagination, .delete-song-btn, .dj-row-controls, .neon-banner, .brand-header, #standby-screen { display: none !important; }  
+ .saved-lists-scroll {  
  max-height: none !important;  
  overflow: visible !important;  
  }  
- .queue-item {   
+ .queue-item, .history-item-card {   
  border: 1px solid #ddd !important;   
  background: #f8fafc !important;   
  color: #000 !important;   
  break-inside: avoid;  
  page-break-inside: avoid;  
+ margin-bottom: 8px !important;  
  }  
- .song-title, .song-artist, .requester-tag { color: #000 !important; }  
+ .song-title, .song-artist, .requester-tag, .history-item-title, .history-item-date { color: #000 !important; }  
  }  
  </style>  
 </head>  
@@ -2550,15 +2570,16 @@
  const safeListName = (list.name || '').replace(/'/g, "\\'");  
  return `  
  <div class="history-item-card">  
- <div class="history-item-header" onclick="viewSavedList('${list.id}')">  
- <div>  
+ <div class="history-item-header">  
+ <div style="flex: 1; cursor: pointer;" onclick="viewSavedList('${list.id}')">  
  <div class="history-item-title">🎵 ${list.name}</div>  
  <div class="history-item-date">📅 ${list.date}</div>  
  </div>  
  <span class="history-badge-count">🎸 ${totalSongs} temas</span>  
  </div>  
  <div class="history-actions">  
- <button class="history-view-btn" onclick="viewSavedList('${list.id}')">👁️ Ver canciones</button>  
+ <button class="history-view-btn" onclick="viewSavedList('${list.id}')">👁️ Ver</button>  
+ <button class="history-pdf-btn" onclick="exportSavedListToPDF('${list.id}')">📄 PDF</button>  
  <button class="history-delete-btn" onclick="deleteHistoryList('${list.id}', '${safeListName}')">🗑️ Borrar</button>  
  </div>  
  </div>  
@@ -2615,6 +2636,56 @@
  </div>  
  `;  
  }).join('');  
+ });  
+ }  
+
+ function exportSavedListToPDF(listId) {  
+ historyRef.child(listId).once('value', (snapshot) => {  
+ const listData = snapshot.val();  
+ if (!listData || !listData.items || listData.items.length === 0) {  
+ alert("No hay canciones en esta lista para exportar.");  
+ return;  
+ }  
+
+ const container = document.getElementById('savedListsContainer');  
+ const previousHTML = container.innerHTML;  
+ const modalTitle = document.getElementById('historyModalTitle');  
+ const modalSubtitle = document.getElementById('historyModalSubtitle');  
+ const prevTitleHTML = modalTitle.innerHTML;  
+ const prevSubText = modalSubtitle.textContent;  
+
+ modalTitle.innerHTML = `🎵 ${listData.name} (${listData.date})`;  
+ modalSubtitle.textContent = `Listado oficial de canciones (${listData.items.length} temas)`;  
+
+ container.innerHTML = listData.items.map((item, index) => {  
+ const absoluteIndex = index + 1;  
+ const count = Number(item.count || 1);  
+ const displayUser = item.users || item.user || 'Anónimo';  
+ const isPlayed = item.played === true;  
+  
+ return `  
+ <div class="queue-item${isPlayed ? ' played' : ''}">  
+ <img src="${item.artwork || 'https://via.placeholder.com/100?text=Live'}" alt="${item.title}">  
+ <div class="song-info">  
+ <div class="song-title">${absoluteIndex}. ${item.title}</div>  
+ <div class="song-artist">${item.artist}</div>  
+ <div class="requester-tag">Pedido: ${displayUser} ${isPlayed ? '✅ [Pinchada]' : ''}</div>  
+ </div>  
+ <div class="action-buttons">  
+ <span class="badge-count">🔥 ${count}</span>  
+ <span class="badge-year">${item.year || 'N/D'}</span>  
+ </div>  
+ </div>  
+ `;  
+ }).join('');  
+
+ window.print();  
+
+ setTimeout(() => {  
+ modalTitle.innerHTML = prevTitleHTML;  
+ modalSubtitle.textContent = prevSubText;  
+ container.innerHTML = previousHTML;  
+ }, 800);  
  });  
  }  
 
