@@ -139,8 +139,6 @@
  background: #000000;  
  display: block;  
  margin: 0 auto;  
- cursor: pointer;  
- touch-action: manipulation;  
  }  
   
  .header-row {  
@@ -487,6 +485,12 @@
  background: rgba(245, 158, 11, 0.15);  
  color: #ffffff;  
  border-color: var(--count-bg);  
+ }  
+
+ .dash-btn-admin-access {  
+ background: rgba(239, 68, 68, 0.15);  
+ color: #ffffff;  
+ border-color: var(--danger);  
  }  
 
  /* Notificación en botón de cola */  
@@ -1496,7 +1500,6 @@
  will-change: transform;  
  display: block;  
  animation: floatLogoTop 5s ease-in-out infinite alternate;  
- cursor: pointer;  
  }  
   
  @keyframes floatLogoTop {  
@@ -1641,7 +1644,7 @@
 
  <div class="card">  
  <div class="brand-header">  
- <img src="logo.jpg" alt="We Love The Remember" class="app-logo" id="logoSecretTrigger">  
+ <img src="logo.jpg" alt="We Love The Remember" class="app-logo">  
  <div class="header-row">  
  <h1>WE LOVE LIVE MUSIC</h1>  
  <button class="theme-btn" id="themeToggle">☀️ Modo Claro</button>  
@@ -1692,6 +1695,10 @@
 
  <button class="dash-btn dash-btn-contest" id="dashContestBtn" ontouchend="handleDashClick(event, 'contest')" onclick="openContestModal()">  
  🏆 Concurso / Sorteo Sala  
+ </button>  
+
+ <button class="dash-btn dash-btn-admin-access" ontouchend="handleDashClick(event, 'admin')" onclick="promptAdminAccess()">  
+ 💡 Panel de Control / Admin  
  </button>  
  </div>  
  </div>  
@@ -2159,7 +2166,6 @@
  let userDismissedLight = false;  
  let lastOverlayTapTime = 0;  
  let latestAdminEffectData = null;  
- let lastLogoTapTime = 0;  
  let standbyTimer = null;  
   
  document.addEventListener('DOMContentLoaded', () => {  
@@ -2175,28 +2181,6 @@
  updateThemeButton(savedTheme);  
   
  document.getElementById('themeToggle').addEventListener('click', toggleTheme);  
-
- const handleLogoTap = (e) => {  
- if (e) {  
- e.preventDefault();  
- e.stopPropagation();  
- }  
- const now = Date.now();  
- if (now - lastLogoTapTime < 600) {  
- toggleAdminModeSecret();  
- lastLogoTapTime = 0;  
- } else {  
- lastLogoTapTime = now;  
- }  
- };  
-
- const logoEl = document.getElementById('logoSecretTrigger');  
- logoEl.addEventListener('touchend', handleLogoTap, { passive: false });  
- logoEl.addEventListener('click', handleLogoTap);  
-
- const standbyLogo = document.getElementById('bouncing-logo');  
- standbyLogo.addEventListener('touchend', handleLogoTap, { passive: false });  
- standbyLogo.addEventListener('click', handleLogoTap);  
 
  const runDrawBtnModal = document.getElementById('runDrawBtnModal');  
  const handleRunDrawAction = (e) => {  
@@ -2518,28 +2502,13 @@
  }, { passive: true });  
  });  
 
- async function toggleAdminModeSecret() {  
+ function promptAdminAccess() {  
  if (!isAdminModeActive) {  
  const pass = prompt("Contraseña de Administrador:");  
  if (pass === null) return;  
  const encodedInput = btoa(pass.trim());  
  if (encodedInput === CORRECT_PASSWORD_ENCODED) {  
  isAdminModeActive = true;  
- let adminTabBtn = document.getElementById('adminTabBtn');  
- if (!adminTabBtn) {  
- const dashboardContainer = document.querySelector('.dashboard-container');  
- adminTabBtn = document.createElement('button');  
- adminTabBtn.id = 'adminTabBtn';  
- adminTabBtn.className = 'dash-btn';  
- adminTabBtn.style.background = 'var(--danger)';  
- adminTabBtn.style.color = '#fff';  
- adminTabBtn.textContent = '💡 Panel Admin / DJ';  
- adminTabBtn.onclick = () => switchTab('admin', true);  
- dashboardContainer.appendChild(adminTabBtn);  
- } else {  
- adminTabBtn.style.display = 'flex';  
- }  
-
  document.getElementById('djToggleContainer').style.display = 'block';  
  document.getElementById('saveListBtn').style.display = 'inline-block';  
  document.getElementById('historyListBtn').style.display = 'inline-block';  
@@ -2555,23 +2524,7 @@
  alert("Contraseña incorrecta.");  
  }  
  } else {  
- isAdminModeActive = false;  
- const adminTabBtn = document.getElementById('adminTabBtn');  
- if (adminTabBtn) {  
- adminTabBtn.style.display = 'none';  
- }  
-
- document.getElementById('djToggleContainer').style.display = 'none';  
- document.getElementById('saveListBtn').style.display = 'none';  
- document.getElementById('historyListBtn').style.display = 'none';  
- document.getElementById('pdfBtn').style.display = 'none';  
- document.getElementById('clearQueueBtn').style.display = 'none';  
- document.getElementById('queueHeaderTitle').textContent = "Peticiones del público";  
-
- switchTab('home', true);  
- alert("Modo Administrador y DJ desactivados.");  
- resetStandbyTimer();  
- renderQueuePage();  
+ switchTab('admin', true);  
  }  
  }  
 
@@ -2585,6 +2538,7 @@
  if (actionType === 'search') openSearchResultsModal('');  
  else if (actionType === 'queue') switchTab('queue', true);  
  else if (actionType === 'contest') openContestModal();  
+ else if (actionType === 'admin') promptAdminAccess();  
  }  
 
  function handlePollBannerClick(e) {  
