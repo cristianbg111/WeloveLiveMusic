@@ -1101,7 +1101,7 @@
  touch-action: manipulation;  
  pointer-events: auto !important;  
  position: relative;  
- z-index: 99;  
+ z-index: 999;  
  box-shadow: 0 2px 8px var(--glow-accent);  
  }  
 
@@ -1119,7 +1119,7 @@
  touch-action: manipulation;  
  pointer-events: auto !important;  
  position: relative;  
- z-index: 99;  
+ z-index: 999;  
  }  
 
  .history-delete-btn {  
@@ -1134,7 +1134,7 @@
  touch-action: manipulation;  
  pointer-events: auto !important;  
  position: relative;  
- z-index: 99;  
+ z-index: 999;  
  }  
 
  /* BOTÓN DE RETORNO ESTILO NEO-NEON PARA EL HISTÓRICO */  
@@ -2577,9 +2577,9 @@
  <span class="history-badge-count">🎸 ${totalSongs} temas</span>  
  </div>  
  <div class="history-actions" onclick="event.stopPropagation()">  
- <button type="button" class="history-view-btn" ontouchend="viewSavedList('${list.id}'); event.preventDefault(); event.stopPropagation();" onclick="viewSavedList('${list.id}'); event.stopPropagation();">👁️ Ver</button>  
- <button type="button" class="history-pdf-btn" ontouchend="exportSavedListToPDF('${list.id}'); event.preventDefault(); event.stopPropagation();" onclick="exportSavedListToPDF('${list.id}'); event.stopPropagation();">📄 PDF</button>  
- <button type="button" class="history-delete-btn" ontouchend="deleteHistoryList('${list.id}', '${safeListName}'); event.preventDefault(); event.stopPropagation();" onclick="deleteHistoryList('${list.id}', '${safeListName}'); event.stopPropagation();">🗑️ Borrar</button>  
+ <button type="button" class="history-view-btn" onpointerdown="verListaDirecta(event, '${list.id}')">👁️ Ver</button>  
+ <button type="button" class="history-pdf-btn" onpointerdown="pdfListaDirecta(event, '${list.id}')">📄 PDF</button>  
+ <button type="button" class="history-delete-btn" onpointerdown="deleteHistoryListDirecta(event, '${list.id}', '${safeListName}')">🗑️ Borrar</button>  
  </div>  
  </div>  
  `;  
@@ -2587,6 +2587,33 @@
  });  
  }  
   
+ function verListaDirecta(e, listId) {  
+ if (e) {  
+ e.preventDefault();  
+ e.stopPropagation();  
+ if (e.stopImmediatePropagation) e.stopImmediatePropagation();  
+ }  
+ viewSavedList(listId);  
+ }  
+
+ function pdfListaDirecta(e, listId) {  
+ if (e) {  
+ e.preventDefault();  
+ e.stopPropagation();  
+ if (e.stopImmediatePropagation) e.stopImmediatePropagation();  
+ }  
+ exportSavedListToPDF(listId);  
+ }  
+
+ function deleteHistoryListDirecta(e, listId, listName) {  
+ if (e) {  
+ e.preventDefault();  
+ e.stopPropagation();  
+ if (e.stopImmediatePropagation) e.stopImmediatePropagation();  
+ }  
+ deleteHistoryList(listId, listName);  
+ }  
+
  function viewSavedList(listId) {  
  const container = document.getElementById('savedListsContainer');  
  const modalTitle = document.getElementById('historyModalTitle');  
