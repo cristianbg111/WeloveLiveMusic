@@ -1383,7 +1383,8 @@
  .btn-burst { background: linear-gradient(135deg, #ff007f, #00f3ff, #ffe600, #8b5cf6); color: #ffffff; animation: neonGlow 3s ease infinite; }  
  .btn-burst.active { border-color: #ffffff; box-shadow: 0 0 20px #00f3ff; transform: scale(1.02); }  
 
- .btn-reset-light { background: var(--danger); color: #ffffff; width: 100%; margin-top: 4px; }  
+ .btn-reset-light { background: var(--tag-bg); color: var(--text-muted); border-color: var(--border); width: 100%; margin-top: 4px; }  
+ .btn-reset-light.active { background: var(--danger); color: #ffffff; border-color: #ffffff; box-shadow: 0 0 15px rgba(239, 68, 68, 0.8); }  
 
  /* --- CAPA DE LUZ GLOBAL DE SALA --- */  
  #room-light-overlay {  
@@ -1648,7 +1649,7 @@
  </div>  
   
  <!-- BOTÓN FLOTANTE DE NOTIFICACIÓN DE ENCUESTA ACTIVA -->  
- <div class="poll-notification-banner" id="pollNotificationBanner" style="display: none;" onclick="openPollModal()">  
+ <div class="poll-notification-banner" id="pollNotificationBanner" style="display: none;" ontouchend="handlePollBannerClick(event)" onclick="openPollModal()">  
  <div class="poll-notif-text">  
  📊 <span id="pollNotifTitleDisplay">Encuesta activa en sala</span>  
  </div>  
@@ -1663,7 +1664,7 @@
  <!-- BARRA DE USUARIO IDENTIFICADO EN PEQUEÑO -->  
  <div class="user-badge-bar" id="userBadgeBar" style="display: none;">  
  <span>👤 Participante: <strong id="currentUserNameDisplay"></strong></span>  
- <button class="theme-btn" style="padding: 2px 6px; font-size: 0.65rem;" onclick="openContestModal()">Ya inscrito</button>  
+ <button class="theme-btn" style="padding: 2px 6px; font-size: 0.65rem;" ontouchend="handleContestBadgeClick(event)" onclick="openContestModal()">Ya inscrito</button>  
  </div>  
    
  <div id="neonBanner" class="neon-banner enabled">🟢 Peticiones de canciones: ABIERTAS</div>  
@@ -1681,15 +1682,15 @@
  </div>  
 
  <div class="dashboard-container">  
- <button class="dash-btn dash-btn-primary" onclick="openSearchResultsModal('')">  
+ <button class="dash-btn dash-btn-primary" ontouchend="handleDashClick(event, 'search')" onclick="openSearchResultsModal('')">  
  🔍 Pide tu canción al DJ  
  </button>  
    
- <button class="dash-btn dash-btn-queue" id="dashQueueBtn" onclick="switchTab('queue', true)">  
+ <button class="dash-btn dash-btn-queue" id="dashQueueBtn" ontouchend="handleDashClick(event, 'queue')" onclick="switchTab('queue', true)">  
  📻 Lista de Peticiones  
  </button>  
 
- <button class="dash-btn dash-btn-contest" id="dashContestBtn" onclick="openContestModal()">  
+ <button class="dash-btn dash-btn-contest" id="dashContestBtn" ontouchend="handleDashClick(event, 'contest')" onclick="openContestModal()">  
  🏆 Concurso / Sorteo Sala  
  </button>  
  </div>  
@@ -1699,7 +1700,7 @@
  <div class="queue-header">  
  <div class="queue-header-top">  
  <span class="queue-title" id="queueHeaderTitle">Peticiones del público</span>  
- <button class="theme-btn" style="padding: 4px 10px;" onclick="switchTab('home', true)">⬅️ Menú</button>  
+ <button class="theme-btn" style="padding: 4px 10px;" ontouchend="handleMenuBack(event, 'home')" onclick="switchTab('home', true)">⬅️ Menú</button>  
  </div>  
 
  <!-- BANNER / BOTÓN DESTACADO PARA ACTIVAR O DESACTIVAR PETICIONES (VISIBLE EN MODO ADMIN/DJ) -->  
@@ -1708,10 +1709,10 @@
  </div>  
 
  <div class="queue-actions">  
- <button class="save-list-btn" id="saveListBtn" style="display: none;" onclick="saveCurrentList()">💾 Guardar</button>  
- <button class="history-list-btn" id="historyListBtn" style="display: none;" onclick="openHistoryModal()">📁 Histórico</button>  
- <button class="pdf-btn" id="pdfBtn" style="display: none;" onclick="exportQueueToPDF()">📄 PDF</button>  
- <button class="clear-queue-btn" id="clearQueueBtn" style="display: none;" onclick="clearQueueSecure()">🗑️ Borrar</button>  
+ <button class="save-list-btn" id="saveListBtn" style="display: none;" ontouchend="handleActionBtn(event, 'save')" onclick="saveCurrentList()">💾 Guardar</button>  
+ <button class="history-list-btn" id="historyListBtn" style="display: none;" ontouchend="handleActionBtn(event, 'history')" onclick="openHistoryModal()">📁 Histórico</button>  
+ <button class="pdf-btn" id="pdfBtn" style="display: none;" ontouchend="handleActionBtn(event, 'pdf')" onclick="exportQueueToPDF()">📄 PDF</button>  
+ <button class="clear-queue-btn" id="clearQueueBtn" style="display: none;" ontouchend="handleActionBtn(event, 'clear')" onclick="clearQueueSecure()">🗑️ Borrar</button>  
  </div>  
  </div>  
   
@@ -1730,26 +1731,26 @@
  <div id="tabAdmin" class="tab-content">  
  <div class="queue-header" style="flex-direction: row; justify-content: space-between; align-items: center; margin-bottom: 6px;">  
  <span class="queue-title">Panel Concurso y Sala (Admin)</span>  
- <button class="theme-btn" style="padding: 4px 10px;" onclick="switchTab('home', true)">⬅️ Menú</button>  
+ <button class="theme-btn" style="padding: 4px 10px;" ontouchend="handleMenuBack(event, 'home')" onclick="switchTab('home', true)">⬅️ Menú</button>  
  </div>  
 
  <div class="admin-menu-container">  
- <button class="admin-menu-btn" style="background: rgba(245, 158, 11, 0.15); color: #fff; border-color: var(--count-bg);" onclick="openAdminModal('contest')">  
+ <button class="admin-menu-btn" style="background: rgba(245, 158, 11, 0.15); color: #fff; border-color: var(--count-bg);" ontouchend="handleAdminMenuBtn(event, 'contest')" onclick="openAdminModal('contest')">  
  <span>🎁 Sorteo y Concurso</span>  
  <span style="color: var(--count-bg);">➔</span>  
  </button>  
 
- <button class="admin-menu-btn" style="background: rgba(236, 72, 153, 0.15); color: #fff; border-color: var(--accent);" onclick="openAdminModal('lights')">  
+ <button class="admin-menu-btn" style="background: rgba(236, 72, 153, 0.15); color: #fff; border-color: var(--accent);" ontouchend="handleAdminMenuBtn(event, 'lights')" onclick="openAdminModal('lights')">  
  <span>✨ Control Lumínico Global</span>  
  <span style="color: var(--accent);">➔</span>  
  </button>  
 
- <button class="admin-menu-btn" style="background: rgba(139, 92, 246, 0.15); color: #fff; border-color: var(--badge-bg);" onclick="openAdminModal('poll')">  
+ <button class="admin-menu-btn" style="background: rgba(139, 92, 246, 0.15); color: #fff; border-color: var(--badge-bg);" ontouchend="handleAdminMenuBtn(event, 'poll')" onclick="openAdminModal('poll')">  
  <span>📊 Encuesta Express (4 Opciones)</span>  
  <span style="color: var(--badge-bg);">➔</span>  
  </button>  
 
- <button class="admin-menu-btn" style="background: rgba(59, 130, 246, 0.15); color: #fff; border-color: #3b82f6;" onclick="openAdminModal('stats')">  
+ <button class="admin-menu-btn" style="background: rgba(59, 130, 246, 0.15); color: #fff; border-color: #3b82f6;" ontouchend="handleAdminMenuBtn(event, 'stats')" onclick="openAdminModal('stats')">  
  <span>📈 Estadísticas de la Temporada</span>  
  <span style="color: #3b82f6);">➔</span>  
  </button>  
@@ -1774,11 +1775,11 @@
  <div class="history-modal-subtitle">Gestiona inscripciones y realiza el sorteo automático</div>  
  </div>  
  <div class="saved-lists-scroll" style="gap: 12px; padding-top: 4px;">  
- <button class="admin-action-btn" id="runDrawBtnModal" style="background: var(--accent); color: #fff; width: 100%; padding: 14px; font-size: 0.9rem;">🎉 ¡Sortear Premio Ahora!</button>  
- <button class="admin-action-btn" id="toggleContestBtnAdminModal" style="background: var(--success); color: #fff; width: 100%; padding: 14px; font-size: 0.9rem;" onclick="toggleContestState()">🔒 Botón Sorteo: ABIERTO</button>  
- <button class="admin-action-btn" style="background: var(--danger); color: #fff; width: 100%; padding: 14px; font-size: 0.9rem;" onclick="clearContestParticipants()">🗑️ Borrar lista de participantes</button>  
+ <button class="admin-action-btn" id="runDrawBtnModal" style="background: var(--accent); color: #fff; width: 100%; padding: 14px; font-size: 0.9rem;" ontouchend="handleRunDrawAction(event)" onclick="runLuckyDraw()">🎉 ¡Sortear Premio Ahora!</button>  
+ <button class="admin-action-btn" id="toggleContestBtnAdminModal" style="background: var(--success); color: #fff; width: 100%; padding: 14px; font-size: 0.9rem;" ontouchend="handleToggleContest(event)" onclick="toggleContestState()">🔒 Botón Sorteo: ABIERTO</button>  
+ <button class="admin-action-btn" style="background: var(--danger); color: #fff; width: 100%; padding: 14px; font-size: 0.9rem;" ontouchend="handleClearContest(event)" onclick="clearContestParticipants()">🗑️ Borrar lista de participantes</button>  
  </div>  
- <button class="history-back-action-btn" onclick="closeAdminModal('contest')">⬅️ Volver al Panel Admin</button>  
+ <button class="history-back-action-btn" ontouchend="handleModalClose(event, 'contest')" onclick="closeAdminModal('contest')">⬅️ Volver al Panel Admin</button>  
  </div>  
  </div>  
 
@@ -1793,22 +1794,22 @@
  </div>  
  <div class="saved-lists-scroll" style="gap: 12px; padding-top: 4px;">  
  <div class="admin-panel-grid" style="grid-template-columns: repeat(4, 1fr); gap: 10px;">  
- <button class="color-circle-btn" data-effect-type="color" data-effect-val="#ff007f" style="background: #ff007f; width: 100%; aspect-ratio: 1/1;" onclick="setAdminEffect('color', '#ff007f')"></button>  
- <button class="color-circle-btn" data-effect-type="color" data-effect-val="#00f3ff" style="background: #00f3ff; width: 100%; aspect-ratio: 1/1;" onclick="setAdminEffect('color', '#00f3ff')"></button>  
- <button class="color-circle-btn" data-effect-type="color" data-effect-val="#ffe600" style="background: #ffe600; width: 100%; aspect-ratio: 1/1;" onclick="setAdminEffect('color', '#ffe600')"></button>  
- <button class="color-circle-btn" data-effect-type="color" data-effect-val="#8b5cf6" style="background: #8b5cf6; width: 100%; aspect-ratio: 1/1;" onclick="setAdminEffect('color', '#8b5cf6')"></button>  
- <button class="color-circle-btn" data-effect-type="color" data-effect-val="#10b981" style="background: #10b981; width: 100%; aspect-ratio: 1/1;" onclick="setAdminEffect('color', '#10b981')"></button>  
- <button class="color-circle-btn" data-effect-type="color" data-effect-val="#ff5500" style="background: #ff5500; width: 100%; aspect-ratio: 1/1;" onclick="setAdminEffect('color', '#ff5500')"></button>  
- <button class="color-circle-btn" data-effect-type="color" data-effect-val="#ffffff" style="background: #ffffff; width: 100%; aspect-ratio: 1/1;" onclick="setAdminEffect('color', '#ffffff')"></button>  
- <button class="color-circle-btn" data-effect-type="color" data-effect-val="#000000" style="border-color: rgba(255,255,255,0.6); background: #000000; width: 100%; aspect-ratio: 1/1;" onclick="setAdminEffect('color', '#000000')"></button>  
+ <button class="color-circle-btn" data-effect-type="color" data-effect-val="#ff007f" style="background: #ff007f; width: 100%; aspect-ratio: 1/1;" ontouchend="handleColorEffect(event, '#ff007f')" onclick="setAdminEffect('color', '#ff007f')"></button>  
+ <button class="color-circle-btn" data-effect-type="color" data-effect-val="#00f3ff" style="background: #00f3ff; width: 100%; aspect-ratio: 1/1;" ontouchend="handleColorEffect(event, '#00f3ff')" onclick="setAdminEffect('color', '#00f3ff')"></button>  
+ <button class="color-circle-btn" data-effect-type="color" data-effect-val="#ffe600" style="background: #ffe600; width: 100%; aspect-ratio: 1/1;" ontouchend="handleColorEffect(event, '#ffe600')" onclick="setAdminEffect('color', '#ffe600')"></button>  
+ <button class="color-circle-btn" data-effect-type="color" data-effect-val="#8b5cf6" style="background: #8b5cf6; width: 100%; aspect-ratio: 1/1;" ontouchend="handleColorEffect(event, '#8b5cf6')" onclick="setAdminEffect('color', '#8b5cf6')"></button>  
+ <button class="color-circle-btn" data-effect-type="color" data-effect-val="#10b981" style="background: #10b981; width: 100%; aspect-ratio: 1/1;" ontouchend="handleColorEffect(event, '#10b981')" onclick="setAdminEffect('color', '#10b981')"></button>  
+ <button class="color-circle-btn" data-effect-type="color" data-effect-val="#ff5500" style="background: #ff5500; width: 100%; aspect-ratio: 1/1;" ontouchend="handleColorEffect(event, '#ff5500')" onclick="setAdminEffect('color', '#ff5500')"></button>  
+ <button class="color-circle-btn" data-effect-type="color" data-effect-val="#ffffff" style="background: #ffffff; width: 100%; aspect-ratio: 1/1;" ontouchend="handleColorEffect(event, '#ffffff')" onclick="setAdminEffect('color', '#ffffff')"></button>  
+ <button class="color-circle-btn" data-effect-type="color" data-effect-val="#000000" style="border-color: rgba(255,255,255,0.6); background: #000000; width: 100%; aspect-ratio: 1/1;" ontouchend="handleColorEffect(event, '#000000')" onclick="setAdminEffect('color', '#000000')"></button>  
  </div>  
  <div class="admin-action-row" style="flex-direction: column; gap: 8px;">  
- <button class="admin-action-btn btn-flash" data-effect-type="flash" data-effect-val="flash" style="width: 100%; padding: 14px;" onclick="setAdminEffect('flash', 'flash')">⚡ Flash Blanco (Estrobo)</button>  
- <button class="admin-action-btn btn-burst" data-effect-type="burst" data-effect-val="burst" style="width: 100%; padding: 14px;" onclick="setAdminEffect('burst', 'burst')">💥 Ráfaga Color</button>  
+ <button class="admin-action-btn btn-flash" data-effect-type="flash" data-effect-val="flash" style="width: 100%; padding: 14px;" ontouchend="handleSpecialEffect(event, 'flash')" onclick="setAdminEffect('flash', 'flash')">⚡ Flash Blanco (Estrobo)</button>  
+ <button class="admin-action-btn btn-burst" data-effect-type="burst" data-effect-val="burst" style="width: 100%; padding: 14px;" ontouchend="handleSpecialEffect(event, 'burst')" onclick="setAdminEffect('burst', 'burst')">💥 Ráfaga Color</button>  
  </div>  
- <button class="admin-action-btn btn-reset-light" style="padding: 14px;" onclick="setAdminEffect('off', '')">🛑 Apagar Efectos / Normal</button>  
+ <button class="admin-action-btn btn-reset-light" id="btnResetLight" style="padding: 14px;" ontouchend="handleSpecialEffect(event, 'off')" onclick="setAdminEffect('off', '')">🛑 Apagar Efectos / Normal</button>  
  </div>  
- <button class="history-back-action-btn" onclick="closeAdminModal('lights')">⬅️ Volver al Panel Admin</button>  
+ <button class="history-back-action-btn" ontouchend="handleModalClose(event, 'lights')" onclick="closeAdminModal('lights')">⬅️ Volver al Panel Admin</button>  
  </div>  
  </div>  
 
@@ -1843,11 +1844,11 @@
  <input type="text" id="adminPollOpt4" class="manual-form-input" value="Commercial Dance" />  
  </div>  
  <div style="display: flex; gap: 8px; margin-top: 6px;">  
- <button class="admin-action-btn" style="background: var(--badge-bg); color: #fff; flex: 2; padding: 14px;" onclick="launchExpressPoll()">🚀 Lanzar</button>  
- <button class="admin-action-btn" style="background: var(--danger); color: #fff; flex: 1; padding: 14px;" onclick="closeExpressPoll()">🛑 Cerrar</button>  
+ <button class="admin-action-btn" style="background: var(--badge-bg); color: #fff; flex: 2; padding: 14px;" ontouchend="handleLaunchPoll(event)" onclick="launchExpressPoll()">🚀 Lanzar</button>  
+ <button class="admin-action-btn" style="background: var(--danger); color: #fff; flex: 1; padding: 14px;" ontouchend="handleClosePoll(event)" onclick="closeExpressPoll()">🛑 Cerrar</button>  
  </div>  
  </div>  
- <button class="history-back-action-btn" onclick="closeAdminModal('poll')">⬅️ Volver al Panel Admin</button>  
+ <button class="history-back-action-btn" ontouchend="handleModalClose(event, 'poll')" onclick="closeAdminModal('poll')">⬅️ Volver al Panel Admin</button>  
  </div>  
  </div>  
 
@@ -2042,7 +2043,7 @@
  <p class="status-msg">Calculando estadísticas...</p>  
  </div>  
   
- <button class="history-back-action-btn" onclick="closeAdminModal('stats')">  
+ <button class="history-back-action-btn" ontouchend="handleModalClose(event, 'stats')" onclick="closeAdminModal('stats')">  
  ⬅️ Cerrar Estadísticas  
  </button>  
  </div>  
@@ -2574,6 +2575,131 @@
  }  
  }  
 
+ /* --- FUNCIONES WRAPPER TÁCTILES ANTI-CONFLICTO DE LOGO --- */  
+ function handleDashClick(e, actionType) {  
+ if (e) {  
+ e.preventDefault();  
+ e.stopPropagation();  
+ if (e.stopImmediatePropagation) e.stopImmediatePropagation();  
+ }  
+ if (actionType === 'search') openSearchResultsModal('');  
+ else if (actionType === 'queue') switchTab('queue', true);  
+ else if (actionType === 'contest') openContestModal();  
+ }  
+
+ function handlePollBannerClick(e) {  
+ if (e) {  
+ e.preventDefault();  
+ e.stopPropagation();  
+ if (e.stopImmediatePropagation) e.stopImmediatePropagation();  
+ }  
+ openPollModal();  
+ }  
+
+ function handleContestBadgeClick(e) {  
+ if (e) {  
+ e.preventDefault();  
+ e.stopPropagation();  
+ if (e.stopImmediatePropagation) e.stopImmediatePropagation();  
+ }  
+ openContestModal();  
+ }  
+
+ function handleMenuBack(e, targetTab) {  
+ if (e) {  
+ e.preventDefault();  
+ e.stopPropagation();  
+ if (e.stopImmediatePropagation) e.stopImmediatePropagation();  
+ }  
+ switchTab(targetTab, true);  
+ }  
+
+ function handleActionBtn(e, actionType) {  
+ if (e) {  
+ e.preventDefault();  
+ e.stopPropagation();  
+ if (e.stopImmediatePropagation) e.stopImmediatePropagation();  
+ }  
+ if (actionType === 'save') saveCurrentList();  
+ else if (actionType === 'history') openHistoryModal();  
+ else if (actionType === 'pdf') exportQueueToPDF();  
+ else if (actionType === 'clear') clearQueueSecure();  
+ }  
+
+ function handleAdminMenuBtn(e, modalType) {  
+ if (e) {  
+ e.preventDefault();  
+ e.stopPropagation();  
+ if (e.stopImmediatePropagation) e.stopImmediatePropagation();  
+ }  
+ openAdminModal(modalType);  
+ }  
+
+ function handleModalClose(e, modalType) {  
+ if (e) {  
+ e.preventDefault();  
+ e.stopPropagation();  
+ if (e.stopImmediatePropagation) e.stopImmediatePropagation();  
+ }  
+ closeAdminModal(modalType);  
+ }  
+
+ function handleColorEffect(e, colorVal) {  
+ if (e) {  
+ e.preventDefault();  
+ e.stopPropagation();  
+ if (e.stopImmediatePropagation) e.stopImmediatePropagation();  
+ }  
+ setAdminEffect('color', colorVal);  
+ }  
+
+ function handleSpecialEffect(e, effectVal) {  
+ if (e) {  
+ e.preventDefault();  
+ e.stopPropagation();  
+ if (e.stopImmediatePropagation) e.stopImmediatePropagation();  
+ }  
+ if (effectVal === 'off') setAdminEffect('off', '');  
+ else if (effectVal === 'flash') setAdminEffect('flash', 'flash');  
+ else if (effectVal === 'burst') setAdminEffect('burst', 'burst');  
+ }  
+
+ function handleLaunchPoll(e) {  
+ if (e) {  
+ e.preventDefault();  
+ e.stopPropagation();  
+ if (e.stopImmediatePropagation) e.stopImmediatePropagation();  
+ }  
+ launchExpressPoll();  
+ }  
+
+ function handleClosePoll(e) {  
+ if (e) {  
+ e.preventDefault();  
+ e.stopPropagation();  
+ if (e.stopImmediatePropagation) e.stopImmediatePropagation();  
+ }  
+ closeExpressPoll();  
+ }  
+
+ function handleToggleContest(e) {  
+ if (e) {  
+ e.preventDefault();  
+ e.stopPropagation();  
+ if (e.stopImmediatePropagation) e.stopImmediatePropagation();  
+ }  
+ toggleContestState();  
+ }  
+
+ function handleClearContest(e) {  
+ if (e) {  
+ e.preventDefault();  
+ e.stopPropagation();  
+ if (e.stopImmediatePropagation) e.stopImmediatePropagation();  
+ }  
+ clearContestParticipants();  
+ }  
+
  /* --- FUNCIONES PARA ABRIR Y CERRAR MODALES ADMIN --- */  
  function openAdminModal(type) {  
  if (!isAdminModeActive) return;  
@@ -2682,7 +2808,11 @@
  if (btn.id !== 'toggleContestBtnAdminModal' && btn.id !== 'runDrawBtnModal') btn.classList.remove('active');  
  });  
 
- if (!effectData || effectData.type === 'off') return;  
+ const resetBtn = document.getElementById('btnResetLight');  
+ if (!effectData || effectData.type === 'off') {  
+ if (resetBtn) resetBtn.classList.add('active');  
+ return;  
+ }  
 
  if (effectData.type === 'color') {  
  const btn = document.querySelector(`.color-circle-btn[data-effect-val="${effectData.value}"]`);  
