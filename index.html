@@ -969,29 +969,185 @@
 
  .back-btn { background: var(--tag-bg); color: var(--text); border: 1px solid var(--border); width: 100%; pointer-events: auto !important; position: relative; z-index: 5; }  
   
- .history-item-card {  
- background: var(--item-bg);  
+ /* --- NUEVO DISEÑO PREMIUM PARA EL HISTÓRICO --- */  
+ .history-modal-content {  
+ background: var(--card-bg);  
  border: 1px solid var(--border);  
- border-radius: 10px;  
- padding: 10px;  
- margin-bottom: 8px;  
- text-align: left;  
+ border-radius: 22px;  
+ padding: 20px;  
+ max-width: 480px;  
+ width: 100%;  
+ height: 90vh;  
  display: flex;  
  flex-direction: column;  
- gap: 6px;  
+ box-shadow: 0 25px 60px rgba(0,0,0,0.7), 0 0 35px var(--glow-accent);  
+ margin: auto;  
  pointer-events: auto !important;  
  }  
+
+ .history-header-box {  
+ display: flex;  
+ flex-direction: column;  
+ gap: 4px;  
+ margin-bottom: 14px;  
+ flex-shrink: 0;  
+ border-bottom: 1px solid var(--border);  
+ padding-bottom: 10px;  
+ }  
+
+ .history-modal-title {  
+ font-size: 1rem;  
+ font-weight: 900;  
+ color: var(--text);  
+ text-transform: uppercase;  
+ letter-spacing: 0.8px;  
+ display: flex;  
+ align-items: center;  
+ gap: 8px;  
+ }  
+
+ .history-modal-subtitle {  
+ font-size: 0.75rem;  
+ color: var(--text-muted);  
+ font-weight: 500;  
+ }  
+
+ .saved-lists-scroll {  
+ flex: 1;  
+ overflow-y: auto;  
+ -webkit-overflow-scrolling: touch;  
+ display: flex;  
+ flex-direction: column;  
+ gap: 10px;  
+ padding-right: 4px;  
+ padding-bottom: 10px;  
+ }  
+
+ .history-item-card {  
+ background: linear-gradient(135deg, var(--item-bg), rgba(139, 92, 246, 0.08));  
+ border: 1.5px solid var(--border);  
+ border-radius: 14px;  
+ padding: 14px;  
+ display: flex;  
+ flex-direction: column;  
+ gap: 10px;  
+ transition: all 0.2s ease;  
+ pointer-events: auto !important;  
+ box-shadow: 0 4px 12px rgba(0,0,0,0.3);  
+ }  
+ .history-item-card:hover {  
+ border-color: var(--accent);  
+ box-shadow: 0 6px 18px var(--glow-accent);  
+ }  
+
  .history-item-header {  
  display: flex;  
  justify-content: space-between;  
- align-items: center;  
+ align-items: flex-start;  
  cursor: pointer;  
  pointer-events: auto !important;  
  }  
- .history-item-title { font-weight: 800; font-size: 0.85rem; color: var(--text); }  
- .history-item-date { font-size: 0.7rem; color: var(--text-muted); }  
- .history-actions { display: flex; gap: 6px; justify-content: flex-end; pointer-events: auto !important; }  
- .history-view-btn { background: var(--badge-bg); color: #fff; border: none; padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; cursor: pointer; touch-action: manipulation; pointer-events: auto !important; position: relative; z-index: 5; }  
+
+ .history-item-title {  
+ font-weight: 900;  
+ font-size: 0.9rem;  
+ color: var(--text);  
+ letter-spacing: 0.4px;  
+ margin-bottom: 3px;  
+ display: flex;  
+ align-items: center;  
+ gap: 6px;  
+ }  
+
+ .history-item-date {  
+ font-size: 0.72rem;  
+ color: var(--text-muted);  
+ display: flex;  
+ align-items: center;  
+ gap: 5px;  
+ font-weight: 600;  
+ }  
+
+ .history-badge-count {  
+ background: rgba(245, 158, 11, 0.15);  
+ border: 1px solid var(--count-bg);  
+ color: var(--count-bg);  
+ padding: 3px 8px;  
+ border-radius: 20px;  
+ font-size: 0.7rem;  
+ font-weight: 800;  
+ white-space: nowrap;  
+ }  
+
+ .history-actions {  
+ display: flex;  
+ gap: 8px;  
+ justify-content: flex-end;  
+ border-top: 1px dashed var(--border);  
+ padding-top: 8px;  
+ pointer-events: auto !important;  
+ }  
+
+ .history-view-btn {  
+ background: linear-gradient(135deg, var(--badge-bg), var(--accent));  
+ color: #fff;  
+ border: none;  
+ padding: 7px 14px;  
+ border-radius: 8px;  
+ font-size: 0.75rem;  
+ font-weight: 800;  
+ cursor: pointer;  
+ text-transform: uppercase;  
+ letter-spacing: 0.5px;  
+ touch-action: manipulation;  
+ pointer-events: auto !important;  
+ position: relative;  
+ z-index: 5;  
+ box-shadow: 0 2px 8px var(--glow-accent);  
+ }  
+
+ .history-delete-btn {  
+ background: rgba(239, 68, 68, 0.15);  
+ border: 1px solid var(--danger);  
+ color: var(--danger);  
+ padding: 7px 12px;  
+ border-radius: 8px;  
+ font-size: 0.75rem;  
+ font-weight: 800;  
+ cursor: pointer;  
+ touch-action: manipulation;  
+ pointer-events: auto !important;  
+ position: relative;  
+ z-index: 5;  
+ }  
+
+ /* BOTÓN DE RETORNO ESTILO NEO-NEON PARA EL HISTÓRICO */  
+ .history-back-action-btn {  
+ background: linear-gradient(135deg, var(--accent), #8b5cf6);  
+ color: #ffffff;  
+ border: none;  
+ width: 100%;  
+ padding: 14px;  
+ border-radius: 12px;  
+ font-weight: 900;  
+ font-size: 0.9rem;  
+ text-transform: uppercase;  
+ letter-spacing: 0.8px;  
+ cursor: pointer;  
+ box-shadow: 0 4px 15px var(--glow-accent);  
+ margin-top: 10px;  
+ flex-shrink: 0;  
+ pointer-events: auto !important;  
+ position: relative;  
+ z-index: 10;  
+ display: flex;  
+ align-items: center;  
+ justify-content: center;  
+ gap: 8px;  
+ }  
+ .history-back-action-btn:active {  
+ transform: scale(0.98);  
+ }  
   
  /* --- ESTILOS PANEL MODO ADMIN --- */  
  .admin-panel-grid {  
@@ -1564,16 +1720,25 @@
  </div>  
  </div>  
   
- <div class="modal" id="historyModal">  
- <div class="modal-content" onclick="event.stopPropagation()">  
- <div class="modal-title" id="historyModalTitle">📁 Histórico de Sesiones</div>  
- <div class="modal-artist" id="historyModalSubtitle" style="margin-bottom: 12px;">Listas guardadas en la base de datos</div>  
+ <!-- MODAL DE HISTÓRICO REDISEÑADO -->  
+ <div class="modal" id="historyModal" data-viewing-list="false">  
+ <div class="history-modal-content" onclick="event.stopPropagation()">  
+ <div class="history-header-box">  
+ <div class="history-modal-title" id="historyModalTitle">  
+ 📁 Histórico de Sesiones  
+ </div>  
+ <div class="history-modal-subtitle" id="historyModalSubtitle">  
+ Listas guardadas en la base de datos  
+ </div>  
+ </div>  
    
- <div id="savedListsContainer" style="margin-bottom: 16px; max-height: 50vh; overflow-y: auto;">  
+ <div id="savedListsContainer" class="saved-lists-scroll">  
  <p class="status-msg">Cargando histórico...</p>  
  </div>  
   
- <button class="back-btn" id="historyBackBtn" onclick="closeHistoryModal()">Cerrar</button>  
+ <button class="history-back-action-btn" id="historyBackBtn" ontouchend="handleHistoryBackAction(event)" onclick="handleHistoryBackAction(event)">  
+ ⬅️ Cerrar Histórico  
+ </button>  
  </div>  
  </div>  
 
@@ -2358,12 +2523,13 @@
    
  const historyModal = document.getElementById('historyModal');  
  historyModal.dataset.viewingList = 'false';  
- modalTitle.textContent = "📁 Histórico de Sesiones";  
+ modalTitle.innerHTML = "📁 Histórico de Sesiones";  
  modalSubtitle.textContent = "Listas guardadas en la base de datos";  
- backBtn.textContent = "Cerrar";  
+ backBtn.innerHTML = "⬅️ Cerrar Histórico";  
   
  container.innerHTML = '<p class="status-msg">Cargando listas guardadas...</p>';  
  historyModal.style.display = 'flex';  
+ history.pushState({ screen: 'historyModal' }, '', '');  
   
  historyRef.once('value', (snapshot) => {  
  const data = snapshot.val();  
@@ -2387,12 +2553,13 @@
  <div class="history-item-header" onclick="viewSavedList('${list.id}')">  
  <div>  
  <div class="history-item-title">🎵 ${list.name}</div>  
- <div class="history-item-date">📅 ${list.date} — 🎸 ${totalSongs} canciones</div>  
+ <div class="history-item-date">📅 ${list.date}</div>  
  </div>  
+ <span class="history-badge-count">🎸 ${totalSongs} temas</span>  
  </div>  
  <div class="history-actions">  
  <button class="history-view-btn" onclick="viewSavedList('${list.id}')">👁️ Ver canciones</button>  
- <button class="request-btn" onclick="deleteHistoryList('${list.id}', '${safeListName}')">🗑️ Borrar</button>  
+ <button class="history-delete-btn" onclick="deleteHistoryList('${list.id}', '${safeListName}')">🗑️ Borrar</button>  
  </div>  
  </div>  
  `;  
@@ -2417,9 +2584,9 @@
  return;  
  }  
   
- modalTitle.textContent = `🎵 ${listData.name}`;  
+ modalTitle.innerHTML = `🎵 ${listData.name}`;  
  modalSubtitle.textContent = `Guardada el ${listData.date} (${listData.items.length} canciones)`;  
- backBtn.textContent = "⬅️ Volver a Listas";  
+ backBtn.innerHTML = "⬅️ Volver a Listas Guardadas";  
   
  container.innerHTML = listData.items.map((item, index) => {  
  const safeTitle = (item.title || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');  
@@ -2450,12 +2617,25 @@
  }).join('');  
  });  
  }  
-  
- function closeHistoryModal() {  
+
+ function handleHistoryBackAction(e) {  
+ if (e) {  
+ e.preventDefault();  
+ e.stopPropagation();  
+ if (e.stopImmediatePropagation) e.stopImmediatePropagation();  
+ }  
+
  const historyModal = document.getElementById('historyModal');  
  if (historyModal.dataset.viewingList === 'true') {  
  openHistoryModal();  
  } else {  
+ closeHistoryModal();  
+ }  
+ }  
+  
+ function closeHistoryModal() {  
+ const historyModal = document.getElementById('historyModal');  
+ if (historyModal.style.display === 'flex') {  
  historyModal.style.display = 'none';  
  document.body.style.overflow = '';  
  }  
