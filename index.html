@@ -1572,16 +1572,11 @@
  </div>  
 
  <div style="margin-bottom: 8px;">  
- <button class="admin-action-btn" style="background: var(--badge-bg); color: #fff; width: 100%;" onclick="openPublicParticipantsModal()">📋 Ver lista de participantes (<span id="participantCountBadgeAdmin">0</span>)</button>  
+ <button class="admin-action-btn" style="background: linear-gradient(135deg, #3b82f6, #8b5cf6); color: #fff; width: 100%;" onclick="openGlobalStatsModal()">📊 Estadísticas de la Temporada</button>  
  </div>  
 
  <div style="margin-bottom: 12px;">  
  <button class="admin-action-btn" style="background: var(--danger); color: #fff; width: 100%;" onclick="clearContestParticipants()">🗑️ Borrar lista de participantes</button>  
- </div>  
-
- <!-- NUEVO BOTÓN DE ESTADÍSTICAS GLOBALES -->  
- <div style="margin-bottom: 12px;">  
- <button class="admin-action-btn" style="background: linear-gradient(135deg, #3b82f6, #8b5cf6); color: #fff; width: 100%;" onclick="openGlobalStatsModal()">📊 Estadísticas de la Temporada</button>  
  </div>  
 
  <div class="instructions-box" style="margin-bottom: 10px;">  
@@ -1990,8 +1985,6 @@
  const countVal = globalContestParticipants.length;  
  document.getElementById('participantCountBadge').textContent = countVal;  
  document.getElementById('participantCountBadgeModal').textContent = countVal;  
- const adminBadge = document.getElementById('participantCountBadgeAdmin');  
- if (adminBadge) adminBadge.textContent = countVal;  
  });  
   
  settingsRef.on('value', (snapshot) => {  
@@ -2509,7 +2502,6 @@
  totalSessions++;  
  const session = histData[key];  
    
- // Extraer mes de la sesión  
  if (session.date) {  
  const parts = session.date.split('/');  
  if (parts.length >= 2) {  
@@ -2518,7 +2510,6 @@
  }  
  }  
 
- // Analizar canciones de la sesión  
  if (session.items && Array.isArray(session.items)) {  
  session.items.forEach(song => {  
  const songKey = `${song.title} - ${song.artist}`;  
@@ -2537,10 +2528,8 @@
  }  
  }  
 
- // Ordenar canciones más pedidas  
  let sortedSongs = Object.values(songCounts).sort((a, b) => b.totalRequests - a.totalRequests).slice(0, 5);  
 
- // Renderizar estadísticas  
  container.innerHTML = `  
  <div class="instructions-box" style="margin-bottom: 12px; background: rgba(59, 130, 246, 0.1); border-color: #3b82f6;">  
  <div class="instructions-title" style="color: #3b82f6;">🌐 Métricas Generales</div>  
