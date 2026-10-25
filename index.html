@@ -105,6 +105,7 @@
  padding: 18px;  
  max-width: 500px;  
  width: 100%;  
+ height: 100%;  
  max-height: 100%;  
  display: flex;  
  flex-direction: column;  
@@ -112,6 +113,7 @@
  margin: auto;  
  z-index: 2;  
  position: relative;  
+ overflow: hidden;  
  }  
   
  .brand-header {  
@@ -604,7 +606,7 @@
  -webkit-overflow-scrolling: touch;   
  overscroll-behavior-y: contain;  
  padding-right: 4px;  
- padding-bottom: 10px;  
+ padding-bottom: 80px;  
  pointer-events: auto !important;  
  }  
    
@@ -1250,7 +1252,7 @@
  z-index: 999;  
  }  
 
- /* BOTÓN DE RETORNO ESTILO NEO-NEON PARA EL HISTÓRICO */  
+ /* BOTÓN DE RETORNO ESTILO NEO-NEON PARA EL HISTÓRICO Y MODALES ADMIN */  
  .history-back-action-btn {  
  background: linear-gradient(135deg, var(--accent), #8b5cf6);  
  color: #ffffff;  
@@ -1278,7 +1280,41 @@
  transform: scale(0.98);  
  }  
   
- /* --- ESTILOS PANEL MODO ADMIN --- */  
+ /* --- ESTILOS PANEL MODO ADMIN (BOTONES DE ACCESO A VENTANAS) --- */  
+ .admin-menu-container {  
+ display: flex;  
+ flex-direction: column;  
+ gap: 10px;  
+ flex: 1;  
+ justify-content: center;  
+ padding: 6px 0;  
+ overflow-y: auto;  
+ }  
+
+ .admin-menu-btn {  
+ width: 100%;  
+ padding: 18px 16px;  
+ border-radius: 14px;  
+ font-size: 0.9rem;  
+ font-weight: 900;  
+ text-transform: uppercase;  
+ letter-spacing: 0.8px;  
+ cursor: pointer;  
+ border: 1.5px solid var(--border);  
+ display: flex;  
+ align-items: center;  
+ justify-content: space-between;  
+ gap: 10px;  
+ transition: transform 0.15s ease, box-shadow 0.15s ease;  
+ -webkit-appearance: none;  
+ touch-action: manipulation;  
+ pointer-events: auto !important;  
+ box-shadow: 0 4px 15px rgba(0,0,0,0.3);  
+ }  
+ .admin-menu-btn:active {  
+ transform: scale(0.97);  
+ }  
+
  .admin-panel-grid {  
  display: grid;  
  grid-template-columns: repeat(4, 1fr);  
@@ -1690,75 +1726,33 @@
  </div>  
  </div>  
 
- <!-- PESTAÑA MODO ADMIN DE SALA -->  
+ <!-- PESTAÑA MODO ADMIN DE SALA (MENÚ CON BOTONES QUE ABREN VENTANAS MODALES) -->  
  <div id="tabAdmin" class="tab-content">  
- <div class="queue-header" style="flex-direction: row; justify-content: space-between; align-items: center;">  
+ <div class="queue-header" style="flex-direction: row; justify-content: space-between; align-items: center; margin-bottom: 6px;">  
  <span class="queue-title">Panel Concurso y Sala (Admin)</span>  
  <button class="theme-btn" style="padding: 4px 10px;" onclick="switchTab('home', true)">⬅️ Menú</button>  
  </div>  
- <div class="results" style="padding-top: 6px;">  
- <div class="instructions-box" style="margin-bottom: 10px; background: rgba(245, 158, 11, 0.1); border-color: var(--count-bg);">  
- <div class="instructions-title" style="color: var(--count-bg);">🎁 Sorteo y Concurso en Directo</div>  
- <div class="instructions-text">Gestiona las inscripciones y realiza el sorteo automático con cuenta atrás. (<span id="participantCountBadge">0</span> participantes inscritos)</div>  
- </div>  
 
- <div style="margin-bottom: 8px;">  
- <button class="admin-action-btn" id="runDrawBtn" style="background: var(--accent); color: #fff; width: 100%;">🎉 ¡Sortear Premio!</button>  
- </div>  
+ <div class="admin-menu-container">  
+ <button class="admin-menu-btn" style="background: rgba(245, 158, 11, 0.15); color: #fff; border-color: var(--count-bg);" onclick="openAdminModal('contest')">  
+ <span>🎁 Sorteo y Concurso</span>  
+ <span style="color: var(--count-bg);">➔</span>  
+ </button>  
 
- <div style="margin-bottom: 8px;">  
- <button class="admin-action-btn" id="toggleContestBtnAdmin" style="background: var(--success); color: #fff; width: 100%;" onclick="toggleContestState()">🔒 Botón Sorteo: ABIERTO</button>  
- </div>  
+ <button class="admin-menu-btn" style="background: rgba(236, 72, 153, 0.15); color: #fff; border-color: var(--accent);" onclick="openAdminModal('lights')">  
+ <span>✨ Control Lumínico Global</span>  
+ <span style="color: var(--accent);">➔</span>  
+ </button>  
 
- <!-- SECCIÓN GESTIÓN DE ENCUESTAS EXPRESS CON 4 OPCIONES -->  
- <div class="instructions-box" style="margin-bottom: 10px; background: rgba(139, 92, 246, 0.1); border-color: var(--badge-bg);">  
- <div class="instructions-title" style="color: var(--badge-bg);">📊 Encuesta Express (4 Opciones)</div>  
- <div class="instructions-text" style="margin-bottom: 6px;">Lanza una pregunta con hasta 4 opciones a todos los móviles al instante.</div>  
- <div class="manual-form-group" style="margin-bottom: 6px;">  
- <input type="text" id="adminPollQuestion" class="manual-form-input" placeholder="Pregunta (ej: ¿Qué estilo ponemos ahora?)" value="¿Qué estilo ponemos ahora?" />  
- </div>  
- <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px;">  
- <input type="text" id="adminPollOpt1" class="manual-form-input" placeholder="Opción 1" value="Makina" />  
- <input type="text" id="adminPollOpt2" class="manual-form-input" placeholder="Opción 2" value="Cantaditas 90s" />  
- <input type="text" id="adminPollOpt3" class="manual-form-input" placeholder="Opción 3" value="Bakalao 80s" />  
- <input type="text" id="adminPollOpt4" class="manual-form-input" placeholder="Opción 4" value="Commercial Dance" />  
- </div>  
- <div style="display: flex; gap: 6px;">  
- <button class="admin-action-btn" style="background: var(--badge-bg); color: #fff; flex: 2;" onclick="launchExpressPoll()">🚀 Lanzar Encuesta</button>  
- <button class="admin-action-btn" style="background: var(--danger); color: #fff; flex: 1;" onclick="closeExpressPoll()">🛑 Cerrar</button>  
- </div>  
- </div>  
+ <button class="admin-menu-btn" style="background: rgba(139, 92, 246, 0.15); color: #fff; border-color: var(--badge-bg);" onclick="openAdminModal('poll')">  
+ <span>📊 Encuesta Express (4 Opciones)</span>  
+ <span style="color: var(--badge-bg);">➔</span>  
+ </button>  
 
- <div style="margin-bottom: 8px;">  
- <button class="admin-action-btn" style="background: linear-gradient(135deg, #3b82f6, #8b5cf6); color: #fff; width: 100%;" onclick="openGlobalStatsModal()">📊 Estadísticas de la Temporada</button>  
- </div>  
-
- <div style="margin-bottom: 12px;">  
- <button class="admin-action-btn" style="background: var(--danger); color: #fff; width: 100%;" onclick="clearContestParticipants()">🗑️ Borrar lista de participantes</button>  
- </div>  
-
- <div class="instructions-box" style="margin-bottom: 10px;">  
- <div class="instructions-title">✨ Control Lumínico Global</div>  
- <div class="instructions-text">Pulsa cualquier color, flash estroboscópico o ráfaga para sincronizar las pantallas de todos los asistentes in situ al instante.</div>  
- </div>  
-
- <div class="admin-panel-grid">  
- <button class="color-circle-btn" data-effect-type="color" data-effect-val="#ff007f" style="background: #ff007f;" onclick="setAdminEffect('color', '#ff007f')"></button>  
- <button class="color-circle-btn" data-effect-type="color" data-effect-val="#00f3ff" style="background: #00f3ff;" onclick="setAdminEffect('color', '#00f3ff')"></button>  
- <button class="color-circle-btn" data-effect-type="color" data-effect-val="#ffe600" style="background: #ffe600;" onclick="setAdminEffect('color', '#ffe600')"></button>  
- <button class="color-circle-btn" data-effect-type="color" data-effect-val="#8b5cf6" style="background: #8b5cf6;" onclick="setAdminEffect('color', '#8b5cf6')"></button>  
- <button class="color-circle-btn" data-effect-type="color" data-effect-val="#10b981" style="background: #10b981;" onclick="setAdminEffect('color', '#10b981')"></button>  
- <button class="color-circle-btn" data-effect-type="color" data-effect-val="#ff5500" style="background: #ff5500;" onclick="setAdminEffect('color', '#ff5500')"></button>  
- <button class="color-circle-btn" data-effect-type="color" data-effect-val="#ffffff" style="background: #ffffff;" onclick="setAdminEffect('color', '#ffffff')"></button>  
- <button class="color-circle-btn" data-effect-type="color" data-effect-val="#000000" style="border-color: rgba(255,255,255,0.6); background: #000000;" onclick="setAdminEffect('color', '#000000')"></button>  
- </div>  
-
- <div class="admin-action-row">  
- <button class="admin-action-btn btn-flash" data-effect-type="flash" data-effect-val="flash" onclick="setAdminEffect('flash', 'flash')">⚡ Flash Blanco (Estrobo)</button>  
- <button class="admin-action-btn btn-burst" data-effect-type="burst" data-effect-val="burst" onclick="setAdminEffect('burst', 'burst')">💥 Ráfaga Color</button>  
- </div>  
-
- <button class="admin-action-btn btn-reset-light" onclick="setAdminEffect('off', '')">🛑 Apagar Efectos / Normal</button>  
+ <button class="admin-menu-btn" style="background: rgba(59, 130, 246, 0.15); color: #fff; border-color: #3b82f6;" onclick="openAdminModal('stats')">  
+ <span>📈 Estadísticas de la Temporada</span>  
+ <span style="color: #3b82f6);">➔</span>  
+ </button>  
  </div>  
  </div>  
   
@@ -1770,7 +1764,94 @@
  </footer>  
  </div>  
   
- <!-- MODAL DE VOTACIÓN DE ENCUESTA EXPRESS (4 OPCIONES) -->  
+ <!-- MODAL INDEPENDIENTE: GESTIÓN DE SORTEO ADMIN -->  
+ <div class="modal" id="adminContestModal">  
+ <div class="history-modal-content" onclick="event.stopPropagation()">  
+ <div class="history-header-box">  
+ <div class="history-modal-title">  
+ <span>🎁 Sorteo y Concurso (<span id="participantCountBadgeAdmin">0</span>)</span>  
+ </div>  
+ <div class="history-modal-subtitle">Gestiona inscripciones y realiza el sorteo automático</div>  
+ </div>  
+ <div class="saved-lists-scroll" style="gap: 12px; padding-top: 4px;">  
+ <button class="admin-action-btn" id="runDrawBtnModal" style="background: var(--accent); color: #fff; width: 100%; padding: 14px; font-size: 0.9rem;">🎉 ¡Sortear Premio Ahora!</button>  
+ <button class="admin-action-btn" id="toggleContestBtnAdminModal" style="background: var(--success); color: #fff; width: 100%; padding: 14px; font-size: 0.9rem;" onclick="toggleContestState()">🔒 Botón Sorteo: ABIERTO</button>  
+ <button class="admin-action-btn" style="background: var(--danger); color: #fff; width: 100%; padding: 14px; font-size: 0.9rem;" onclick="clearContestParticipants()">🗑️ Borrar lista de participantes</button>  
+ </div>  
+ <button class="history-back-action-btn" onclick="closeAdminModal('contest')">⬅️ Volver al Panel Admin</button>  
+ </div>  
+ </div>  
+
+ <!-- MODAL INDEPENDIENTE: CONTROL LUMÍNICO GLOBAL ADMIN -->  
+ <div class="modal" id="adminLightsModal">  
+ <div class="history-modal-content" onclick="event.stopPropagation()">  
+ <div class="history-header-box">  
+ <div class="history-modal-title">  
+ <span>✨ Control Lumínico Global</span>  
+ </div>  
+ <div class="history-modal-subtitle">Sincroniza las pantallas de todos los asistentes in situ</div>  
+ </div>  
+ <div class="saved-lists-scroll" style="gap: 12px; padding-top: 4px;">  
+ <div class="admin-panel-grid" style="grid-template-columns: repeat(4, 1fr); gap: 10px;">  
+ <button class="color-circle-btn" data-effect-type="color" data-effect-val="#ff007f" style="background: #ff007f; width: 100%; aspect-ratio: 1/1;" onclick="setAdminEffect('color', '#ff007f')"></button>  
+ <button class="color-circle-btn" data-effect-type="color" data-effect-val="#00f3ff" style="background: #00f3ff; width: 100%; aspect-ratio: 1/1;" onclick="setAdminEffect('color', '#00f3ff')"></button>  
+ <button class="color-circle-btn" data-effect-type="color" data-effect-val="#ffe600" style="background: #ffe600; width: 100%; aspect-ratio: 1/1;" onclick="setAdminEffect('color', '#ffe600')"></button>  
+ <button class="color-circle-btn" data-effect-type="color" data-effect-val="#8b5cf6" style="background: #8b5cf6; width: 100%; aspect-ratio: 1/1;" onclick="setAdminEffect('color', '#8b5cf6')"></button>  
+ <button class="color-circle-btn" data-effect-type="color" data-effect-val="#10b981" style="background: #10b981; width: 100%; aspect-ratio: 1/1;" onclick="setAdminEffect('color', '#10b981')"></button>  
+ <button class="color-circle-btn" data-effect-type="color" data-effect-val="#ff5500" style="background: #ff5500; width: 100%; aspect-ratio: 1/1;" onclick="setAdminEffect('color', '#ff5500')"></button>  
+ <button class="color-circle-btn" data-effect-type="color" data-effect-val="#ffffff" style="background: #ffffff; width: 100%; aspect-ratio: 1/1;" onclick="setAdminEffect('color', '#ffffff')"></button>  
+ <button class="color-circle-btn" data-effect-type="color" data-effect-val="#000000" style="border-color: rgba(255,255,255,0.6); background: #000000; width: 100%; aspect-ratio: 1/1;" onclick="setAdminEffect('color', '#000000')"></button>  
+ </div>  
+ <div class="admin-action-row" style="flex-direction: column; gap: 8px;">  
+ <button class="admin-action-btn btn-flash" data-effect-type="flash" data-effect-val="flash" style="width: 100%; padding: 14px;" onclick="setAdminEffect('flash', 'flash')">⚡ Flash Blanco (Estrobo)</button>  
+ <button class="admin-action-btn btn-burst" data-effect-type="burst" data-effect-val="burst" style="width: 100%; padding: 14px;" onclick="setAdminEffect('burst', 'burst')">💥 Ráfaga Color</button>  
+ </div>  
+ <button class="admin-action-btn btn-reset-light" style="padding: 14px;" onclick="setAdminEffect('off', '')">🛑 Apagar Efectos / Normal</button>  
+ </div>  
+ <button class="history-back-action-btn" onclick="closeAdminModal('lights')">⬅️ Volver al Panel Admin</button>  
+ </div>  
+ </div>  
+
+ <!-- MODAL INDEPENDIENTE: ENCUESTA EXPRESS ADMIN -->  
+ <div class="modal" id="adminPollModal">  
+ <div class="history-modal-content" onclick="event.stopPropagation()">  
+ <div class="history-header-box">  
+ <div class="history-modal-title">  
+ <span>📊 Encuesta Express (4 Opciones)</span>  
+ </div>  
+ <div class="history-modal-subtitle">Lanza una pregunta y opciones a todos los móviles</div>  
+ </div>  
+ <div class="saved-lists-scroll" style="gap: 10px; padding-top: 4px;">  
+ <div class="manual-form-group">  
+ <label class="manual-form-label">Pregunta</label>  
+ <input type="text" id="adminPollQuestion" class="manual-form-input" placeholder="Ej: ¿Qué estilo ponemos ahora?" value="¿Qué estilo ponemos ahora?" />  
+ </div>  
+ <div class="manual-form-group">  
+ <label class="manual-form-label">Opción 1</label>  
+ <input type="text" id="adminPollOpt1" class="manual-form-input" value="Makina" />  
+ </div>  
+ <div class="manual-form-group">  
+ <label class="manual-form-label">Opción 2</label>  
+ <input type="text" id="adminPollOpt2" class="manual-form-input" value="Cantaditas 90s" />  
+ </div>  
+ <div class="manual-form-group">  
+ <label class="manual-form-label">Opción 3</label>  
+ <input type="text" id="adminPollOpt3" class="manual-form-input" value="Bakalao 80s" />  
+ </div>  
+ <div class="manual-form-group">  
+ <label class="manual-form-label">Opción 4</label>  
+ <input type="text" id="adminPollOpt4" class="manual-form-input" value="Commercial Dance" />  
+ </div>  
+ <div style="display: flex; gap: 8px; margin-top: 6px;">  
+ <button class="admin-action-btn" style="background: var(--badge-bg); color: #fff; flex: 2; padding: 14px;" onclick="launchExpressPoll()">🚀 Lanzar</button>  
+ <button class="admin-action-btn" style="background: var(--danger); color: #fff; flex: 1; padding: 14px;" onclick="closeExpressPoll()">🛑 Cerrar</button>  
+ </div>  
+ </div>  
+ <button class="history-back-action-btn" onclick="closeAdminModal('poll')">⬅️ Volver al Panel Admin</button>  
+ </div>  
+ </div>  
+
+ <!-- MODAL DE VOTACIÓN DE ENCUESTA EXPRESS (PÚBLICO) -->  
  <div class="modal" id="pollModal">  
  <div class="poll-modal-box" onclick="event.stopPropagation()">  
  <div class="poll-question-title" id="pollQuestionDisplay">📊 ¿Qué estilo ponemos ahora?</div>  
@@ -1961,7 +2042,7 @@
  <p class="status-msg">Calculando estadísticas...</p>  
  </div>  
   
- <button class="history-back-action-btn" onclick="closeGlobalStatsModal()">  
+ <button class="history-back-action-btn" onclick="closeAdminModal('stats')">  
  ⬅️ Cerrar Estadísticas  
  </button>  
  </div>  
@@ -2116,7 +2197,7 @@
  standbyLogo.addEventListener('touchend', handleLogoTap, { passive: false });  
  standbyLogo.addEventListener('click', handleLogoTap);  
 
- const runDrawBtn = document.getElementById('runDrawBtn');  
+ const runDrawBtnModal = document.getElementById('runDrawBtnModal');  
  const handleRunDrawAction = (e) => {  
  if (e) {  
  e.preventDefault();  
@@ -2125,8 +2206,8 @@
  }  
  runLuckyDraw();  
  };  
- runDrawBtn.addEventListener('click', handleRunDrawAction);  
- runDrawBtn.addEventListener('touchend', handleRunDrawAction, { passive: false });  
+ runDrawBtnModal.addEventListener('click', handleRunDrawAction);  
+ runDrawBtnModal.addEventListener('touchend', handleRunDrawAction, { passive: false });  
    
  const modalSongInput = document.getElementById('modalSongInput');  
  modalSongInput.addEventListener('input', handleModalInput);  
@@ -2146,7 +2227,10 @@
  document.getElementById('manualModal').addEventListener('click', closeManualModal);  
  document.getElementById('searchResultsModal').addEventListener('click', closeSearchResultsModal);  
  document.getElementById('historyModal').addEventListener('click', closeHistoryModal);  
- document.getElementById('globalStatsModal').addEventListener('click', closeGlobalStatsModal);  
+ document.getElementById('globalStatsModal').addEventListener('click', () => closeAdminModal('stats'));  
+ document.getElementById('adminContestModal').addEventListener('click', () => closeAdminModal('contest'));  
+ document.getElementById('adminLightsModal').addEventListener('click', () => closeAdminModal('lights'));  
+ document.getElementById('adminPollModal').addEventListener('click', () => closeAdminModal('poll'));  
  document.getElementById('contestModal').addEventListener('click', closeContestModal);  
  document.getElementById('publicParticipantsModal').addEventListener('click', closePublicParticipantsModal);  
  document.getElementById('pollModal').addEventListener('click', closePollModal);  
@@ -2187,7 +2271,7 @@
  checkSavedUserBadge();  
  }  
  const countVal = globalContestParticipants.length;  
- document.getElementById('participantCountBadge').textContent = countVal;  
+ document.getElementById('participantCountBadgeAdmin').textContent = countVal;  
  document.getElementById('participantCountBadgeModal').textContent = countVal;  
  });  
 
@@ -2243,7 +2327,7 @@
 
  const myVote = localStorage.getItem('user_poll_vote');  
  ['1', '2', '3', '4'].forEach(n => {  
- const btn = document.getElementById(`pollOptInBtn` + n) || document.getElementById(`pollOpt${n}Btn`);  
+ const btn = document.getElementById(`pollOpt${n}Btn`);  
  if (btn) {  
  btn.classList.remove('voted');  
  if (myVote === n) {  
@@ -2294,6 +2378,9 @@
  const searchResultsModal = document.getElementById('searchResultsModal');  
  const historyModal = document.getElementById('historyModal');  
  const globalStatsModal = document.getElementById('globalStatsModal');  
+ const adminContestModal = document.getElementById('adminContestModal');  
+ const adminLightsModal = document.getElementById('adminLightsModal');  
+ const adminPollModal = document.getElementById('adminPollModal');  
  const contestModal = document.getElementById('contestModal');  
  const publicParticipantsModal = document.getElementById('publicParticipantsModal');  
  const pollModal = document.getElementById('pollModal');  
@@ -2303,11 +2390,14 @@
  return;  
  }  
 
- if (manualModal.style.display === 'flex' || searchResultsModal.style.display === 'flex' || historyModal.style.display === 'flex' || globalStatsModal.style.display === 'flex' || contestModal.style.display === 'flex' || publicParticipantsModal.style.display === 'flex' || pollModal.style.display === 'flex') {  
+ if (manualModal.style.display === 'flex' || searchResultsModal.style.display === 'flex' || historyModal.style.display === 'flex' || globalStatsModal.style.display === 'flex' || adminContestModal.style.display === 'flex' || adminLightsModal.style.display === 'flex' || adminPollModal.style.display === 'flex' || contestModal.style.display === 'flex' || publicParticipantsModal.style.display === 'flex' || pollModal.style.display === 'flex') {  
  closeManualModal();  
  closeSearchResultsModal();  
  closeHistoryModal();  
- closeGlobalStatsModal();  
+ closeAdminModal('stats');  
+ closeAdminModal('contest');  
+ closeAdminModal('lights');  
+ closeAdminModal('poll');  
  closeContestModal();  
  closePublicParticipantsModal();  
  closePollModal();  
@@ -2390,7 +2480,10 @@
  closeManualModal();  
  closeSearchResultsModal();  
  closeHistoryModal();  
- closeGlobalStatsModal();  
+ closeAdminModal('stats');  
+ closeAdminModal('contest');  
+ closeAdminModal('lights');  
+ closeAdminModal('poll');  
  closeContestModal();  
  closePublicParticipantsModal();  
  closePollModal();  
@@ -2481,6 +2574,35 @@
  }  
  }  
 
+ /* --- FUNCIONES PARA ABRIR Y CERRAR MODALES ADMIN --- */  
+ function openAdminModal(type) {  
+ if (!isAdminModeActive) return;  
+ if (type === 'contest') {  
+ document.getElementById('adminContestModal').style.display = 'flex';  
+ history.pushState({ screen: 'adminContest' }, '', '');  
+ } else if (type === 'lights') {  
+ document.getElementById('adminLightsModal').style.display = 'flex';  
+ history.pushState({ screen: 'adminLights' }, '', '');  
+ } else if (type === 'poll') {  
+ document.getElementById('adminPollModal').style.display = 'flex';  
+ history.pushState({ screen: 'adminPoll' }, '', '');  
+ } else if (type === 'stats') {  
+ openGlobalStatsModal();  
+ }  
+ }  
+
+ function closeAdminModal(type) {  
+ if (type === 'contest') {  
+ document.getElementById('adminContestModal').style.display = 'none';  
+ } else if (type === 'lights') {  
+ document.getElementById('adminLightsModal').style.display = 'none';  
+ } else if (type === 'poll') {  
+ document.getElementById('adminPollModal').style.display = 'none';  
+ } else if (type === 'stats') {  
+ document.getElementById('globalStatsModal').style.display = 'none';  
+ }  
+ }  
+
  function launchExpressPoll() {  
  if (!isAdminModeActive) return;  
  const question = document.getElementById('adminPollQuestion').value.trim() || '¿Qué estilo ponemos ahora?';  
@@ -2504,6 +2626,7 @@
  votes4: 0  
  }).then(() => {  
  alert("🚀 ¡Encuesta de 4 opciones lanzada a todos los móviles de la sala con éxito! Votos reseteados.");  
+ closeAdminModal('poll');  
  });  
  }  
 
@@ -2511,6 +2634,7 @@
  if (!isAdminModeActive) return;  
  pollRef.update({ active: false }).then(() => {  
  closePollModal();  
+ closeAdminModal('poll');  
  alert("🛑 Encuesta cerrada.");  
  });  
  }  
@@ -2555,7 +2679,7 @@
 
  function updateAdminButtonsUI(effectData) {  
  document.querySelectorAll('.color-circle-btn, .admin-action-btn').forEach(btn => {  
- if (btn.id !== 'toggleContestBtnAdmin' && btn.id !== 'runDrawBtn') btn.classList.remove('active');  
+ if (btn.id !== 'toggleContestBtnAdminModal' && btn.id !== 'runDrawBtnModal') btn.classList.remove('active');  
  });  
 
  if (!effectData || effectData.type === 'off') return;  
@@ -2713,7 +2837,7 @@
  }  
 
  function updateContestButtonUI() {  
- const btn = document.getElementById('toggleContestBtnAdmin');  
+ const btn = document.getElementById('toggleContestBtnAdminModal');  
  const contestDashBtn = document.getElementById('dashContestBtn');  
  const contestModal = document.getElementById('contestModal');  
 
@@ -2790,7 +2914,6 @@
  return;  
  }  
 
- // 🛑 SE AÑADE LA CONFIRMACIÓN AQUÍ PARA EVITAR PULSACIONES ACCIDENTALES  
  if (!confirm("¿Estás seguro de que quieres realizar el sorteo y sacar al ganador ahora?")) {  
  return;  
  }  
@@ -2897,13 +3020,6 @@
  `;  
  });  
  });  
- }  
-
- function closeGlobalStatsModal() {  
- const modal = document.getElementById('globalStatsModal');  
- if (modal.style.display === 'flex') {  
- modal.style.display = 'none';  
- }  
  }  
   
  function executeToggleRequests(e) {  
