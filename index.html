@@ -1420,7 +1420,7 @@
  .btn-reset-light { background: var(--tag-bg); color: var(--text-muted); border-color: var(--border); width: 100%; margin-top: 4px; }  
  .btn-reset-light.active { background: var(--danger); color: #ffffff; border-color: #ffffff; box-shadow: 0 0 15px rgba(239, 68, 68, 0.8); }  
 
- /* --- CAPA DE LUZ GLOBAL DE SALA --- */  
+ /* --- CAPA DE LUZ GLOBAL DE SALA (Z-INDEX SUPERIOR A STANDBY) --- */  
  #room-light-overlay {  
  position: fixed;  
  top: 0;  
@@ -1428,7 +1428,7 @@
  width: 100vw;  
  height: 100vh;  
  height: 100dvh;  
- z-index: 100000;  
+ z-index: 9999999;  
  display: none;  
  cursor: pointer;  
  -webkit-user-select: none;  
@@ -1437,6 +1437,7 @@
  -webkit-tap-highlight-color: transparent;  
  filter: brightness(1.5) contrast(1.25);  
  -webkit-filter: brightness(1.5) contrast(1.25);  
+ pointer-events: auto;  
  }  
  #room-light-overlay.active {  
  display: block;  
@@ -1668,7 +1669,7 @@
 </head>  
 <body>  
   
- <!-- CAPA DE ILUMINACIÓN GLOBAL DE SALA -->  
+ <!-- CAPA DE ILUMINACIÓN GLOBAL DE SALA (Z-INDEX MÁS ALTO PARA CUBRIR STANDBY) -->  
  <div id="room-light-overlay">  
  <div id="room-light-notice">Toca 2 veces para salir</div>  
  </div>  
@@ -2861,7 +2862,7 @@
  const adminLightsModal = document.getElementById('adminLightsModal');  
  const isInAdminLights = adminLightsModal && adminLightsModal.style.display === 'flex';  
 
- // Se activan en Standby, Menú Principal y cualquier pantalla.  
+ // Se activa en Standby, Menú Principal y cualquier pantalla.  
  // Únicamente se excluye si el administrador está activamente dentro de la ventana de luces configurándolas.  
  if (!effectData || effectData.type === 'off' || isInAdminLights || userDismissedLight) {  
  overlay.classList.remove('active', 'show-notice');  
