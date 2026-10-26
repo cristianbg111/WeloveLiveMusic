@@ -1322,39 +1322,29 @@
  .admin-panel-grid {  
  display: grid;  
  grid-template-columns: repeat(4, 1fr);  
- gap: 12px;  
+ gap: 8px;  
  margin-bottom: 12px;  
- justify-items: center;  
- align-items: center;  
  }  
   
- /* Círculos de colores extra grandes para una pulsación táctil perfecta */  
  .color-circle-btn {  
- width: 64px;  
- height: 64px;  
- max-width: 100%;  
+ aspect-ratio: 1/1;  
  border-radius: 50%;  
- border: 3.5px solid rgba(255,255,255,0.35);  
+ border: 3px solid rgba(255,255,255,0.3);  
  cursor: pointer;  
- box-shadow: 0 6px 14px rgba(0,0,0,0.5);  
+ box-shadow: 0 4px 10px rgba(0,0,0,0.4);  
  transition: transform 0.1s ease, filter 0.1s ease, box-shadow 0.2s ease, border-color 0.2s ease;  
  -webkit-appearance: none;  
  touch-action: manipulation;  
  position: relative;  
  pointer-events: auto !important;  
  z-index: 5;  
- box-sizing: border-box;  
- display: flex;  
- align-items: center;  
- justify-content: center;  
- margin: auto;  
  }  
  .color-circle-btn:active { transform: scale(0.9); }  
 
  .color-circle-btn.active {  
  border-color: #ffffff;  
  transform: scale(1.08);  
- box-shadow: 0 0 20px #ffffff, 0 6px 16px rgba(0,0,0,0.7);  
+ box-shadow: 0 0 16px #ffffff, 0 4px 12px rgba(0,0,0,0.6);  
  }  
  .color-circle-btn.active::after {  
  content: '✓';  
@@ -1363,10 +1353,9 @@
  left: 50%;  
  transform: translate(-50%, -50%);  
  color: #000000;  
- font-size: 1.3rem;  
+ font-size: 1.1rem;  
  font-weight: 900;  
  text-shadow: 0 0 4px #fff, 0 0 8px #fff;  
- pointer-events: none;  
  }  
   
  .admin-action-row {  
@@ -1377,10 +1366,10 @@
   
  .admin-action-btn {  
  flex: 1;  
- padding: 14px;  
- border-radius: 12px;  
+ padding: 12px;  
+ border-radius: 10px;  
  font-weight: 800;  
- font-size: 0.82rem;  
+ font-size: 0.8rem;  
  text-transform: uppercase;  
  border: 2px solid transparent;  
  cursor: pointer;  
@@ -1776,7 +1765,7 @@
  </div>  
   
  <footer class="footer">  
- App creada por[span_0](start_span)[span_0](end_span)<strong>We Love The Remember Studios</strong>[span_1](start_span)[span_1](end_span) 
+ App creada por<strong>We Love The Remember Studios</strong> 
  <div class="visitor-counter">  
  👀 Visitas: <span id="visitorCount">...</span>  
  </div>  
@@ -1812,20 +1801,20 @@
  </div>  
  <div class="saved-lists-scroll" style="gap: 12px; padding-top: 4px;">  
  <div class="admin-panel-grid" style="grid-template-columns: repeat(4, 1fr); gap: 10px;">  
- <button class="color-circle-btn" data-effect-type="color" data-effect-val="#ff007f" style="background: #ff007f;" ontouchend="handleColorEffect(event, '#ff007f')" onclick="setAdminEffect('color', '#ff007f')"></button>  
- <button class="color-circle-btn" data-effect-type="color" data-effect-val="#00f3ff" style="background: #00f3ff;" ontouchend="handleColorEffect(event, '#00f3ff')" onclick="setAdminEffect('color', '#00f3ff')"></button>  
- <button class="color-circle-btn" data-effect-type="color" data-effect-val="#ffe600" style="background: #ffe600;" ontouchend="handleColorEffect(event, '#ffe600')" onclick="setAdminEffect('color', '#ffe600')"></button>  
- <button class="color-circle-btn" data-effect-type="color" data-effect-val="#8b5cf6" style="background: #8b5cf6;" ontouchend="handleColorEffect(event, '#8b5cf6')" onclick="setAdminEffect('color', '#8b5cf6')"></button>  
- <button class="color-circle-btn" data-effect-type="color" data-effect-val="#10b981" style="background: #10b981;" ontouchend="handleColorEffect(event, '#10b981')" onclick="setAdminEffect('color', '#10b981')"></button>  
- <button class="color-circle-btn" data-effect-type="color" data-effect-val="#ff5500" style="background: #ff5500;" ontouchend="handleColorEffect(event, '#ff5500')" onclick="setAdminEffect('color', '#ff5500')"></button>  
- <button class="color-circle-btn" data-effect-type="color" data-effect-val="#ffffff" style="background: #ffffff;" ontouchend="handleColorEffect(event, '#ffffff')" onclick="setAdminEffect('color', '#ffffff')"></button>  
- <button class="color-circle-btn" data-effect-type="color" data-effect-val="#000000" style="border-color: rgba(255,255,255,0.6); background: #000000;" ontouchend="handleColorEffect(event, '#000000')" onclick="setAdminEffect('color', '#000000')"></button>  
+ <button class="color-circle-btn" data-effect-type="color" data-effect-val="#ff007f" style="background: #ff007f; width: 100%; aspect-ratio: 1/1;" ontouchend="handleColorEffect(event, '#ff007f')" onclick="setAdminEffect('color', '#ff007f')"></button>  
+ <button class="color-circle-btn" data-effect-type="color" data-effect-val="#00f3ff" style="background: #00f3ff; width: 100%; aspect-ratio: 1/1;" ontouchend="handleColorEffect(event, '#00f3ff')" onclick="setAdminEffect('color', '#00f3ff')"></button>  
+ <button class="color-circle-btn" data-effect-type="color" data-effect-val="#ffe600" style="background: #ffe600; width: 100%; aspect-ratio: 1/1;" ontouchend="handleColorEffect(event, '#ffe600')" onclick="setAdminEffect('color', '#ffe600')"></button>  
+ <button class="color-circle-btn" data-effect-type="color" data-effect-val="#8b5cf6" style="background: #8b5cf6; width: 100%; aspect-ratio: 1/1;" ontouchend="handleColorEffect(event, '#8b5cf6')" onclick="setAdminEffect('color', '#8b5cf6')"></button>  
+ <button class="color-circle-btn" data-effect-type="color" data-effect-val="#10b981" style="background: #10b981; width: 100%; aspect-ratio: 1/1;" ontouchend="handleColorEffect(event, '#10b981')" onclick="setAdminEffect('color', '#10b981')"></button>  
+ <button class="color-circle-btn" data-effect-type="color" data-effect-val="#ff5500" style="background: #ff5500; width: 100%; aspect-ratio: 1/1;" ontouchend="handleColorEffect(event, '#ff5500')" onclick="setAdminEffect('color', '#ff5500')"></button>  
+ <button class="color-circle-btn" data-effect-type="color" data-effect-val="#ffffff" style="background: #ffffff; width: 100%; aspect-ratio: 1/1;" ontouchend="handleColorEffect(event, '#ffffff')" onclick="setAdminEffect('color', '#ffffff')"></button>  
+ <button class="color-circle-btn" data-effect-type="color" data-effect-val="#000000" style="border-color: rgba(255,255,255,0.6); background: #000000; width: 100%; aspect-ratio: 1/1;" ontouchend="handleColorEffect(event, '#000000')" onclick="setAdminEffect('color', '#000000')"></button>  
  </div>  
  <div class="admin-action-row" style="flex-direction: column; gap: 8px;">  
- <button class="admin-action-btn btn-flash" data-effect-type="flash" data-effect-val="flash" style="width: 100%; padding: 14px;" ontouchend="handleSpecialEffect(event, 'flash')" onclick="setAdminEffect('flash', 'flash')">⚡ Flash Blanco (Estrobo)</button>  
- <button class="admin-action-btn btn-burst" data-effect-type="burst" data-effect-val="burst" style="width: 100%; padding: 14px;" ontouchend="handleSpecialEffect(event, 'burst')" onclick="setAdminEffect('burst', 'burst')">💥 Ráfaga Color</button>  
+ <button class="admin-action-btn btn-flash" style="width: 100%; padding: 14px;" ontouchend="setAdminEffect('flash', 'flash'); event.preventDefault();" onclick="setAdminEffect('flash', 'flash')">⚡ Flash Blanco (Estrobo)</button>  
+ <button class="admin-action-btn btn-burst" style="width: 100%; padding: 14px;" ontouchend="setAdminEffect('burst', 'burst'); event.preventDefault();" onclick="setAdminEffect('burst', 'burst')">💥 Ráfaga Color</button>  
  </div>  
- <button class="admin-action-btn btn-reset-light" id="btnResetLight" style="padding: 14px;" ontouchend="handleSpecialEffect(event, 'off')" onclick="setAdminEffect('off', '')">🛑 Apagar Efectos / Normal</button>  
+ <button class="admin-action-btn btn-reset-light" id="btnResetLight" style="padding: 14px;" ontouchend="setAdminEffect('off', ''); event.preventDefault();" onclick="setAdminEffect('off', '')">🛑 Apagar Efectos / Normal</button>  
  </div>  
  <button class="history-back-action-btn" ontouchend="handleModalClose(event, 'lights')" onclick="closeAdminModal('lights')">⬅️ Volver al Panel Admin</button>  
  </div>  
@@ -2618,17 +2607,6 @@
  setAdminEffect('color', colorVal);  
  }  
 
- function handleSpecialEffect(e, effectVal) {  
- if (e) {  
- e.preventDefault();  
- e.stopPropagation();  
- if (e.stopImmediatePropagation) e.stopImmediatePropagation();  
- }  
- if (effectVal === 'off') setAdminEffect('off', '');  
- else if (effectVal === 'flash') setAdminEffect('flash', 'flash');  
- else if (effectVal === 'burst') setAdminEffect('burst', 'burst');  
- }  
-
  function handleLaunchPoll(e) {  
  if (e) {  
  e.preventDefault();  
@@ -2746,7 +2724,7 @@
  function votePoll(optionNumber) {  
  const hasVoted = localStorage.getItem('user_poll_vote');  
  if (hasVoted) {  
- alert("⚠️ Ya estás emitido tu voto en esta encuesta.");  
+ alert("⚠️ Ya has emitido tu voto en esta encuesta.");  
  return;  
  }  
 
