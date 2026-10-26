@@ -2861,8 +2861,8 @@
  const adminLightsModal = document.getElementById('adminLightsModal');  
  const isInAdminLights = adminLightsModal && adminLightsModal.style.display === 'flex';  
 
- // Se activa en cualquier momento y pantalla (Standby, Home, Peticiones, etc.),  
- // excepto si el administrador está activamente dentro de la ventana de luces configurándolas.  
+ // Se activan en Standby, Menú Principal y cualquier pantalla.  
+ // Únicamente se excluye si el administrador está activamente dentro de la ventana de luces configurándolas.  
  if (!effectData || effectData.type === 'off' || isInAdminLights || userDismissedLight) {  
  overlay.classList.remove('active', 'show-notice');  
  overlay.style.backgroundColor = '';  
