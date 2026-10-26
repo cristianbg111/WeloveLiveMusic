@@ -1319,43 +1319,61 @@
  transform: scale(0.97);  
  }  
 
+ /* --- NUEVO DISEÑO REDISEÑADO DE BOTONES DE COLORES DE LUCES --- */  
  .admin-panel-grid {  
  display: grid;  
- grid-template-columns: repeat(4, 1fr);  
+ grid-template-columns: repeat(2, 1fr);  
  gap: 8px;  
- margin-bottom: 12px;  
+ margin-bottom: 10px;  
  }  
   
- .color-circle-btn {  
- aspect-ratio: 1/1;  
- border-radius: 50%;  
- border: 3px solid rgba(255,255,255,0.3);  
+ .light-color-tile {  
+ background: var(--item-bg);  
+ border: 2px solid var(--border);  
+ border-radius: 12px;  
+ padding: 12px 14px;  
+ display: flex;  
+ align-items: center;  
+ gap: 10px;  
  cursor: pointer;  
- box-shadow: 0 4px 10px rgba(0,0,0,0.4);  
- transition: transform 0.1s ease, filter 0.1s ease, box-shadow 0.2s ease, border-color 0.2s ease;  
+ min-height: 56px;  
+ width: 100%;  
+ text-align: left;  
  -webkit-appearance: none;  
  touch-action: manipulation;  
+ transition: all 0.2s ease;  
  position: relative;  
- pointer-events: auto !important;  
  z-index: 5;  
+ box-shadow: 0 4px 10px rgba(0,0,0,0.3);  
+ pointer-events: auto !important;  
  }  
- .color-circle-btn:active { transform: scale(0.9); }  
+ .light-color-tile:active {  
+ transform: scale(0.97);  
+ }  
 
- .color-circle-btn.active {  
- border-color: #ffffff;  
- transform: scale(1.08);  
- box-shadow: 0 0 16px #ffffff, 0 4px 12px rgba(0,0,0,0.6);  
+ .color-dot {  
+ width: 26px;  
+ height: 26px;  
+ min-width: 26px;  
+ border-radius: 50%;  
+ border: 2px solid rgba(255,255,255,0.6);  
+ box-shadow: 0 0 8px rgba(0,0,0,0.4);  
  }  
- .color-circle-btn.active::after {  
- content: '✓';  
- position: absolute;  
- top: 50%;  
- left: 50%;  
- transform: translate(-50%, -50%);  
- color: #000000;  
- font-size: 1.1rem;  
- font-weight: 900;  
- text-shadow: 0 0 4px #fff, 0 0 8px #fff;  
+
+ .color-tile-text {  
+ font-size: 0.78rem;  
+ font-weight: 800;  
+ color: var(--text);  
+ text-transform: uppercase;  
+ letter-spacing: 0.5px;  
+ word-break: break-word;  
+ }  
+
+ .light-color-tile.active {  
+ border-color: #ffffff;  
+ background: rgba(255, 255, 255, 0.12);  
+ box-shadow: 0 0 16px #ffffff, 0 4px 12px rgba(0,0,0,0.6);  
+ transform: scale(1.02);  
  }  
   
  .admin-action-row {  
@@ -1807,15 +1825,39 @@
  <div class="history-modal-subtitle">Sincroniza las pantallas de todos los asistentes in situ</div>  
  </div>  
  <div class="saved-lists-scroll" style="gap: 12px; padding-top: 4px;">  
- <div class="admin-panel-grid" style="grid-template-columns: repeat(4, 1fr); gap: 10px;">  
- <button class="color-circle-btn" data-effect-type="color" data-effect-val="#ff007f" style="background: #ff007f; width: 100%; aspect-ratio: 1/1;" ontouchend="handleColorEffect(event, '#ff007f')" onclick="setAdminEffect('color', '#ff007f')"></button>  
- <button class="color-circle-btn" data-effect-type="color" data-effect-val="#00f3ff" style="background: #00f3ff; width: 100%; aspect-ratio: 1/1;" ontouchend="handleColorEffect(event, '#00f3ff')" onclick="setAdminEffect('color', '#00f3ff')"></button>  
- <button class="color-circle-btn" data-effect-type="color" data-effect-val="#ffe600" style="background: #ffe600; width: 100%; aspect-ratio: 1/1;" ontouchend="handleColorEffect(event, '#ffe600')" onclick="setAdminEffect('color', '#ffe600')"></button>  
- <button class="color-circle-btn" data-effect-type="color" data-effect-val="#8b5cf6" style="background: #8b5cf6; width: 100%; aspect-ratio: 1/1;" ontouchend="handleColorEffect(event, '#8b5cf6')" onclick="setAdminEffect('color', '#8b5cf6')"></button>  
- <button class="color-circle-btn" data-effect-type="color" data-effect-val="#10b981" style="background: #10b981; width: 100%; aspect-ratio: 1/1;" ontouchend="handleColorEffect(event, '#10b981')" onclick="setAdminEffect('color', '#10b981')"></button>  
- <button class="color-circle-btn" data-effect-type="color" data-effect-val="#ff5500" style="background: #ff5500; width: 100%; aspect-ratio: 1/1;" ontouchend="handleColorEffect(event, '#ff5500')" onclick="setAdminEffect('color', '#ff5500')"></button>  
- <button class="color-circle-btn" data-effect-type="color" data-effect-val="#ffffff" style="background: #ffffff; width: 100%; aspect-ratio: 1/1;" ontouchend="handleColorEffect(event, '#ffffff')" onclick="setAdminEffect('color', '#ffffff')"></button>  
- <button class="color-circle-btn" data-effect-type="color" data-effect-val="#000000" style="border-color: rgba(255,255,255,0.6); background: #000000; width: 100%; aspect-ratio: 1/1;" ontouchend="handleColorEffect(event, '#000000')" onclick="setAdminEffect('color', '#000000')"></button>  
+ <div class="admin-panel-grid">  
+ <button class="light-color-tile" data-effect-type="color" data-effect-val="#ff007f" ontouchend="handleColorEffect(event, '#ff007f')" onclick="setAdminEffect('color', '#ff007f')">  
+ <div class="color-dot" style="background: #ff007f;"></div>  
+ <span class="color-tile-text">Rosa Neón</span>  
+ </button>  
+ <button class="light-color-tile" data-effect-type="color" data-effect-val="#00f3ff" ontouchend="handleColorEffect(event, '#00f3ff')" onclick="setAdminEffect('color', '#00f3ff')">  
+ <div class="color-dot" style="background: #00f3ff;"></div>  
+ <span class="color-tile-text">Azul Láser</span>  
+ </button>  
+ <button class="light-color-tile" data-effect-type="color" data-effect-val="#ffe600" ontouchend="handleColorEffect(event, '#ffe600')" onclick="setAdminEffect('color', '#ffe600')">  
+ <div class="color-dot" style="background: #ffe600;"></div>  
+ <span class="color-tile-text">Amarillo Strobe</span>  
+ </button>  
+ <button class="light-color-tile" data-effect-type="color" data-effect-val="#8b5cf6" ontouchend="handleColorEffect(event, '#8b5cf6')" onclick="setAdminEffect('color', '#8b5cf6')">  
+ <div class="color-dot" style="background: #8b5cf6;"></div>  
+ <span class="color-tile-text">Morado Club</span>  
+ </button>  
+ <button class="light-color-tile" data-effect-type="color" data-effect-val="#10b981" ontouchend="handleColorEffect(event, '#10b981')" onclick="setAdminEffect('color', '#10b981')">  
+ <div class="color-dot" style="background: #10b981;"></div>  
+ <span class="color-tile-text">Verde Rave</span>  
+ </button>  
+ <button class="light-color-tile" data-effect-type="color" data-effect-val="#ff5500" ontouchend="handleColorEffect(event, '#ff5500')" onclick="setAdminEffect('color', '#ff5500')">  
+ <div class="color-dot" style="background: #ff5500;"></div>  
+ <span class="color-tile-text">Naranja Fuego</span>  
+ </button>  
+ <button class="light-color-tile" data-effect-type="color" data-effect-val="#ffffff" ontouchend="handleColorEffect(event, '#ffffff')" onclick="setAdminEffect('color', '#ffffff')">  
+ <div class="color-dot" style="background: #ffffff;"></div>  
+ <span class="color-tile-text">Blanco Puro</span>  
+ </button>  
+ <button class="light-color-tile" data-effect-type="color" data-effect-val="#000000" ontouchend="handleColorEffect(event, '#000000')" onclick="setAdminEffect('color', '#000000')">  
+ <div class="color-dot" style="background: #000000; border-color: rgba(255,255,255,0.6);"></div>  
+ <span class="color-tile-text">Negro / Off</span>  
+ </button>  
  </div>  
  <div class="admin-action-row" style="flex-direction: column; gap: 8px;">  
  <button class="admin-action-btn btn-flash" style="width: 100%; padding: 14px;" ontouchend="setAdminEffect('flash', 'flash'); event.preventDefault();" onclick="setAdminEffect('flash', 'flash')">⚡ Flash Blanco (Estrobo)</button>  
@@ -2754,7 +2796,7 @@
  }  
 
  function updateAdminButtonsUI(effectData) {  
- document.querySelectorAll('.color-circle-btn, .admin-action-btn').forEach(btn => {  
+ document.querySelectorAll('.light-color-tile, .admin-action-btn').forEach(btn => {  
  if (btn.id !== 'toggleContestBtnAdminModal' && btn.id !== 'runDrawBtnModal') btn.classList.remove('active');  
  });  
 
@@ -2765,7 +2807,7 @@
  }  
 
  if (effectData.type === 'color') {  
- const btn = document.querySelector(`.color-circle-btn[data-effect-val="${effectData.value}"]`);  
+ const btn = document.querySelector(`.light-color-tile[data-effect-val="${effectData.value}"]`);  
  if (btn) btn.classList.add('active');  
  } else if (effectData.type === 'flash') {  
  const btn = document.querySelector('.btn-flash');  
