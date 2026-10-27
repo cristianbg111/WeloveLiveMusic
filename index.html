@@ -423,10 +423,10 @@
  .dashboard-container {  
  display: flex;  
  flex-direction: column;  
- gap: 10px;  
+ gap: 8px;  
  flex: 1;  
  justify-content: center;  
- padding: 6px 0;  
+ padding: 4px 0;  
  overflow-y: auto;  
  }  
 
@@ -438,9 +438,9 @@
 
  .dash-btn {  
  width: 100%;  
- padding: 20px 16px;  
- border-radius: 14px;  
- font-size: 0.95rem;  
+ padding: 14px 16px;  
+ border-radius: 12px;  
+ font-size: 0.85rem;  
  font-weight: 900;  
  text-transform: uppercase;  
  letter-spacing: 0.8px;  
@@ -456,7 +456,7 @@
  pointer-events: auto !important;  
  position: relative;  
  text-shadow: 0 1px 3px rgba(0,0,0,0.4);  
- box-shadow: 0 4px 15px rgba(0,0,0,0.3);  
+ box-shadow: 0 4px 12px rgba(0,0,0,0.3);  
  }  
  .dash-btn:active {  
  transform: scale(0.97);  
@@ -467,8 +467,14 @@
  background-size: 300% 300%;  
  animation: neonGlow 4s ease infinite;  
  color: #ffffff;  
- font-size: 1.05rem;  
- padding: 24px 16px;  
+ font-size: 0.95rem;  
+ padding: 18px 16px;  
+ border-color: rgba(255, 255, 255, 0.4);  
+ }  
+
+ .dash-btn-qr {  
+ background: linear-gradient(135deg, #00f3ff, #3b82f6);  
+ color: #ffffff;  
  border-color: rgba(255, 255, 255, 0.4);  
  }  
 
@@ -1783,6 +1789,10 @@
  🔍 Pide tu canción al DJ  
  </button>  
    
+ <button class="dash-btn dash-btn-qr" ontouchend="handleDashClick(event, 'qr')" onclick="openQrModal()">  
+ 📱 Compartir QR  
+ </button>  
+
  <button class="dash-btn dash-btn-queue" id="dashQueueBtn" ontouchend="handleDashClick(event, 'queue')" onclick="switchTab('queue', true)">  
  📻 Lista de Peticiones  
  </button>  
@@ -1864,6 +1874,22 @@
  👀 Visitas: <span id="visitorCount">...</span>  
  </div>  
  </footer>  
+ </div>  
+
+ <!-- MODAL DE COMPARTIR QR -->  
+ <div class="modal" id="qrModal">  
+ <div class="modal-content" onclick="event.stopPropagation()">  
+ <div class="modal-title">📱 Código QR de la App</div>  
+ <div class="modal-artist" style="margin-bottom: 12px;">Escanea o comparte para acceder a la sala</div>  
+ <div style="background: #ffffff; padding: 16px; border-radius: 12px; display: inline-block; margin-bottom: 12px; border: 1px solid var(--border);">  
+ <img id="qrImage" src="" alt="QR Code" style="width: 200px; height: 200px; border-radius: 4px; border: none; display: block; margin: 0 auto;">  
+ </div>  
+ <div style="font-size: 0.8rem; font-weight: 800; color: var(--accent); margin-bottom: 14px; word-break: break-all;">www.welovelivemusic.es</div>  
+ <div class="modal-actions">  
+ <button type="button" class="request-btn" style="width: 100%; padding: 12px; font-size: 0.85rem;" onclick="shareQrLink()">📤 Compartir enlace / QR</button>  
+ <button type="button" class="back-btn" onclick="closeQrModal()">Cerrar</button>  
+ </div>  
+ </div>  
  </div>  
   
  <!-- MODAL INDEPENDIENTE: GESTIÓN DE SORTEO ADMIN -->  
@@ -2338,6 +2364,7 @@
  document.getElementById('contestModal').addEventListener('click', closeContestModal);  
  document.getElementById('publicParticipantsModal').addEventListener('click', closePublicParticipantsModal);  
  document.getElementById('pollModal').addEventListener('click', closePollModal);  
+ document.getElementById('qrModal').addEventListener('click', closeQrModal);  
  document.getElementById('modalTidalBtn').addEventListener('click', openTidalApp);  
  document.getElementById('modalYoutubeBtn').addEventListener('click', openYoutubeApp);  
 
@@ -2488,13 +2515,14 @@
  const contestModal = document.getElementById('contestModal');  
  const publicParticipantsModal = document.getElementById('publicParticipantsModal');  
  const pollModal = document.getElementById('pollModal');  
+ const qrModal = document.getElementById('qrModal');  
 
  if (imageModal.style.display === 'flex') {  
  closeModalFromPopState();  
  return;  
  }  
 
- if (manualModal.style.display === 'flex' || searchResultsModal.style.display === 'flex' || historyModal.style.display === 'flex' || globalStatsModal.style.display === 'flex' || adminContestModal.style.display === 'flex' || adminLightsModal.style.display === 'flex' || adminPollModal.style.display === 'flex' || contestModal.style.display === 'flex' || publicParticipantsModal.style.display === 'flex' || pollModal.style.display === 'flex') {  
+ if (manualModal.style.display === 'flex' || searchResultsModal.style.display === 'flex' || historyModal.style.display === 'flex' || globalStatsModal.style.display === 'flex' || adminContestModal.style.display === 'flex' || adminLightsModal.style.display === 'flex' || adminPollModal.style.display === 'flex' || contestModal.style.display === 'flex' || publicParticipantsModal.style.display === 'flex' || pollModal.style.display === 'flex' || qrModal.style.display === 'flex') {  
  closeManualModal();  
  closeSearchResultsModal();  
  closeHistoryModal();  
@@ -2505,6 +2533,7 @@
  closeContestModal();  
  closePublicParticipantsModal();  
  closePollModal();  
+ closeQrModal();  
  switchTab('home', false);  
  history.replaceState({ screen: 'home' }, '', '');  
  return;  
@@ -2591,6 +2620,7 @@
  closeContestModal();  
  closePublicParticipantsModal();  
  closePollModal();  
+ closeQrModal();  
  document.body.style.overflow = '';  
  }, 50);  
  }  
@@ -2660,9 +2690,43 @@
  if (e.stopImmediatePropagation) e.stopImmediatePropagation();  
  }  
  if (actionType === 'search') openSearchResultsModal('');  
+ else if (actionType === 'qr') openQrModal();  
  else if (actionType === 'queue') switchTab('queue', true);  
  else if (actionType === 'contest') openContestModal();  
  else if (actionType === 'admin') promptAdminAccess();  
+ }  
+
+ function openQrModal() {  
+ const appUrl = "https://www.welovelivemusic.es";  
+ const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(appUrl)}`;  
+ document.getElementById('qrImage').src = qrImgUrl;  
+ const modal = document.getElementById('qrModal');  
+ modal.style.display = 'flex';  
+ history.pushState({ screen: 'qrModal' }, '', '');  
+ }  
+
+ function closeQrModal() {  
+ const modal = document.getElementById('qrModal');  
+ if (modal.style.display === 'flex') {  
+ modal.style.display = 'none';  
+ }  
+ }  
+
+ function shareQrLink() {  
+ const appUrl = "https://www.welovelivemusic.es";  
+ if (navigator.share) {  
+ navigator.share({  
+ title: 'We LOVE Live Music',  
+ text: '¡Entra para hacer tus peticiones y disfrutar en directo!',  
+ url: appUrl  
+ }).catch(() => {});  
+ } else {  
+ navigator.clipboard.writeText(appUrl).then(() => {  
+ alert("¡Enlace copiado al portapapeles: www.welovelivemusic.es!");  
+ }).catch(() => {  
+ alert("www.welovelivemusic.es");  
+ });  
+ }  
  }  
 
  function handlePollBannerClick(e) {  
@@ -3255,7 +3319,7 @@
  banner.className = "neon-banner enabled";  
  banner.textContent = "🟢 Peticiones de canciones: ABIERTAS";  
  if (toggleBtn) {  
- toggleBtn.textContent = "🔓 Peticiones: ABIERTAS (Toca para cerrar)";  
+ toggleBtn.textContent = "🔓 Peticiones: ABIERTAS (Toca para abrir)";  
  toggleBtn.classList.remove('off');  
  toggleBtn.style.background = "var(--success)";  
  }  
