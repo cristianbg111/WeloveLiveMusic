@@ -1855,11 +1855,6 @@
  <span>📈 Estadísticas de la Temporada</span>  
  <span style="color: #3b82f6);">➔</span>  
  </button>  
-
- <button class="admin-menu-btn" style="background: rgba(16, 185, 129, 0.15); color: #fff; border-color: var(--success);" ontouchend="handleAdminMenuBtn(event, 'qr')" onclick="openAdminModal('qr')">  
- <span>📱 Código QR de Acceso Sala</span>  
- <span style="color: var(--success);">➔</span>  
- </button>  
  </div>  
  </div>  
   
@@ -1941,25 +1936,6 @@
  <button class="admin-action-btn btn-reset-light" id="btnResetLight" style="padding: 14px;" ontouchend="setAdminEffect('off', ''); event.preventDefault();" onclick="setAdminEffect('off', '')">🛑 Apagar Efectos / Normal</button>  
  </div>  
  <button class="history-back-action-btn" ontouchend="handleModalClose(event, 'lights')" onclick="closeAdminModal('lights')">⬅️ Volver al Panel Admin</button>  
- </div>  
- </div>  
-
- <!-- MODAL INDEPENDIENTE: CÓDIGO QR DE ACCESO SALA -->  
- <div class="modal" id="adminQrModal">  
- <div class="history-modal-content" onclick="event.stopPropagation()">  
- <div class="history-header-box">  
- <div class="history-modal-title">  
- <span>📱 Código QR de Acceso</span>  
- </div>  
- <div class="history-modal-subtitle">Muestra este código en pantalla para que escaneen la web</div>  
- </div>  
- <div class="saved-lists-scroll" style="align-items: center; justify-content: center; gap: 14px; padding-top: 10px; text-align: center;">  
- <div id="qrCodeContainer" style="background: #ffffff; padding: 16px; border-radius: 16px; box-shadow: 0 0 20px rgba(255,255,255,0.2); display: inline-block;">  
- <!-- El QR dinámico se genera aquí mediante JavaScript -->  
- </div>  
- <div id="qrUrlDisplay" style="font-size: 0.75rem; color: var(--text-muted); word-break: break-all; padding: 0 10px;"></div>  
- </div>  
- <button class="history-back-action-btn" ontouchend="handleModalClose(event, 'qr')" onclick="closeAdminModal('qr')">⬅️ Volver al Panel Admin</button>  
  </div>  
  </div>  
 
@@ -2358,7 +2334,6 @@
  document.getElementById('globalStatsModal').addEventListener('click', () => closeAdminModal('stats'));  
  document.getElementById('adminContestModal').addEventListener('click', () => closeAdminModal('contest'));  
  document.getElementById('adminLightsModal').addEventListener('click', () => closeAdminModal('lights'));  
- document.getElementById('adminQrModal').addEventListener('click', () => closeAdminModal('qr'));  
  document.getElementById('adminPollModal').addEventListener('click', () => closeAdminModal('poll'));  
  document.getElementById('contestModal').addEventListener('click', closeContestModal);  
  document.getElementById('publicParticipantsModal').addEventListener('click', closePublicParticipantsModal);  
@@ -2509,7 +2484,6 @@
  const globalStatsModal = document.getElementById('globalStatsModal');  
  const adminContestModal = document.getElementById('adminContestModal');  
  const adminLightsModal = document.getElementById('adminLightsModal');  
- const adminQrModal = document.getElementById('adminQrModal');  
  const adminPollModal = document.getElementById('adminPollModal');  
  const contestModal = document.getElementById('contestModal');  
  const publicParticipantsModal = document.getElementById('publicParticipantsModal');  
@@ -2520,14 +2494,13 @@
  return;  
  }  
 
- if (manualModal.style.display === 'flex' || searchResultsModal.style.display === 'flex' || historyModal.style.display === 'flex' || globalStatsModal.style.display === 'flex' || adminContestModal.style.display === 'flex' || adminLightsModal.style.display === 'flex' || adminQrModal.style.display === 'flex' || adminPollModal.style.display === 'flex' || contestModal.style.display === 'flex' || publicParticipantsModal.style.display === 'flex' || pollModal.style.display === 'flex') {  
+ if (manualModal.style.display === 'flex' || searchResultsModal.style.display === 'flex' || historyModal.style.display === 'flex' || globalStatsModal.style.display === 'flex' || adminContestModal.style.display === 'flex' || adminLightsModal.style.display === 'flex' || adminPollModal.style.display === 'flex' || contestModal.style.display === 'flex' || publicParticipantsModal.style.display === 'flex' || pollModal.style.display === 'flex') {  
  closeManualModal();  
  closeSearchResultsModal();  
  closeHistoryModal();  
  closeAdminModal('stats');  
  closeAdminModal('contest');  
  closeAdminModal('lights');  
- closeAdminModal('qr');  
  closeAdminModal('poll');  
  closeContestModal();  
  closePublicParticipantsModal();  
@@ -2614,7 +2587,6 @@
  closeAdminModal('stats');  
  closeAdminModal('contest');  
  closeAdminModal('lights');  
- closeAdminModal('qr');  
  closeAdminModal('poll');  
  closeContestModal();  
  closePublicParticipantsModal();  
@@ -2804,10 +2776,6 @@
  } else if (type === 'lights') {  
  document.getElementById('adminLightsModal').style.display = 'flex';  
  history.pushState({ screen: 'adminLights' }, '', '');  
- } else if (type === 'qr') {  
- generateQrCodeView();  
- document.getElementById('adminQrModal').style.display = 'flex';  
- history.pushState({ screen: 'adminQr' }, '', '');  
  } else if (type === 'poll') {  
  document.getElementById('adminPollModal').style.display = 'flex';  
  history.pushState({ screen: 'adminPoll' }, '', '');  
@@ -2821,32 +2789,11 @@
  document.getElementById('adminContestModal').style.display = 'none';  
  } else if (type === 'lights') {  
  document.getElementById('adminLightsModal').style.display = 'none';  
- } else if (type === 'qr') {  
- document.getElementById('adminQrModal').style.display = 'none';  
  } else if (type === 'poll') {  
  document.getElementById('adminPollModal').style.display = 'none';  
  } else if (type === 'stats') {  
  document.getElementById('globalStatsModal').style.display = 'none';  
  }  
- }  
-
- /* --- GENERADOR NATIVO DE CÓDIGO QR --- */  
- function generateQrCodeView() {  
- const currentUrl = window.location.href;  
- document.getElementById('qrUrlDisplay').textContent = currentUrl;  
- const container = document.getElementById('qrCodeContainer');  
- container.innerHTML = '';  
-
- // Generación de código QR puro en SVG integrado para máxima compatibilidad instantánea  
- const qrSvgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(currentUrl)}`;  
- const img = document.createElement('img');  
- img.src = qrSvgUrl;  
- img.alt = 'Código QR de Acceso';  
- img.style.width = '200px';  
- img.style.height = '200px';  
- img.style.display = 'block';  
- img.style.borderRadius = '8px';  
- container.appendChild(img);  
  }  
 
  function launchExpressPoll() {  
@@ -2945,7 +2892,7 @@
  const btn = document.querySelector('.btn-burst');  
  if (btn) btn.classList.add('active');  
  } else if (effectData.type === 'heart') {  
- // Sin botón individual dedicado que recalcar  
+ // Sin botón individual dedicado que recalcar o se puede añadir si se desea  
  }  
  }  
 
