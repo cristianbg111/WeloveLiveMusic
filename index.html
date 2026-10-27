@@ -1440,7 +1440,65 @@
  pointer-events: auto;  
  }  
  #room-light-overlay.active {  
- display: block;  
+ display: flex;  
+ justify-content: center;  
+ align-items: center;  
+ }  
+
+ /* CONTENEDOR DE CORAZÓN PARA EL EFECTO ESPECIAL */  
+ .heart-effect-container {  
+ display: none;  
+ flex-direction: column;  
+ align-items: center;  
+ justify-content: center;  
+ width: 100%;  
+ height: 100%;  
+ background: #ffffff;  
+ position: absolute;  
+ top: 0;  
+ left: 0;  
+ pointer-events: none;  
+ }  
+ #room-light-overlay.heart-active .heart-effect-container {  
+ display: flex;  
+ }  
+
+ .giant-pulsing-heart {  
+ width: 160px;  
+ height: 160px;  
+ background: #ff0055;  
+ position: relative;  
+ transform: rotate(-45deg);  
+ animation: heartBeatAnim 0.8s infinite alternate ease-in-out;  
+ box-shadow: 0 0 40px rgba(255, 0, 85, 0.8);  
+ }  
+ .giant-pulsing-heart::before,  
+ .giant-pulsing-heart::after {  
+ content: "";  
+ width: 160px;  
+ height: 160px;  
+ background: #ff0055;  
+ border-radius: 50%;  
+ position: absolute;  
+ }  
+ .giant-pulsing-heart::before {  
+ top: -80px;  
+ left: 0;  
+ }  
+ .giant-pulsing-heart::after {  
+ left: 80px;  
+ top: 0;  
+ }  
+
+ @keyframes heartBeatAnim {  
+ 0% {  
+ transform: rotate(-45deg) scale(0.9);  
+ filter: drop-shadow(0 0 15px rgba(255, 0, 85, 0.6));  
+ }  
+ 100% {  
+ transform: rotate(-45deg) scale(1.2);  
+ filter: drop-shadow(0 0 35px rgba(255, 0, 85, 1));  
+ }  
  }  
 
  /* AVISO TÁCTIL EN EL OVERLAY PARA DOBLE PULSACIÓN */  
@@ -1463,6 +1521,7 @@
  transition: opacity 0.2s ease;  
  -webkit-backdrop-filter: blur(6px);  
  backdrop-filter: blur(6px);  
+ z-index: 10;  
  }  
  #room-light-overlay.show-notice #room-light-notice {  
  opacity: 1;  
@@ -1671,6 +1730,9 @@
   
  <!-- CAPA DE ILUMINACIÓN GLOBAL DE SALA (Z-INDEX MÁS ALTO PARA CUBRIR STANDBY) -->  
  <div id="room-light-overlay">  
+ <div class="heart-effect-container">  
+ <div class="giant-pulsing-heart"></div>  
+ </div>  
  <div id="room-light-notice">Toca 2 veces para salir</div>  
  </div>  
 
@@ -1869,6 +1931,7 @@
  <div class="admin-action-row" style="flex-direction: column; gap: 8px;">  
  <button class="admin-action-btn btn-flash" style="width: 100%; padding: 14px;" ontouchend="setAdminEffect('flash', 'flash'); event.preventDefault();" onclick="setAdminEffect('flash', 'flash')">⚡ Flash Blanco (Estrobo)</button>  
  <button class="admin-action-btn btn-burst" style="width: 100%; padding: 14px;" ontouchend="setAdminEffect('burst', 'burst'); event.preventDefault();" onclick="setAdminEffect('burst', 'burst')">💥 Ráfaga Color</button>  
+ <button class="admin-action-btn" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #ff0055, #ec4899); color: #fff;" ontouchend="setAdminEffect('heart', 'heart'); event.preventDefault();" onclick="setAdminEffect('heart', 'heart')">❤️ Corazón Neón (Fondo Blanco)</button>  
  </div>  
  <button class="admin-action-btn btn-reset-light" id="btnResetLight" style="padding: 14px;" ontouchend="setAdminEffect('off', ''); event.preventDefault();" onclick="setAdminEffect('off', '')">🛑 Apagar Efectos / Normal</button>  
  </div>  
@@ -2828,6 +2891,8 @@
  } else if (effectData.type === 'burst') {  
  const btn = document.querySelector('.btn-burst');  
  if (btn) btn.classList.add('active');  
+ } else if (effectData.type === 'heart') {  
+ // Sin botón individual dedicado que recalcar o se puede añadir si se desea  
  }  
  }  
 
@@ -2838,7 +2903,7 @@
 
  if (now - lastOverlayTapTime < 800) {  
  userDismissedLight = true;  
- overlay.classList.remove('active', 'show-notice');  
+ overlay.classList.remove('active', 'heart-active', 'show-notice');  
  if (effectInterval) {  
  clearInterval(effectInterval);  
  effectInterval = null;  
@@ -2862,10 +2927,8 @@
  const adminLightsModal = document.getElementById('adminLightsModal');  
  const isInAdminLights = adminLightsModal && adminLightsModal.style.display === 'flex';  
 
- // Se activa en Standby, Menú Principal y cualquier pantalla.  
- // Únicamente se excluye si el administrador está activamente dentro de la ventana de luces configurándolas.  
  if (!effectData || effectData.type === 'off' || isInAdminLights || userDismissedLight) {  
- overlay.classList.remove('active', 'show-notice');  
+ overlay.classList.remove('active', 'heart-active', 'show-notice');  
  overlay.style.backgroundColor = '';  
  return;  
  }  
@@ -2873,8 +2936,13 @@
  overlay.classList.add('active');  
 
  if (effectData.type === 'color') {  
+ overlay.classList.remove('heart-active');  
  overlay.style.backgroundColor = effectData.value;  
+ } else if (effectData.type === 'heart') {  
+ overlay.classList.add('heart-active');  
+ overlay.style.backgroundColor = '#ffffff';  
  } else if (effectData.type === 'flash') {  
+ overlay.classList.remove('heart-active');  
  let isWhite = true;  
  overlay.style.backgroundColor = '#ffffff';  
  effectInterval = setInterval(() => {  
@@ -2882,6 +2950,7 @@
  overlay.style.backgroundColor = isWhite ? '#ffffff' : '#000000';  
  }, 80);  
  } else if (effectData.type === 'burst') {  
+ overlay.classList.remove('heart-active');  
  const colors = ['#ff007f', '#00f3ff', '#ffe600', '#8b5cf6', '#10b981', '#ff5500', '#ffffff'];  
  effectInterval = setInterval(() => {  
  const randomColor = colors[Math.floor(Math.random() * colors.length)];  
