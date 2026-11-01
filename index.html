@@ -102,16 +102,16 @@
  align-items: center;  
  height: 100vh;  
  height: 100dvh;  
- padding: max(8px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));  
+ padding: max(6px, env(safe-area-inset-top)) max(6px, env(safe-area-inset-right)) max(6px, env(safe-area-inset-bottom)) max(6px, env(safe-area-inset-left));  
  overflow: hidden;  
  }  
   
- /* --- CHASIS DE CONSOLA DJ --- */
+ /* --- CHASIS DE CONSOLA DJ COMPACTO --- */
  .card {  
  background: var(--card-bg);  
  border: 1px solid var(--border);  
- border-radius: 28px;  
- padding: 14px 14px;  
+ border-radius: 24px;  
+ padding: 10px 12px;  
  max-width: 480px;  
  width: 100%;  
  height: 100%;  
@@ -127,18 +127,18 @@
  overflow: hidden;  
  }  
   
- /* --- CABECERA TIPO PLATO DE MEZCLAS / DECK HORIZONTAL --- */
+ /* --- CABECERA TIPO PLATO DE MEZCLAS --- */
  .brand-header {  
  display: flex;  
  flex-direction: row;  
  align-items: center;  
  justify-content: space-between;  
- gap: 9px;  
+ gap: 8px;  
  background: var(--surface);  
  border: 1px solid var(--border);  
- padding: 8px 10px;  
- border-radius: 20px;  
- margin-bottom: 10px;  
+ padding: 7px 10px;  
+ border-radius: 16px;  
+ margin-bottom: 6px;  
  flex-shrink: 0;  
  position: relative;  
  overflow: hidden;  
@@ -156,13 +156,13 @@
  /* Plato de vinilo giratorio para el logo */
  .vinyl-platter {  
  position: relative;  
- width: 56px;  
- height: 56px;  
- min-width: 56px;  
+ width: 48px;  
+ height: 48px;  
+ min-width: 48px;  
  border-radius: 50%;  
- padding: 5px;  
+ padding: 4px;  
  background: repeating-radial-gradient(circle, #0a0a0f 0px, #0a0a0f 2px, #222538 3px, #0a0a0f 4px);  
- box-shadow: 0 0 14px var(--glow-accent), 0 0 0 2px var(--accent);  
+ box-shadow: 0 0 10px var(--glow-accent), 0 0 0 1.5px var(--accent);  
  display: flex;  
  align-items: center;  
  justify-content: center;  
@@ -177,8 +177,8 @@
  height: 100%;  
  object-fit: contain;  
  border-radius: 50%;  
- padding: 3px;  
- border: 1.5px solid var(--cyan);  
+ padding: 2px;  
+ border: 1px solid var(--cyan);  
  background: #000000;  
  display: block;  
  }  
@@ -203,20 +203,20 @@
  .live-sub-badge {  
  display: inline-flex;  
  align-items: center;  
- gap: 5px;  
+ gap: 4px;  
  font-family: 'JetBrains Mono', monospace;  
- font-size: 0.58rem;  
+ font-size: 0.52rem;  
  font-weight: 800;  
  color: var(--cyan);  
  text-transform: uppercase;  
  letter-spacing: 1px;  
- margin-bottom: 2px;  
+ margin-bottom: 1px;  
  }  
  .live-sub-badge .mini-eq {  
  display: inline-flex;  
  align-items: flex-end;  
  gap: 2px;  
- height: 9px;  
+ height: 8px;  
  }  
  .live-sub-badge .mini-eq i {  
  width: 2px;  
@@ -224,25 +224,24 @@
  border-radius: 1px;  
  animation: miniEqBounce 0.6s infinite alternate;  
  }  
- .live-sub-badge .mini-eq i:nth-child(1) { height: 4px; animation-duration: 0.45s; }  
- .live-sub-badge .mini-eq i:nth-child(2) { height: 9px; animation-duration: 0.7s; background: var(--cyan); }  
- .live-sub-badge .mini-eq i:nth-child(3) { height: 6px; animation-duration: 0.55s; }  
+ .live-sub-badge .mini-eq i:nth-child(1) { height: 3px; animation-duration: 0.45s; }  
+ .live-sub-badge .mini-eq i:nth-child(2) { height: 8px; animation-duration: 0.7s; background: var(--cyan); }  
+ .live-sub-badge .mini-eq i:nth-child(3) { height: 5px; animation-duration: 0.55s; }  
  @keyframes miniEqBounce {  
- 0% { height: 3px; }  
- 100% { height: 9px; }  
+ 0% { height: 2px; }  
+ 100% { height: 8px; }  
  }  
   
- /* Título principal ajustado para que entre completo sin cortarse */
  h1 {   
  font-family: 'Syne', sans-serif;  
- font-size: clamp(0.65rem, 2.8vw, 0.78rem);   
+ font-size: clamp(0.62rem, 2.5vw, 0.74rem);   
  font-weight: 800;   
  color: var(--text);   
  letter-spacing: -0.2px;  
  text-transform: uppercase;  
  margin: 0;  
  white-space: nowrap;  
- line-height: 1.15;  
+ line-height: 1.1;  
  width: 100%;  
  }  
    
@@ -250,11 +249,11 @@
  background: var(--surface-elevated);  
  border: 1px solid var(--border);  
  color: var(--text);  
- padding: 6px 9px;  
- border-radius: 11px;  
+ padding: 5px 8px;  
+ border-radius: 10px;  
  cursor: pointer;  
  font-family: inherit;  
- font-size: 0.66rem;  
+ font-size: 0.62rem;  
  font-weight: 800;  
  white-space: nowrap;  
  -webkit-appearance: none;  
@@ -272,30 +271,30 @@
  align-items: center;  
  background: var(--surface);  
  border: 1px solid var(--badge-bg);  
- padding: 6px 12px;  
- border-radius: 12px;  
- font-size: 0.72rem;  
+ padding: 5px 10px;  
+ border-radius: 10px;  
+ font-size: 0.7rem;  
  font-weight: 700;  
  color: var(--text);  
- margin-bottom: 8px;  
+ margin-bottom: 6px;  
  flex-shrink: 0;  
  }  
  .user-badge-bar span { color: var(--cyan); }  
 
- /* --- BANNER GANADOR EN DIRECTO --- */  
+ /* --- BANNER GANADOR EN DIRECTO COMPACTO --- */  
  .winner-banner {  
  background: linear-gradient(90deg, #ff9900, #ff007a, #7928ca);  
- border: 2px solid #ffffff;  
+ border: 1.5px solid #ffffff;  
  color: #ffffff;  
- padding: 10px 12px;  
- border-radius: 14px;  
- font-size: 0.82rem;  
+ padding: 8px 10px;  
+ border-radius: 12px;  
+ font-size: 0.76rem;  
  font-weight: 900;  
  text-align: center;  
  text-transform: uppercase;  
- letter-spacing: 0.6px;  
- margin-bottom: 8px;  
- box-shadow: 0 0 25px rgba(255, 0, 122, 0.8);  
+ letter-spacing: 0.5px;  
+ margin-bottom: 6px;  
+ box-shadow: 0 0 20px rgba(255, 0, 122, 0.7);  
  animation: pulseWinner 1.4s infinite alternate;  
  flex-shrink: 0;  
  }  
@@ -417,14 +416,14 @@
  .poll-notification-banner {  
  background: linear-gradient(90deg, rgba(121, 40, 202, 0.35), rgba(255, 0, 122, 0.35));  
  border: 1.5px solid var(--cyan);  
- border-radius: 14px;  
- padding: 9px 12px;  
- margin-bottom: 8px;  
+ border-radius: 12px;  
+ padding: 7px 10px;  
+ margin-bottom: 6px;  
  display: flex;  
  align-items: center;  
  justify-content: space-between;  
  cursor: pointer;  
- box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);  
+ box-shadow: 0 0 12px rgba(0, 240, 255, 0.25);  
  animation: pulsePollBtn 1.5s infinite alternate;  
  flex-shrink: 0;  
  }  
@@ -432,27 +431,27 @@
  background: linear-gradient(90deg, rgba(255, 184, 0, 0.2), rgba(121, 40, 202, 0.25));  
  border-color: var(--count-bg);  
  animation: none;  
- box-shadow: 0 0 12px rgba(255, 184, 0, 0.25);  
+ box-shadow: 0 0 10px rgba(255, 184, 0, 0.2);  
  }  
  @keyframes pulsePollBtn {  
  0% { border-color: var(--cyan); }  
  100% { border-color: var(--accent); }  
  }  
  .poll-notif-text {  
- font-size: 0.76rem;  
+ font-size: 0.72rem;  
  font-weight: 800;  
  color: var(--text);  
  text-transform: uppercase;  
  display: flex;  
  align-items: center;  
- gap: 6px;  
+ gap: 5px;  
  }  
  .poll-notif-action {  
  background: var(--accent);  
  color: #ffffff;  
- padding: 5px 10px;  
- border-radius: 8px;  
- font-size: 0.7rem;  
+ padding: 4px 8px;  
+ border-radius: 6px;  
+ font-size: 0.66rem;  
  font-weight: 800;  
  text-transform: uppercase;  
  white-space: nowrap;  
@@ -465,15 +464,15 @@
  /* --- PANTALLA LED DE ESTADO "ON AIR" --- */
  .neon-banner {  
  width: 100%;  
- padding: 6px 12px;  
- border-radius: 10px;  
+ padding: 5px 10px;  
+ border-radius: 8px;  
  font-family: 'JetBrains Mono', monospace;  
- font-size: 0.68rem;  
+ font-size: 0.64rem;  
  font-weight: 800;  
  text-align: center;  
  text-transform: uppercase;  
- letter-spacing: 1px;  
- margin-bottom: 10px;  
+ letter-spacing: 0.8px;  
+ margin-bottom: 6px;  
  flex-shrink: 0;  
  transition: all 0.3s ease;  
  }  
@@ -482,14 +481,14 @@
  background: rgba(0, 245, 155, 0.1);  
  border: 1px solid rgba(0, 245, 155, 0.4);  
  color: var(--success);  
- box-shadow: inset 0 0 12px rgba(0, 245, 155, 0.15);  
+ box-shadow: inset 0 0 10px rgba(0, 245, 155, 0.12);  
  }  
   
  .neon-banner.disabled {  
  background: rgba(255, 42, 84, 0.15);  
  border: 1px solid var(--danger);  
  color: var(--danger);  
- box-shadow: 0 0 12px rgba(255, 42, 84, 0.5);  
+ box-shadow: 0 0 10px rgba(255, 42, 84, 0.4);  
  animation: pulseNeon 2s infinite;  
  }  
   
@@ -498,56 +497,56 @@
  50% { opacity: 0.65; }  
  }  
   
- /* --- TARJETA COMPACTA DE INSTRUCCIONES TIPO VIP PASS --- */
+ /* --- TARJETA COMPACTA DE INSTRUCCIONES --- */
  .instructions-box {  
  background: var(--surface);  
  border: 1px solid var(--border);  
- border-radius: 16px;  
- padding: 9px 12px;  
- margin-bottom: 10px;  
+ border-radius: 14px;  
+ padding: 7px 10px;  
+ margin-bottom: 6px;  
  flex-shrink: 0;  
  display: flex;  
  flex-direction: column;  
- gap: 3px;  
+ gap: 2px;  
  }  
   
  .instructions-title {  
  font-family: 'Syne', sans-serif;  
- font-size: 0.74rem;  
+ font-size: 0.7rem;  
  font-weight: 800;  
  color: var(--cyan);  
  text-transform: uppercase;  
- letter-spacing: 0.6px;  
+ letter-spacing: 0.5px;  
  display: flex;  
  align-items: center;  
- gap: 6px;  
+ gap: 5px;  
  }  
   
  .instructions-text {  
- font-size: 0.7rem;  
+ font-size: 0.66rem;  
  color: var(--text-muted);  
- line-height: 1.3;  
+ line-height: 1.25;  
  font-weight: 600;  
  }  
   
  .aviso-evento {  
- margin-top: 4px;  
- padding: 4px 8px;  
- background: rgba(255, 184, 0, 0.12);  
- border-left: 3px solid var(--count-bg);  
- border-radius: 4px;  
+ margin-top: 3px;  
+ padding: 3px 6px;  
+ background: rgba(255, 184, 0, 0.1);  
+ border-left: 2px solid var(--count-bg);  
+ border-radius: 3px;  
  color: var(--count-bg);  
- font-size: 0.66rem;  
+ font-size: 0.62rem;  
  font-weight: 700;  
  }  
   
  /* ==========================================================
-    DASHBOARD: HERO PLAYER + MATRIZ LAUNCHPAD 2x2
+    DASHBOARD: HERO PLAYER + MATRIZ LAUNCHPAD 2x2 MÁS COMPACTA
     ========================================================== */  
  .dashboard-container {  
  display: flex;  
  flex-direction: column;  
- gap: 10px;  
+ gap: 8px;  
  flex: 1;  
  justify-content: space-between;  
  padding: 2px 0;  
@@ -560,17 +559,17 @@
  width: 100%;  
  background: linear-gradient(135deg, #ff007a 0%, #7928ca 60%, #1e1b4b 100%);  
  border: 1px solid rgba(255, 255, 255, 0.35);  
- border-radius: 22px;  
- padding: 16px;  
+ border-radius: 18px;  
+ padding: 12px 14px;  
  cursor: pointer;  
  display: flex;  
  flex-direction: column;  
  align-items: stretch;  
  justify-content: space-between;  
- gap: 12px;  
+ gap: 8px;  
  position: relative;  
  overflow: hidden;  
- box-shadow: 0 12px 30px -6px rgba(255, 0, 122, 0.55);  
+ box-shadow: 0 10px 25px -6px rgba(255, 0, 122, 0.5);  
  -webkit-appearance: none;  
  touch-action: manipulation;  
  pointer-events: auto !important;  
@@ -593,31 +592,31 @@
  border: 1px solid rgba(255, 255, 255, 0.25);  
  color: #fff;  
  font-family: 'JetBrains Mono', monospace;  
- font-size: 0.62rem;  
+ font-size: 0.58rem;  
  font-weight: 800;  
- padding: 4px 9px;  
+ padding: 3px 8px;  
  border-radius: 99px;  
  text-transform: uppercase;  
- letter-spacing: 0.8px;  
+ letter-spacing: 0.6px;  
  }  
  .hero-wave {  
  display: flex;  
  align-items: center;  
- gap: 3px;  
- height: 20px;  
+ gap: 2px;  
+ height: 16px;  
  }  
  .hero-wave span {  
- width: 3px;  
+ width: 2.5px;  
  background: #ffffff;  
  border-radius: 99px;  
  animation: wavePulse 0.8s ease-in-out infinite alternate;  
  }  
- .hero-wave span:nth-child(1) { height: 8px; animation-delay: 0.1s; }  
- .hero-wave span:nth-child(2) { height: 18px; animation-delay: 0.3s; background: var(--cyan); }  
- .hero-wave span:nth-child(3) { height: 12px; animation-delay: 0.2s; }  
- .hero-wave span:nth-child(4) { height: 20px; animation-delay: 0.4s; background: var(--cyan); }  
- .hero-wave span:nth-child(5) { height: 10px; animation-delay: 0.15s; }  
- .hero-wave span:nth-child(6) { height: 16px; animation-delay: 0.35s; }  
+ .hero-wave span:nth-child(1) { height: 6px; animation-delay: 0.1s; }  
+ .hero-wave span:nth-child(2) { height: 14px; animation-delay: 0.3s; background: var(--cyan); }  
+ .hero-wave span:nth-child(3) { height: 10px; animation-delay: 0.2s; }  
+ .hero-wave span:nth-child(4) { height: 16px; animation-delay: 0.4s; background: var(--cyan); }  
+ .hero-wave span:nth-child(5) { height: 8px; animation-delay: 0.15s; }  
+ .hero-wave span:nth-child(6) { height: 12px; animation-delay: 0.35s; }  
  @keyframes wavePulse {  
  0% { transform: scaleY(0.45); opacity: 0.6; }  
  100% { transform: scaleY(1); opacity: 1; }  
@@ -625,51 +624,51 @@
 
  .hero-main-title {  
  font-family: 'Syne', sans-serif;  
- font-size: 1.18rem;  
+ font-size: 1.05rem;  
  font-weight: 800;  
  color: #ffffff;  
  text-transform: uppercase;  
- letter-spacing: 0.5px;  
- line-height: 1.15;  
+ letter-spacing: 0.4px;  
+ line-height: 1.1;  
  pointer-events: none;  
  }  
 
  .hero-fake-search {  
  background: rgba(7, 7, 12, 0.55);  
- border: 1px solid rgba(255, 255, 255, 0.25);  
- border-radius: 12px;  
- padding: 9px 12px;  
+ border: 1px solid rgba(255, 255, 255, 0.22);  
+ border-radius: 10px;  
+ padding: 7px 10px;  
  display: flex;  
  align-items: center;  
  justify-content: space-between;  
  color: rgba(255, 255, 255, 0.85);  
- font-size: 0.76rem;  
+ font-size: 0.72rem;  
  font-weight: 600;  
  pointer-events: none;  
  }  
  .hero-fake-search strong {  
  background: #ffffff;  
  color: #07070c;  
- padding: 3px 8px;  
- border-radius: 6px;  
- font-size: 0.66rem;  
+ padding: 2px 6px;  
+ border-radius: 5px;  
+ font-size: 0.62rem;  
  font-weight: 800;  
  text-transform: uppercase;  
  }  
 
- /* 2. MATRIZ LAUNCHPAD 2x2 PARA LOS 4 PADS DE SALA */
+ /* 2. MATRIZ LAUNCHPAD 2x2 MÁS COMPACTA PARA GANAR ESPACIO EN MODALES */
  .launchpad-grid {  
  display: grid;  
  grid-template-columns: repeat(2, 1fr);  
- gap: 10px;  
+ gap: 8px;  
  flex: 1;  
  }  
 
  .dash-btn.pad-card {  
  background: var(--surface);  
  border: 1.5px solid var(--border);  
- border-radius: 20px;  
- padding: 14px 12px;  
+ border-radius: 16px;  
+ padding: 10px 10px;  
  display: flex;  
  flex-direction: column;  
  align-items: flex-start;  
@@ -681,8 +680,9 @@
  touch-action: manipulation;  
  pointer-events: auto !important;  
  transition: transform 0.15s ease, border-color 0.2s ease;  
- box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 6px 16px rgba(0,0,0,0.3);  
- min-height: 92px;  
+ box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 4px 12px rgba(0,0,0,0.25);  
+ min-height: 74px;  
+ max-height: 84px;  
  }  
  .dash-btn.pad-card:active {  
  transform: scale(0.95);  
@@ -690,36 +690,36 @@
 
  .pad-led {  
  position: absolute;  
- top: 12px;  
- right: 12px;  
- width: 8px;  
- height: 8px;  
+ top: 10px;  
+ right: 10px;  
+ width: 7px;  
+ height: 7px;  
  border-radius: 50%;  
  pointer-events: none;  
  }  
 
  .pad-icon {  
- font-size: 1.45rem;  
+ font-size: 1.2rem;  
  line-height: 1;  
- margin-bottom: 6px;  
+ margin-bottom: 4px;  
  pointer-events: none;  
  }  
 
  .pad-title {  
  font-family: 'Syne', sans-serif;  
- font-size: 0.8rem;  
+ font-size: 0.75rem;  
  font-weight: 800;  
  color: var(--text);  
  text-transform: uppercase;  
- line-height: 1.15;  
+ line-height: 1.1;  
  pointer-events: none;  
  }  
 
  .pad-sub {  
- font-size: 0.64rem;  
+ font-size: 0.6rem;  
  font-weight: 600;  
  color: var(--text-muted);  
- margin-top: 2px;  
+ margin-top: 1px;  
  pointer-events: none;  
  }  
 
@@ -727,25 +727,25 @@
  border-color: rgba(121, 40, 202, 0.5);  
  background: linear-gradient(160deg, var(--surface) 40%, rgba(121, 40, 202, 0.18) 100%);  
  }  
- .dash-btn-queue .pad-led { background: #a855f7; box-shadow: 0 0 8px #a855f7; }  
+ .dash-btn-queue .pad-led { background: #a855f7; box-shadow: 0 0 6px #a855f7; }  
 
  .dash-btn-contest.pad-card {  
  border-color: rgba(255, 184, 0, 0.5);  
  background: linear-gradient(160deg, var(--surface) 40%, rgba(255, 184, 0, 0.16) 100%);  
  }  
- .dash-btn-contest .pad-led { background: var(--count-bg); box-shadow: 0 0 8px var(--count-bg); }  
+ .dash-btn-contest .pad-led { background: var(--count-bg); box-shadow: 0 0 6px var(--count-bg); }  
 
  .dash-btn-qr.pad-card {  
  border-color: rgba(0, 240, 255, 0.45);  
  background: linear-gradient(160deg, var(--surface) 40%, rgba(0, 240, 255, 0.15) 100%);  
  }  
- .dash-btn-qr .pad-led { background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }  
+ .dash-btn-qr .pad-led { background: var(--cyan); box-shadow: 0 0 6px var(--cyan); }  
 
  .dash-btn-admin-access.pad-card {  
  border-color: rgba(255, 42, 84, 0.45);  
  background: linear-gradient(160deg, var(--surface) 40%, rgba(255, 42, 84, 0.15) 100%);  
  }  
- .dash-btn-admin-access .pad-led { background: var(--danger); box-shadow: 0 0 8px var(--danger); }  
+ .dash-btn-admin-access .pad-led { background: var(--danger); box-shadow: 0 0 6px var(--danger); }  
 
  .dash-btn-participants {  
  width: 100%;  
@@ -761,15 +761,15 @@
  .dash-btn-queue.has-new::after {  
  content: 'NUEVA';  
  position: absolute;  
- top: 10px;  
- right: 26px;  
+ top: 8px;  
+ right: 22px;  
  background: var(--danger);  
  color: #fff;  
- font-size: 0.55rem;  
+ font-size: 0.5rem;  
  font-weight: 900;  
- padding: 2px 5px;  
- border-radius: 4px;  
- box-shadow: 0 0 8px var(--danger);  
+ padding: 2px 4px;  
+ border-radius: 3px;  
+ box-shadow: 0 0 6px var(--danger);  
  animation: pulseNotification 1.2s infinite;  
  }  
   
@@ -1186,31 +1186,62 @@
  .page-btn:disabled { opacity: 0.3; cursor: not-allowed; background: var(--tag-bg); color: var(--text-muted); }  
  .page-info { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--text); font-weight: 800; }  
   
- /* --- FOOTER COMPACTO DE ESTUDIO --- */
+ /* --- FOOTER CON CONTADOR ONLINE EN VIVO Y VISITAS --- */
  .footer {  
- margin-top: 6px;  
- padding-top: 8px;  
+ margin-top: 4px;  
+ padding-top: 6px;  
  border-top: 1px solid var(--border);  
  display: flex;  
  justify-content: space-between;  
  align-items: center;  
- font-size: 0.64rem;  
+ font-size: 0.62rem;  
  color: var(--text-muted);  
  flex-shrink: 0;  
+ gap: 4px;  
+ flex-wrap: wrap;  
  }  
  .footer strong { color: var(--accent); }  
+ .footer-stats-group {
+ display: flex;
+ align-items: center;
+ gap: 6px;
+ }
+ .online-counter {  
+ font-family: 'JetBrains Mono', monospace;  
+ font-size: 0.6rem;  
+ background: rgba(0, 245, 155, 0.1);  
+ border: 1px solid rgba(0, 245, 155, 0.35);  
+ padding: 2px 7px;  
+ border-radius: 99px;  
+ color: var(--success);  
+ font-weight: 700;
+ display: inline-flex;
+ align-items: center;
+ gap: 4px;
+ }  
+ .online-dot {
+ width: 6px;
+ height: 6px;
+ background: var(--success);
+ border-radius: 50%;
+ animation: pulseOnline 1.5s infinite;
+ }
+ @keyframes pulseOnline {
+ 0%, 100% { opacity: 1; transform: scale(1); }
+ 50% { opacity: 0.4; transform: scale(0.85); }
+ }
  .visitor-counter {  
  font-family: 'JetBrains Mono', monospace;  
- font-size: 0.62rem;  
+ font-size: 0.6rem;  
  background: var(--surface);  
  border: 1px solid var(--border);  
- padding: 3px 8px;  
+ padding: 2px 7px;  
  border-radius: 99px;  
  color: var(--text-muted);  
  }  
  .visitor-counter span { color: var(--cyan); font-weight: 800; }  
   
- /* --- MODALES Y REPRODUCTOR DE VINILO --- */
+ /* --- MODALES Y REPRODUCTOR DE VINILO --- */  
  .modal {  
  display: none;  
  position: fixed;  
@@ -1740,7 +1771,7 @@
  }  
  #room-light-overlay.show-notice #room-light-notice { opacity: 1; }  
 
- /* --- PANTALLA STANDBY DE BIENVENIDA CON PLATO DJ GIRATORIO AJUSTADO --- */  
+ /* --- PANTALLA STANDBY DE BIENVENIDA CON PLATO DJ GIRATORIO --- */  
  #standby-screen {  
  position: fixed;  
  top: 0; left: 0;  
@@ -1906,7 +1937,7 @@
 </head>  
 <body>  
   
- <!-- CAPA DE ILUMINACIÓN GLOBAL DE SALA (Z-INDEX MÁS ALTO PARA CUBRIR STANDBY) -->  
+ <!-- CAPA DE ILUMINACIÓN GLOBAL DE SALA -->  
  <div id="room-light-overlay">  
  <div class="heart-effect-container">  
  <div class="giant-pulsing-heart"></div>  
@@ -1914,7 +1945,7 @@
  <div id="room-light-notice">Toca 2 veces para salir</div>  
  </div>  
 
- <!-- OVERLAY DE RULETA Y CUENTA ATRÁS EN DIRECTO (SINCRONIZADO EN TODA LA SALA) -->
+ <!-- OVERLAY DE RULETA Y CUENTA ATRÁS EN DIRECTO -->
  <div id="rouletteOverlay" onclick="closeRouletteOverlay()">
  <div class="roulette-box" onclick="event.stopPropagation()">
  <div class="roulette-badge" id="rouletteStatusBadge">🎲 SORTEO EN DIRECTO EN SALA</div>
@@ -1944,7 +1975,7 @@
  </div>  
  </div>  
   
- <!-- BOTÓN FLOTANTE DE NOTIFICACIÓN DE ENCUESTA ACTIVA O CERRADA CON RESULTADOS -->  
+ <!-- BOTÓN FLOTANTE DE NOTIFICACIÓN DE ENCUESTA -->  
  <div class="poll-notification-banner" id="pollNotificationBanner" style="display: none;" ontouchend="handlePollBannerClick(event)" onclick="openPollModal()">  
  <div class="poll-notif-text">  
  📊 <span id="pollNotifTitleDisplay">Encuesta activa en sala</span>  
@@ -1952,7 +1983,7 @@
  <div class="poll-notif-action" id="pollNotifActionBtn">¡Votar!</div>  
  </div>  
 
- <!-- BANNER GANADOR EN DIRECTO (GLOBAL PARA TODOS) -->  
+ <!-- BANNER GANADOR EN DIRECTO -->  
  <div class="winner-banner" id="winnerBanner" style="display: none;">  
  🏆 ¡GANADOR DEL SORTEO: <span id="winnerNameDisplay">---</span>! 🏆  
  </div>  
@@ -1965,7 +1996,7 @@
    
  <div id="neonBanner" class="neon-banner enabled">🟢 Peticiones de canciones: ABIERTAS</div>  
   
- <!-- PESTAÑA MENÚ DE INICIO (DASHBOARD TIPO LAUNCHPAD MUSICAL) -->  
+ <!-- PESTAÑA MENÚ DE INICIO (DASHBOARD) -->  
  <div id="tabHome" class="tab-content active">  
  <div class="instructions-box">  
  <div class="instructions-title">🎧 CONSOLA DE PETICIONES EN VIVO</div>  
@@ -1991,7 +2022,7 @@
  </div>
  </button>  
    
- <!-- MATRIZ 2x2 DE PADS DE CABINA -->
+ <!-- MATRIZ 2x2 DE PADS DE CABINA COMPACTOS -->
  <div class="launchpad-grid">
  <button class="dash-btn pad-card dash-btn-queue" id="dashQueueBtn" ontouchend="handleDashClick(event, 'queue')" onclick="switchTab('queue', true)">  
  <span class="pad-led"></span>
@@ -2039,7 +2070,6 @@
  <button class="theme-btn" style="padding: 5px 10px;" ontouchend="handleMenuBack(event, 'home')" onclick="switchTab('home', true)">⬅️ Consola</button>  
  </div>  
 
- <!-- BANNER / BOTÓN DESTACADO PARA ACTIVAR O DESACTIVAR PETICIONES (VISIBLE EN MODO ADMIN/DJ) -->  
  <div id="djToggleContainer" style="display: none; margin-bottom: 8px; width: 100%;">  
  <button class="toggle-requests-btn off" id="masterToggleBtn" style="width: 100%; padding: 12px; font-size: 0.82rem; font-weight: 900; letter-spacing: 0.5px;" ontouchend="executeToggleRequests(event)" onclick="executeToggleRequests(event)">🔒 Peticiones: OFF</button>  
  </div>  
@@ -2063,7 +2093,7 @@
  </div>  
  </div>  
 
- <!-- PESTAÑA MODO ADMIN DE SALA (MATRIZ 2x2 DE CABINA) -->  
+ <!-- PESTAÑA MODO ADMIN DE SALA -->  
  <div id="tabAdmin" class="tab-content">  
  <div class="queue-header" style="flex-direction: row; justify-content: space-between; align-items: center; margin-bottom: 6px;">  
  <span class="queue-title">🎛️ Rack de Control (Admin)</span>  
@@ -2093,11 +2123,17 @@
  </div>  
  </div>  
   
+ <!-- FOOTER CON CONTADOR EN VIVO Y VISITAS -->  
  <footer class="footer">  
  <div>App creada por <strong>We Love The Remember Studios</strong></div>
- <div class="visitor-counter">  
+ <div class="footer-stats-group">
+ <div class="online-counter" title="Usuarios conectados ahora en la app">  
+ <i class="online-dot"></i> Online: <span id="onlineCount">1</span>  
+ </div>  
+ <div class="visitor-counter" title="Visitas históricas acumuladas">  
  👀 Visitas: <span id="visitorCount">...</span>  
  </div>  
+ </div>
  </footer>  
  </div>  
 
@@ -2310,7 +2346,6 @@
  <button class="close-results-btn" onclick="closeSearchResultsModal()">✕ Cerrar</button>  
  </div>  
 
- <!-- BARRA DE BÚSQUEDA DENTRO DEL MODAL -->  
  <form class="search-box" id="modalSearchForm" action="javascript:void(0);" style="margin-bottom: 8px;">  
  <input type="text" id="modalSongInput" placeholder="Ej: U2, Queen, Estopa..." autocomplete="off" spellcheck="false" enterkeyhint="search" />  
  <button type="button" class="clear-search-btn" id="modalClearSearchBtn" onclick="modalClearSearchInput()" title="Borrar texto">✕</button>  
@@ -2328,7 +2363,7 @@
  </div>  
  </div>  
 
- <!-- MODAL DE DETALLE / PREVISUALIZACIÓN CON VINILO Y PANTALLA CDJ -->  
+ <!-- MODAL DE DETALLE / PREVISUALIZACIÓN -->  
  <div class="modal" id="imageModal">  
  <div class="modal-content" onclick="event.stopPropagation()">  
    
@@ -2488,7 +2523,7 @@
  </div>  
  </div>  
   
- <!-- PANTALLA STANDBY DE BIENVENIDA (ACTIVA AL ABRIR) -->  
+ <!-- PANTALLA STANDBY DE BIENVENIDA -->  
  <div id="standby-screen">  
  <div class="laser-background"></div>  
  <div class="strobe-overlay"></div>  
@@ -2631,6 +2666,23 @@
  const count = snapshot.val() || 0;  
  document.getElementById('visitorCount').textContent = count.toLocaleString();  
  });  
+
+ /* --- SISTEMA DE PRESENCIA EN VIVO (USUARIOS ONLINE) --- */
+ const onlineRef = db.ref('welove_live_music_online');
+ const connectedRef = db.ref('.info/connected');
+
+ connectedRef.on('value', (snapshot) => {
+ if (snapshot.val() === true) {
+ const myPresenceRef = onlineRef.push();
+ myPresenceRef.onDisconnect().remove();
+ myPresenceRef.set(true);
+ }
+ });
+
+ onlineRef.on('value', (snapshot) => {
+ const onlineCount = snapshot.numChildren() || 1;
+ document.getElementById('onlineCount').textContent = onlineCount;
+ });
   
  queueRef.on('value', (snapshot) => {  
  const data = snapshot.val();  
@@ -2988,7 +3040,7 @@
  }  
  }  
 
- /* --- FUNCIONES WRAPPER TÁCTILES ANTI-CONFLICTO DE LOGO --- */  
+ /* --- FUNCIONES WRAPPER TÁCTILES --- */  
  function handleDashClick(e, actionType) {  
  if (e) {  
  e.preventDefault();  
@@ -3175,7 +3227,7 @@
  }  
  }  
 
- /* --- LÓGICA MEJORADA DE ENCUESTA EXPRESS --- */  
+ /* --- LÓGICA DE ENCUESTA EXPRESS --- */  
  function launchExpressPoll() {  
  if (!isAdminModeActive) return;  
  const question = document.getElementById('adminPollQuestion').value.trim() || '¿Qué estilo ponemos ahora?';  
@@ -3551,7 +3603,7 @@
  }  
  }  
 
- /* --- CONTROLADOR ÚNICO SIN DOBLE DISPARO + RULETA VISUAL DE 5 SEGUNDOS --- */
+ /* --- CONTROLADOR RULETA DE 5 SEGUNDOS --- */
  function handleRunDrawClick(e) {
  if (e) {
  e.preventDefault();
