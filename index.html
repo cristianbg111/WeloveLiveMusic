@@ -111,7 +111,7 @@
  background: var(--card-bg);  
  border: 1px solid var(--border);  
  border-radius: 28px;  
- padding: 14px 16px;  
+ padding: 14px 14px;  
  max-width: 480px;  
  width: 100%;  
  height: 100%;  
@@ -133,10 +133,10 @@
  flex-direction: row;  
  align-items: center;  
  justify-content: space-between;  
- gap: 12px;  
+ gap: 9px;  
  background: var(--surface);  
  border: 1px solid var(--border);  
- padding: 9px 12px;  
+ padding: 8px 10px;  
  border-radius: 20px;  
  margin-bottom: 10px;  
  flex-shrink: 0;  
@@ -153,14 +153,14 @@
  background: linear-gradient(90deg, var(--cyan), var(--accent), var(--accent-2));  
  }  
   
- /* Plato de vinilo giratorio para el logo (ajustado para ver el logo entero sin recortes) */
+ /* Plato de vinilo giratorio para el logo */
  .vinyl-platter {  
  position: relative;  
- width: 62px;  
- height: 62px;  
- min-width: 62px;  
+ width: 56px;  
+ height: 56px;  
+ min-width: 56px;  
  border-radius: 50%;  
- padding: 6px;  
+ padding: 5px;  
  background: repeating-radial-gradient(circle, #0a0a0f 0px, #0a0a0f 2px, #222538 3px, #0a0a0f 4px);  
  box-shadow: 0 0 14px var(--glow-accent), 0 0 0 2px var(--accent);  
  display: flex;  
@@ -177,7 +177,7 @@
  height: 100%;  
  object-fit: contain;  
  border-radius: 50%;  
- padding: 4px;  
+ padding: 3px;  
  border: 1.5px solid var(--cyan);  
  background: #000000;  
  display: block;  
@@ -189,13 +189,14 @@
  align-items: center;  
  flex: 1;  
  min-width: 0;  
- gap: 8px;  
+ gap: 6px;  
  }  
 
  .title-stack {  
  display: flex;  
  flex-direction: column;  
  align-items: flex-start;  
+ flex: 1;  
  min-width: 0;  
  }  
 
@@ -204,11 +205,11 @@
  align-items: center;  
  gap: 5px;  
  font-family: 'JetBrains Mono', monospace;  
- font-size: 0.6rem;  
+ font-size: 0.58rem;  
  font-weight: 800;  
  color: var(--cyan);  
  text-transform: uppercase;  
- letter-spacing: 1.2px;  
+ letter-spacing: 1px;  
  margin-bottom: 2px;  
  }  
  .live-sub-badge .mini-eq {  
@@ -231,29 +232,29 @@
  100% { height: 9px; }  
  }  
   
+ /* Título principal ajustado para que entre completo sin cortarse */
  h1 {   
  font-family: 'Syne', sans-serif;  
- font-size: 0.94rem;   
+ font-size: clamp(0.65rem, 2.8vw, 0.78rem);   
  font-weight: 800;   
  color: var(--text);   
- letter-spacing: 0.3px;  
+ letter-spacing: -0.2px;  
  text-transform: uppercase;  
  margin: 0;  
  white-space: nowrap;  
- overflow: hidden;  
- text-overflow: ellipsis;  
- max-width: 100%;  
+ line-height: 1.15;  
+ width: 100%;  
  }  
    
  .theme-btn {  
  background: var(--surface-elevated);  
  border: 1px solid var(--border);  
  color: var(--text);  
- padding: 7px 11px;  
- border-radius: 12px;  
+ padding: 6px 9px;  
+ border-radius: 11px;  
  cursor: pointer;  
  font-family: inherit;  
- font-size: 0.7rem;  
+ font-size: 0.66rem;  
  font-weight: 800;  
  white-space: nowrap;  
  -webkit-appearance: none;  
@@ -303,6 +304,115 @@
  100% { transform: scale(1.02); }  
  }  
 
+ /* --- OVERLAY DE RULETA Y CUENTA ATRÁS EN DIRECTO --- */
+ #rouletteOverlay {
+ display: none;
+ position: fixed;
+ top: 0; left: 0;
+ width: 100vw; height: 100vh; height: 100dvh;
+ background: rgba(5, 5, 11, 0.94);
+ -webkit-backdrop-filter: blur(18px);
+ backdrop-filter: blur(18px);
+ z-index: 2500;
+ justify-content: center;
+ align-items: center;
+ padding: 20px;
+ pointer-events: auto !important;
+ }
+ .roulette-box {
+ background: linear-gradient(160deg, #151726 0%, #0b0c14 100%);
+ border: 2px solid var(--cyan);
+ border-radius: 28px;
+ padding: 24px 18px;
+ max-width: 420px;
+ width: 100%;
+ text-align: center;
+ box-shadow: 0 0 50px rgba(0, 240, 255, 0.35), 0 0 30px var(--glow-accent);
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ gap: 14px;
+ position: relative;
+ overflow: hidden;
+ }
+ .roulette-badge {
+ background: rgba(255, 0, 122, 0.2);
+ border: 1px solid var(--accent);
+ color: #ffffff;
+ font-family: 'JetBrains Mono', monospace;
+ font-size: 0.7rem;
+ font-weight: 800;
+ padding: 5px 14px;
+ border-radius: 99px;
+ text-transform: uppercase;
+ letter-spacing: 1.2px;
+ }
+ .roulette-countdown-circle {
+ width: 92px;
+ height: 92px;
+ border-radius: 50%;
+ background: radial-gradient(circle, rgba(255, 0, 122, 0.3) 0%, rgba(7, 7, 12, 0.9) 75%);
+ border: 3px solid var(--cyan);
+ box-shadow: 0 0 25px rgba(0, 240, 255, 0.6), inset 0 0 15px rgba(255, 0, 122, 0.5);
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ font-family: 'Syne', sans-serif;
+ font-size: 2.6rem;
+ font-weight: 800;
+ color: #ffffff;
+ text-shadow: 0 0 15px var(--cyan);
+ animation: countdownBeat 0.95s infinite ease-in-out;
+ }
+ @keyframes countdownBeat {
+ 0% { transform: scale(0.94); }
+ 50% { transform: scale(1.08); }
+ 100% { transform: scale(0.94); }
+ }
+ .roulette-slot-window {
+ width: 100%;
+ min-height: 84px;
+ background: #06070c;
+ border: 2px solid var(--border);
+ border-radius: 18px;
+ padding: 16px 12px;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ justify-content: center;
+ position: relative;
+ box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.9);
+ transition: all 0.35s ease;
+ }
+ .roulette-slot-window.winner-revealed {
+ background: linear-gradient(135deg, rgba(255, 184, 0, 0.22), rgba(255, 0, 122, 0.28));
+ border-color: var(--count-bg);
+ box-shadow: 0 0 30px rgba(255, 184, 0, 0.65), inset 0 0 15px rgba(255, 255, 255, 0.2);
+ transform: scale(1.03);
+ }
+ .roulette-slot-label {
+ font-family: 'JetBrains Mono', monospace;
+ font-size: 0.62rem;
+ color: var(--text-muted);
+ text-transform: uppercase;
+ letter-spacing: 1px;
+ margin-bottom: 4px;
+ }
+ .roulette-slot-name {
+ font-family: 'Syne', sans-serif;
+ font-size: 1.35rem;
+ font-weight: 800;
+ color: var(--cyan);
+ text-transform: uppercase;
+ letter-spacing: 0.8px;
+ word-break: break-word;
+ }
+ .roulette-slot-window.winner-revealed .roulette-slot-name {
+ font-size: 1.55rem;
+ color: #ffffff;
+ text-shadow: 0 0 15px var(--count-bg), 0 0 25px var(--accent);
+ }
+
  /* --- BOTÓN FLOTANTE DE NOTIFICACIÓN DE ENCUESTA --- */  
  .poll-notification-banner {  
  background: linear-gradient(90deg, rgba(121, 40, 202, 0.35), rgba(255, 0, 122, 0.35));  
@@ -317,6 +427,12 @@
  box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);  
  animation: pulsePollBtn 1.5s infinite alternate;  
  flex-shrink: 0;  
+ }  
+ .poll-notification-banner.closed-poll {  
+ background: linear-gradient(90deg, rgba(255, 184, 0, 0.2), rgba(121, 40, 202, 0.25));  
+ border-color: var(--count-bg);  
+ animation: none;  
+ box-shadow: 0 0 12px rgba(255, 184, 0, 0.25);  
  }  
  @keyframes pulsePollBtn {  
  0% { border-color: var(--cyan); }  
@@ -339,6 +455,11 @@
  font-size: 0.7rem;  
  font-weight: 800;  
  text-transform: uppercase;  
+ white-space: nowrap;  
+ }  
+ .poll-notification-banner.closed-poll .poll-notif-action {  
+ background: var(--count-bg);  
+ color: #000000;  
  }  
 
  /* --- PANTALLA LED DE ESTADO "ON AIR" --- */
@@ -1267,6 +1388,27 @@
  max-height: 90vh;  
  overflow-y: auto;  
  }  
+ .poll-status-pill {  
+ display: inline-block;  
+ font-family: 'JetBrains Mono', monospace;  
+ font-size: 0.65rem;  
+ font-weight: 800;  
+ padding: 4px 10px;  
+ border-radius: 99px;  
+ text-transform: uppercase;  
+ letter-spacing: 0.8px;  
+ margin-bottom: 8px;  
+ }  
+ .poll-status-pill.open {  
+ background: rgba(0, 245, 155, 0.15);  
+ border: 1px solid var(--success);  
+ color: var(--success);  
+ }  
+ .poll-status-pill.closed {  
+ background: rgba(255, 184, 0, 0.15);  
+ border: 1px solid var(--count-bg);  
+ color: var(--count-bg);  
+ }  
  .poll-question-title {  
  font-family: 'Syne', sans-serif;  
  font-size: 0.92rem;  
@@ -1294,11 +1436,17 @@
  word-break: break-word;  
  -webkit-appearance: none;  
  touch-action: manipulation;  
+ transition: opacity 0.2s ease, transform 0.15s ease;  
+ }  
+ .poll-option-btn:disabled {  
+ opacity: 0.55;  
+ cursor: not-allowed;  
  }  
  .poll-option-btn.voted {  
  background: var(--success);  
  border-color: #ffffff;  
  color: #000000;  
+ opacity: 1 !important;  
  }  
  .poll-results-bar-container {  
  display: flex;  
@@ -1307,10 +1455,14 @@
  font-size: 0.72rem;  
  font-weight: 700;  
  text-align: left;  
+ background: var(--surface);  
+ padding: 12px;  
+ border-radius: 14px;  
+ border: 1px solid var(--border);  
  }  
- .poll-bar-row { display: flex; flex-direction: column; gap: 2px; }  
+ .poll-bar-row { display: flex; flex-direction: column; gap: 3px; }  
  .poll-bar-info { display: flex; justify-content: space-between; color: var(--text-muted); }  
- .poll-bar-track { width: 100%; height: 8px; background: var(--surface); border-radius: 99px; overflow: hidden; }  
+ .poll-bar-track { width: 100%; height: 8px; background: var(--input-bg); border-radius: 99px; overflow: hidden; }  
  .poll-bar-fill { height: 100%; background: linear-gradient(90deg, var(--cyan), var(--accent)); width: 0%; transition: width 0.4s ease; }  
 
  /* --- HISTÓRICO Y MODALES ADMIN --- */  
@@ -1493,11 +1645,11 @@
  .admin-action-btn {  
  flex: 1;  
  width: 100%;  
- min-height: 50px;  
- padding: 14px;  
+ min-height: 48px;  
+ padding: 12px 10px;  
  border-radius: 14px;  
  font-weight: 800;  
- font-size: 0.82rem;  
+ font-size: 0.78rem;  
  text-transform: uppercase;  
  border: 2px solid transparent;  
  cursor: pointer;  
@@ -1628,7 +1780,6 @@
  pointer-events: none;  
  }  
   
- /* Disco de vinilo principal con galleta central amplia donde el logo se ve completo */
  #bouncing-logo {  
  position: absolute;  
  top: 28%;  
@@ -1746,7 +1897,7 @@
  body * { visibility: hidden; }  
  #historyModal, #historyModal *, #tabQueue, #tabQueue * { visibility: visible; }  
  #historyModal { position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; height: auto !important; background: #ffffff !important; color: #000000 !important; display: block !important; max-height: none !important; overflow: visible !important; }  
- .history-back-action-btn, .history-actions, .history-header-box .history-modal-subtitle, .queue-actions, .theme-btn, .dashboard-container, .search-box, .footer, .pagination, .delete-song-btn, .dj-row-controls, .neon-banner, .brand-header, #standby-screen { display: none !important; }  
+ .history-back-action-btn, .history-actions, .history-header-box .history-modal-subtitle, .queue-actions, .theme-btn, .dashboard-container, .search-box, .footer, .pagination, .delete-song-btn, .dj-row-controls, .neon-banner, .brand-header, #standby-screen, #rouletteOverlay { display: none !important; }  
  .saved-lists-scroll { max-height: none !important; overflow: visible !important; }  
  .queue-item, .history-item-card { border: 1px solid #ddd !important; background: #f8fafc !important; color: #000 !important; break-inside: avoid; page-break-inside: avoid; margin-bottom: 8px !important; }  
  .song-title, .song-artist, .requester-tag, .history-item-title, .history-item-date { color: #000 !important; }  
@@ -1762,6 +1913,19 @@
  </div>  
  <div id="room-light-notice">Toca 2 veces para salir</div>  
  </div>  
+
+ <!-- OVERLAY DE RULETA Y CUENTA ATRÁS EN DIRECTO (SINCRONIZADO EN TODA LA SALA) -->
+ <div id="rouletteOverlay" onclick="closeRouletteOverlay()">
+ <div class="roulette-box" onclick="event.stopPropagation()">
+ <div class="roulette-badge" id="rouletteStatusBadge">🎲 SORTEO EN DIRECTO EN SALA</div>
+ <div class="roulette-countdown-circle" id="rouletteCountdownNum">5</div>
+ <div class="roulette-slot-window" id="rouletteSlotWindow">
+ <div class="roulette-slot-label" id="rouletteSlotLabel">Buscando participante premiado...</div>
+ <div class="roulette-slot-name" id="rouletteSlotName">---</div>
+ </div>
+ <button type="button" class="back-btn" id="closeRouletteBtn" style="display: none; margin-top: 4px;" onclick="closeRouletteOverlay()">✕ Cerrar pantalla de sorteo</button>
+ </div>
+ </div>
 
  <div class="card">  
  <!-- CABECERA TIPO PLATO DJ HORIZONTAL -->
@@ -1780,12 +1944,12 @@
  </div>  
  </div>  
   
- <!-- BOTÓN FLOTANTE DE NOTIFICACIÓN DE ENCUESTA ACTIVA -->  
+ <!-- BOTÓN FLOTANTE DE NOTIFICACIÓN DE ENCUESTA ACTIVA O CERRADA CON RESULTADOS -->  
  <div class="poll-notification-banner" id="pollNotificationBanner" style="display: none;" ontouchend="handlePollBannerClick(event)" onclick="openPollModal()">  
  <div class="poll-notif-text">  
  📊 <span id="pollNotifTitleDisplay">Encuesta activa en sala</span>  
  </div>  
- <div class="poll-notif-action">¡Votar!</div>  
+ <div class="poll-notif-action" id="pollNotifActionBtn">¡Votar!</div>  
  </div>  
 
  <!-- BANNER GANADOR EN DIRECTO (GLOBAL PARA TODOS) -->  
@@ -1960,12 +2124,13 @@
  <div class="history-modal-title">  
  <span>🎁 Sorteo y Concurso (<span id="participantCountBadgeAdmin">0</span>)</span>  
  </div>  
- <div class="history-modal-subtitle">Gestiona inscripciones y realiza el sorteo automático</div>  
+ <div class="history-modal-subtitle">Gestiona inscripciones y lanza la ruleta en directo</div>  
  </div>  
- <div class="saved-lists-scroll" style="gap: 12px; padding-top: 4px;">  
- <button class="admin-action-btn" id="runDrawBtnModal" style="background: var(--accent); color: #fff; width: 100%; padding: 14px; font-size: 0.9rem;" ontouchend="handleRunDrawAction(event)" onclick="runLuckyDraw()">🎉 ¡Sortear Premio Ahora!</button>  
- <button class="admin-action-btn" id="toggleContestBtnAdminModal" style="background: var(--success); color: #000; width: 100%; padding: 14px; font-size: 0.9rem;" ontouchend="handleToggleContest(event)" onclick="toggleContestState()">🔒 Botón Sorteo: ABIERTO</button>  
- <button class="admin-action-btn" style="background: var(--danger); color: #fff; width: 100%; padding: 14px; font-size: 0.9rem;" ontouchend="handleClearContest(event)" onclick="clearContestParticipants()">🗑️ Borrar lista de participantes</button>  
+ <div class="saved-lists-scroll" style="gap: 10px; padding-top: 4px;">  
+ <button type="button" class="admin-action-btn" id="runDrawBtnModal" style="background: linear-gradient(90deg, var(--accent), var(--accent-2)); color: #fff; width: 100%; padding: 15px; font-size: 0.9rem; box-shadow: 0 4px 15px var(--glow-accent);" onclick="handleRunDrawClick(event)">🎰 ¡Lanzar Ruleta y Sortear Ahora!</button>  
+ <button type="button" class="admin-action-btn" id="toggleContestBtnAdminModal" style="background: var(--success); color: #000; width: 100%; padding: 14px; font-size: 0.86rem;" ontouchend="handleToggleContest(event)" onclick="toggleContestState()">🔒 Botón Sorteo: ABIERTO</button>  
+ <button type="button" class="admin-action-btn" style="background: var(--surface-elevated); border: 1px solid var(--count-bg); color: var(--count-bg); width: 100%; padding: 13px; font-size: 0.82rem;" onclick="clearWinnerBannerOnly()">🧹 Ocultar Cartel de Ganador</button>  
+ <button type="button" class="admin-action-btn" style="background: rgba(255, 42, 84, 0.16); border: 1px solid var(--danger); color: var(--danger); width: 100%; padding: 13px; font-size: 0.82rem;" ontouchend="handleClearContest(event)" onclick="clearContestParticipants()">🗑️ Borrar lista de participantes</button>  
  </div>  
  <button class="history-back-action-btn" ontouchend="handleModalClose(event, 'contest')" onclick="closeAdminModal('contest')">⬅️ Volver al Panel Admin</button>  
  </div>  
@@ -2032,34 +2197,61 @@
  <div class="history-header-box">  
  <div class="history-modal-title">  
  <span>📊 Encuesta Express (4 Opciones)</span>  
+ <span class="poll-status-pill" id="adminPollStatusBadge" style="margin-bottom: 0;">INACTIVA</span>  
  </div>  
- <div class="history-modal-subtitle">Lanza una pregunta y opciones a todos los móviles</div>  
+ <div class="history-modal-subtitle">Lanza, cierra manteniendo resultados o reinicia a cero</div>  
  </div>  
- <div class="saved-lists-scroll" style="gap: 10px; padding-top: 4px;">  
- <div class="manual-form-group">  
+ <div class="saved-lists-scroll" style="gap: 8px; padding-top: 2px;">  
+ <div class="poll-results-bar-container" style="margin-bottom: 4px;">  
+ <div style="font-size: 0.7rem; font-weight: 800; color: var(--cyan); text-transform: uppercase; margin-bottom: 2px;">  
+ 📈 Resultados en Sala (<span id="adminTotalVotesDisplay">0</span> votos totales)  
+ </div>  
+ <div class="poll-bar-row">  
+ <div class="poll-bar-info"><span id="adminPollLabel1">Opción 1</span><span id="adminPollCount1">0 (0%)</span></div>  
+ <div class="poll-bar-track"><div class="poll-bar-fill" id="adminPollBar1"></div></div>  
+ </div>  
+ <div class="poll-bar-row">  
+ <div class="poll-bar-info"><span id="adminPollLabel2">Opción 2</span><span id="adminPollCount2">0 (0%)</span></div>  
+ <div class="poll-bar-track"><div class="poll-bar-fill" id="adminPollBar2"></div></div>  
+ </div>  
+ <div class="poll-bar-row">  
+ <div class="poll-bar-info"><span id="adminPollLabel3">Opción 3</span><span id="adminPollCount3">0 (0%)</span></div>  
+ <div class="poll-bar-track"><div class="poll-bar-fill" id="adminPollBar3"></div></div>  
+ </div>  
+ <div class="poll-bar-row">  
+ <div class="poll-bar-info"><span id="adminPollLabel4">Opción 4</span><span id="adminPollCount4">0 (0%)</span></div>  
+ <div class="poll-bar-track"><div class="poll-bar-fill" id="adminPollBar4"></div></div>  
+ </div>  
+ </div>  
+
+ <div class="manual-form-group" style="margin-bottom: 6px;">  
  <label class="manual-form-label">Pregunta</label>  
  <input type="text" id="adminPollQuestion" class="manual-form-input" placeholder="Ej: ¿Qué estilo ponemos ahora?" value="¿Qué estilo ponemos ahora?" />  
  </div>  
- <div class="manual-form-group">  
+ <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">  
+ <div class="manual-form-group" style="margin-bottom: 4px;">  
  <label class="manual-form-label">Opción 1</label>  
  <input type="text" id="adminPollOpt1" class="manual-form-input" value="Makina" />  
  </div>  
- <div class="manual-form-group">  
+ <div class="manual-form-group" style="margin-bottom: 4px;">  
  <label class="manual-form-label">Opción 2</label>  
  <input type="text" id="adminPollOpt2" class="manual-form-input" value="Cantaditas 90s" />  
  </div>  
- <div class="manual-form-group">  
+ <div class="manual-form-group" style="margin-bottom: 4px;">  
  <label class="manual-form-label">Opción 3</label>  
  <input type="text" id="adminPollOpt3" class="manual-form-input" value="Bakalao 80s" />  
  </div>  
- <div class="manual-form-group">  
+ <div class="manual-form-group" style="margin-bottom: 4px;">  
  <label class="manual-form-label">Opción 4</label>  
  <input type="text" id="adminPollOpt4" class="manual-form-input" value="Commercial Dance" />  
  </div>  
- <div style="display: flex; gap: 8px; margin-top: 6px;">  
- <button class="admin-action-btn" style="background: var(--badge-bg); color: #fff; flex: 2; padding: 14px;" ontouchend="handleLaunchPoll(event)" onclick="launchExpressPoll()">🚀 Lanzar</button>  
- <button class="admin-action-btn" style="background: var(--danger); color: #fff; flex: 1; padding: 14px;" ontouchend="handleClosePoll(event)" onclick="closeExpressPoll()">🛑 Cerrar</button>  
  </div>  
+
+ <div style="display: flex; gap: 8px; margin-top: 6px;">  
+ <button class="admin-action-btn" style="background: var(--success); color: #000; flex: 1;" ontouchend="handleLaunchPoll(event)" onclick="launchExpressPoll()">🚀 Lanzar / Abrir</button>  
+ <button class="admin-action-btn" style="background: var(--count-bg); color: #000; flex: 1;" ontouchend="handleClosePoll(event)" onclick="closeExpressPoll()">🔒 Cerrar Votación</button>  
+ </div>  
+ <button class="admin-action-btn" style="background: rgba(255, 42, 84, 0.18); border: 1px solid var(--danger); color: var(--danger); width: 100%; margin-top: 2px;" ontouchend="handleResetPoll(event)" onclick="resetExpressPoll()">🔄 Reiniciar Encuesta (Borrar Resultados)</button>  
  </div>  
  <button class="history-back-action-btn" ontouchend="handleModalClose(event, 'poll')" onclick="closeAdminModal('poll')">⬅️ Volver al Panel Admin</button>  
  </div>  
@@ -2068,6 +2260,7 @@
  <!-- MODAL DE VOTACIÓN DE ENCUESTA EXPRESS (PÚBLICO) -->  
  <div class="modal" id="pollModal">  
  <div class="poll-modal-box" onclick="event.stopPropagation()">  
+ <div class="poll-status-pill open" id="publicPollStatusBadge">🟢 VOTACIÓN ABIERTA</div>  
  <div class="poll-question-title" id="pollQuestionDisplay">📊 ¿Qué estilo ponemos ahora?</div>  
  <div class="poll-buttons-grid">  
  <button class="poll-option-btn" id="pollOpt1Btn" onclick="votePoll(1)">Opción 1</button>  
@@ -2105,7 +2298,7 @@
  <div class="poll-bar-track"><div class="poll-bar-fill" id="pollBar4"></div></div>  
  </div>  
  </div>  
- <button class="back-btn" style="margin-top: 14px;" onclick="closePollModal()">Cerrar</button>  
+ <button class="back-btn" style="margin-top: 14px;" onclick="closePollModal()">Cerrar ventana</button>  
  </div>  
  </div>  
 
@@ -2345,6 +2538,7 @@
  const contestRef = db.ref('welove_live_music_contest');  
  const contestOpenRef = db.ref('welove_live_music_settings/contestOpen');  
  const winnerRef = db.ref('welove_live_music_settings/currentWinner');  
+ const drawEventRef = db.ref('welove_live_music_settings/drawEvent');  
  const pollRef = db.ref('welove_live_music_poll');  
   
  let modalDebounceTimer;  
@@ -2372,6 +2566,11 @@
  let lastOverlayTapTime = 0;  
  let latestAdminEffectData = null;  
  let standbyTimer = null;  
+
+ let isDrawInProgress = false;
+ let lastDrawTriggerTime = 0;
+ let rouletteSpinInterval = null;
+ let rouletteCountdownInterval = null;
   
  document.addEventListener('DOMContentLoaded', () => {  
  const standbyScreen = document.getElementById('standby-screen');  
@@ -2386,18 +2585,6 @@
  updateThemeButton(savedTheme);  
   
  document.getElementById('themeToggle').addEventListener('click', toggleTheme);  
-
- const runDrawBtnModal = document.getElementById('runDrawBtnModal');  
- const handleRunDrawAction = (e) => {  
- if (e) {  
- e.preventDefault();  
- e.stopPropagation();  
- if (e.stopImmediatePropagation) e.stopImmediatePropagation();  
- }  
- runLuckyDraw();  
- };  
- runDrawBtnModal.addEventListener('click', handleRunDrawAction);  
- runDrawBtnModal.addEventListener('touchend', handleRunDrawAction, { passive: false });  
    
  const modalSongInput = document.getElementById('modalSongInput');  
  modalSongInput.addEventListener('input', handleModalInput);  
@@ -2466,24 +2653,93 @@
  document.getElementById('participantCountBadgeModal').textContent = countVal;  
  });  
 
+ drawEventRef.on('value', (snapshot) => {
+ const drawData = snapshot.val();
+ if (!drawData || !drawData.id || !drawData.winner) return;
+
+ const now = Date.now();
+ const lastSeenDrawId = sessionStorage.getItem('last_seen_draw_id');
+ if (lastSeenDrawId !== String(drawData.id) && Math.abs(now - Number(drawData.id)) < 12000) {
+ sessionStorage.setItem('last_seen_draw_id', String(drawData.id));
+ startVisualRouletteSequence(drawData.winner, drawData.participants || []);
+ }
+ });
+
  pollRef.on('value', (snapshot) => {  
  const pollData = snapshot.val();  
  const pollNotifBanner = document.getElementById('pollNotificationBanner');  
+ const pollNotifActionBtn = document.getElementById('pollNotifActionBtn');  
+ const publicStatusBadge = document.getElementById('publicPollStatusBadge');  
+ const adminStatusBadge = document.getElementById('adminPollStatusBadge');  
   
+ if (pollData && pollData.pollId) {  
+ const savedPollId = localStorage.getItem('user_poll_id');  
+ if (savedPollId !== String(pollData.pollId)) {  
+ localStorage.removeItem('user_poll_vote');  
+ localStorage.setItem('user_poll_id', String(pollData.pollId));  
+ }  
+ }  
+
+ const opt1 = (pollData && pollData.opt1) ? pollData.opt1 : 'Opción 1';  
+ const opt2 = (pollData && pollData.opt2) ? pollData.opt2 : 'Opción 2';  
+ const opt3 = (pollData && pollData.opt3) ? pollData.opt3 : 'Opción 3';  
+ const opt4 = (pollData && pollData.opt4) ? pollData.opt4 : 'Opción 4';  
+
+ const votes1 = (pollData && pollData.votes1) ? pollData.votes1 : 0;  
+ const votes2 = (pollData && pollData.votes2) ? pollData.votes2 : 0;  
+ const votes3 = (pollData && pollData.votes3) ? pollData.votes3 : 0;  
+ const votes4 = (pollData && pollData.votes4) ? pollData.votes4 : 0;  
+ const totalVotes = votes1 + votes2 + votes3 + votes4;  
+
+ const pct1 = totalVotes > 0 ? Math.round((votes1 / totalVotes) * 100) : 0;  
+ const pct2 = totalVotes > 0 ? Math.round((votes2 / totalVotes) * 100) : 0;  
+ const pct3 = totalVotes > 0 ? Math.round((votes3 / totalVotes) * 100) : 0;  
+ const pct4 = totalVotes > 0 ? Math.round((votes4 / totalVotes) * 100) : 0;  
+
+ document.getElementById('adminTotalVotesDisplay').textContent = totalVotes;  
+ document.getElementById('adminPollLabel1').textContent = opt1;  
+ document.getElementById('adminPollLabel2').textContent = opt2;  
+ document.getElementById('adminPollLabel3').textContent = opt3;  
+ document.getElementById('adminPollLabel4').textContent = opt4;  
+ document.getElementById('adminPollCount1').textContent = `${votes1} (${pct1}%)`;  
+ document.getElementById('adminPollCount2').textContent = `${votes2} (${pct2}%)`;  
+ document.getElementById('adminPollCount3').textContent = `${votes3} (${pct3}%)`;  
+ document.getElementById('adminPollCount4').textContent = `${votes4} (${pct4}%)`;  
+ document.getElementById('adminPollBar1').style.width = pct1 + '%';  
+ document.getElementById('adminPollBar2').style.width = pct2 + '%';  
+ document.getElementById('adminPollBar3').style.width = pct3 + '%';  
+ document.getElementById('adminPollBar4').style.width = pct4 + '%';  
+
  if (!pollData || !pollData.active) {  
  pollNotifBanner.style.display = 'none';  
+ adminStatusBadge.textContent = 'INACTIVA';  
+ adminStatusBadge.className = 'poll-status-pill';  
  closePollModal();  
  return;  
  }  
 
+ const isClosed = pollData.closed === true;  
  pollNotifBanner.style.display = 'flex';  
+
+ if (isClosed) {  
+ pollNotifBanner.classList.add('closed-poll');  
+ document.getElementById('pollNotifTitleDisplay').textContent = `🔒 Finalizada: ${pollData.question || 'Encuesta'}`;  
+ pollNotifActionBtn.textContent = 'Ver Resultados';  
+ publicStatusBadge.textContent = '🔒 ENCUESTA CERRADA · RESULTADOS FINALES';  
+ publicStatusBadge.className = 'poll-status-pill closed';  
+ adminStatusBadge.textContent = 'CERRADA (CON RESULTADOS)';  
+ adminStatusBadge.className = 'poll-status-pill closed';  
+ } else {  
+ pollNotifBanner.classList.remove('closed-poll');  
  document.getElementById('pollNotifTitleDisplay').textContent = pollData.question || 'Encuesta activa en sala';  
+ pollNotifActionBtn.textContent = '¡Votar!';  
+ publicStatusBadge.textContent = '🟢 VOTACIÓN ABIERTA EN SALA';  
+ publicStatusBadge.className = 'poll-status-pill open';  
+ adminStatusBadge.textContent = 'ABIERTA';  
+ adminStatusBadge.className = 'poll-status-pill open';  
+ }  
+
  document.getElementById('pollQuestionDisplay').textContent = pollData.question || '📊 ¿Qué estilo ponemos ahora?';  
-   
- const opt1 = pollData.opt1 || 'Opción 1';  
- const opt2 = pollData.opt2 || 'Opción 2';  
- const opt3 = pollData.opt3 || 'Opción 3';  
- const opt4 = pollData.opt4 || 'Opción 4';  
 
  document.getElementById('pollOpt1Btn').textContent = opt1;  
  document.getElementById('pollOpt2Btn').textContent = opt2;  
@@ -2494,17 +2750,6 @@
  document.getElementById('pollLabel2').textContent = opt2;  
  document.getElementById('pollLabel3').textContent = opt3;  
  document.getElementById('pollLabel4').textContent = opt4;  
-
- const votes1 = pollData.votes1 || 0;  
- const votes2 = pollData.votes2 || 0;  
- const votes3 = pollData.votes3 || 0;  
- const votes4 = pollData.votes4 || 0;  
- const totalVotes = votes1 + votes2 + votes3 + votes4;  
-
- const pct1 = totalVotes > 0 ? Math.round((votes1 / totalVotes) * 100) : 0;  
- const pct2 = totalVotes > 0 ? Math.round((votes2 / totalVotes) * 100) : 0;  
- const pct3 = totalVotes > 0 ? Math.round((votes3 / totalVotes) * 100) : 0;  
- const pct4 = totalVotes > 0 ? Math.round((votes4 / totalVotes) * 100) : 0;  
 
  document.getElementById('pollCount1').textContent = `${votes1} votos (${pct1}%)`;  
  document.getElementById('pollCount2').textContent = `${votes2} votos (${pct2}%)`;  
@@ -2521,6 +2766,7 @@
  const btn = document.getElementById(`pollOpt${n}Btn`);  
  if (btn) {  
  btn.classList.remove('voted');  
+ btn.disabled = isClosed;  
  if (myVote === n) {  
  btn.classList.add('voted');  
  const originalText = pollData['opt' + n] || `Opción ${n}`;  
@@ -2873,6 +3119,15 @@
  closeExpressPoll();  
  }  
 
+ function handleResetPoll(e) {  
+ if (e) {  
+ e.preventDefault();  
+ e.stopPropagation();  
+ if (e.stopImmediatePropagation) e.stopImmediatePropagation();  
+ }  
+ resetExpressPoll();  
+ }  
+
  function handleToggleContest(e) {  
  if (e) {  
  e.preventDefault();  
@@ -2920,6 +3175,7 @@
  }  
  }  
 
+ /* --- LÓGICA MEJORADA DE ENCUESTA EXPRESS --- */  
  function launchExpressPoll() {  
  if (!isAdminModeActive) return;  
  const question = document.getElementById('adminPollQuestion').value.trim() || '¿Qué estilo ponemos ahora?';  
@@ -2928,10 +3184,64 @@
  const opt3 = document.getElementById('adminPollOpt3').value.trim() || 'Opción 3';  
  const opt4 = document.getElementById('adminPollOpt4').value.trim() || 'Opción 4';  
 
- localStorage.removeItem('user_poll_vote');  
+ pollRef.once('value', (snapshot) => {  
+ const currentData = snapshot.val() || {};  
+ const hasExistingVotes = (currentData.votes1 || 0) + (currentData.votes2 || 0) + (currentData.votes3 || 0) + (currentData.votes4 || 0) > 0;  
 
  pollRef.set({  
  active: true,  
+ closed: false,  
+ pollId: currentData.pollId || Date.now(),  
+ question: question,  
+ opt1: opt1,  
+ opt2: opt2,  
+ opt3: opt3,  
+ opt4: opt4,  
+ votes1: hasExistingVotes ? (currentData.votes1 || 0) : 0,  
+ votes2: hasExistingVotes ? (currentData.votes2 || 0) : 0,  
+ votes3: hasExistingVotes ? (currentData.votes3 || 0) : 0,  
+ votes4: hasExistingVotes ? (currentData.votes4 || 0) : 0  
+ }).then(() => {  
+ alert("🚀 ¡Encuesta ABIERTA y publicada en los móviles de la sala!");  
+ });  
+ });  
+ }  
+
+ function closeExpressPoll() {  
+ if (!isAdminModeActive) return;  
+ pollRef.once('value', (snapshot) => {  
+ const currentData = snapshot.val();  
+ if (!currentData || !currentData.active) {  
+ alert("⚠️ No hay ninguna encuesta activa en este momento.");  
+ return;  
+ }  
+ pollRef.update({  
+ closed: true  
+ }).then(() => {  
+ alert("🔒 Votación cerrada. Ya no se admiten más votos, pero los resultados siguen visibles en la sala y en tu panel.");  
+ });  
+ });  
+ }  
+
+ function resetExpressPoll() {  
+ if (!isAdminModeActive) return;  
+ if (!confirm("¿Seguro que quieres REINICIAR la encuesta? Se pondrán todos los votos a 0 y se retirará de las pantallas de la sala.")) {  
+ return;  
+ }  
+ const question = document.getElementById('adminPollQuestion').value.trim() || '¿Qué estilo ponemos ahora?';  
+ const opt1 = document.getElementById('adminPollOpt1').value.trim() || 'Opción 1';  
+ const opt2 = document.getElementById('adminPollOpt2').value.trim() || 'Opción 2';  
+ const opt3 = document.getElementById('adminPollOpt3').value.trim() || 'Opción 3';  
+ const opt4 = document.getElementById('adminPollOpt4').value.trim() || 'Opción 4';  
+
+ const newPollId = Date.now();  
+ localStorage.removeItem('user_poll_vote');  
+ localStorage.setItem('user_poll_id', String(newPollId));  
+
+ pollRef.set({  
+ active: false,  
+ closed: false,  
+ pollId: newPollId,  
  question: question,  
  opt1: opt1,  
  opt2: opt2,  
@@ -2942,18 +3252,8 @@
  votes3: 0,  
  votes4: 0  
  }).then(() => {  
- alert("🚀 ¡Encuesta de 4 opciones lanzada a todos los móviles de la sala con éxito! Votos reseteados.");  
- closeAdminModal('poll');  
- });  
- }  
-
- function closeExpressPoll() {  
- if (!isAdminModeActive) return;  
- localStorage.removeItem('user_poll_vote');  
- pollRef.update({ active: false }).then(() => {  
  closePollModal();  
- closeAdminModal('poll');  
- alert("🛑 Encuesta cerrada y votos reseteados.");  
+ alert("🔄 ¡Encuesta reiniciada! Todos los resultados se han puesto a 0.");  
  });  
  }  
 
@@ -2971,21 +3271,29 @@
  }  
 
  function votePoll(optionNumber) {  
- const hasVoted = localStorage.getItem('user_poll_vote');  
- if (hasVoted) {  
- alert("⚠️ Ya estás participando en esta encuesta.");  
- return;  
- }  
-
  pollRef.once('value', (snapshot) => {  
  const data = snapshot.val();  
  if (!data || !data.active) return;  
+
+ if (data.closed) {  
+ alert("🔒 La encuesta ya está cerrada. Solo puedes consultar los resultados finales.");  
+ return;  
+ }  
+
+ const hasVoted = localStorage.getItem('user_poll_vote');  
+ if (hasVoted) {  
+ alert("⚠️ Ya has votado en esta encuesta.");  
+ return;  
+ }  
 
  let updates = {};  
  updates[`votes${optionNumber}`] = (data[`votes${optionNumber}`] || 0) + 1;  
 
  pollRef.update(updates).then(() => {  
  localStorage.setItem('user_poll_vote', optionNumber.toString());  
+ if (data.pollId) {  
+ localStorage.setItem('user_poll_id', String(data.pollId));  
+ }  
  alert("✅ ¡Voto registrado correctamente!");  
  });  
  });  
@@ -3015,8 +3323,6 @@
  } else if (effectData.type === 'burst') {  
  const btn = document.querySelector('.btn-burst');  
  if (btn) btn.classList.add('active');  
- } else if (effectData.type === 'heart') {  
- // Efecto corazón activo  
  }  
  }  
 
@@ -3226,10 +3532,18 @@
  }  
  }  
 
+ function clearWinnerBannerOnly() {
+ if (!isAdminModeActive) return;
+ winnerRef.remove().then(() => {
+ alert("🧹 Cartel de ganador ocultado de las pantallas.");
+ });
+ }
+
  function clearContestParticipants() {  
  if (confirm("¿Estás seguro de borrar toda la lista de participantes del concurso?")) {  
  contestRef.remove().then(() => {  
  winnerRef.remove();  
+ drawEventRef.remove();  
  localStorage.removeItem('user_contest_name');  
  checkSavedUserBadge();  
  alert("Lista de participantes borrada y bloqueos de dispositivos reseteados.");  
@@ -3237,31 +3551,119 @@
  }  
  }  
 
+ /* --- CONTROLADOR ÚNICO SIN DOBLE DISPARO + RULETA VISUAL DE 5 SEGUNDOS --- */
+ function handleRunDrawClick(e) {
+ if (e) {
+ e.preventDefault();
+ e.stopPropagation();
+ }
+ runLuckyDraw();
+ }
+
  function runLuckyDraw() {  
+ const now = Date.now();
+ if (isDrawInProgress || (now - lastDrawTriggerTime < 3000)) {
+ return;
+ }
+ lastDrawTriggerTime = now;
+
  if (globalContestParticipants.length === 0) {  
  alert("⚠️ No hay ningún participante registrado en el concurso todavía.");  
  return;  
  }  
 
- if (!confirm("¿Estás seguro de que quieres realizar el sorteo y sacar al ganador ahora?")) {  
+ if (!confirm("¿Quieres lanzar la Ruleta en directo y sortear el ganador ahora?")) {  
  return;  
  }  
 
- let secondsLeft = 5;  
- alert(`🎲 ¡Comienza el sorteo automático!\nCalculando ganador en ${secondsLeft} segundos...`);  
+ isDrawInProgress = true;
+ lastDrawTriggerTime = Date.now();
 
- const interval = setInterval(() => {  
- secondsLeft--;  
- if (secondsLeft > 0) {  
- console.log(`Sorteo en ${secondsLeft}...`);  
- } else {  
- clearInterval(interval);  
  const winner = globalContestParticipants[Math.floor(Math.random() * globalContestParticipants.length)];  
- winnerRef.set(winner.name);  
- alert(`🎉🎊 ¡TENEMOS GANADOR / A! 🎊🎉\n\nEl premio es para:\n⭐ ${winner.name.toUpperCase()} ⭐\n\n¡Felicidades! Se ha publicado en las pantallas de la sala.`);  
+ const namesPool = globalContestParticipants.map(p => p.name);
+ const drawId = Date.now();
+
+ winnerRef.remove();
+ closeAdminModal('contest');
+
+ drawEventRef.set({
+ id: drawId,
+ winner: winner.name,
+ participants: namesPool
+ });
+
+ setTimeout(() => {
+ winnerRef.set(winner.name);
+ isDrawInProgress = false;
+ }, 5100);
  }  
- }, 1000);  
- }  
+
+ function startVisualRouletteSequence(winnerName, participantsList) {
+ const standbyScreen = document.getElementById('standby-screen');
+ if (standbyScreen && !standbyScreen.classList.contains('inactive')) {
+ standbyScreen.classList.add('inactive');
+ }
+ resetStandbyTimer();
+
+ const overlay = document.getElementById('rouletteOverlay');
+ const statusBadge = document.getElementById('rouletteStatusBadge');
+ const countdownEl = document.getElementById('rouletteCountdownNum');
+ const slotWindow = document.getElementById('rouletteSlotWindow');
+ const slotLabel = document.getElementById('rouletteSlotLabel');
+ const slotName = document.getElementById('rouletteSlotName');
+ const closeBtn = document.getElementById('closeRouletteBtn');
+
+ if (rouletteSpinInterval) clearInterval(rouletteSpinInterval);
+ if (rouletteCountdownInterval) clearInterval(rouletteCountdownInterval);
+
+ const pool = (participantsList && participantsList.length > 0)
+ ? participantsList
+ : (globalContestParticipants.length > 0 ? globalContestParticipants.map(p => p.name) : [winnerName]);
+
+ slotWindow.classList.remove('winner-revealed');
+ statusBadge.textContent = '🎲 SORTEO EN DIRECTO EN SALA';
+ slotLabel.textContent = 'Girando ruleta de participantes...';
+ closeBtn.style.display = 'none';
+
+ let secondsLeft = 5;
+ countdownEl.textContent = secondsLeft;
+ overlay.style.display = 'flex';
+
+ let idx = 0;
+ rouletteSpinInterval = setInterval(() => {
+ const randomName = pool[idx % pool.length];
+ slotName.textContent = randomName;
+ idx++;
+ }, 75);
+
+ rouletteCountdownInterval = setInterval(() => {
+ secondsLeft--;
+ if (secondsLeft > 0) {
+ countdownEl.textContent = secondsLeft;
+ } else {
+ clearInterval(rouletteCountdownInterval);
+ clearInterval(rouletteSpinInterval);
+ rouletteCountdownInterval = null;
+ rouletteSpinInterval = null;
+
+ countdownEl.textContent = '🏆';
+ statusBadge.textContent = '🎉 ¡TENEMOS GANADOR/A EN LA SALA! 🎉';
+ slotWindow.classList.add('winner-revealed');
+ slotLabel.textContent = '⭐ PREMIO PARA ⭐';
+ slotName.textContent = winnerName.toUpperCase();
+ closeBtn.style.display = 'block';
+
+ if ('vibrate' in navigator) {
+ try { navigator.vibrate([200, 100, 400]); } catch (e) {}
+ }
+ }
+ }, 1000);
+ }
+
+ function closeRouletteOverlay() {
+ if (rouletteSpinInterval || rouletteCountdownInterval) return;
+ document.getElementById('rouletteOverlay').style.display = 'none';
+ }
 
  /* --- LÓGICA DE ESTADÍSTICAS GLOBALES --- */  
  function openGlobalStatsModal() {  
