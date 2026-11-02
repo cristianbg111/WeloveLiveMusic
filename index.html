@@ -2365,6 +2365,12 @@
  <div id="queueResults" class="results">  
  <p class="status-msg">Cargando lista...</p>  
  </div>  
+
+ <div id="queuePaginationBottom" class="pagination" style="display: none; margin-top: 8px; flex-shrink: 0;">  
+ <button class="page-btn" id="prevPageBtnBottom" onclick="changePage(-1)">⬅️ Anterior</button>  
+ <span class="page-info" id="pageInfoTextBottom">Pág 1/1</span>  
+ <button class="page-btn" id="nextPageBtnBottom" onclick="changePage(1)">Siguiente ➡️</button>  
+ </div>  
  </div>  
 
  <!-- PESTAÑA MODO ADMIN DE SALA -->  
@@ -5067,6 +5073,11 @@
  const pageInfoText = document.getElementById('pageInfoText');  
  const prevBtn = document.getElementById('prevPageBtn');  
  const nextBtn = document.getElementById('nextPageBtn');  
+
+ const paginationBottomDiv = document.getElementById('queuePaginationBottom');  
+ const pageInfoTextBottom = document.getElementById('pageInfoTextBottom');  
+ const prevBtnBottom = document.getElementById('prevPageBtnBottom');  
+ const nextBtnBottom = document.getElementById('nextPageBtnBottom');  
   
  if (globalQueueItems.length === 0) {  
  queueResults.innerHTML = '<p class="status-msg">No hay peticiones en la sala todavía.</p>';  
@@ -5084,8 +5095,14 @@
  pageInfoText.textContent = `Pág ${currentPage}/${totalPages}`;  
  prevBtn.disabled = currentPage === 1;  
  nextBtn.disabled = currentPage === totalPages;  
+
+ if (paginationBottomDiv) paginationBottomDiv.style.display = 'flex';  
+ if (pageInfoTextBottom) pageInfoTextBottom.textContent = `Pág ${currentPage}/${totalPages}`;  
+ if (prevBtnBottom) prevBtnBottom.disabled = currentPage === 1;  
+ if (nextBtnBottom) nextBtnBottom.disabled = currentPage === totalPages;  
  } else {  
  paginationDiv.style.display = 'none';  
+ if (paginationBottomDiv) paginationBottomDiv.style.display = 'none';  
  }  
   
  queueResults.innerHTML = currentItems.map((item, index) => {  
