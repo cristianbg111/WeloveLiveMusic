@@ -102,16 +102,16 @@
  align-items: center;  
  height: 100vh;  
  height: 100dvh;  
- padding: max(6px, env(safe-area-inset-top)) max(6px, env(safe-area-inset-right)) max(6px, env(safe-area-inset-bottom)) max(6px, env(safe-area-inset-left));  
+ padding: max(8px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));  
  overflow: hidden;  
  }  
   
- /* --- CHASIS DE CONSOLA DJ COMPACTO --- */
+ /* --- CHASIS DE CONSOLA DJ --- */
  .card {  
  background: var(--card-bg);  
  border: 1px solid var(--border);  
- border-radius: 24px;  
- padding: 10px 12px;  
+ border-radius: 28px;  
+ padding: 12px 14px;  
  max-width: 480px;  
  width: 100%;  
  height: 100%;  
@@ -127,18 +127,18 @@
  overflow: hidden;  
  }  
   
- /* --- CABECERA TIPO PLATO DE MEZCLAS --- */
+ /* --- CABECERA TIPO PLATO DE MEZCLAS / DECK HORIZONTAL --- */
  .brand-header {  
  display: flex;  
  flex-direction: row;  
  align-items: center;  
  justify-content: space-between;  
- gap: 8px;  
+ gap: 9px;  
  background: var(--surface);  
  border: 1px solid var(--border);  
- padding: 7px 10px;  
- border-radius: 16px;  
- margin-bottom: 6px;  
+ padding: 8px 10px;  
+ border-radius: 20px;  
+ margin-bottom: 8px;  
  flex-shrink: 0;  
  position: relative;  
  overflow: hidden;  
@@ -156,13 +156,13 @@
  /* Plato de vinilo giratorio para el logo */
  .vinyl-platter {  
  position: relative;  
- width: 48px;  
- height: 48px;  
- min-width: 48px;  
+ width: 54px;  
+ height: 54px;  
+ min-width: 54px;  
  border-radius: 50%;  
- padding: 4px;  
+ padding: 5px;  
  background: repeating-radial-gradient(circle, #0a0a0f 0px, #0a0a0f 2px, #222538 3px, #0a0a0f 4px);  
- box-shadow: 0 0 10px var(--glow-accent), 0 0 0 1.5px var(--accent);  
+ box-shadow: 0 0 14px var(--glow-accent), 0 0 0 2px var(--accent);  
  display: flex;  
  align-items: center;  
  justify-content: center;  
@@ -177,8 +177,8 @@
  height: 100%;  
  object-fit: contain;  
  border-radius: 50%;  
- padding: 2px;  
- border: 1px solid var(--cyan);  
+ padding: 3px;  
+ border: 1.5px solid var(--cyan);  
  background: #000000;  
  display: block;  
  }  
@@ -203,20 +203,20 @@
  .live-sub-badge {  
  display: inline-flex;  
  align-items: center;  
- gap: 4px;  
+ gap: 5px;  
  font-family: 'JetBrains Mono', monospace;  
- font-size: 0.52rem;  
+ font-size: 0.58rem;  
  font-weight: 800;  
  color: var(--cyan);  
  text-transform: uppercase;  
  letter-spacing: 1px;  
- margin-bottom: 1px;  
+ margin-bottom: 2px;  
  }  
  .live-sub-badge .mini-eq {  
  display: inline-flex;  
  align-items: flex-end;  
  gap: 2px;  
- height: 8px;  
+ height: 9px;  
  }  
  .live-sub-badge .mini-eq i {  
  width: 2px;  
@@ -224,24 +224,24 @@
  border-radius: 1px;  
  animation: miniEqBounce 0.6s infinite alternate;  
  }  
- .live-sub-badge .mini-eq i:nth-child(1) { height: 3px; animation-duration: 0.45s; }  
- .live-sub-badge .mini-eq i:nth-child(2) { height: 8px; animation-duration: 0.7s; background: var(--cyan); }  
- .live-sub-badge .mini-eq i:nth-child(3) { height: 5px; animation-duration: 0.55s; }  
+ .live-sub-badge .mini-eq i:nth-child(1) { height: 4px; animation-duration: 0.45s; }  
+ .live-sub-badge .mini-eq i:nth-child(2) { height: 9px; animation-duration: 0.7s; background: var(--cyan); }  
+ .live-sub-badge .mini-eq i:nth-child(3) { height: 6px; animation-duration: 0.55s; }  
  @keyframes miniEqBounce {  
- 0% { height: 2px; }  
- 100% { height: 8px; }  
+ 0% { height: 3px; }  
+ 100% { height: 9px; }  
  }  
   
  h1 {   
  font-family: 'Syne', sans-serif;  
- font-size: clamp(0.62rem, 2.5vw, 0.74rem);   
+ font-size: clamp(0.65rem, 2.8vw, 0.78rem);   
  font-weight: 800;   
  color: var(--text);   
  letter-spacing: -0.2px;  
  text-transform: uppercase;  
  margin: 0;  
  white-space: nowrap;  
- line-height: 1.1;  
+ line-height: 1.15;  
  width: 100%;  
  }  
    
@@ -249,11 +249,11 @@
  background: var(--surface-elevated);  
  border: 1px solid var(--border);  
  color: var(--text);  
- padding: 5px 8px;  
- border-radius: 10px;  
+ padding: 6px 9px;  
+ border-radius: 11px;  
  cursor: pointer;  
  font-family: inherit;  
- font-size: 0.62rem;  
+ font-size: 0.66rem;  
  font-weight: 800;  
  white-space: nowrap;  
  -webkit-appearance: none;  
@@ -272,7 +272,7 @@
  background: var(--surface);  
  border: 1px solid var(--badge-bg);  
  padding: 5px 10px;  
- border-radius: 10px;  
+ border-radius: 11px;  
  font-size: 0.7rem;  
  font-weight: 700;  
  color: var(--text);  
@@ -281,12 +281,12 @@
  }  
  .user-badge-bar span { color: var(--cyan); }  
 
- /* --- BANNER GANADOR EN DIRECTO COMPACTO --- */  
+ /* --- BANNER GANADOR EN DIRECTO --- */  
  .winner-banner {  
  background: linear-gradient(90deg, #ff9900, #ff007a, #7928ca);  
  border: 1.5px solid #ffffff;  
  color: #ffffff;  
- padding: 8px 10px;  
+ padding: 7px 10px;  
  border-radius: 12px;  
  font-size: 0.76rem;  
  font-weight: 900;  
@@ -294,13 +294,13 @@
  text-transform: uppercase;  
  letter-spacing: 0.5px;  
  margin-bottom: 6px;  
- box-shadow: 0 0 20px rgba(255, 0, 122, 0.7);  
+ box-shadow: 0 0 20px rgba(255, 0, 122, 0.75);  
  animation: pulseWinner 1.4s infinite alternate;  
  flex-shrink: 0;  
  }  
  @keyframes pulseWinner {  
  0% { transform: scale(1); }  
- 100% { transform: scale(1.02); }  
+ 100% { transform: scale(1.015); }  
  }  
 
  /* --- OVERLAY DE RULETA Y CUENTA ATRÁS EN DIRECTO --- */
@@ -417,13 +417,13 @@
  background: linear-gradient(90deg, rgba(121, 40, 202, 0.35), rgba(255, 0, 122, 0.35));  
  border: 1.5px solid var(--cyan);  
  border-radius: 12px;  
- padding: 7px 10px;  
+ padding: 7px 11px;  
  margin-bottom: 6px;  
  display: flex;  
  align-items: center;  
  justify-content: space-between;  
  cursor: pointer;  
- box-shadow: 0 0 12px rgba(0, 240, 255, 0.25);  
+ box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);  
  animation: pulsePollBtn 1.5s infinite alternate;  
  flex-shrink: 0;  
  }  
@@ -431,27 +431,27 @@
  background: linear-gradient(90deg, rgba(255, 184, 0, 0.2), rgba(121, 40, 202, 0.25));  
  border-color: var(--count-bg);  
  animation: none;  
- box-shadow: 0 0 10px rgba(255, 184, 0, 0.2);  
+ box-shadow: 0 0 12px rgba(255, 184, 0, 0.25);  
  }  
  @keyframes pulsePollBtn {  
  0% { border-color: var(--cyan); }  
  100% { border-color: var(--accent); }  
  }  
  .poll-notif-text {  
- font-size: 0.72rem;  
+ font-size: 0.74rem;  
  font-weight: 800;  
  color: var(--text);  
  text-transform: uppercase;  
  display: flex;  
  align-items: center;  
- gap: 5px;  
+ gap: 6px;  
  }  
  .poll-notif-action {  
  background: var(--accent);  
  color: #ffffff;  
- padding: 4px 8px;  
- border-radius: 6px;  
- font-size: 0.66rem;  
+ padding: 4px 9px;  
+ border-radius: 8px;  
+ font-size: 0.68rem;  
  font-weight: 800;  
  text-transform: uppercase;  
  white-space: nowrap;  
@@ -464,15 +464,15 @@
  /* --- PANTALLA LED DE ESTADO "ON AIR" --- */
  .neon-banner {  
  width: 100%;  
- padding: 5px 10px;  
- border-radius: 8px;  
+ padding: 5px 12px;  
+ border-radius: 10px;  
  font-family: 'JetBrains Mono', monospace;  
- font-size: 0.64rem;  
+ font-size: 0.66rem;  
  font-weight: 800;  
  text-align: center;  
  text-transform: uppercase;  
- letter-spacing: 0.8px;  
- margin-bottom: 6px;  
+ letter-spacing: 1px;  
+ margin-bottom: 8px;  
  flex-shrink: 0;  
  transition: all 0.3s ease;  
  }  
@@ -481,14 +481,14 @@
  background: rgba(0, 245, 155, 0.1);  
  border: 1px solid rgba(0, 245, 155, 0.4);  
  color: var(--success);  
- box-shadow: inset 0 0 10px rgba(0, 245, 155, 0.12);  
+ box-shadow: inset 0 0 12px rgba(0, 245, 155, 0.15);  
  }  
   
  .neon-banner.disabled {  
  background: rgba(255, 42, 84, 0.15);  
  border: 1px solid var(--danger);  
  color: var(--danger);  
- box-shadow: 0 0 10px rgba(255, 42, 84, 0.4);  
+ box-shadow: 0 0 12px rgba(255, 42, 84, 0.5);  
  animation: pulseNeon 2s infinite;  
  }  
   
@@ -497,60 +497,65 @@
  50% { opacity: 0.65; }  
  }  
   
- /* --- TARJETA COMPACTA DE INSTRUCCIONES --- */
+ /* --- TARJETA DE INSTRUCCIONES (SE OCULTA AUTOMÁTICAMENTE SI HAY CARTEL DE SORTEO/ENCUESTA PARA NO APLASTAR LOS BOTONES) --- */
  .instructions-box {  
  background: var(--surface);  
  border: 1px solid var(--border);  
- border-radius: 14px;  
- padding: 7px 10px;  
- margin-bottom: 6px;  
+ border-radius: 16px;  
+ padding: 8px 11px;  
+ margin-bottom: 8px;  
  flex-shrink: 0;  
  display: flex;  
  flex-direction: column;  
  gap: 2px;  
+ transition: all 0.25s ease;  
+ }  
+
+ body.has-active-banners #tabHome .instructions-box {  
+ display: none !important;  
  }  
   
  .instructions-title {  
  font-family: 'Syne', sans-serif;  
- font-size: 0.7rem;  
+ font-size: 0.72rem;  
  font-weight: 800;  
  color: var(--cyan);  
  text-transform: uppercase;  
- letter-spacing: 0.5px;  
+ letter-spacing: 0.6px;  
  display: flex;  
  align-items: center;  
- gap: 5px;  
+ gap: 6px;  
  }  
   
  .instructions-text {  
- font-size: 0.66rem;  
+ font-size: 0.68rem;  
  color: var(--text-muted);  
- line-height: 1.25;  
+ line-height: 1.28;  
  font-weight: 600;  
  }  
   
  .aviso-evento {  
  margin-top: 3px;  
- padding: 3px 6px;  
- background: rgba(255, 184, 0, 0.1);  
- border-left: 2px solid var(--count-bg);  
- border-radius: 3px;  
+ padding: 3px 8px;  
+ background: rgba(255, 184, 0, 0.12);  
+ border-left: 3px solid var(--count-bg);  
+ border-radius: 4px;  
  color: var(--count-bg);  
- font-size: 0.62rem;  
+ font-size: 0.64rem;  
  font-weight: 700;  
  }  
   
  /* ==========================================================
-    DASHBOARD: HERO PLAYER + MATRIZ LAUNCHPAD 2x2 MÁS COMPACTA
+    DASHBOARD: BOTONES AMPLIOS COMO ANTES CON AJUSTE ELÁSTICO
     ========================================================== */  
  .dashboard-container {  
  display: flex;  
  flex-direction: column;  
- gap: 8px;  
+ gap: 10px;  
  flex: 1;  
  justify-content: space-between;  
  padding: 2px 0;  
- overflow-y: auto;  
+ overflow: hidden;  
  min-height: 0;  
  }  
 
@@ -559,22 +564,23 @@
  width: 100%;  
  background: linear-gradient(135deg, #ff007a 0%, #7928ca 60%, #1e1b4b 100%);  
  border: 1px solid rgba(255, 255, 255, 0.35);  
- border-radius: 18px;  
- padding: 12px 14px;  
+ border-radius: 22px;  
+ padding: 14px 16px;  
  cursor: pointer;  
  display: flex;  
  flex-direction: column;  
  align-items: stretch;  
  justify-content: space-between;  
- gap: 8px;  
+ gap: 10px;  
  position: relative;  
  overflow: hidden;  
- box-shadow: 0 10px 25px -6px rgba(255, 0, 122, 0.5);  
+ box-shadow: 0 12px 30px -6px rgba(255, 0, 122, 0.55);  
  -webkit-appearance: none;  
  touch-action: manipulation;  
  pointer-events: auto !important;  
  transition: transform 0.15s ease;  
  text-align: left;  
+ flex-shrink: 0;  
  }  
  .dash-btn-primary:active {  
  transform: scale(0.98);  
@@ -592,31 +598,31 @@
  border: 1px solid rgba(255, 255, 255, 0.25);  
  color: #fff;  
  font-family: 'JetBrains Mono', monospace;  
- font-size: 0.58rem;  
+ font-size: 0.62rem;  
  font-weight: 800;  
- padding: 3px 8px;  
+ padding: 4px 9px;  
  border-radius: 99px;  
  text-transform: uppercase;  
- letter-spacing: 0.6px;  
+ letter-spacing: 0.8px;  
  }  
  .hero-wave {  
  display: flex;  
  align-items: center;  
- gap: 2px;  
- height: 16px;  
+ gap: 3px;  
+ height: 18px;  
  }  
  .hero-wave span {  
- width: 2.5px;  
+ width: 3px;  
  background: #ffffff;  
  border-radius: 99px;  
  animation: wavePulse 0.8s ease-in-out infinite alternate;  
  }  
- .hero-wave span:nth-child(1) { height: 6px; animation-delay: 0.1s; }  
- .hero-wave span:nth-child(2) { height: 14px; animation-delay: 0.3s; background: var(--cyan); }  
- .hero-wave span:nth-child(3) { height: 10px; animation-delay: 0.2s; }  
- .hero-wave span:nth-child(4) { height: 16px; animation-delay: 0.4s; background: var(--cyan); }  
- .hero-wave span:nth-child(5) { height: 8px; animation-delay: 0.15s; }  
- .hero-wave span:nth-child(6) { height: 12px; animation-delay: 0.35s; }  
+ .hero-wave span:nth-child(1) { height: 8px; animation-delay: 0.1s; }  
+ .hero-wave span:nth-child(2) { height: 16px; animation-delay: 0.3s; background: var(--cyan); }  
+ .hero-wave span:nth-child(3) { height: 11px; animation-delay: 0.2s; }  
+ .hero-wave span:nth-child(4) { height: 18px; animation-delay: 0.4s; background: var(--cyan); }  
+ .hero-wave span:nth-child(5) { height: 9px; animation-delay: 0.15s; }  
+ .hero-wave span:nth-child(6) { height: 14px; animation-delay: 0.35s; }  
  @keyframes wavePulse {  
  0% { transform: scaleY(0.45); opacity: 0.6; }  
  100% { transform: scaleY(1); opacity: 1; }  
@@ -624,51 +630,53 @@
 
  .hero-main-title {  
  font-family: 'Syne', sans-serif;  
- font-size: 1.05rem;  
+ font-size: 1.15rem;  
  font-weight: 800;  
  color: #ffffff;  
  text-transform: uppercase;  
- letter-spacing: 0.4px;  
- line-height: 1.1;  
+ letter-spacing: 0.5px;  
+ line-height: 1.15;  
  pointer-events: none;  
  }  
 
  .hero-fake-search {  
  background: rgba(7, 7, 12, 0.55);  
- border: 1px solid rgba(255, 255, 255, 0.22);  
- border-radius: 10px;  
- padding: 7px 10px;  
+ border: 1px solid rgba(255, 255, 255, 0.25);  
+ border-radius: 12px;  
+ padding: 8px 12px;  
  display: flex;  
  align-items: center;  
  justify-content: space-between;  
  color: rgba(255, 255, 255, 0.85);  
- font-size: 0.72rem;  
+ font-size: 0.75rem;  
  font-weight: 600;  
  pointer-events: none;  
  }  
  .hero-fake-search strong {  
  background: #ffffff;  
  color: #07070c;  
- padding: 2px 6px;  
- border-radius: 5px;  
- font-size: 0.62rem;  
+ padding: 3px 8px;  
+ border-radius: 6px;  
+ font-size: 0.66rem;  
  font-weight: 800;  
  text-transform: uppercase;  
  }  
 
- /* 2. MATRIZ LAUNCHPAD 2x2 MÁS COMPACTA PARA GANAR ESPACIO EN MODALES */
+ /* 2. MATRIZ LAUNCHPAD 2x2 CON EL TAMAÑO Y DISEÑO ORIGINAL QUE TE GUSTABA */
  .launchpad-grid {  
  display: grid;  
  grid-template-columns: repeat(2, 1fr);  
- gap: 8px;  
+ grid-auto-rows: 1fr;  
+ gap: 10px;  
  flex: 1;  
+ min-height: 0;  
  }  
 
  .dash-btn.pad-card {  
  background: var(--surface);  
  border: 1.5px solid var(--border);  
- border-radius: 16px;  
- padding: 10px 10px;  
+ border-radius: 20px;  
+ padding: 13px 12px;  
  display: flex;  
  flex-direction: column;  
  align-items: flex-start;  
@@ -680,9 +688,9 @@
  touch-action: manipulation;  
  pointer-events: auto !important;  
  transition: transform 0.15s ease, border-color 0.2s ease;  
- box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 4px 12px rgba(0,0,0,0.25);  
- min-height: 74px;  
- max-height: 84px;  
+ box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 6px 16px rgba(0,0,0,0.3);  
+ min-height: 0;  
+ height: 100%;  
  }  
  .dash-btn.pad-card:active {  
  transform: scale(0.95);  
@@ -690,16 +698,16 @@
 
  .pad-led {  
  position: absolute;  
- top: 10px;  
- right: 10px;  
- width: 7px;  
- height: 7px;  
+ top: 12px;  
+ right: 12px;  
+ width: 8px;  
+ height: 8px;  
  border-radius: 50%;  
  pointer-events: none;  
  }  
 
  .pad-icon {  
- font-size: 1.2rem;  
+ font-size: 1.45rem;  
  line-height: 1;  
  margin-bottom: 4px;  
  pointer-events: none;  
@@ -707,19 +715,19 @@
 
  .pad-title {  
  font-family: 'Syne', sans-serif;  
- font-size: 0.75rem;  
+ font-size: 0.8rem;  
  font-weight: 800;  
  color: var(--text);  
  text-transform: uppercase;  
- line-height: 1.1;  
+ line-height: 1.15;  
  pointer-events: none;  
  }  
 
  .pad-sub {  
- font-size: 0.6rem;  
+ font-size: 0.64rem;  
  font-weight: 600;  
  color: var(--text-muted);  
- margin-top: 1px;  
+ margin-top: 2px;  
  pointer-events: none;  
  }  
 
@@ -727,25 +735,25 @@
  border-color: rgba(121, 40, 202, 0.5);  
  background: linear-gradient(160deg, var(--surface) 40%, rgba(121, 40, 202, 0.18) 100%);  
  }  
- .dash-btn-queue .pad-led { background: #a855f7; box-shadow: 0 0 6px #a855f7; }  
+ .dash-btn-queue .pad-led { background: #a855f7; box-shadow: 0 0 8px #a855f7; }  
 
  .dash-btn-contest.pad-card {  
  border-color: rgba(255, 184, 0, 0.5);  
  background: linear-gradient(160deg, var(--surface) 40%, rgba(255, 184, 0, 0.16) 100%);  
  }  
- .dash-btn-contest .pad-led { background: var(--count-bg); box-shadow: 0 0 6px var(--count-bg); }  
+ .dash-btn-contest .pad-led { background: var(--count-bg); box-shadow: 0 0 8px var(--count-bg); }  
 
  .dash-btn-qr.pad-card {  
  border-color: rgba(0, 240, 255, 0.45);  
  background: linear-gradient(160deg, var(--surface) 40%, rgba(0, 240, 255, 0.15) 100%);  
  }  
- .dash-btn-qr .pad-led { background: var(--cyan); box-shadow: 0 0 6px var(--cyan); }  
+ .dash-btn-qr .pad-led { background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }  
 
  .dash-btn-admin-access.pad-card {  
  border-color: rgba(255, 42, 84, 0.45);  
  background: linear-gradient(160deg, var(--surface) 40%, rgba(255, 42, 84, 0.15) 100%);  
  }  
- .dash-btn-admin-access .pad-led { background: var(--danger); box-shadow: 0 0 6px var(--danger); }  
+ .dash-btn-admin-access .pad-led { background: var(--danger); box-shadow: 0 0 8px var(--danger); }  
 
  .dash-btn-participants {  
  width: 100%;  
@@ -761,15 +769,15 @@
  .dash-btn-queue.has-new::after {  
  content: 'NUEVA';  
  position: absolute;  
- top: 8px;  
- right: 22px;  
+ top: 10px;  
+ right: 26px;  
  background: var(--danger);  
  color: #fff;  
- font-size: 0.5rem;  
+ font-size: 0.55rem;  
  font-weight: 900;  
- padding: 2px 4px;  
- border-radius: 3px;  
- box-shadow: 0 0 6px var(--danger);  
+ padding: 2px 5px;  
+ border-radius: 4px;  
+ box-shadow: 0 0 8px var(--danger);  
  animation: pulseNotification 1.2s infinite;  
  }  
   
@@ -1188,8 +1196,8 @@
   
  /* --- FOOTER CON CONTADOR ONLINE EN VIVO Y VISITAS --- */
  .footer {  
- margin-top: 4px;  
- padding-top: 6px;  
+ margin-top: 6px;  
+ padding-top: 7px;  
  border-top: 1px solid var(--border);  
  display: flex;  
  justify-content: space-between;  
@@ -2022,7 +2030,7 @@
  </div>
  </button>  
    
- <!-- MATRIZ 2x2 DE PADS DE CABINA COMPACTOS -->
+ <!-- MATRIZ 2x2 DE PADS DE CABINA CON EL TAMAÑO AMPLIO ORIGINAL -->
  <div class="launchpad-grid">
  <button class="dash-btn pad-card dash-btn-queue" id="dashQueueBtn" ontouchend="handleDashClick(event, 'queue')" onclick="switchTab('queue', true)">  
  <span class="pad-led"></span>
@@ -2606,6 +2614,23 @@
  let lastDrawTriggerTime = 0;
  let rouletteSpinInterval = null;
  let rouletteCountdownInterval = null;
+
+ /* Función que detecta si hay carteles activos (ganador, encuesta o usuario inscrito) para ajustar la consola automáticamente sin encoger los botones */
+ function syncCompactLayoutState() {
+ const pollBanner = document.getElementById('pollNotificationBanner');
+ const winnerBanner = document.getElementById('winnerBanner');
+ const userBadge = document.getElementById('userBadgeBar');
+
+ const isPollVisible = pollBanner && pollBanner.style.display !== 'none';
+ const isWinnerVisible = winnerBanner && winnerBanner.style.display !== 'none';
+ const isBadgeVisible = userBadge && userBadge.style.display !== 'none';
+
+ if (isPollVisible || isWinnerVisible || isBadgeVisible) {
+ document.body.classList.add('has-active-banners');
+ } else {
+ document.body.classList.remove('has-active-banners');
+ }
+ }
   
  document.addEventListener('DOMContentLoaded', () => {  
  const standbyScreen = document.getElementById('standby-screen');  
@@ -2767,11 +2792,13 @@
  adminStatusBadge.textContent = 'INACTIVA';  
  adminStatusBadge.className = 'poll-status-pill';  
  closePollModal();  
+ syncCompactLayoutState();  
  return;  
  }  
 
  const isClosed = pollData.closed === true;  
  pollNotifBanner.style.display = 'flex';  
+ syncCompactLayoutState();  
 
  if (isClosed) {  
  pollNotifBanner.classList.add('closed-poll');  
@@ -2850,6 +2877,7 @@
  } else {  
  banner.style.display = 'none';  
  }  
+ syncCompactLayoutState();  
  });  
 
  adminEffectRef.on('value', (snapshot) => {  
@@ -3474,6 +3502,7 @@
  } else {  
  badgeBar.style.display = 'none';  
  }  
+ syncCompactLayoutState();  
  }  
 
  function submitContestEntry(event) {  
@@ -3734,7 +3763,7 @@
  const histData = historySnap.val();  
  if (!histData) {  
  container.innerHTML = `  
- <div class="instructions-box" style="margin-bottom: 10px;">  
+ <div class="instructions-box" style="margin-bottom: 10px; display: flex !important;">  
  <div class="instructions-title">📈 Resumen General</div>  
  <div class="instructions-text">Visitas acumuladas en app: <strong>${totalVisits.toLocaleString()}</strong></div>  
  <div class="instructions-text">Sesiones guardadas en histórico: <strong>0</strong></div>  
@@ -3781,7 +3810,7 @@
  let sortedSongs = Object.values(songCounts).sort((a, b) => b.totalRequests - a.totalRequests).slice(0, 5);  
 
  container.innerHTML = `  
- <div class="instructions-box" style="margin-bottom: 12px;">  
+ <div class="instructions-box" style="margin-bottom: 12px; display: flex !important;">  
  <div class="instructions-title">🌐 Métricas Generales</div>  
  <div class="instructions-text" style="font-size: 0.8rem; margin-top: 4px;">  
  👁️ Visitas totales a la plataforma: <strong>${totalVisits.toLocaleString()}</strong><br>  
