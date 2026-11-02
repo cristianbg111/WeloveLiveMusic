@@ -5149,7 +5149,15 @@
  if (currentPage > totalPages) currentPage = totalPages;  
  renderQueuePage();  
  const qRes = document.getElementById('queueResults');  
- if (qRes) qRes.scrollTop = 0;  
+ if (qRes) {  
+ if (direction < 0) {  
+ // Anterior -> ir al final de la página anterior  
+ qRes.scrollTop = qRes.scrollHeight;  
+ } else {  
+ // Siguiente -> ir al principio de la página siguiente  
+ qRes.scrollTop = 0;  
+ }  
+ }  
  }  
   
  function exportQueueToPDF() {  
