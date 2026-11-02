@@ -6545,5 +6545,36 @@
  }
 
  </script>  
+<script>
+let touchStartX = 0;
+let touchStartY = 0;
+let isScrolling = false;
+
+window.addEventListener('touchstart', (e) => {
+    if (e.touches && e.touches.length > 0) {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        isScrolling = false;
+    }
+}, { passive: true });
+
+window.addEventListener('touchmove', (e) => {
+    if (e.touches && e.touches.length > 0) {
+        const moveX = Math.abs(e.touches[0].clientX - touchStartX);
+        const moveY = Math.abs(e.touches[0].clientY - touchStartY);
+        if (moveX > 8 || moveY > 8) {
+            isScrolling = true;
+        }
+    }
+}, { passive: true });
+
+window.addEventListener('click', (e) => {
+    if (isScrolling) {
+        e.preventDefault();
+        e.stopPropagation();
+        isScrolling = false;
+    }
+}, { capture: true });
+</script>
 </body>  
 </html>
