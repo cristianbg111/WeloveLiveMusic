@@ -303,6 +303,63 @@
  100% { transform: scale(1.015); }  
  }  
 
+ /* --- BANNER PRÓXIMA FIESTA CONFIGURABLE DESDE CABINA DJ --- */
+ .next-party-banner {
+ background: linear-gradient(90deg, rgba(121, 40, 202, 0.32), rgba(255, 0, 122, 0.28), rgba(0, 240, 255, 0.22));
+ border: 1.5px solid var(--cyan);
+ color: #ffffff;
+ padding: 6px 10px;
+ border-radius: 12px;
+ margin-bottom: 6px;
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ gap: 8px;
+ box-shadow: 0 0 15px rgba(0, 240, 255, 0.28);
+ flex-shrink: 0;
+ animation: pulseNextParty 2s infinite alternate;
+ }
+ @keyframes pulseNextParty {
+ 0% { border-color: var(--cyan); box-shadow: 0 0 12px rgba(0, 240, 255, 0.25); }
+ 100% { border-color: var(--accent); box-shadow: 0 0 16px rgba(255, 0, 122, 0.4); }
+ }
+ .next-party-content {
+ display: flex;
+ flex-direction: column;
+ align-items: flex-start;
+ flex: 1;
+ min-width: 0;
+ line-height: 1.2;
+ }
+ .next-party-tag {
+ font-family: 'JetBrains Mono', monospace;
+ font-size: 0.56rem;
+ font-weight: 800;
+ color: var(--count-bg);
+ text-transform: uppercase;
+ letter-spacing: 0.8px;
+ }
+ .next-party-title {
+ font-family: 'Syne', sans-serif;
+ font-size: 0.75rem;
+ font-weight: 800;
+ color: #ffffff;
+ text-transform: uppercase;
+ white-space: nowrap;
+ overflow: hidden;
+ text-overflow: ellipsis;
+ width: 100%;
+ }
+ .next-party-details {
+ font-size: 0.65rem;
+ font-weight: 700;
+ color: var(--cyan);
+ white-space: nowrap;
+ overflow: hidden;
+ text-overflow: ellipsis;
+ width: 100%;
+ }  
+
  /* --- OVERLAY DE RULETA Y CUENTA ATRÁS EN DIRECTO --- */
  #rouletteOverlay {
  display: none;
@@ -2251,6 +2308,16 @@
  🏆 ¡GANADOR DEL SORTEO: <span id="winnerNameDisplay">---</span>! 🏆  
  </div>  
 
+ <!-- BANNER PRÓXIMA FIESTA (CONFIGURABLE DESDE CABINA DJ) -->  
+ <div class="next-party-banner" id="nextPartyBanner" style="display: none;">  
+ <span style="font-size: 1.25rem; flex-shrink: 0;">🎉</span>  
+ <div class="next-party-content">  
+ <span class="next-party-tag">🔥 PRÓXIMO EVENTO / FIESTA</span>  
+ <div class="next-party-title" id="nextPartyTitleDisplay">WE LOVE THE REMEMBER</div>  
+ <div class="next-party-details" id="nextPartyDetailsDisplay">📅 Próximamente</div>  
+ </div>  
+ </div>  
+
  <!-- BARRA DE USUARIO IDENTIFICADO EN PEQUEÑO -->  
  <div class="user-badge-bar" id="userBadgeBar" style="display: none;">  
  <span>👤 Participante: <strong id="currentUserNameDisplay"></strong></span>  
@@ -2405,6 +2472,17 @@
  <button class="admin-menu-btn" style="background: rgba(255, 184, 0, 0.16); color: #fff; border-color: var(--count-bg); min-height: 90px;" ontouchend="handleResetHype(event)" onclick="resetHypeCounter()">  
  <span style="font-size: 1.4rem;">🔄</span>  
  <span style="font-size: 0.76rem;">Reset Hype a 0</span>  
+ </button>  
+
+ <button class="admin-menu-btn" style="grid-column: span 2; background: linear-gradient(135deg, rgba(255, 0, 122, 0.22), rgba(0, 240, 255, 0.18)); color: #fff; border-color: var(--cyan); min-height: 78px; flex-direction: row; align-items: center; justify-content: space-between; padding: 12px 16px;" ontouchend="handleAdminMenuBtn(event, 'nextParty')" onclick="openAdminModal('nextParty')">  
+ <div style="display: flex; align-items: center; gap: 10px;">  
+ <span style="font-size: 1.5rem;">🎉</span>  
+ <div style="display: flex; flex-direction: column; text-align: left;">  
+ <span style="font-size: 0.8rem;">Banner Próxima Fiesta</span>  
+ <span style="font-size: 0.64rem; color: var(--cyan); font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; text-transform: none;">Configurar cartel del próximo evento en sala</span>  
+ </div>  
+ </div>  
+ <span class="poll-status-pill" id="adminNextPartyBadgeMain" style="margin-bottom: 0;">OFF</span>  
  </button>  
  </div>  
  </div>  
@@ -2578,6 +2656,40 @@
  <button class="admin-action-btn" style="background: rgba(255, 42, 84, 0.18); border: 1px solid var(--danger); color: var(--danger); width: 100%; margin-top: 2px;" ontouchend="handleResetPoll(event)" onclick="resetExpressPoll()">🔄 Reiniciar Encuesta (Borrar Resultados)</button>  
  </div>  
  <button class="history-back-action-btn" ontouchend="handleModalClose(event, 'poll')" onclick="closeAdminModal('poll')">⬅️ Volver al Panel Admin</button>  
+ </div>  
+ </div>  
+
+ <!-- MODAL INDEPENDIENTE: BANNER PRÓXIMA FIESTA ADMIN -->  
+ <div class="modal" id="adminNextPartyModal">  
+ <div class="history-modal-content" onclick="event.stopPropagation()">  
+ <div class="history-header-box">  
+ <div class="history-modal-title">  
+ <span>🎉 Banner Próxima Fiesta</span>  
+ <span class="poll-status-pill" id="adminNextPartyStatusBadge" style="margin-bottom: 0;">OCULTO</span>  
+ </div>  
+ <div class="history-modal-subtitle">Anuncia tu próximo evento en la pantalla principal de todos los asistentes</div>  
+ </div>  
+ <div class="saved-lists-scroll" style="gap: 10px; padding-top: 4px;">  
+ <div class="manual-form-group" style="margin-bottom: 4px;">  
+ <label class="manual-form-label">Nombre de la Fiesta / Evento</label>  
+ <input type="text" id="adminNextPartyTitle" class="manual-form-input" placeholder="Ej: We LOVE The Remember 80-90-00" value="We LOVE The Remember 80-90-00" />  
+ </div>  
+ <div class="manual-form-group" style="margin-bottom: 4px;">  
+ <label class="manual-form-label">Fecha y Hora</label>  
+ <input type="text" id="adminNextPartyDate" class="manual-form-input" placeholder="Ej: Sábado 14 Nov · 18:00h" value="" />  
+ </div>  
+ <div class="manual-form-group" style="margin-bottom: 6px;">  
+ <label class="manual-form-label">Sala / Lugar o Info Extra</label>  
+ <input type="text" id="adminNextPartyVenue" class="manual-form-input" placeholder="Ej: Sala Zahora Magestic · Entrada Libre" value="" />  
+ </div>  
+
+ <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 6px;">  
+ <button type="button" class="admin-action-btn" style="background: var(--success); color: #000; width: 100%; padding: 12px;" ontouchend="handleSaveNextParty(event, true)" onclick="saveNextPartyBanner(true)">📢 Publicar / Mostrar Banner en Sala</button>  
+ <button type="button" class="admin-action-btn" style="background: var(--count-bg); color: #000; width: 100%; padding: 12px;" ontouchend="handleSaveNextParty(event, false)" onclick="saveNextPartyBanner(false)">🙈 Ocultar Banner (Guardar Datos)</button>  
+ <button type="button" class="admin-action-btn" style="background: rgba(255, 42, 84, 0.18); border: 1px solid var(--danger); color: var(--danger); width: 100%; padding: 12px;" ontouchend="handleClearNextParty(event)" onclick="clearNextPartyBanner()">🗑️ Borrar y Desactivar Banner</button>  
+ </div>  
+ </div>  
+ <button class="history-back-action-btn" ontouchend="handleModalClose(event, 'nextParty')" onclick="closeAdminModal('nextParty')">⬅️ Volver al Panel Admin</button>  
  </div>  
  </div>  
 
@@ -2888,7 +3000,8 @@
  const pollRef = db.ref('welove_live_music_poll');  
  const hypeRef = db.ref('welove_live_music_hype');  
  const hypeOpenRef = db.ref('welove_live_music_settings/hypeOpen');
- const upNextRef = db.ref('welove_live_music_settings/upNextAlert');  
+ const upNextRef = db.ref('welove_live_music_settings/upNextAlert');
+ const nextPartyRef = db.ref('welove_live_music_settings/nextPartyBanner');  
  let currentDecadeFilter = 'all';  
  let photoCountdownInterval = null;  
  let versusTimerTimeout = null;  
@@ -2929,13 +3042,15 @@
  function syncCompactLayoutState() {
  const pollBanner = document.getElementById('pollNotificationBanner');
  const winnerBanner = document.getElementById('winnerBanner');
+ const nextPartyBanner = document.getElementById('nextPartyBanner');
  const userBadge = document.getElementById('userBadgeBar');
 
  const isPollVisible = pollBanner && pollBanner.style.display !== 'none';
  const isWinnerVisible = winnerBanner && winnerBanner.style.display !== 'none';
+ const isNextPartyVisible = nextPartyBanner && nextPartyBanner.style.display !== 'none';
  const isBadgeVisible = userBadge && userBadge.style.display !== 'none';
 
- if (isPollVisible || isWinnerVisible || isBadgeVisible) {
+ if (isPollVisible || isWinnerVisible || isNextPartyVisible || isBadgeVisible) {
  document.body.classList.add('has-active-banners');
  } else {
  document.body.classList.remove('has-active-banners');
@@ -2977,7 +3092,8 @@
  document.getElementById('globalStatsModal').addEventListener('click', () => closeAdminModal('stats'));  
  document.getElementById('adminContestModal').addEventListener('click', () => closeAdminModal('contest'));  
  document.getElementById('adminLightsModal').addEventListener('click', () => closeAdminModal('lights'));  
- document.getElementById('adminPollModal').addEventListener('click', () => closeAdminModal('poll'));  
+ document.getElementById('adminPollModal').addEventListener('click', () => closeAdminModal('poll'));
+ document.getElementById('adminNextPartyModal').addEventListener('click', () => closeAdminModal('nextParty'));  
  document.getElementById('contestModal').addEventListener('click', closeContestModal);  
  document.getElementById('publicParticipantsModal').addEventListener('click', closePublicParticipantsModal);  
  document.getElementById('pollModal').addEventListener('click', closePollModal);  
@@ -3258,6 +3374,52 @@
  syncCompactLayoutState();  
  });  
 
+ nextPartyRef.on('value', (snapshot) => {  
+ const data = snapshot.val();  
+ const banner = document.getElementById('nextPartyBanner');  
+ const titleDisplay = document.getElementById('nextPartyTitleDisplay');  
+ const detailsDisplay = document.getElementById('nextPartyDetailsDisplay');  
+ const statusBadge = document.getElementById('adminNextPartyStatusBadge');  
+ const mainBadge = document.getElementById('adminNextPartyBadgeMain');  
+
+ if (data) {  
+ const titleInput = document.getElementById('adminNextPartyTitle');  
+ const dateInput = document.getElementById('adminNextPartyDate');  
+ const venueInput = document.getElementById('adminNextPartyVenue');  
+ if (titleInput && document.activeElement !== titleInput && data.title !== undefined) titleInput.value = data.title;  
+ if (dateInput && document.activeElement !== dateInput && data.date !== undefined) dateInput.value = data.date;  
+ if (venueInput && document.activeElement !== venueInput && data.venue !== undefined) venueInput.value = data.venue;  
+ }  
+
+ if (data && data.active && data.title) {  
+ titleDisplay.textContent = data.title;  
+ const parts = [];  
+ if (data.date) parts.push('📅 ' + data.date);  
+ if (data.venue) parts.push('📍 ' + data.venue);  
+ detailsDisplay.textContent = parts.length > 0 ? parts.join(' · ') : '✨ ¡No te lo pierdas!';  
+ banner.style.display = 'flex';  
+ if (statusBadge) {  
+ statusBadge.textContent = 'ACTIVO EN SALA';  
+ statusBadge.className = 'poll-status-pill open';  
+ }  
+ if (mainBadge) {  
+ mainBadge.textContent = 'ON';  
+ mainBadge.className = 'poll-status-pill open';  
+ }  
+ } else {  
+ banner.style.display = 'none';  
+ if (statusBadge) {  
+ statusBadge.textContent = 'OCULTO';  
+ statusBadge.className = 'poll-status-pill';  
+ }  
+ if (mainBadge) {  
+ mainBadge.textContent = 'OFF';  
+ mainBadge.className = 'poll-status-pill';  
+ }  
+ }  
+ syncCompactLayoutState();  
+ });  
+
  adminEffectRef.on('value', (snapshot) => {  
  const val = snapshot.val();  
  latestAdminEffectData = val;  
@@ -3275,7 +3437,8 @@
  const globalStatsModal = document.getElementById('globalStatsModal');  
  const adminContestModal = document.getElementById('adminContestModal');  
  const adminLightsModal = document.getElementById('adminLightsModal');  
- const adminPollModal = document.getElementById('adminPollModal');  
+ const adminPollModal = document.getElementById('adminPollModal');
+ const adminNextPartyModal = document.getElementById('adminNextPartyModal');  
  const contestModal = document.getElementById('contestModal');  
  const publicParticipantsModal = document.getElementById('publicParticipantsModal');  
  const pollModal = document.getElementById('pollModal');  
@@ -3286,14 +3449,15 @@
  return;  
  }  
 
- if (manualModal.style.display === 'flex' || searchResultsModal.style.display === 'flex' || historyModal.style.display === 'flex' || globalStatsModal.style.display === 'flex' || adminContestModal.style.display === 'flex' || adminLightsModal.style.display === 'flex' || adminPollModal.style.display === 'flex' || contestModal.style.display === 'flex' || publicParticipantsModal.style.display === 'flex' || pollModal.style.display === 'flex' || qrModal.style.display === 'flex') {  
+ if (manualModal.style.display === 'flex' || searchResultsModal.style.display === 'flex' || historyModal.style.display === 'flex' || globalStatsModal.style.display === 'flex' || adminContestModal.style.display === 'flex' || adminLightsModal.style.display === 'flex' || adminPollModal.style.display === 'flex' || adminNextPartyModal.style.display === 'flex' || contestModal.style.display === 'flex' || publicParticipantsModal.style.display === 'flex' || pollModal.style.display === 'flex' || qrModal.style.display === 'flex') {  
  closeManualModal();  
  closeSearchResultsModal();  
  closeHistoryModal();  
  closeAdminModal('stats');  
  closeAdminModal('contest');  
  closeAdminModal('lights');  
- closeAdminModal('poll');  
+ closeAdminModal('poll');
+ closeAdminModal('nextParty');  
  closeContestModal();  
  closePublicParticipantsModal();  
  closePollModal();  
@@ -3380,7 +3544,8 @@
  closeAdminModal('stats');  
  closeAdminModal('contest');  
  closeAdminModal('lights');  
- closeAdminModal('poll');  
+ closeAdminModal('poll');
+ closeAdminModal('nextParty');  
  closeContestModal();  
  closePublicParticipantsModal();  
  closePollModal();  
@@ -3616,6 +3781,9 @@
  } else if (type === 'poll') {  
  document.getElementById('adminPollModal').style.display = 'flex';  
  history.pushState({ screen: 'adminPoll' }, '', '');  
+ } else if (type === 'nextParty') {  
+ document.getElementById('adminNextPartyModal').style.display = 'flex';  
+ history.pushState({ screen: 'adminNextParty' }, '', '');  
  } else if (type === 'stats') {  
  openGlobalStatsModal();  
  }  
@@ -3628,6 +3796,8 @@
  document.getElementById('adminLightsModal').style.display = 'none';  
  } else if (type === 'poll') {  
  document.getElementById('adminPollModal').style.display = 'none';  
+ } else if (type === 'nextParty') {  
+ document.getElementById('adminNextPartyModal').style.display = 'none';  
  } else if (type === 'stats') {  
  document.getElementById('globalStatsModal').style.display = 'none';  
  }  
@@ -5588,6 +5758,57 @@
  e.stopPropagation();
  }
  launchTop2VersusBattle();
+ }
+
+ function handleSaveNextParty(e, makeActive) {
+ if (e) {
+ e.preventDefault();
+ e.stopPropagation();
+ }
+ saveNextPartyBanner(makeActive);
+ }
+
+ function handleClearNextParty(e) {
+ if (e) {
+ e.preventDefault();
+ e.stopPropagation();
+ }
+ clearNextPartyBanner();
+ }
+
+ function saveNextPartyBanner(makeActive) {
+ if (!isAdminModeActive) return;
+ const title = document.getElementById('adminNextPartyTitle').value.trim();
+ const date = document.getElementById('adminNextPartyDate').value.trim();
+ const venue = document.getElementById('adminNextPartyVenue').value.trim();
+
+ if (makeActive && !title) {
+ alert("⚠️ Escribe al menos el nombre de la próxima fiesta para mostrar el banner.");
+ document.getElementById('adminNextPartyTitle').focus();
+ return;
+ }
+
+ nextPartyRef.set({
+ active: Boolean(makeActive),
+ title: title || 'We LOVE The Remember',
+ date: date,
+ venue: venue,
+ updatedAt: Date.now()
+ }).then(() => {
+ alert(makeActive ? "🎉 ¡Banner de Próxima Fiesta publicado en todas las pantallas de la sala!" : "🙈 Banner ocultado de las pantallas (datos guardados).");
+ });
+ }
+
+ function clearNextPartyBanner() {
+ if (!isAdminModeActive) return;
+ if (confirm("¿Seguro que quieres borrar y desactivar el banner de la próxima fiesta?")) {
+ nextPartyRef.remove().then(() => {
+ document.getElementById('adminNextPartyTitle').value = '';
+ document.getElementById('adminNextPartyDate').value = '';
+ document.getElementById('adminNextPartyVenue').value = '';
+ alert("🗑️ Banner de próxima fiesta eliminado.");
+ });
+ }
  }
 
  function handleResetHype(e) {
