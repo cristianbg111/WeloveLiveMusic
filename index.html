@@ -497,7 +497,7 @@
  50% { opacity: 0.65; }  
  }  
   
- /* --- TARJETA DE INSTRUCCIONES (SE OCULTA AUTOMÁTICAMENTE SI HAY CARTEL DE SORTEO/ENCUESTA PARA NO APLASTAR LOS BOTONES) --- */
+ /* --- TARJETA DE INSTRUCCIONES (SE OCULTA AUTOMÁTICAMENTE SI HAY CARTEL ACTIVO) --- */
  .instructions-box {  
  background: var(--surface);  
  border: 1px solid var(--border);  
@@ -546,7 +546,7 @@
  }  
   
  /* ==========================================================
-    DASHBOARD: BOTONES AMPLIOS COMO ANTES CON AJUSTE ELÁSTICO
+    DASHBOARD: BOTONES AMPLIOS CON AJUSTE ELÁSTICO
     ========================================================== */  
  .dashboard-container {  
  display: flex;  
@@ -662,7 +662,7 @@
  text-transform: uppercase;  
  }  
 
- /* 2. MATRIZ LAUNCHPAD 2x2 CON EL TAMAÑO Y DISEÑO ORIGINAL QUE TE GUSTABA */
+ /* 2. MATRIZ LAUNCHPAD 2x2 CON TAMAÑO ORIGINAL Y AJUSTE ELÁSTICO */
  .launchpad-grid {  
  display: grid;  
  grid-template-columns: repeat(2, 1fr);  
@@ -2030,7 +2030,7 @@
  </div>
  </button>  
    
- <!-- MATRIZ 2x2 DE PADS DE CABINA CON EL TAMAÑO AMPLIO ORIGINAL -->
+ <!-- MATRIZ 2x2 DE PADS DE CABINA CON TAMAÑO ORIGINAL Y AJUSTE ELÁSTICO -->
  <div class="launchpad-grid">
  <button class="dash-btn pad-card dash-btn-queue" id="dashQueueBtn" ontouchend="handleDashClick(event, 'queue')" onclick="switchTab('queue', true)">  
  <span class="pad-led"></span>
@@ -2131,7 +2131,7 @@
  </div>  
  </div>  
   
- <!-- FOOTER CON CONTADOR EN VIVO Y VISITAS -->  
+ <!-- FOOTER CON CONTADOR ONLINE EN VIVO Y VISITAS -->  
  <footer class="footer">  
  <div>App creada por <strong>We Love The Remember Studios</strong></div>
  <div class="footer-stats-group">
@@ -2615,7 +2615,6 @@
  let rouletteSpinInterval = null;
  let rouletteCountdownInterval = null;
 
- /* Función que detecta si hay carteles activos (ganador, encuesta o usuario inscrito) para ajustar la consola automáticamente sin encoger los botones */
  function syncCompactLayoutState() {
  const pollBanner = document.getElementById('pollNotificationBanner');
  const winnerBanner = document.getElementById('winnerBanner');
@@ -2692,7 +2691,6 @@
  document.getElementById('visitorCount').textContent = count.toLocaleString();  
  });  
 
- /* --- SISTEMA DE PRESENCIA EN VIVO (USUARIOS ONLINE) --- */
  const onlineRef = db.ref('welove_live_music_online');
  const connectedRef = db.ref('.info/connected');
 
