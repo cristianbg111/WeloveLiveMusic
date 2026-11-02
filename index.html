@@ -2233,9 +2233,303 @@
  font-weight: 600;
  }
 
+ 
+ /* --- PANTALLA INTERMEDIA (PORTAL CON LOGO GIRATORIO Y 2 BOTONES) --- */
+ body.portal-mode .brand-header,
+ body.portal-mode #neonBanner,
+ body.portal-mode #pollNotificationBanner,
+ body.portal-mode #winnerBanner,
+ body.portal-mode #nextPartyBanner,
+ body.portal-mode #userBadgeBar {
+ display: none !important;
+ }
+
+ body.events-mode #neonBanner,
+ body.events-mode #pollNotificationBanner,
+ body.events-mode #winnerBanner,
+ body.events-mode #nextPartyBanner,
+ body.events-mode #userBadgeBar {
+ display: none !important;
+ }
+
+ .portal-container {
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ justify-content: space-between;
+ flex: 1;
+ padding: 10px 6px 6px;
+ text-align: center;
+ min-height: 0;
+ overflow-y: auto;
+ }
+
+ .portal-top-bar {
+ width: 100%;
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ margin-bottom: 4px;
+ }
+
+ .portal-vinyl-wrapper {
+ position: relative;
+ width: clamp(145px, 38vw, 185px);
+ height: clamp(145px, 38vw, 185px);
+ border-radius: 50%;
+ padding: 18px;
+ background:
+ conic-gradient(from 45deg, rgba(255,255,255,0.08) 0deg, transparent 40deg, rgba(255,255,255,0.08) 180deg, transparent 220deg),
+ repeating-radial-gradient(circle, #08080c 0px, #08080c 4px, #1d1f2e 5px, #08080c 6px);
+ box-shadow: 0 0 0 3px rgba(255, 0, 122, 0.75), 0 0 35px rgba(255, 0, 122, 0.5), 0 0 60px rgba(0, 240, 255, 0.3);
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ animation: spinVinyl 13s linear infinite;
+ margin: 6px auto;
+ flex-shrink: 0;
+ }
+
+ .portal-vinyl-wrapper img {
+ width: 100%;
+ height: 100%;
+ object-fit: contain;
+ border-radius: 50%;
+ padding: 10px;
+ border: 2.5px solid var(--cyan);
+ background: #000000;
+ box-shadow: inset 0 0 12px rgba(0, 240, 255, 0.35);
+ display: block;
+ pointer-events: none;
+ }
+
+ .portal-brand-titles {
+ margin: 4px 0 8px;
+ }
+
+ .portal-brand-title {
+ font-family: 'Syne', sans-serif;
+ font-size: clamp(1.1rem, 4.5vw, 1.4rem);
+ font-weight: 800;
+ color: var(--text);
+ text-transform: uppercase;
+ letter-spacing: 0.8px;
+ text-shadow: 0 0 14px var(--glow-accent);
+ line-height: 1.15;
+ }
+
+ .portal-brand-sub {
+ font-family: 'JetBrains Mono', monospace;
+ font-size: 0.68rem;
+ font-weight: 800;
+ color: var(--cyan);
+ text-transform: uppercase;
+ letter-spacing: 1.2px;
+ margin-top: 3px;
+ }
+
+ .portal-buttons-stack {
+ display: flex;
+ flex-direction: column;
+ gap: 12px;
+ width: 100%;
+ margin-top: 4px;
+ margin-bottom: 4px;
+ }
+
+ .portal-main-btn {
+ width: 100%;
+ border-radius: 22px;
+ padding: 18px 18px;
+ cursor: pointer;
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ gap: 12px;
+ text-align: left;
+ border: 1.5px solid rgba(255, 255, 255, 0.3);
+ transition: transform 0.15s ease, box-shadow 0.2s ease;
+ -webkit-appearance: none;
+ touch-action: manipulation;
+ pointer-events: auto !important;
+ position: relative;
+ overflow: hidden;
+ }
+ .portal-main-btn:active {
+ transform: scale(0.97);
+ }
+
+ .portal-btn-live {
+ background: linear-gradient(135deg, #ff007a 0%, #7928ca 65%, #1e1b4b 100%);
+ box-shadow: 0 12px 28px -6px rgba(255, 0, 122, 0.6);
+ }
+
+ .portal-btn-events {
+ background: linear-gradient(135deg, #0284c7 0%, #4f46e5 60%, #1e1b4b 100%);
+ border-color: var(--cyan);
+ box-shadow: 0 12px 28px -6px rgba(0, 240, 255, 0.35);
+ }
+
+ .portal-btn-left {
+ display: flex;
+ align-items: center;
+ gap: 13px;
+ pointer-events: none;
+ }
+
+ .portal-btn-icon {
+ font-size: 1.9rem;
+ line-height: 1;
+ filter: drop-shadow(0 0 8px rgba(255,255,255,0.3));
+ }
+
+ .portal-btn-text-group {
+ display: flex;
+ flex-direction: column;
+ gap: 2px;
+ }
+
+ .portal-btn-title {
+ font-family: 'Syne', sans-serif;
+ font-size: 1.08rem;
+ font-weight: 800;
+ color: #ffffff;
+ text-transform: uppercase;
+ letter-spacing: 0.4px;
+ line-height: 1.15;
+ }
+
+ .portal-btn-subtitle {
+ font-size: 0.7rem;
+ font-weight: 600;
+ color: rgba(255, 255, 255, 0.85);
+ }
+
+ .portal-btn-arrow {
+ background: rgba(255, 255, 255, 0.92);
+ color: #07070c;
+ font-weight: 900;
+ font-size: 0.78rem;
+ padding: 6px 11px;
+ border-radius: 99px;
+ text-transform: uppercase;
+ pointer-events: none;
+ white-space: nowrap;
+ }
+
+ /* --- TARJETAS DE PRÓXIMOS EVENTOS Y CALENDARIO WE LOVE --- */
+ .event-card {
+ background: linear-gradient(155deg, var(--surface) 0%, rgba(121, 40, 202, 0.14) 100%);
+ border: 1.5px solid var(--border);
+ border-left: 4px solid var(--accent);
+ border-radius: 18px;
+ padding: 13px 14px;
+ display: flex;
+ flex-direction: column;
+ gap: 7px;
+ position: relative;
+ box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+ flex-shrink: 0;
+ text-align: left;
+ }
+
+ .event-card-header {
+ display: flex;
+ justify-content: space-between;
+ align-items: flex-start;
+ gap: 8px;
+ }
+
+ .event-card-title {
+ font-family: 'Syne', sans-serif;
+ font-size: 0.92rem;
+ font-weight: 800;
+ color: var(--text);
+ text-transform: uppercase;
+ line-height: 1.2;
+ }
+
+ .event-card-meta {
+ display: flex;
+ flex-wrap: wrap;
+ gap: 6px;
+ margin-top: 2px;
+ }
+
+ .event-meta-pill {
+ display: inline-flex;
+ align-items: center;
+ gap: 4px;
+ background: var(--input-bg);
+ border: 1px solid var(--border);
+ padding: 4px 9px;
+ border-radius: 8px;
+ font-size: 0.7rem;
+ font-weight: 700;
+ color: var(--cyan);
+ }
+
+ .event-meta-pill.venue-pill {
+ color: var(--count-bg);
+ border-color: rgba(255, 184, 0, 0.35);
+ width: 100%;
+ }
+
+ .event-card-notes {
+ margin-top: 3px;
+ padding: 8px 10px;
+ background: rgba(255, 255, 255, 0.04);
+ border-left: 3px solid var(--cyan);
+ border-radius: 8px;
+ font-size: 0.72rem;
+ color: var(--text);
+ line-height: 1.38;
+ font-weight: 500;
+ white-space: pre-wrap;
+ word-break: break-word;
+ }
+
+ .event-card-notes-label {
+ display: block;
+ font-family: 'JetBrains Mono', monospace;
+ font-size: 0.6rem;
+ font-weight: 800;
+ color: var(--cyan);
+ text-transform: uppercase;
+ margin-bottom: 2px;
+ letter-spacing: 0.5px;
+ }
+
+ textarea.manual-form-input {
+ font-family: inherit;
+ resize: vertical;
+ min-height: 58px;
+ line-height: 1.35;
+ }
+
+ .event-admin-actions {
+ display: flex;
+ gap: 8px;
+ justify-content: flex-end;
+ border-top: 1px dashed var(--border);
+ padding-top: 8px;
+ margin-top: 2px;
+ }
+
+ .event-edit-btn {
+ background: rgba(0, 240, 255, 0.15);
+ border: 1px solid var(--cyan);
+ color: var(--cyan);
+ padding: 6px 12px;
+ border-radius: 8px;
+ font-size: 0.72rem;
+ font-weight: 800;
+ cursor: pointer;
+ }
+
  </style>  
 </head>  
-<body>  
+<body class="portal-mode">  
   
  <!-- CONTENEDOR FLOTANTE DE REACCIONES HYPE -->
  <div id="hype-floating-container"></div>
@@ -2291,7 +2585,10 @@
  </div>
  <h1>WE LOVE LIVE MUSIC</h1>  
  </div>
- <button class="theme-btn" id="themeToggle">☀️ Claro</button>  
+ <div style="display: flex; gap: 5px; align-items: center; flex-shrink: 0;">
+ <button class="theme-btn" id="backToPortalBtn" ontouchend="handleMenuBack(event, 'portal')" onclick="switchTab('portal', true)">⬅️ Inicio</button>
+ <button class="theme-btn" id="themeToggle">☀️ Claro</button>
+ </div>  
  </div>  
  </div>  
   
@@ -2326,8 +2623,70 @@
    
  <div id="neonBanner" class="neon-banner enabled">🟢 Peticiones de canciones: ABIERTAS</div>  
   
- <!-- PESTAÑA MENÚ DE INICIO (DASHBOARD) -->  
- <div id="tabHome" class="tab-content active">  
+ <!-- PANTALLA INTERMEDIA DE SELECCIÓN (LOGO GIRANDO + 2 BOTONES) -->
+ <div id="tabPortal" class="tab-content active">
+ <div class="portal-container">
+ <div class="portal-top-bar">
+ <div class="live-sub-badge" style="margin-bottom: 0;">
+ <span class="mini-eq"><i></i><i></i><i></i></span> WE LOVE THE REMEMBER
+ </div>
+ <button class="theme-btn" id="themeTogglePortal" onclick="toggleTheme()">☀️ Claro</button>
+ </div>
+
+ <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; width: 100%;">
+ <div class="portal-vinyl-wrapper">
+ <img src="logo.jpg" alt="We Love Live Music Logo">
+ </div>
+ <div class="portal-brand-titles">
+ <div class="portal-brand-title">We Love The Remember</div>
+ <div class="portal-brand-sub">80 · 90 · 00 &amp; Live Music</div>
+ </div>
+ </div>
+
+ <div class="portal-buttons-stack">
+ <button type="button" class="portal-main-btn portal-btn-live" ontouchend="handlePortalNav(event, 'home')" onclick="switchTab('home', true)">
+ <div class="portal-btn-left">
+ <span class="portal-btn-icon">🎧</span>
+ <div class="portal-btn-text-group">
+ <span class="portal-btn-title">Sala en Directo!</span>
+ <span class="portal-btn-subtitle">Pide canciones, vota y participa</span>
+ </div>
+ </div>
+ <span class="portal-btn-arrow">Entrar ➔</span>
+ </button>
+
+ <button type="button" class="portal-main-btn portal-btn-events" ontouchend="handlePortalNav(event, 'events')" onclick="switchTab('events', true)">
+ <div class="portal-btn-left">
+ <span class="portal-btn-icon">📅</span>
+ <div class="portal-btn-text-group">
+ <span class="portal-btn-title">Próximos eventos</span>
+ <span class="portal-btn-subtitle">Consulta nuestras próximas fiestas (<span id="publicEventsCountBadge">0</span>)</span>
+ </div>
+ </div>
+ <span class="portal-btn-arrow">Ver ➔</span>
+ </button>
+ </div>
+ </div>
+ </div>
+
+ <!-- PANTALLA PÚBLICA DE PRÓXIMOS EVENTOS -->
+ <div id="tabEvents" class="tab-content">
+ <div class="queue-header" style="flex-direction: row; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+ <span class="queue-title">📅 Próximos Eventos</span>
+ <button class="theme-btn" style="padding: 6px 11px;" ontouchend="handleMenuBack(event, 'portal')" onclick="switchTab('portal', true)">⬅️ Volver</button>
+ </div>
+
+ <div id="publicEventsList" class="results" style="padding-bottom: 14px;">
+ <p class="status-msg">Cargando próximos eventos...</p>
+ </div>
+
+ <button type="button" class="back-btn-top" style="margin-bottom: 0; margin-top: 6px; flex-shrink: 0;" ontouchend="handlePortalNav(event, 'home')" onclick="switchTab('home', true)">
+ 🎧 Ir a Sala en Directo!
+ </button>
+ </div>
+
+ <!-- PESTAÑA MENÚ DE INICIO (DASHBOARD / SALA EN DIRECTO) -->  
+ <div id="tabHome" class="tab-content">  
  <div class="instructions-box">  
  <div class="instructions-title">🎧 CONSOLA DE PETICIONES EN VIVO</div>  
  <div class="instructions-text">  
@@ -2474,7 +2833,18 @@
  <span style="font-size: 0.76rem;">Reset Hype a 0</span>  
  </button>  
 
- <button class="admin-menu-btn" style="grid-column: span 2; background: linear-gradient(135deg, rgba(255, 0, 122, 0.22), rgba(0, 240, 255, 0.18)); color: #fff; border-color: var(--cyan); min-height: 78px; flex-direction: row; align-items: center; justify-content: space-between; padding: 12px 16px;" ontouchend="handleAdminMenuBtn(event, 'nextParty')" onclick="openAdminModal('nextParty')">  
+ <button class="admin-menu-btn" style="grid-column: span 2; background: linear-gradient(135deg, rgba(2, 132, 199, 0.28), rgba(121, 40, 202, 0.26)); color: #fff; border-color: var(--accent); min-height: 74px; flex-direction: row; align-items: center; justify-content: space-between; padding: 12px 16px;" ontouchend="handleAdminMenuBtn(event, 'calendar')" onclick="openAdminModal('calendar')">  
+ <div style="display: flex; align-items: center; gap: 10px;">  
+ <span style="font-size: 1.5rem;">📅</span>  
+ <div style="display: flex; flex-direction: column; text-align: left;">  
+ <span style="font-size: 0.82rem;">Calendario We Love</span>  
+ <span style="font-size: 0.64rem; color: var(--cyan); font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; text-transform: none;">Añadir, editar, modificar y borrar próximos eventos</span>  
+ </div>  
+ </div>  
+ <span class="poll-status-pill open" id="adminCalendarCountBadge" style="margin-bottom: 0;">0</span>  
+ </button>  
+
+  <button class="admin-menu-btn" style="grid-column: span 2; background: linear-gradient(135deg, rgba(255, 0, 122, 0.22), rgba(0, 240, 255, 0.18)); color: #fff; border-color: var(--cyan); min-height: 78px; flex-direction: row; align-items: center; justify-content: space-between; padding: 12px 16px;" ontouchend="handleAdminMenuBtn(event, 'nextParty')" onclick="openAdminModal('nextParty')">  
  <div style="display: flex; align-items: center; gap: 10px;">  
  <span style="font-size: 1.5rem;">🎉</span>  
  <div style="display: flex; flex-direction: column; text-align: left;">  
@@ -2690,6 +3060,66 @@
  </div>  
  </div>  
  <button class="history-back-action-btn" ontouchend="handleModalClose(event, 'nextParty')" onclick="closeAdminModal('nextParty')">⬅️ Volver al Panel Admin</button>  
+ </div>  
+ </div>  
+
+ <!-- MODAL / PÁGINA INDEPENDIENTE: CALENDARIO WE LOVE (ADMIN CRUD EVENTOS) -->  
+ <div class="modal" id="adminCalendarModal">  
+ <div class="history-modal-content" onclick="event.stopPropagation()">  
+ <div class="history-header-box">  
+ <div class="history-modal-title">  
+ <span>📅 Calendario We Love</span>  
+ <span class="poll-status-pill open" id="adminCalendarHeaderBadge" style="margin-bottom: 0;">0 eventos</span>  
+ </div>  
+ <div class="history-modal-subtitle">Añade nuevos eventos o edita y borra los existentes</div>  
+ </div>  
+
+ <div class="saved-lists-scroll" id="adminCalendarScrollContainer" style="gap: 10px; padding-top: 4px;">  
+ <!-- FORMULARIO AÑADIR / EDITAR EVENTO -->
+ <form id="calendarEventForm" onsubmit="saveCalendarEvent(event)" style="background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 12px; display: flex; flex-direction: column; gap: 8px; flex-shrink: 0;">
+ <div id="calFormModeTitle" style="font-family: 'Syne', sans-serif; font-size: 0.8rem; font-weight: 800; color: var(--cyan); text-transform: uppercase; margin-bottom: 2px;">➕ Añadir Nuevo Evento</div>
+ <input type="hidden" id="calEventEditId" value="" />
+
+ <div class="manual-form-group" style="margin-bottom: 2px;">  
+ <label class="manual-form-label">Nombre del evento</label>  
+ <input type="text" id="calEventName" class="manual-form-input" placeholder="Ej: We Love The Remember 80-90-00" required autocomplete="off" />  
+ </div>  
+
+ <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+ <div class="manual-form-group" style="margin-bottom: 2px;">  
+ <label class="manual-form-label">Fecha</label>  
+ <input type="date" id="calEventDate" class="manual-form-input" required />  
+ </div>  
+
+ <div class="manual-form-group" style="margin-bottom: 2px;">  
+ <label class="manual-form-label">Hora</label>  
+ <input type="text" id="calEventTime" class="manual-form-input" placeholder="Ej: 18:00h" required autocomplete="off" />  
+ </div>  
+ </div>
+
+ <div class="manual-form-group" style="margin-bottom: 2px;">  
+ <label class="manual-form-label">Sala / Lugar</label>  
+ <input type="text" id="calEventVenue" class="manual-form-input" placeholder="Ej: Sala Zahora Magestic" required autocomplete="off" />  
+ </div>  
+
+ <div class="manual-form-group" style="margin-bottom: 4px;">  
+ <label class="manual-form-label">Observaciones</label>  
+ <textarea id="calEventNotes" class="manual-form-input" rows="2" placeholder="Escribe aquí información adicional del evento (entradas, DJs, promociones, horarios...)"></textarea>  
+ </div>  
+
+ <div style="display: flex; gap: 8px;">
+ <button type="submit" id="calSubmitBtn" class="admin-action-btn" style="background: var(--success); color: #000; flex: 1; min-height: 42px; padding: 10px;">➕ Guardar Evento</button>
+ <button type="button" id="calCancelEditBtn" class="admin-action-btn" style="background: var(--surface-elevated); border: 1px solid var(--border); color: var(--text); display: none; min-height: 42px; padding: 10px;" onclick="cancelCalendarEdit()">✕ Cancelar</button>
+ </div>
+ </form>
+
+ <div style="font-family: 'Syne', sans-serif; font-size: 0.78rem; font-weight: 800; color: var(--text); text-transform: uppercase; margin-top: 4px;">📋 Eventos Programados</div>
+ <div id="adminCalendarEventsList" style="display: flex; flex-direction: column; gap: 8px;">
+ <p class="status-msg">No hay eventos programados.</p>
+ </div>
+ </div>  
+
+ <button class="history-back-action-btn" ontouchend="handleModalClose(event, 'calendar')" onclick="closeAdminModal('calendar')">⬅️ Volver al Panel Admin</button>  
  </div>  
  </div>  
 
@@ -2957,7 +3387,7 @@
    
  <div class="standby-content">  
  <div class="standby-title">We LOVE Live Music</div>  
- <div class="standby-subtitle">Toca la pantalla para hacer tu petición</div>  
+ <div class="standby-subtitle">Bienvenidos a We Love The Remember 80-90-00. Toca para entrar.</div>  
  </div>  
   
  <div class="equalizer-container">  
@@ -3002,6 +3432,8 @@
  const hypeOpenRef = db.ref('welove_live_music_settings/hypeOpen');
  const upNextRef = db.ref('welove_live_music_settings/upNextAlert');
  const nextPartyRef = db.ref('welove_live_music_settings/nextPartyBanner');  
+ const calendarRef = db.ref('welove_live_music_calendar');  
+ let globalCalendarEvents = [];  
  let currentDecadeFilter = 'all';  
  let photoCountdownInterval = null;  
  let versusTimerTimeout = null;  
@@ -3094,6 +3526,7 @@
  document.getElementById('adminLightsModal').addEventListener('click', () => closeAdminModal('lights'));  
  document.getElementById('adminPollModal').addEventListener('click', () => closeAdminModal('poll'));
  document.getElementById('adminNextPartyModal').addEventListener('click', () => closeAdminModal('nextParty'));  
+ document.getElementById('adminCalendarModal').addEventListener('click', () => closeAdminModal('calendar'));  
  document.getElementById('contestModal').addEventListener('click', closeContestModal);  
  document.getElementById('publicParticipantsModal').addEventListener('click', closePublicParticipantsModal);  
  document.getElementById('pollModal').addEventListener('click', closePollModal);  
@@ -3420,6 +3853,31 @@
  syncCompactLayoutState();  
  });  
 
+ calendarRef.on('value', (snapshot) => {  
+ const data = snapshot.val();  
+ globalCalendarEvents = [];  
+ if (data) {  
+ for (let key in data) {  
+ globalCalendarEvents.push({ id: key, ...data[key] });  
+ }  
+ }  
+ globalCalendarEvents.sort((a, b) => {  
+ const dA = a.date || '9999-99-99';  
+ const dB = b.date || '9999-99-99';  
+ if (dA !== dB) return dA.localeCompare(dB);  
+ return (a.time || '').localeCompare(b.time || '');  
+ });  
+ const totalEv = globalCalendarEvents.length;  
+ const pubBadge = document.getElementById('publicEventsCountBadge');  
+ const admBadge = document.getElementById('adminCalendarCountBadge');  
+ const admHeaderBadge = document.getElementById('adminCalendarHeaderBadge');  
+ if (pubBadge) pubBadge.textContent = totalEv;  
+ if (admBadge) admBadge.textContent = totalEv;  
+ if (admHeaderBadge) admHeaderBadge.textContent = totalEv + (totalEv === 1 ? ' evento' : ' eventos');  
+ renderPublicCalendarEvents();  
+ renderAdminCalendarEvents();  
+ });  
+
  adminEffectRef.on('value', (snapshot) => {  
  const val = snapshot.val();  
  latestAdminEffectData = val;  
@@ -3428,7 +3886,7 @@
  updateAdminButtonsUI(val);  
  });  
 
- history.replaceState({ screen: 'home' }, '', '');  
+ history.replaceState({ screen: 'portal' }, '', '');  
  window.addEventListener('popstate', (e) => {  
  const imageModal = document.getElementById('imageModal');  
  const manualModal = document.getElementById('manualModal');  
@@ -3439,6 +3897,7 @@
  const adminLightsModal = document.getElementById('adminLightsModal');  
  const adminPollModal = document.getElementById('adminPollModal');
  const adminNextPartyModal = document.getElementById('adminNextPartyModal');  
+ const adminCalendarModal = document.getElementById('adminCalendarModal');  
  const contestModal = document.getElementById('contestModal');  
  const publicParticipantsModal = document.getElementById('publicParticipantsModal');  
  const pollModal = document.getElementById('pollModal');  
@@ -3449,7 +3908,7 @@
  return;  
  }  
 
- if (manualModal.style.display === 'flex' || searchResultsModal.style.display === 'flex' || historyModal.style.display === 'flex' || globalStatsModal.style.display === 'flex' || adminContestModal.style.display === 'flex' || adminLightsModal.style.display === 'flex' || adminPollModal.style.display === 'flex' || adminNextPartyModal.style.display === 'flex' || contestModal.style.display === 'flex' || publicParticipantsModal.style.display === 'flex' || pollModal.style.display === 'flex' || qrModal.style.display === 'flex') {  
+ if (manualModal.style.display === 'flex' || searchResultsModal.style.display === 'flex' || historyModal.style.display === 'flex' || globalStatsModal.style.display === 'flex' || adminContestModal.style.display === 'flex' || adminLightsModal.style.display === 'flex' || adminPollModal.style.display === 'flex' || adminNextPartyModal.style.display === 'flex' || adminCalendarModal.style.display === 'flex' || contestModal.style.display === 'flex' || publicParticipantsModal.style.display === 'flex' || pollModal.style.display === 'flex' || qrModal.style.display === 'flex') {  
  closeManualModal();  
  closeSearchResultsModal();  
  closeHistoryModal();  
@@ -3457,27 +3916,35 @@
  closeAdminModal('contest');  
  closeAdminModal('lights');  
  closeAdminModal('poll');
- closeAdminModal('nextParty');  
+ closeAdminModal('nextParty');
+ closeAdminModal('calendar');  
+ closeAdminModal('calendar');  
  closeContestModal();  
  closePublicParticipantsModal();  
  closePollModal();  
  closeQrModal();  
+ return;  
+ }  
+
+ const activeTabQueue = document.getElementById('tabQueue');  
+ const activeTabAdmin = document.getElementById('tabAdmin');  
+ if (activeTabQueue.classList.contains('active') || activeTabAdmin.classList.contains('active')) {  
  switchTab('home', false);  
  history.replaceState({ screen: 'home' }, '', '');  
  return;  
  }  
 
- const activeTabHome = document.getElementById('tabHome');  
- if (!activeTabHome.classList.contains('active')) {  
- switchTab('home', false);  
- history.replaceState({ screen: 'home' }, '', '');  
+ const activeTabPortal = document.getElementById('tabPortal');  
+ if (!activeTabPortal.classList.contains('active')) {  
+ switchTab('portal', false);  
+ history.replaceState({ screen: 'portal' }, '', '');  
  return;  
  }  
 
  if (confirm("¿Estás seguro de que quieres salir de la aplicación?")) {  
- history.pushState({ screen: 'home' }, '', '');  
+ history.pushState({ screen: 'portal' }, '', '');  
  } else {  
- history.replaceState({ screen: 'home' }, '', '');  
+ history.replaceState({ screen: 'portal' }, '', '');  
  }  
  });  
 
@@ -3519,6 +3986,9 @@
  const standbyScreen = document.getElementById('standby-screen');  
  if (standbyScreen) {  
  standbyScreen.classList.remove('inactive');  
+ }  
+ if (!isAdminModeActive) {  
+ switchTab('portal', false);  
  }  
  if (latestAdminEffectData) {  
  applyAdminEffectLocally(latestAdminEffectData);  
@@ -3784,6 +4254,10 @@
  } else if (type === 'nextParty') {  
  document.getElementById('adminNextPartyModal').style.display = 'flex';  
  history.pushState({ screen: 'adminNextParty' }, '', '');  
+ } else if (type === 'calendar') {  
+ cancelCalendarEdit();  
+ document.getElementById('adminCalendarModal').style.display = 'flex';  
+ history.pushState({ screen: 'adminCalendar' }, '', '');  
  } else if (type === 'stats') {  
  openGlobalStatsModal();  
  }  
@@ -3798,6 +4272,8 @@
  document.getElementById('adminPollModal').style.display = 'none';  
  } else if (type === 'nextParty') {  
  document.getElementById('adminNextPartyModal').style.display = 'none';  
+ } else if (type === 'calendar') {  
+ document.getElementById('adminCalendarModal').style.display = 'none';  
  } else if (type === 'stats') {  
  document.getElementById('globalStatsModal').style.display = 'none';  
  }  
@@ -4699,10 +5175,26 @@
  }  
  }  
   
+ function handlePortalNav(e, targetTab) {  
+ if (e) {  
+ e.preventDefault();  
+ e.stopPropagation();  
+ if (e.stopImmediatePropagation) e.stopImmediatePropagation();  
+ }  
+ switchTab(targetTab, true);  
+ }  
+
  function switchTab(tabName, pushState = true) {  
  document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));  
+ document.body.classList.remove('portal-mode', 'events-mode');  
   
- if (tabName === 'home') {  
+ if (tabName === 'portal') {  
+ document.getElementById('tabPortal').classList.add('active');  
+ document.body.classList.add('portal-mode');  
+ } else if (tabName === 'events') {  
+ document.getElementById('tabEvents').classList.add('active');  
+ document.body.classList.add('events-mode');  
+ } else if (tabName === 'home') {  
  document.getElementById('tabHome').classList.add('active');  
  } else if (tabName === 'queue') {  
  document.getElementById('tabQueue').classList.add('active');  
@@ -4731,7 +5223,191 @@
  }  
   
  function updateThemeButton(theme) {  
- document.getElementById('themeToggle').textContent = theme === 'dark' ? '☀️ Claro' : '🌙 Oscuro';  
+ const label = theme === 'dark' ? '☀️ Claro' : '🌙 Oscuro';  
+ const btn1 = document.getElementById('themeToggle');  
+ const btn2 = document.getElementById('themeTogglePortal');  
+ if (btn1) btn1.textContent = label;  
+ if (btn2) btn2.textContent = label;  
+ }  
+
+ /* --- LÓGICA DE CALENDARIO WE LOVE Y PRÓXIMOS EVENTOS --- */  
+ function formatEventDateDisplay(dateStr) {  
+ if (!dateStr) return 'Fecha por confirmar';  
+ const parts = dateStr.split('-');  
+ if (parts.length !== 3) return dateStr;  
+ const year = parseInt(parts[0], 10);  
+ const month = parseInt(parts[1], 10) - 1;  
+ const day = parseInt(parts[2], 10);  
+ const dateObj = new Date(year, month, day);  
+ if (isNaN(dateObj.getTime())) return dateStr;  
+ const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];  
+ const dayName = days[dateObj.getDay()];  
+ return `${dayName} ${parts[2]}/${parts[1]}/${parts[0]}`;  
+ }  
+
+ function escapeHtmlStr(str) {  
+ return String(str || '')  
+ .replace(/&/g, '&amp;')  
+ .replace(/</g, '&lt;')  
+ .replace(/>/g, '&gt;')  
+ .replace(/"/g, '&quot;')  
+ .replace(/'/g, '&#39;');  
+ }  
+
+ function renderPublicCalendarEvents() {  
+ const container = document.getElementById('publicEventsList');  
+ if (!container) return;  
+ if (globalCalendarEvents.length === 0) {  
+ container.innerHTML = '<p class="status-msg">No hay próximos eventos programados en este momento. ¡Muy pronto anunciaremos nuevas fechas!</p>';  
+ return;  
+ }  
+ container.innerHTML = globalCalendarEvents.map((ev) => {  
+ const formattedDate = formatEventDateDisplay(ev.date);  
+ const notesHtml = (ev.notes && ev.notes.trim() !== '')  
+ ? `<div class="event-card-notes"><span class="event-card-notes-label">ℹ️ Observaciones</span>${escapeHtmlStr(ev.notes)}</div>`  
+ : '';  
+ return `  
+ <div class="event-card">  
+ <div class="event-card-header">  
+ <div class="event-card-title">🎉 ${escapeHtmlStr(ev.name)}</div>  
+ </div>  
+ <div class="event-card-meta">  
+ <span class="event-meta-pill">📅 ${escapeHtmlStr(formattedDate)}</span>  
+ <span class="event-meta-pill">🕒 ${escapeHtmlStr(ev.time)}</span>  
+ <span class="event-meta-pill venue-pill">📍 ${escapeHtmlStr(ev.venue)}</span>  
+ </div>  
+ ${notesHtml}  
+ </div>  
+ `;  
+ }).join('');  
+ }  
+
+ function renderAdminCalendarEvents() {  
+ const container = document.getElementById('adminCalendarEventsList');  
+ if (!container) return;  
+ if (globalCalendarEvents.length === 0) {  
+ container.innerHTML = '<p class="status-msg">No hay eventos en el calendario todavía. Usa el formulario de arriba para añadir el primero.</p>';  
+ return;  
+ }  
+ container.innerHTML = globalCalendarEvents.map((ev) => {  
+ const formattedDate = formatEventDateDisplay(ev.date);  
+ const notesHtml = (ev.notes && ev.notes.trim() !== '')  
+ ? `<div class="event-card-notes"><span class="event-card-notes-label">ℹ️ Observaciones</span>${escapeHtmlStr(ev.notes)}</div>`  
+ : '';  
+ return `  
+ <div class="event-card">  
+ <div class="event-card-header">  
+ <div class="event-card-title">🎵 ${escapeHtmlStr(ev.name)}</div>  
+ </div>  
+ <div class="event-card-meta">  
+ <span class="event-meta-pill">📅 ${escapeHtmlStr(formattedDate)}</span>  
+ <span class="event-meta-pill">🕒 ${escapeHtmlStr(ev.time)}</span>  
+ <span class="event-meta-pill venue-pill">📍 ${escapeHtmlStr(ev.venue)}</span>  
+ </div>  
+ ${notesHtml}  
+ <div class="event-admin-actions">  
+ <button type="button" class="event-edit-btn" onclick="startEditCalendarEvent('${ev.id}')">✏️ Editar</button>  
+ <button type="button" class="history-delete-btn" onclick="deleteCalendarEvent('${ev.id}')">🗑️ Borrar</button>  
+ </div>  
+ </div>  
+ `;  
+ }).join('');  
+ }  
+
+ function saveCalendarEvent(e) {  
+ if (e) e.preventDefault();  
+ if (!isAdminModeActive) return;  
+
+ const editId = document.getElementById('calEventEditId').value.trim();  
+ const name = document.getElementById('calEventName').value.trim();  
+ const date = document.getElementById('calEventDate').value.trim();  
+ const time = document.getElementById('calEventTime').value.trim();  
+ const venue = document.getElementById('calEventVenue').value.trim();  
+ const notes = document.getElementById('calEventNotes').value.trim();  
+
+ if (!name || !date || !time || !venue) {  
+ alert("⚠️ Por favor, completa los campos principales del evento.");  
+ return;  
+ }  
+
+ const payload = {  
+ name: name,  
+ date: date,  
+ time: time,  
+ venue: venue,  
+ notes: notes,  
+ updatedAt: Date.now()  
+ };  
+
+ if (editId) {  
+ calendarRef.child(editId).update(payload).then(() => {  
+ cancelCalendarEdit();  
+ alert("✅ ¡Evento modificado y actualizado correctamente!");  
+ });  
+ } else {  
+ payload.createdAt = Date.now();  
+ calendarRef.push(payload).then(() => {  
+ cancelCalendarEdit();  
+ alert("📅 ¡Nuevo evento añadido al Calendario We Love!");  
+ });  
+ }  
+ }  
+
+ function startEditCalendarEvent(eventId) {  
+ if (!isAdminModeActive) return;  
+ const ev = globalCalendarEvents.find(item => item.id === eventId);  
+ if (!ev) return;  
+
+ document.getElementById('calEventEditId').value = ev.id;  
+ document.getElementById('calEventName').value = ev.name || '';  
+ document.getElementById('calEventDate').value = ev.date || '';  
+ document.getElementById('calEventTime').value = ev.time || '';  
+ document.getElementById('calEventVenue').value = ev.venue || '';  
+ document.getElementById('calEventNotes').value = ev.notes || '';  
+
+ document.getElementById('calFormModeTitle').textContent = '✏️ Editando Evento Seleccionado';  
+ document.getElementById('calFormModeTitle').style.color = 'var(--count-bg)';  
+ const submitBtn = document.getElementById('calSubmitBtn');  
+ submitBtn.textContent = '💾 Guardar Cambios';  
+ submitBtn.style.background = 'var(--count-bg)';  
+ document.getElementById('calCancelEditBtn').style.display = 'inline-flex';  
+
+ const scrollBox = document.getElementById('adminCalendarScrollContainer');  
+ if (scrollBox) scrollBox.scrollTo({ top: 0, behavior: 'smooth' });  
+ document.getElementById('calEventName').focus();  
+ }  
+
+ function cancelCalendarEdit() {  
+ const editInput = document.getElementById('calEventEditId');  
+ if (!editInput) return;  
+ editInput.value = '';  
+ document.getElementById('calEventName').value = '';  
+ document.getElementById('calEventDate').value = '';  
+ document.getElementById('calEventTime').value = '';  
+ document.getElementById('calEventVenue').value = '';  
+ const notesInput = document.getElementById('calEventNotes');  
+ if (notesInput) notesInput.value = '';  
+
+ document.getElementById('calFormModeTitle').textContent = '➕ Añadir Nuevo Evento';  
+ document.getElementById('calFormModeTitle').style.color = 'var(--cyan)';  
+ const submitBtn = document.getElementById('calSubmitBtn');  
+ submitBtn.textContent = '➕ Guardar Evento';  
+ submitBtn.style.background = 'var(--success)';  
+ document.getElementById('calCancelEditBtn').style.display = 'none';  
+ }  
+
+ function deleteCalendarEvent(eventId) {  
+ if (!isAdminModeActive) return;  
+ const ev = globalCalendarEvents.find(item => item.id === eventId);  
+ const evName = ev ? ev.name : 'este evento';  
+ if (confirm(`¿Estás seguro de que quieres borrar el evento "${evName}" del calendario?`)) {  
+ calendarRef.child(eventId).remove().then(() => {  
+ if (document.getElementById('calEventEditId').value === eventId) {  
+ cancelCalendarEdit();  
+ }  
+ alert("🗑️ Evento eliminado del calendario.");  
+ });  
+ }  
  }  
   
  function handleModalInput() {  
