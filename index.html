@@ -2527,6 +2527,19 @@
  cursor: pointer;
  }
 
+ 
+ .standby-bottom-prompt {
+ position: absolute;
+ bottom: calc(max(16px, env(safe-area-inset-bottom)) + 72px);
+ left: 50%;
+ transform: translateX(-50%);
+ width: 100%;
+ padding: 0 16px;
+ z-index: 3;
+ text-align: center;
+ pointer-events: none;
+ }
+
  </style>  
 </head>  
 <body class="portal-mode">  
@@ -3387,6 +3400,9 @@
    
  <div class="standby-content">  
  <div class="standby-title">We LOVE Live Music</div>  
+ </div>  
+
+ <div class="standby-bottom-prompt">  
  <div class="standby-subtitle">Bienvenidos a We Love The Remember 80-90-00. Toca para entrar.</div>  
  </div>  
   
