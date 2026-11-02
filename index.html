@@ -1721,7 +1721,8 @@
  filter: brightness(1.5) contrast(1.25);  
  -webkit-filter: brightness(1.5) contrast(1.25);  
  pointer-events: auto;  
- }  
+ transition: background-color 1.5s ease-in-out;
+}  
  #room-light-overlay.active { display: flex; justify-content: center; align-items: center; }  
 
  .heart-effect-container {  
@@ -2176,7 +2177,19 @@
  font-weight: 600;
  }
 
- </style>  
+ 
+@keyframes roomColorFade {
+ 0% { background-color: #ff007f; }
+ 14% { background-color: #00f3ff; }
+ 28% { background-color: #8b5cf6; }
+ 42% { background-color: #10b981; }
+ 57% { background-color: #ffe600; }
+ 71% { background-color: #ff5500; }
+ 85% { background-color: #38bdf8; }
+ 100% { background-color: #ff007f; }
+}
+
+</style>  
 </head>  
 <body>  
   
@@ -2261,6 +2274,12 @@
   
  <!-- PESTAÑA MENÚ DE INICIO (DASHBOARD) -->  
  <div id="tabHome" class="tab-content active">  
+ <!-- BANNER PRÓXIMO EVENTO -->  
+ <div class="instructions-box" id="nextEventHomeBanner" style="display: none; background: linear-gradient(135deg, rgba(236,72,153,0.2), rgba(121,40,202,0.25)); border-color: #ec4899;">  
+ <div class="instructions-title" style="color: #f472b6;">📅 PRÓXIMO EVENTO CONFIRMADO</div>  
+ <div class="instructions-text" id="nextEventHomeText" style="color: #fff; font-weight: 700; margin-top: 2px;">---</div>  
+ </div>  
+
  <div class="instructions-box">  
  <div class="instructions-title">🎧 CONSOLA DE PETICIONES EN VIVO</div>  
  <div class="instructions-text">  
@@ -2406,6 +2425,11 @@
  <span style="font-size: 1.4rem;">🔄</span>  
  <span style="font-size: 0.76rem;">Reset Hype a 0</span>  
  </button>  
+
+ <button class="admin-menu-btn" style="background: rgba(236, 72, 153, 0.16); color: #fff; border-color: #ec4899; min-height: 90px;" ontouchend="handleAdminMenuBtn(event, 'nextEvent')" onclick="openAdminModal('nextEvent')">  
+ <span style="font-size: 1.4rem;">📅</span>  
+ <span style="font-size: 0.76rem;">Próximo Evento</span>  
+ </button>  
  </div>  
  </div>  
   
@@ -2504,6 +2528,7 @@
  </div>  
  <div class="admin-action-row" style="flex-direction: column; gap: 8px;">  
  <button class="admin-action-btn btn-flash" style="width: 100%; padding: 14px;" ontouchend="setAdminEffect('flash', 'flash'); event.preventDefault();" onclick="setAdminEffect('flash', 'flash')">⚡ Flash Blanco (Estrobo)</button>  
+ <button class="admin-action-btn" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #38bdf8, #0284c7); color: #fff;" ontouchend="setAdminEffect('fade', 'fade'); event.preventDefault();" onclick="setAdminEffect('fade', 'fade')">🔦 Modo Linterna Sala (Colores Desvaneciéndose)</button>
  <button class="admin-action-btn btn-burst" style="width: 100%; padding: 14px;" ontouchend="setAdminEffect('burst', 'burst'); event.preventDefault();" onclick="setAdminEffect('burst', 'burst')">💥 Ráfaga Color</button>  
  <button class="admin-action-btn" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #ff0055, #ec4899); color: #fff;" ontouchend="setAdminEffect('heart', 'heart'); event.preventDefault();" onclick="setAdminEffect('heart', 'heart')">❤️ Corazón Neón (Fondo Blanco)</button>  
  <button class="admin-action-btn" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #ffb800, #ff007a); color: #fff;" ontouchend="triggerPhotoMomentAlert(event)" onclick="triggerPhotoMomentAlert(event)">📸 Alerta Momento Foto / Subidón (10s + Flash)</button>
@@ -2511,6 +2536,38 @@
  <button class="admin-action-btn btn-reset-light" id="btnResetLight" style="padding: 14px;" ontouchend="setAdminEffect('off', ''); event.preventDefault();" onclick="setAdminEffect('off', '')">🛑 Apagar Efectos / Normal</button>  
  </div>  
  <button class="history-back-action-btn" ontouchend="handleModalClose(event, 'lights')" onclick="closeAdminModal('lights')">⬅️ Volver al Panel Admin</button>  
+ </div>  
+ </div>  
+
+ <!-- MODAL INDEPENDIENTE: PRÓXIMO EVENTO ADMIN -->  
+ <div class="modal" id="adminNextEventModal">  
+ <div class="history-modal-content" onclick="event.stopPropagation()">  
+ <div class="history-header-box">  
+ <div class="history-modal-title">  
+ <span>📅 Próximo Evento / Fecha</span>  
+ <span class="poll-status-pill" id="adminNextEventStatus" style="margin-bottom: 0;">ACTIVO</span>  
+ </div>  
+ <div class="history-modal-subtitle">Configura la fecha, hora y lugar para mostrarlo en la app</div>  
+ </div>  
+ <div class="saved-lists-scroll" style="gap: 10px; padding-top: 4px;">  
+ <div class="manual-form-group">  
+ <label class="manual-form-label">Nombre del Evento</label>  
+ <input type="text" id="nextEventTitleInput" class="manual-form-input" placeholder="Ej: We LOVE The Remember" value="We LOVE The Remember 80 90 00" />  
+ </div>  
+ <div class="manual-form-group">  
+ <label class="manual-form-label">Fecha y Hora</label>  
+ <input type="text" id="nextEventDateInput" class="manual-form-input" placeholder="Ej: Sábado 24 de Octubre - 18:00h" value="Sábado 24 de Octubre - 18:00h" />  
+ </div>  
+ <div class="manual-form-group">  
+ <label class="manual-form-label">Ubicación / Sala</label>  
+ <input type="text" id="nextEventVenueInput" class="manual-form-input" placeholder="Ej: Sala Zahora Magestic" value="Sala Zahora Magestic (Ciudad Real)" />  
+ </div>  
+ <div style="display: flex; gap: 8px; margin-top: 6px;">  
+ <button class="admin-action-btn" style="background: var(--success); color: #000; flex: 1;" onclick="publishNextEvent()">📢 Publicar en App</button>  
+ <button class="admin-action-btn" style="background: var(--danger); color: #fff; flex: 1;" onclick="clearNextEvent()">🗑️ Ocultar Banner</button>  
+ </div>  
+ </div>  
+ <button class="history-back-action-btn" ontouchend="handleModalClose(event, 'nextEvent')" onclick="closeAdminModal('nextEvent')">⬅️ Volver al Panel Admin</button>  
  </div>  
  </div>  
 
@@ -2889,6 +2946,7 @@
  const hypeRef = db.ref('welove_live_music_hype');  
  const hypeOpenRef = db.ref('welove_live_music_settings/hypeOpen');
  const upNextRef = db.ref('welove_live_music_settings/upNextAlert');  
+ const nextEventRef = db.ref('welove_live_music_settings/nextEventInfo');  
  let currentDecadeFilter = 'all';  
  let photoCountdownInterval = null;  
  let versusTimerTimeout = null;  
@@ -3213,6 +3271,19 @@
  });
 
  /* --- LISTENER DE AVISO: ¡TU TEMA ESTÁ A PUNTO DE SONAR! --- */
+ nextEventRef.on('value', (snap) => {
+ const ev = snap.val();
+ const banner = document.getElementById('nextEventHomeBanner');
+ const textEl = document.getElementById('nextEventHomeText');
+ if (ev && ev.active) {
+ textEl.innerHTML = `<strong>${ev.title}</strong><br>📍 ${ev.venue}<br>🕒 ${ev.date}`;
+ banner.style.display = 'flex';
+ } else {
+ banner.style.display = 'none';
+ }
+ syncCompactLayoutState();
+ });
+
  upNextRef.on('value', (snap) => {
  const alertData = snap.val();
  if (!alertData || !alertData.id) return;
@@ -3275,7 +3346,8 @@
  const globalStatsModal = document.getElementById('globalStatsModal');  
  const adminContestModal = document.getElementById('adminContestModal');  
  const adminLightsModal = document.getElementById('adminLightsModal');  
- const adminPollModal = document.getElementById('adminPollModal');  
+ const adminPollModal = document.getElementById('adminPollModal');
+ const adminNextEventModal = document.getElementById('adminNextEventModal');  
  const contestModal = document.getElementById('contestModal');  
  const publicParticipantsModal = document.getElementById('publicParticipantsModal');  
  const pollModal = document.getElementById('pollModal');  
@@ -3286,14 +3358,16 @@
  return;  
  }  
 
- if (manualModal.style.display === 'flex' || searchResultsModal.style.display === 'flex' || historyModal.style.display === 'flex' || globalStatsModal.style.display === 'flex' || adminContestModal.style.display === 'flex' || adminLightsModal.style.display === 'flex' || adminPollModal.style.display === 'flex' || contestModal.style.display === 'flex' || publicParticipantsModal.style.display === 'flex' || pollModal.style.display === 'flex' || qrModal.style.display === 'flex') {  
+ if (manualModal.style.display === 'flex' || searchResultsModal.style.display === 'flex' || historyModal.style.display === 'flex' || globalStatsModal.style.display === 'flex' || adminContestModal.style.display === 'flex' || adminLightsModal.style.display === 'flex' || adminPollModal.style.display === 'flex' || adminNextEventModal.style.display === 'flex' || contestModal.style.display === 'flex' || publicParticipantsModal.style.display === 'flex' || pollModal.style.display === 'flex' || qrModal.style.display === 'flex') {  
  closeManualModal();  
  closeSearchResultsModal();  
  closeHistoryModal();  
  closeAdminModal('stats');  
  closeAdminModal('contest');  
  closeAdminModal('lights');  
- closeAdminModal('poll');  
+ closeAdminModal('poll');
+ closeAdminModal('nextEvent');
+ closeAdminModal('nextEvent');  
  closeContestModal();  
  closePublicParticipantsModal();  
  closePollModal();  
@@ -3380,7 +3454,8 @@
  closeAdminModal('stats');  
  closeAdminModal('contest');  
  closeAdminModal('lights');  
- closeAdminModal('poll');  
+ closeAdminModal('poll');
+ closeAdminModal('nextEvent');  
  closeContestModal();  
  closePublicParticipantsModal();  
  closePollModal();  
@@ -3616,6 +3691,9 @@
  } else if (type === 'poll') {  
  document.getElementById('adminPollModal').style.display = 'flex';  
  history.pushState({ screen: 'adminPoll' }, '', '');  
+ } else if (type === 'nextEvent') {  
+ document.getElementById('adminNextEventModal').style.display = 'flex';  
+ history.pushState({ screen: 'adminNextEvent' }, '', '');  
  } else if (type === 'stats') {  
  openGlobalStatsModal();  
  }  
@@ -3628,9 +3706,37 @@
  document.getElementById('adminLightsModal').style.display = 'none';  
  } else if (type === 'poll') {  
  document.getElementById('adminPollModal').style.display = 'none';  
+ } else if (type === 'nextEvent') {  
+ document.getElementById('adminNextEventModal').style.display = 'none';  
  } else if (type === 'stats') {  
  document.getElementById('globalStatsModal').style.display = 'none';  
  }  
+ }
+
+ function publishNextEvent() {
+ if (!isAdminModeActive) return;
+ const title = document.getElementById('nextEventTitleInput').value.trim() || 'We LOVE The Remember';
+ const date = document.getElementById('nextEventDateInput').value.trim() || 'Próximamente';
+ const venue = document.getElementById('nextEventVenueInput').value.trim() || 'Sala principal';
+
+ nextEventRef.set({
+ active: true,
+ title: title,
+ date: date,
+ venue: venue,
+ timestamp: Date.now()
+ }).then(() => {
+ alert("📢 ¡Próximo evento publicado en la pantalla principal de la app!");
+ closeAdminModal('nextEvent');
+ });
+ }
+
+ function clearNextEvent() {
+ if (!isAdminModeActive) return;
+ nextEventRef.remove().then(() => {
+ alert("🗑️ Banner de próximo evento ocultado.");
+ closeAdminModal('nextEvent');
+ });
  }  
 
  /* --- LÓGICA DE ENCUESTA EXPRESS --- */  
@@ -3819,6 +3925,7 @@
  if (!effectData || effectData.type === 'off' || isInAdminLights || userDismissedLight) {  
  overlay.classList.remove('active', 'heart-active', 'photo-active', 'show-notice');  
  overlay.style.backgroundColor = '';  
+ overlay.style.animation = '';
  return;  
  }  
 
@@ -3845,6 +3952,9 @@
  const randomColor = colors[Math.floor(Math.random() * colors.length)];  
  overlay.style.backgroundColor = randomColor;  
  }, 150);  
+ } else if (effectData.type === 'fade' || effectData.type === 'lantern') {
+ overlay.classList.remove('heart-active', 'photo-active');
+ overlay.style.animation = 'roomColorFade 14s infinite linear';
  } else if (effectData.type === 'photo_countdown') {
  overlay.classList.remove('heart-active', 'photo-active');
  overlay.classList.add('photo-active');
