@@ -2964,12 +2964,12 @@
  </button>  
  </div>  
  <div class="admin-action-row" style="flex-direction: column; gap: 8px;">  
- <button class="admin-action-btn btn-flash" style="width: 100%; padding: 14px;" ontouchend="setAdminEffect('flash', 'flash'); event.preventDefault();" onclick="setAdminEffect('flash', 'flash')">⚡ Flash Blanco (Estrobo)</button>  
- <button class="admin-action-btn btn-burst" style="width: 100%; padding: 14px;" ontouchend="setAdminEffect('burst', 'burst'); event.preventDefault();" onclick="setAdminEffect('burst', 'burst')">💥 Ráfaga Color</button>  
- <button class="admin-action-btn" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #ff0055, #ec4899); color: #fff;" ontouchend="setAdminEffect('heart', 'heart'); event.preventDefault();" onclick="setAdminEffect('heart', 'heart')">❤️ Corazón Neón (Fondo Blanco)</button>  
- <button class="admin-action-btn" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #ffb800, #ff007a); color: #fff;" ontouchend="triggerPhotoMomentAlert(event)" onclick="triggerPhotoMomentAlert(event)">📸 Alerta Momento Foto / Subidón (10s + Flash)</button>
+ <button class="admin-action-btn btn-flash" style="width: 100%; padding: 14px;" ontouchend="handleLightTouch(event, 'flash', 'flash')" onclick="setAdminEffect('flash', 'flash')">⚡ Flash Blanco (Estrobo)</button>  
+ <button class="admin-action-btn btn-burst" style="width: 100%; padding: 14px;" ontouchend="handleLightTouch(event, 'burst', 'burst')" onclick="setAdminEffect('burst', 'burst')">💥 Ráfaga Color</button>  
+ <button class="admin-action-btn" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #ff0055, #ec4899); color: #fff;" ontouchend="handleLightTouch(event, 'heart', 'heart')" onclick="setAdminEffect('heart', 'heart')">❤️ Corazón Neón (Fondo Blanco)</button>  
+ <button class="admin-action-btn" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #ffb800, #ff007a); color: #fff;" ontouchend="handleLightPhotoTouch(event)" onclick="triggerPhotoMomentAlert(event)">📸 Alerta Momento Foto / Subidón (10s + Flash)</button>
  </div>  
- <button class="admin-action-btn btn-reset-light" id="btnResetLight" style="padding: 14px;" ontouchend="setAdminEffect('off', ''); event.preventDefault();" onclick="setAdminEffect('off', '')">🛑 Apagar Efectos / Normal</button>  
+ <button class="admin-action-btn btn-reset-light" id="btnResetLight" style="padding: 14px;" ontouchend="handleLightTouch(event, 'off', '')" onclick="setAdminEffect('off', '')">🛑 Apagar Efectos / Normal</button>  
  </div>  
  <button class="history-back-action-btn" ontouchend="handleModalClose(event, 'lights')" onclick="closeAdminModal('lights')">⬅️ Volver al Panel Admin</button>  
  </div>  
@@ -4202,6 +4202,10 @@
  }  
 
  function handleColorEffect(e, colorVal) {  
+ if (isScrolling) {  
+ if (e) { e.preventDefault(); e.stopPropagation(); }  
+ return;  
+ }  
  if (e) {  
  e.preventDefault();  
  e.stopPropagation();  
@@ -6561,6 +6565,7 @@
  }
 
  </script>  
+
 <script>
 let touchStartX = 0;
 let touchStartY = 0;
@@ -6591,6 +6596,27 @@ window.addEventListener('click', (e) => {
         isScrolling = false;
     }
 }, { capture: true });
+
+function handleLightTouch(e, type, val) {
+    if (isScrolling) {
+        if (e) { e.preventDefault(); e.stopPropagation(); }
+        return;
+    }
+    if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    setAdminEffect(type, val);
+}
+
+function handleLightPhotoTouch(e) {
+    if (isScrolling) {
+        if (e) { e.preventDefault(); e.stopPropagation(); }
+        return;
+    }
+    triggerPhotoMomentAlert(e);
+}
 </script>
-</body>  
+
+</body>
 </html>
