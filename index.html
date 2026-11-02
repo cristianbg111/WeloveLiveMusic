@@ -2356,11 +2356,7 @@
  </div>  
  </div>  
   
- <div id="queuePagination" class="pagination" style="display: none;">  
- <button class="page-btn" id="prevPageBtn" onclick="changePage(-1)">⬅️ Anterior</button>  
- <span class="page-info" id="pageInfoText">Pág 1/1</span>  
- <button class="page-btn" id="nextPageBtn" onclick="changePage(1)">Siguiente ➡️</button>  
- </div>  
+   
   
  <div id="queueResults" class="results">  
  <p class="status-msg">Cargando lista...</p>  
@@ -5091,17 +5087,11 @@
  const currentItems = globalQueueItems.slice(startIndex, endIndex);  
   
  if (globalQueueItems.length > itemsPerPage) {  
- paginationDiv.style.display = 'flex';  
- pageInfoText.textContent = `Pág ${currentPage}/${totalPages}`;  
- prevBtn.disabled = currentPage === 1;  
- nextBtn.disabled = currentPage === totalPages;  
-
  if (paginationBottomDiv) paginationBottomDiv.style.display = 'flex';  
  if (pageInfoTextBottom) pageInfoTextBottom.textContent = `Pág ${currentPage}/${totalPages}`;  
  if (prevBtnBottom) prevBtnBottom.disabled = currentPage === 1;  
  if (nextBtnBottom) nextBtnBottom.disabled = currentPage === totalPages;  
  } else {  
- paginationDiv.style.display = 'none';  
  if (paginationBottomDiv) paginationBottomDiv.style.display = 'none';  
  }  
   
@@ -5158,6 +5148,8 @@
  if (currentPage < 1) currentPage = 1;  
  if (currentPage > totalPages) currentPage = totalPages;  
  renderQueuePage();  
+ const qRes = document.getElementById('queueResults');  
+ if (qRes) qRes.scrollTop = 0;  
  }  
   
  function exportQueueToPDF() {  
