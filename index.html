@@ -17,181 +17,7 @@
  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Syne:wght@700;800&family=JetBrains+Mono:wght@700;800&display=swap" rel="stylesheet">
   
 <!-- Firebase SDK (Compat) -->  
- <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js">
- /* --- FUNCIONES DE LAS 5 NUEVAS CARACTERÍSTICAS --- */
- let lastHypeClickTime = 0;
- function sendHypeReaction(emoji) {
- const now = Date.now();
- if (now - lastHypeClickTime < 350) return;
- lastHypeClickTime = now;
- spawnFloatingHypeEmoji(emoji);
- hypeRef.child('total').transaction(val => (val || 0) + 1);
- hypeRef.child('lastEvent').set({ id: now, emoji: emoji });
- }
-
- function spawnFloatingHypeEmoji(emoji) {
- const container = document.getElementById('hype-floating-container');
- if (!container) return;
- const el = document.createElement('div');
- el.className = 'floating-hype-emoji';
- el.textContent = emoji;
- el.style.left = (12 + Math.random() * 76) + 'vw';
- container.appendChild(el);
- setTimeout(() => {
- if (el.parentNode) el.parentNode.removeChild(el);
- }, 2600);
- }
-
- function setDecadeFilter(decade) {
- currentDecadeFilter = decade;
- document.querySelectorAll('.decade-chip').forEach(btn => {
- btn.classList.toggle('active', btn.getAttribute('data-decade') === decade);
- });
- const query = document.getElementById('modalSongInput').value.trim();
- if (query && searchCache.has(query.toLowerCase())) {
- renderResults([...searchCache.get(query.toLowerCase())], query);
- }
- }
-
- function rememberMySongKey(songKey) {
- try {
- const list = JSON.parse(localStorage.getItem('my_requested_songs') || '[]');
- if (!list.includes(songKey)) {
- list.push(songKey);
- localStorage.setItem('my_requested_songs', JSON.stringify(list));
- }
- } catch (e) {}
- }
-
- function notifySongUpNext(songId, event) {
- if (event) event.stopPropagation();
- if (!isAdminModeActive) return;
- const item = globalQueueItems.find(i => i.id === songId);
- if (!item) return;
- upNextRef.set({
- id: Date.now(),
- songKey: item.id,
- title: item.title,
- artist: item.artist,
- artwork: (item.artwork || 'logo.jpg').replace('100x100bb', '1000x1000bb'),
- users: item.users || item.user || 'Público de la sala'
- }).then(() => {
- alert(`🔔 ¡Aviso enviado a la sala! Notificando que "${item.title}" va a sonar ahora.`);
- });
- }
-
- function showUpNextAlertModal(alertData, isMine) {
- const standbyScreen = document.getElementById('standby-screen');
- if (standbyScreen && !standbyScreen.classList.contains('inactive')) {
- standbyScreen.classList.add('inactive');
- }
- resetStandbyTimer();
- document.getElementById('upNextImg').src = alertData.artwork || 'logo.jpg';
- document.getElementById('upNextTitle').textContent = isMine ? `🔥 ¡TU PETICIÓN VA A SONAR: ${alertData.title}!` : `🎵 ¡A PUNTO DE SONAR: ${alertData.title}!`;
- document.getElementById('upNextArtist').textContent = alertData.artist || '';
- document.getElementById('upNextUsers').textContent = alertData.users || 'Público';
- document.getElementById('upNextOverlay').style.display = 'flex';
- if ('vibrate' in navigator) {
- try { navigator.vibrate(isMine ? [400, 120, 400, 120, 600] : [250, 100, 250]); } catch (e) {}
- }
- }
-
- function closeUpNextOverlay() {
- document.getElementById('upNextOverlay').style.display = 'none';
- }
-
- function triggerPhotoMomentAlert(e) {
- if (e) {
- e.preventDefault();
- e.stopPropagation();
- }
- if (!isAdminModeActive) return;
- setAdminEffect('photo_countdown', String(Date.now()));
- closeAdminModal('lights');
- }
-
- function runLocalPhotoCountdown() {
- const standbyScreen = document.getElementById('standby-screen');
- if (standbyScreen && !standbyScreen.classList.contains('inactive')) {
- standbyScreen.classList.add('inactive');
- }
- if (photoCountdownInterval) clearInterval(photoCountdownInterval);
- const numEl = document.getElementById('photoCountdownNum');
- const textEl = document.getElementById('photoCountdownText');
- const overlay = document.getElementById('room-light-overlay');
- let sec = 10;
- if (numEl) numEl.textContent = sec;
- if (textEl) textEl.textContent = '¡Mira hacia la cabina del DJ para la foto/vídeo!';
- if ('vibrate' in navigator) {
- try { navigator.vibrate([300, 100, 300]); } catch (e) {}
- }
- photoCountdownInterval = setInterval(() => {
- sec--;
- if (sec > 0) {
- if (numEl) numEl.textContent = sec;
- if ('vibrate' in navigator && sec <= 3) {
- try { navigator.vibrate(150); } catch (e) {}
- }
- } else {
- clearInterval(photoCountdownInterval);
- photoCountdownInterval = null;
- overlay.classList.remove('photo-active');
- let isWhite = true;
- overlay.style.backgroundColor = '#ffffff';
- if (effectInterval) clearInterval(effectInterval);
- effectInterval = setInterval(() => {
- isWhite = !isWhite;
- overlay.style.backgroundColor = isWhite ? '#ffffff' : '#000000';
- }, 80);
- }
- }, 1000);
- }
-
- function launchTop2VersusBattle() {
- if (!isAdminModeActive) return;
- const unplayed = globalQueueItems.filter(i => !i.played);
- if (unplayed.length < 2) {
- alert("⚠️ Necesitas al menos 2 canciones sin pinchar en la cola para lanzar una Batalla Versus automática.");
- return;
- }
- const songA = unplayed[0];
- const songB = unplayed[1];
- const newPollId = Date.now();
- localStorage.removeItem('user_poll_vote');
- localStorage.setItem('user_poll_id', String(newPollId));
-
- pollRef.set({
- active: true,
- closed: false,
- isVersus: true,
- pollId: newPollId,
- question: '⚔️ BATALLA DE TEMAS (60s): ¿Cuál suena ahora?',
- opt1: songA.title,
- artist1: songA.artist,
- art1: (songA.artwork || 'logo.jpg').replace('100x100bb', '1000x1000bb'),
- opt2: songB.title,
- artist2: songB.artist,
- art2: (songB.artwork || 'logo.jpg').replace('100x100bb', '1000x1000bb'),
- opt3: '-',
- opt4: '-',
- votes1: 0,
- votes2: 0,
- votes3: 0,
- votes4: 0
- }).then(() => {
- alert(`⚔️ ¡Batalla Versus lanzada durante 60 segundos!
-
-🅰️ ${songA.title}
-🆚
-🅱️ ${songB.title}`);
- if (versusTimerTimeout) clearTimeout(versusTimerTimeout);
- versusTimerTimeout = setTimeout(() => {
- pollRef.update({ closed: true });
- }, 60000);
- });
- }
-
- </script>  
+ <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>  
  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>  
   
  <style>  
@@ -2205,6 +2031,7 @@
  transition: all 0.15s ease;
  -webkit-appearance: none;
  touch-action: manipulation;
+ pointer-events: auto !important;
  }
  .decade-chip.active {
  background: linear-gradient(90deg, var(--accent), var(--accent-2));
@@ -2501,10 +2328,10 @@
  <div class="hype-bar">
  <div class="hype-label">⚡ HYPE PISTA (<span id="hypeCountBadge">0</span>):</div>
  <div class="hype-btns">
- <button type="button" class="hype-btn" onclick="sendHypeReaction('🔥')" title="Fuego">🔥</button>
- <button type="button" class="hype-btn" onclick="sendHypeReaction('🙌')" title="Manos arriba">🙌</button>
- <button type="button" class="hype-btn" onclick="sendHypeReaction('💣')" title="Temazo">💣</button>
- <button type="button" class="hype-btn" onclick="sendHypeReaction('❤️')" title="Me encanta">❤️</button>
+ <button type="button" class="hype-btn" ontouchend="handleHypeTouch(event, '🔥')" onclick="sendHypeReaction('🔥')" title="Fuego">🔥</button>
+ <button type="button" class="hype-btn" ontouchend="handleHypeTouch(event, '🙌')" onclick="sendHypeReaction('🙌')" title="Manos arriba">🙌</button>
+ <button type="button" class="hype-btn" ontouchend="handleHypeTouch(event, '💣')" onclick="sendHypeReaction('💣')" title="Temazo">💣</button>
+ <button type="button" class="hype-btn" ontouchend="handleHypeTouch(event, '❤️')" onclick="sendHypeReaction('❤️')" title="Me encanta">❤️</button>
  </div>
  </div>
  </div>  
@@ -2735,7 +2562,7 @@
  <button class="admin-action-btn" style="background: var(--success); color: #000; flex: 1;" ontouchend="handleLaunchPoll(event)" onclick="launchExpressPoll()">🚀 Lanzar Encuesta</button>  
  <button class="admin-action-btn" style="background: var(--count-bg); color: #000; flex: 1;" ontouchend="handleClosePoll(event)" onclick="closeExpressPoll()">🔒 Cerrar Votación</button>  
  </div>
- <button class="admin-action-btn" style="background: linear-gradient(90deg, var(--accent), var(--accent-2)); color: #fff; width: 100%; margin-top: 4px;" onclick="launchTop2VersusBattle()">⚔️ Batalla VS (Enfrentar Top 2 de la Cola - 60s)</button>  
+ <button class="admin-action-btn" style="background: linear-gradient(90deg, var(--accent), var(--accent-2)); color: #fff; width: 100%; margin-top: 4px;" ontouchend="handleVersusLaunch(event)" onclick="launchTop2VersusBattle()">⚔️ Batalla VS (Enfrentar Top 2 de la Cola - 60s)</button>  
  <button class="admin-action-btn" style="background: rgba(255, 42, 84, 0.18); border: 1px solid var(--danger); color: var(--danger); width: 100%; margin-top: 2px;" ontouchend="handleResetPoll(event)" onclick="resetExpressPoll()">🔄 Reiniciar Encuesta (Borrar Resultados)</button>  
  </div>  
  <button class="history-back-action-btn" ontouchend="handleModalClose(event, 'poll')" onclick="closeAdminModal('poll')">⬅️ Volver al Panel Admin</button>  
@@ -2817,11 +2644,11 @@
 
  <!-- FILTRO INTELIGENTE POR DÉCADAS / ESTILOS -->
  <div class="decade-filters" id="decadeFiltersBar">
- <button type="button" class="decade-chip active" data-decade="all" onclick="setDecadeFilter('all')">🌐 Todas</button>
- <button type="button" class="decade-chip" data-decade="80s" onclick="setDecadeFilter('80s')">🕹️ 80s</button>
- <button type="button" class="decade-chip" data-decade="90s" onclick="setDecadeFilter('90s')">💿 90s Remember</button>
- <button type="button" class="decade-chip" data-decade="2000s" onclick="setDecadeFilter('2000s')">⚡ 2000s</button>
- <button type="button" class="decade-chip" data-decade="actual" onclick="setDecadeFilter('actual')">🔥 Actual (2010+)</button>
+ <button type="button" class="decade-chip active" data-decade="all" ontouchend="handleDecadeTouch(event, 'all')" onclick="setDecadeFilter('all')">🌐 Todas</button>
+ <button type="button" class="decade-chip" data-decade="80s" ontouchend="handleDecadeTouch(event, '80s')" onclick="setDecadeFilter('80s')">🕹️ 80s</button>
+ <button type="button" class="decade-chip" data-decade="90s" ontouchend="handleDecadeTouch(event, '90s')" onclick="setDecadeFilter('90s')">💿 90s Remember</button>
+ <button type="button" class="decade-chip" data-decade="2000s" ontouchend="handleDecadeTouch(event, '2000s')" onclick="setDecadeFilter('2000s')">⚡ 2000s</button>
+ <button type="button" class="decade-chip" data-decade="actual" ontouchend="handleDecadeTouch(event, 'actual')" onclick="setDecadeFilter('actual')">🔥 Actual (2010+)</button>
  </div>  
 
  <div id="historySection" class="history-section" style="display: none; margin-bottom: 6px;">  
@@ -3802,6 +3629,7 @@
  pollRef.set({  
  active: true,  
  closed: false,  
+ isVersus: false,  
  pollId: currentData.pollId || Date.now(),  
  question: question,  
  opt1: opt1,  
@@ -5512,6 +5340,200 @@
  function searchFromHistory(query) {  
  openSearchResultsModal(query);  
  }  
+ 
+ /* --- FUNCIONES DE LAS 5 NUEVAS CARACTERÍSTICAS --- */
+ let lastHypeClickTime = 0;
+ function handleHypeTouch(e, emoji) {
+ if (e) {
+ e.preventDefault();
+ e.stopPropagation();
+ }
+ sendHypeReaction(emoji);
+ }
+
+ function sendHypeReaction(emoji) {
+ const now = Date.now();
+ if (now - lastHypeClickTime < 350) return;
+ lastHypeClickTime = now;
+ spawnFloatingHypeEmoji(emoji);
+ hypeRef.child('total').transaction(val => (val || 0) + 1);
+ hypeRef.child('lastEvent').set({ id: now, emoji: emoji });
+ }
+
+ function spawnFloatingHypeEmoji(emoji) {
+ const container = document.getElementById('hype-floating-container');
+ if (!container) return;
+ const el = document.createElement('div');
+ el.className = 'floating-hype-emoji';
+ el.textContent = emoji;
+ el.style.left = (12 + Math.random() * 76) + 'vw';
+ container.appendChild(el);
+ setTimeout(() => {
+ if (el.parentNode) el.parentNode.removeChild(el);
+ }, 2600);
+ }
+
+ function handleDecadeTouch(e, decade) {
+ if (e) {
+ e.preventDefault();
+ e.stopPropagation();
+ }
+ setDecadeFilter(decade);
+ }
+
+ function setDecadeFilter(decade) {
+ currentDecadeFilter = decade;
+ document.querySelectorAll('.decade-chip').forEach(btn => {
+ btn.classList.toggle('active', btn.getAttribute('data-decade') === decade);
+ });
+ const query = document.getElementById('modalSongInput').value.trim();
+ if (query && searchCache.has(query.toLowerCase())) {
+ renderResults([...searchCache.get(query.toLowerCase())], query);
+ }
+ }
+
+ function rememberMySongKey(songKey) {
+ try {
+ const list = JSON.parse(localStorage.getItem('my_requested_songs') || '[]');
+ if (!list.includes(songKey)) {
+ list.push(songKey);
+ localStorage.setItem('my_requested_songs', JSON.stringify(list));
+ }
+ } catch (e) {}
+ }
+
+ function notifySongUpNext(songId, event) {
+ if (event) event.stopPropagation();
+ if (!isAdminModeActive) return;
+ const item = globalQueueItems.find(i => i.id === songId);
+ if (!item) return;
+ upNextRef.set({
+ id: Date.now(),
+ songKey: item.id,
+ title: item.title,
+ artist: item.artist,
+ artwork: (item.artwork || 'logo.jpg').replace('100x100bb', '1000x1000bb'),
+ users: item.users || item.user || 'Público de la sala'
+ }).then(() => {
+ alert(`🔔 ¡Aviso enviado a la sala! Notificando que "${item.title}" va a sonar ahora.`);
+ });
+ }
+
+ function showUpNextAlertModal(alertData, isMine) {
+ const standbyScreen = document.getElementById('standby-screen');
+ if (standbyScreen && !standbyScreen.classList.contains('inactive')) {
+ standbyScreen.classList.add('inactive');
+ }
+ resetStandbyTimer();
+ document.getElementById('upNextImg').src = alertData.artwork || 'logo.jpg';
+ document.getElementById('upNextTitle').textContent = isMine ? `🔥 ¡TU PETICIÓN VA A SONAR: ${alertData.title}!` : `🎵 ¡A PUNTO DE SONAR: ${alertData.title}!`;
+ document.getElementById('upNextArtist').textContent = alertData.artist || '';
+ document.getElementById('upNextUsers').textContent = alertData.users || 'Público';
+ document.getElementById('upNextOverlay').style.display = 'flex';
+ if ('vibrate' in navigator) {
+ try { navigator.vibrate(isMine ? [400, 120, 400, 120, 600] : [250, 100, 250]); } catch (e) {}
+ }
+ }
+
+ function closeUpNextOverlay() {
+ document.getElementById('upNextOverlay').style.display = 'none';
+ }
+
+ function triggerPhotoMomentAlert(e) {
+ if (e) {
+ e.preventDefault();
+ e.stopPropagation();
+ }
+ if (!isAdminModeActive) return;
+ setAdminEffect('photo_countdown', String(Date.now()));
+ closeAdminModal('lights');
+ }
+
+ function runLocalPhotoCountdown() {
+ const standbyScreen = document.getElementById('standby-screen');
+ if (standbyScreen && !standbyScreen.classList.contains('inactive')) {
+ standbyScreen.classList.add('inactive');
+ }
+ if (photoCountdownInterval) clearInterval(photoCountdownInterval);
+ const numEl = document.getElementById('photoCountdownNum');
+ const textEl = document.getElementById('photoCountdownText');
+ const overlay = document.getElementById('room-light-overlay');
+ let sec = 10;
+ if (numEl) numEl.textContent = sec;
+ if (textEl) textEl.textContent = '¡Mira hacia la cabina del DJ para la foto/vídeo!';
+ if ('vibrate' in navigator) {
+ try { navigator.vibrate([300, 100, 300]); } catch (e) {}
+ }
+ photoCountdownInterval = setInterval(() => {
+ sec--;
+ if (sec > 0) {
+ if (numEl) numEl.textContent = sec;
+ if ('vibrate' in navigator && sec <= 3) {
+ try { navigator.vibrate(150); } catch (e) {}
+ }
+ } else {
+ clearInterval(photoCountdownInterval);
+ photoCountdownInterval = null;
+ overlay.classList.remove('photo-active');
+ let isWhite = true;
+ overlay.style.backgroundColor = '#ffffff';
+ if (effectInterval) clearInterval(effectInterval);
+ effectInterval = setInterval(() => {
+ isWhite = !isWhite;
+ overlay.style.backgroundColor = isWhite ? '#ffffff' : '#000000';
+ }, 80);
+ }
+ }, 1000);
+ }
+
+ function handleVersusLaunch(e) {
+ if (e) {
+ e.preventDefault();
+ e.stopPropagation();
+ }
+ launchTop2VersusBattle();
+ }
+
+ function launchTop2VersusBattle() {
+ if (!isAdminModeActive) return;
+ const unplayed = globalQueueItems.filter(i => !i.played);
+ if (unplayed.length < 2) {
+ alert("⚠️ Necesitas al menos 2 canciones sin pinchar en la cola para lanzar una Batalla Versus automática.");
+ return;
+ }
+ const songA = unplayed[0];
+ const songB = unplayed[1];
+ const newPollId = Date.now();
+ localStorage.removeItem('user_poll_vote');
+ localStorage.setItem('user_poll_id', String(newPollId));
+
+ pollRef.set({
+ active: true,
+ closed: false,
+ isVersus: true,
+ pollId: newPollId,
+ question: '⚔️ BATALLA DE TEMAS (60s): ¿Cuál suena ahora?',
+ opt1: songA.title,
+ artist1: songA.artist,
+ art1: (songA.artwork || 'logo.jpg').replace('100x100bb', '1000x1000bb'),
+ opt2: songB.title,
+ artist2: songB.artist,
+ art2: (songB.artwork || 'logo.jpg').replace('100x100bb', '1000x1000bb'),
+ opt3: '-',
+ opt4: '-',
+ votes1: 0,
+ votes2: 0,
+ votes3: 0,
+ votes4: 0
+ }).then(() => {
+ alert(`⚔️ ¡Batalla Versus lanzada durante 60 segundos!\n\n🅰️ ${songA.title}\n🆚\n🅱️ ${songB.title}`);
+ if (versusTimerTimeout) clearTimeout(versusTimerTimeout);
+ versusTimerTimeout = setTimeout(() => {
+ pollRef.update({ closed: true });
+ }, 60000);
+ });
+ }
+
  </script>  
 </body>  
 </html>
