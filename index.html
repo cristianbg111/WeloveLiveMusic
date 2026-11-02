@@ -1,5 +1,4 @@
 <!DOCTYPE html>  
-
 <html lang="es" data-theme="dark">  
 <head>  
  <meta charset="UTF-8" />  
@@ -8,23 +7,19 @@
  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />  
  <meta name="theme-color" content="#07070c" />  
  <title>WE LOVE LIVE MUSIC</title>  
-
+   
 <!-- PWA Manifest integrado en Data URI para instalación directa -->  
-
  <link rel="manifest" href='data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22We%20Love%20Live%20Music%22%2C%22short_name%22%3A%22Live%20Music%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%2307070c%22%2C%22theme_color%22%3A%22%2307070c%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22logo.jpg%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fjpeg%22%7D%5D%7D'>  
 
 <!-- Fuentes Musicales / Club Display -->
-
  <link rel="preconnect" href="https://fonts.googleapis.com">
  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Syne:wght@700;800&family=JetBrains+Mono:wght@700;800&display=swap" rel="stylesheet">
-
+  
 <!-- Firebase SDK (Compat) -->  
-
  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>  
-
  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>  
-
+  
  <style>  
  :root {  
  --bg: #07070c;  
@@ -197,7 +192,6 @@
  gap: 6px;  
  }  
 
-
  .title-stack {  
  display: flex;  
  flex-direction: column;  
@@ -205,7 +199,6 @@
  flex: 1;  
  min-width: 0;  
  }  
-
 
  .live-sub-badge {  
  display: inline-flex;  
@@ -288,7 +281,6 @@
  }  
  .user-badge-bar span { color: var(--cyan); }  
 
-
  /* --- BANNER GANADOR EN DIRECTO --- */  
  .winner-banner {  
  background: linear-gradient(90deg, #ff9900, #ff007a, #7928ca);  
@@ -310,7 +302,6 @@
  0% { transform: scale(1); }  
  100% { transform: scale(1.015); }  
  }  
-
 
  /* --- OVERLAY DE RULETA Y CUENTA ATRÁS EN DIRECTO --- */
  #rouletteOverlay {
@@ -421,7 +412,6 @@
  text-shadow: 0 0 15px var(--count-bg), 0 0 25px var(--accent);
  }
 
-
  /* --- BOTÓN FLOTANTE DE NOTIFICACIÓN DE ENCUESTA --- */  
  .poll-notification-banner {  
  background: linear-gradient(90deg, rgba(121, 40, 202, 0.35), rgba(255, 0, 122, 0.35));  
@@ -471,7 +461,6 @@
  color: #000000;  
  }  
 
-
  /* --- PANTALLA LED DE ESTADO "ON AIR" --- */
  .neon-banner {  
  width: 100%;  
@@ -508,7 +497,7 @@
  50% { opacity: 0.65; }  
  }  
   
- /* --- TARJETA DE INSTRUCCIONES --- */
+ /* --- TARJETA DE INSTRUCCIONES (SE OCULTA AUTOMÁTICAMENTE SI HAY CARTEL DE SORTEO/ENCUESTA PARA NO APLASTAR LOS BOTONES) --- */
  .instructions-box {  
  background: var(--surface);  
  border: 1px solid var(--border);  
@@ -521,7 +510,6 @@
  gap: 2px;  
  transition: all 0.25s ease;  
  }  
-
 
  body.has-active-banners #tabHome .instructions-box {  
  display: none !important;  
@@ -558,7 +546,7 @@
  }  
   
  /* ==========================================================
-    DASHBOARD: BOTONES AMPLIOS CON AJUSTE ELÁSTICO
+    DASHBOARD: BOTONES AMPLIOS COMO ANTES CON AJUSTE ELÁSTICO
     ========================================================== */  
  .dashboard-container {  
  display: flex;  
@@ -571,7 +559,7 @@
  min-height: 0;  
  }  
 
-
+ /* 1. BOTÓN HERO (BUSCADOR / PEDIR CANCIÓN) */
  .dash-btn-primary {  
  width: 100%;  
  background: linear-gradient(135deg, #ff007a 0%, #7928ca 60%, #1e1b4b 100%);  
@@ -597,7 +585,6 @@
  .dash-btn-primary:active {  
  transform: scale(0.98);  
  }  
-
 
  .hero-top-row {  
  display: flex;  
@@ -641,7 +628,6 @@
  100% { transform: scaleY(1); opacity: 1; }  
  }  
 
-
  .hero-main-title {  
  font-family: 'Syne', sans-serif;  
  font-size: 1.15rem;  
@@ -652,7 +638,6 @@
  line-height: 1.15;  
  pointer-events: none;  
  }  
-
 
  .hero-fake-search {  
  background: rgba(7, 7, 12, 0.55);  
@@ -677,7 +662,7 @@
  text-transform: uppercase;  
  }  
 
-
+ /* 2. MATRIZ LAUNCHPAD 2x2 CON EL TAMAÑO Y DISEÑO ORIGINAL QUE TE GUSTABA */
  .launchpad-grid {  
  display: grid;  
  grid-template-columns: repeat(2, 1fr);  
@@ -686,7 +671,6 @@
  flex: 1;  
  min-height: 0;  
  }  
-
 
  .dash-btn.pad-card {  
  background: var(--surface);  
@@ -712,7 +696,6 @@
  transform: scale(0.95);  
  }  
 
-
  .pad-led {  
  position: absolute;  
  top: 12px;  
@@ -723,14 +706,12 @@
  pointer-events: none;  
  }  
 
-
  .pad-icon {  
  font-size: 1.45rem;  
  line-height: 1;  
  margin-bottom: 4px;  
  pointer-events: none;  
  }  
-
 
  .pad-title {  
  font-family: 'Syne', sans-serif;  
@@ -742,7 +723,6 @@
  pointer-events: none;  
  }  
 
-
  .pad-sub {  
  font-size: 0.64rem;  
  font-weight: 600;  
@@ -751,13 +731,11 @@
  pointer-events: none;  
  }  
 
-
  .dash-btn-queue.pad-card {  
  border-color: rgba(121, 40, 202, 0.5);  
  background: linear-gradient(160deg, var(--surface) 40%, rgba(121, 40, 202, 0.18) 100%);  
  }  
  .dash-btn-queue .pad-led { background: #a855f7; box-shadow: 0 0 8px #a855f7; }  
-
 
  .dash-btn-contest.pad-card {  
  border-color: rgba(255, 184, 0, 0.5);  
@@ -765,20 +743,17 @@
  }  
  .dash-btn-contest .pad-led { background: var(--count-bg); box-shadow: 0 0 8px var(--count-bg); }  
 
-
  .dash-btn-qr.pad-card {  
  border-color: rgba(0, 240, 255, 0.45);  
  background: linear-gradient(160deg, var(--surface) 40%, rgba(0, 240, 255, 0.15) 100%);  
  }  
  .dash-btn-qr .pad-led { background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }  
 
-
  .dash-btn-admin-access.pad-card {  
  border-color: rgba(255, 42, 84, 0.45);  
  background: linear-gradient(160deg, var(--surface) 40%, rgba(255, 42, 84, 0.15) 100%);  
  }  
  .dash-btn-admin-access .pad-led { background: var(--danger); box-shadow: 0 0 8px var(--danger); }  
-
 
  .dash-btn-participants {  
  width: 100%;  
@@ -790,7 +765,7 @@
  cursor: pointer;  
  }  
 
-
+ /* Notificación en botón de cola */  
  .dash-btn-queue.has-new::after {  
  content: 'NUEVA';  
  position: absolute;  
@@ -811,7 +786,6 @@
  50% { transform: scale(1.08); }  
  }  
 
-
  .tab-content {   
  display: none;   
  flex: 1;  
@@ -821,6 +795,7 @@
  }  
  .tab-content.active { display: flex; }  
   
+ /* --- BUSCADOR DENTRO DEL MODAL --- */
  .search-box {  
  display: flex;  
  gap: 6px;  
@@ -865,7 +840,6 @@
  pointer-events: auto !important;  
  }  
 
-
  .search-btn {  
  background: linear-gradient(135deg, var(--accent), var(--accent-2));  
  color: var(--accent-text);  
@@ -899,6 +873,7 @@
  pointer-events: auto !important;  
  }  
   
+ /* --- PISTAS DE AUDIO / COLA DE CANCIONES --- */
  .results {   
  display: flex;   
  flex-direction: column;   
@@ -926,7 +901,7 @@
  }  
  .queue-item { margin-bottom: 6px; text-align: left; }  
 
-
+ /* Portadas tipo vinilo en lista */
  .song-item img, .queue-item img {  
  width: 44px !important;  
  height: 44px !important;  
@@ -940,7 +915,6 @@
  border: 2px solid var(--accent);  
  box-shadow: 0 0 0 3px #000;  
  }  
-
 
  .song-info { flex: 1; overflow: hidden; cursor: pointer; min-width: 0; touch-action: manipulation; pointer-events: auto !important; }  
  .song-title { font-weight: 800; font-size: 0.84rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }  
@@ -998,7 +972,7 @@
    
  .status-msg { text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 16px 0; }  
 
-
+ /* --- CAJA DE AVISO Y BOTÓN DE INSERCIÓN MANUAL --- */  
  .manual-fallback-box {  
  background: rgba(255, 42, 84, 0.1);  
  border: 1px dashed var(--danger);  
@@ -1031,7 +1005,6 @@
  position: relative;  
  z-index: 5;  
  }  
-
 
  .manual-form-group {  
  display: flex;  
@@ -1066,7 +1039,6 @@
  flex-shrink: 0;  
  pointer-events: auto !important;  
  }  
-
 
  .queue-header-top {  
  display: flex;  
@@ -1222,6 +1194,7 @@
  .page-btn:disabled { opacity: 0.3; cursor: not-allowed; background: var(--tag-bg); color: var(--text-muted); }  
  .page-info { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--text); font-weight: 800; }  
   
+ /* --- FOOTER CON CONTADOR ONLINE EN VIVO Y VISITAS --- */
  .footer {  
  margin-top: 6px;  
  padding-top: 7px;  
@@ -1276,6 +1249,7 @@
  }  
  .visitor-counter span { color: var(--cyan); font-weight: 800; }  
   
+ /* --- MODALES Y REPRODUCTOR DE VINILO --- */  
  .modal {  
  display: none;  
  position: fixed;  
@@ -1307,7 +1281,7 @@
  pointer-events: auto !important;  
  }  
 
-
+ /* Carátula como disco de vinilo en el modal de detalle */
  #imageModal .modal-content img#modalImg {  
  width: 175px;  
  height: 175px;  
@@ -1322,7 +1296,6 @@
   
  .modal-title { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 800; color: var(--text); margin-bottom: 3px; }  
  .modal-artist { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px; font-weight: 600; }  
-
 
  .results-modal-content {  
  background: var(--card-bg);  
@@ -1367,6 +1340,7 @@
  z-index: 5;  
  }  
   
+ /* Pantalla digital LCD estilo Pioneer CDJ */
  .dj-stats {  
  display: grid;  
  grid-template-columns: 1fr 1fr;  
@@ -1436,9 +1410,9 @@
  z-index: 5;  
  }  
 
-
  .back-btn { background: var(--surface-elevated); color: var(--text); border: 1px solid var(--border); width: 100%; pointer-events: auto !important; position: relative; z-index: 5; }  
   
+ /* --- CONTENIDO DEL MODAL DE ENCUESTA (4 OPCIONES) --- */  
  .poll-modal-box {  
  background: var(--card-bg);  
  border: 2px solid var(--badge-bg);  
@@ -1530,7 +1504,7 @@
  .poll-bar-track { width: 100%; height: 8px; background: var(--input-bg); border-radius: 99px; overflow: hidden; }  
  .poll-bar-fill { height: 100%; background: linear-gradient(90deg, var(--cyan), var(--accent)); width: 0%; transition: width 0.4s ease; }  
 
-
+ /* --- HISTÓRICO Y MODALES ADMIN --- */  
  .history-modal-content {  
  background: var(--card-bg);  
  border: 1px solid var(--border);  
@@ -1546,7 +1520,6 @@
  pointer-events: auto !important;  
  }  
 
-
  .history-header-box {  
  display: flex;  
  flex-direction: column;  
@@ -1556,7 +1529,6 @@
  border-bottom: 1px solid var(--border);  
  padding-bottom: 10px;  
  }  
-
 
  .history-modal-title {  
  font-family: 'Syne', sans-serif;  
@@ -1570,9 +1542,7 @@
  gap: 8px;  
  }  
 
-
  .history-modal-subtitle { font-size: 0.74rem; color: var(--text-muted); font-weight: 500; }  
-
 
  .saved-lists-scroll {  
  flex: 1;  
@@ -1584,7 +1554,6 @@
  padding-right: 4px;  
  padding-bottom: 10px;  
  }  
-
 
  .history-item-card {  
  background: var(--surface);  
@@ -1598,17 +1567,14 @@
  cursor: pointer;  
  }  
 
-
  .history-item-header { display: flex; justify-content: space-between; align-items: flex-start; pointer-events: auto !important; }  
  .history-item-title { font-weight: 800; font-size: 0.88rem; color: var(--text); margin-bottom: 3px; }  
  .history-item-date { font-size: 0.7rem; color: var(--text-muted); font-weight: 600; }  
  .history-badge-count { background: rgba(255, 184, 0, 0.15); border: 1px solid var(--count-bg); color: var(--count-bg); padding: 3px 8px; border-radius: 99px; font-size: 0.68rem; font-weight: 800; }  
  .history-actions { display: flex; gap: 8px; justify-content: flex-end; border-top: 1px dashed var(--border); padding-top: 8px; pointer-events: auto !important; }  
 
-
  .history-pdf-btn { background: var(--success); color: #000; border: none; padding: 6px 10px; border-radius: 8px; font-size: 0.72rem; font-weight: 800; cursor: pointer; position: relative; z-index: 999; }  
  .history-delete-btn { background: rgba(255, 42, 84, 0.15); border: 1px solid var(--danger); color: var(--danger); padding: 7px 12px; border-radius: 8px; font-size: 0.74rem; font-weight: 800; cursor: pointer; position: relative; z-index: 999; }  
-
 
  .history-back-action-btn {  
  background: linear-gradient(90deg, var(--accent), var(--accent-2));  
@@ -1628,6 +1594,7 @@
  z-index: 10;  
  }  
   
+ /* --- PANEL MODO ADMIN EN MATRIZ DE 4 PADS CUADRADOS --- */  
  .admin-menu-container {  
  display: grid;  
  grid-template-columns: repeat(2, 1fr);  
@@ -1637,7 +1604,6 @@
  padding: 6px 0;  
  overflow-y: auto;  
  }  
-
 
  .admin-menu-btn {  
  width: 100%;  
@@ -1663,7 +1629,7 @@
  }  
  .admin-menu-btn:active { transform: scale(0.96); }  
 
-
+ /* --- BOTONES DE COLORES DE LUCES --- */  
  .admin-panel-grid {  
  display: grid;  
  grid-template-columns: repeat(2, 1fr);  
@@ -1690,7 +1656,6 @@
  pointer-events: auto !important;  
  }  
 
-
  .color-dot {  
  width: 28px;  
  height: 28px;  
@@ -1700,7 +1665,6 @@
  pointer-events: none;  
  }  
 
-
  .color-tile-text {  
  font-size: 0.78rem;  
  font-weight: 800;  
@@ -1708,7 +1672,6 @@
  text-transform: uppercase;  
  pointer-events: none;  
  }  
-
 
  .light-color-tile.active {  
  border-color: #ffffff;  
@@ -1746,7 +1709,7 @@
  .btn-reset-light { background: var(--surface-elevated); color: var(--text-muted); border-color: var(--border); width: 100%; margin-top: 4px; }  
  .btn-reset-light.active { background: var(--danger); color: #ffffff; border-color: #ffffff; }  
 
-
+ /* --- CAPA DE LUZ GLOBAL DE SALA --- */  
  #room-light-overlay {  
  position: fixed;  
  top: 0; left: 0;  
@@ -1761,7 +1724,6 @@
  }  
  #room-light-overlay.active { display: flex; justify-content: center; align-items: center; }  
 
-
  .heart-effect-container {  
  display: none;  
  flex-direction: column;  
@@ -1774,7 +1736,6 @@
  pointer-events: none;  
  }  
  #room-light-overlay.heart-active .heart-effect-container { display: flex; }  
-
 
  .giant-pulsing-heart {  
  width: 160px; height: 160px;  
@@ -1793,12 +1754,10 @@
  .giant-pulsing-heart::before { top: -80px; left: 0; }  
  .giant-pulsing-heart::after { left: 80px; top: 0; }  
 
-
  @keyframes heartBeatAnim {  
  0% { transform: rotate(-45deg) scale(0.9); }  
  100% { transform: rotate(-45deg) scale(1.2); }  
  }  
-
 
  #room-light-notice {  
  position: absolute;  
@@ -1820,7 +1779,7 @@
  }  
  #room-light-overlay.show-notice #room-light-notice { opacity: 1; }  
 
-
+ /* --- PANTALLA STANDBY DE BIENVENIDA CON PLATO DJ GIRATORIO --- */  
  #standby-screen {  
  position: fixed;  
  top: 0; left: 0;  
@@ -2049,7 +2008,7 @@
  100% { transform: translateY(-92vh) scale(0.9) rotate(-12deg); opacity: 0; }
  }
 
-
+ /* Filtros por décadas en buscador */
  .decade-filters {
  display: flex;
  gap: 5px;
@@ -2081,7 +2040,7 @@
  box-shadow: 0 0 10px var(--glow-accent);
  }
 
-
+ /* Botón DJ Aviso "¡Va a sonar!" */
  .notify-upnext-btn {
  background: linear-gradient(90deg, #ff9900, #ff007a);
  color: #ffffff;
@@ -2098,7 +2057,7 @@
  z-index: 5;
  }
 
-
+ /* Overlay "¡Tu tema está a punto de sonar!" */
  #upNextOverlay {
  display: none;
  position: fixed;
@@ -2135,7 +2094,7 @@
  animation: spinVinyl 10s linear infinite;
  }
 
-
+ /* Overlay Momento Foto / Subidón 10s */
  .photo-countdown-container {
  display: none;
  flex-direction: column;
@@ -2172,7 +2131,7 @@
  text-shadow: 0 0 15px var(--accent);
  }
 
-
+ /* Modo Versus / Batalla de Temas */
  .versus-grid {
  display: grid;
  grid-template-columns: 1fr 1fr;
@@ -2216,13 +2175,15 @@
  color: var(--text-muted);
  font-weight: 600;
  }
- </style>  
 
+ </style>  
 </head>  
 <body>  
-
+  
+ <!-- CONTENEDOR FLOTANTE DE REACCIONES HYPE -->
  <div id="hype-floating-container"></div>
 
+ <!-- OVERLAY AVISO: ¡TU TEMA ESTÁ A PUNTO DE SONAR! -->
  <div id="upNextOverlay" onclick="closeUpNextOverlay()">
  <div class="upnext-card" onclick="event.stopPropagation()">
  <div class="roulette-badge" style="background: rgba(255,184,0,0.2); border-color: var(--count-bg);">🎧 ¡AVISO DIRECTO DESDE CABINA!</div>
@@ -2234,6 +2195,7 @@
  </div>
  </div>
 
+ <!-- CAPA DE ILUMINACIÓN GLOBAL DE SALA -->  
  <div id="room-light-overlay">  
  <div class="heart-effect-container">  
  <div class="giant-pulsing-heart"></div>  
@@ -2246,6 +2208,7 @@
  <div id="room-light-notice">Toca 2 veces para salir</div>  
  </div>  
 
+ <!-- OVERLAY DE RULETA Y CUENTA ATRÁS EN DIRECTO -->
  <div id="rouletteOverlay" onclick="closeRouletteOverlay()">
  <div class="roulette-box" onclick="event.stopPropagation()">
  <div class="roulette-badge" id="rouletteStatusBadge">🎲 SORTEO EN DIRECTO EN SALA</div>
@@ -2259,6 +2222,7 @@
  </div>
 
  <div class="card">  
+ <!-- CABECERA TIPO PLATO DJ HORIZONTAL -->
  <div class="brand-header">  
  <div class="vinyl-platter">
  <img src="logo.jpg" alt="We Love The Remember" class="app-logo">  
@@ -2273,7 +2237,8 @@
  <button class="theme-btn" id="themeToggle">☀️ Claro</button>  
  </div>  
  </div>  
-
+  
+ <!-- BOTÓN FLOTANTE DE NOTIFICACIÓN DE ENCUESTA -->  
  <div class="poll-notification-banner" id="pollNotificationBanner" style="display: none;" ontouchend="handlePollBannerClick(event)" onclick="openPollModal()">  
  <div class="poll-notif-text">  
  📊 <span id="pollNotifTitleDisplay">Encuesta activa en sala</span>  
@@ -2281,17 +2246,20 @@
  <div class="poll-notif-action" id="pollNotifActionBtn">¡Votar!</div>  
  </div>  
 
+ <!-- BANNER GANADOR EN DIRECTO -->  
  <div class="winner-banner" id="winnerBanner" style="display: none;">  
  🏆 ¡GANADOR DEL SORTEO: <span id="winnerNameDisplay">---</span>! 🏆  
  </div>  
 
+ <!-- BARRA DE USUARIO IDENTIFICADO EN PEQUEÑO -->  
  <div class="user-badge-bar" id="userBadgeBar" style="display: none;">  
  <span>👤 Participante: <strong id="currentUserNameDisplay"></strong></span>  
  <button class="theme-btn" style="padding: 2px 6px; font-size: 0.65rem;" ontouchend="handleContestBadgeClick(event)" onclick="openContestModal()">Ya inscrito</button>  
  </div>  
-
+   
  <div id="neonBanner" class="neon-banner enabled">🟢 Peticiones de canciones: ABIERTAS</div>  
-
+  
+ <!-- PESTAÑA MENÚ DE INICIO (DASHBOARD) -->  
  <div id="tabHome" class="tab-content active">  
  <div class="instructions-box">  
  <div class="instructions-title">🎧 CONSOLA DE PETICIONES EN VIVO</div>  
@@ -2304,6 +2272,7 @@
  </div>  
 
  <div class="dashboard-container">  
+ <!-- MÓDULO PROTAGONISTA: BUSCADOR MUSICAL -->
  <button class="dash-btn dash-btn-primary" ontouchend="handleDashClick(event, 'search')" onclick="openSearchResultsModal('')">  
  <div class="hero-top-row">
  <span class="hero-badge">💿 BUSCADOR EN DIRECTO</span>
@@ -2315,7 +2284,8 @@
  <strong>Pedir ➔</strong>
  </div>
  </button>  
-
+   
+ <!-- MATRIZ 2x2 DE PADS DE CABINA CON EL TAMAÑO AMPLIO ORIGINAL -->
  <div class="launchpad-grid">
  <button class="dash-btn pad-card dash-btn-queue" id="dashQueueBtn" ontouchend="handleDashClick(event, 'queue')" onclick="switchTab('queue', true)">  
  <span class="pad-led"></span>
@@ -2354,6 +2324,7 @@
  </button>  
  </div>
 
+ <!-- BARRA DE REACCIONES EN VIVO (HYPE-O-METER) -->
  <div class="hype-bar">
  <div class="hype-label">⚡ HYPE PISTA (<span id="hypeCountBadge">0</span>):</div>
  <div class="hype-btns">
@@ -2365,7 +2336,7 @@
  </div>
  </div>  
  </div>  
-
+  
  <div id="tabQueue" class="tab-content">  
  <div class="queue-header">  
  <div class="queue-header-top">  
@@ -2384,18 +2355,19 @@
  <button class="clear-queue-btn" id="clearQueueBtn" style="display: none;" ontouchend="handleActionBtn(event, 'clear')" onclick="clearQueueSecure()">🗑️ Borrar</button>  
  </div>  
  </div>  
-
+  
  <div id="queuePagination" class="pagination" style="display: none;">  
  <button class="page-btn" id="prevPageBtn" onclick="changePage(-1)">⬅️ Anterior</button>  
  <span class="page-info" id="pageInfoText">Pág 1/1</span>  
  <button class="page-btn" id="nextPageBtn" onclick="changePage(1)">Siguiente ➡️</button>  
  </div>  
-
+  
  <div id="queueResults" class="results">  
  <p class="status-msg">Cargando lista...</p>  
  </div>  
  </div>  
 
+ <!-- PESTAÑA MODO ADMIN DE SALA -->  
  <div id="tabAdmin" class="tab-content">  
  <div class="queue-header" style="flex-direction: row; justify-content: space-between; align-items: center; margin-bottom: 6px;">  
  <span class="queue-title">🎛️ Rack de Control (Admin)</span>  
@@ -2424,7 +2396,8 @@
  </button>  
  </div>  
  </div>  
-
+  
+ <!-- FOOTER CON CONTADOR EN VIVO Y VISITAS -->  
  <footer class="footer">  
  <div>App creada por <strong>We Love The Remember Studios</strong></div>
  <div class="footer-stats-group">
@@ -2438,6 +2411,7 @@
  </footer>  
  </div>  
 
+ <!-- MODAL DE COMPARTIR QR -->  
  <div class="modal" id="qrModal">  
  <div class="modal-content" onclick="event.stopPropagation()">  
  <div class="modal-title">📱 Código QR de la App</div>  
@@ -2452,7 +2426,8 @@
  </div>  
  </div>  
  </div>  
-
+  
+ <!-- MODAL INDEPENDIENTE: GESTIÓN DE SORTEO ADMIN -->  
  <div class="modal" id="adminContestModal">  
  <div class="history-modal-content" onclick="event.stopPropagation()">  
  <div class="history-header-box">  
@@ -2461,17 +2436,19 @@
  </div>  
  <div class="history-modal-subtitle">Gestiona inscripciones y lanza la ruleta en directo</div>  
  </div>  
- <div class="saved-lists-scroll" style="gap: 10px; padding-top: 4px;">  
- <button type="button" class="admin-action-btn" id="runDrawBtnModal" style="background: linear-gradient(90deg, var(--accent), var(--accent-2)); color: #fff; width: 100%; padding: 15px; font-size: 0.9rem; box-shadow: 0 4px 15px var(--glow-accent);" onclick="handleRunDrawClick(event)">🎰 ¡Lanzar Ruleta y Sortear Ahora!</button>  
- <button type="button" class="admin-action-btn" id="toggleContestBtnAdminModal" style="background: var(--success); color: #000; width: 100%; padding: 14px; font-size: 0.86rem;" ontouchend="handleToggleContest(event)" onclick="toggleContestState()">🔒 Botón Sorteo: ABIERTO</button>  
- <button type="button" class="admin-action-btn" style="background: var(--surface-elevated); border: 1px solid var(--count-bg); color: var(--count-bg); width: 100%; padding: 13px; font-size: 0.82rem;" onclick="clearWinnerBannerOnly()">🧹 Ocultar Cartel de Ganador</button>  
- <button type="button" class="admin-action-btn" style="background: rgba(255, 42, 84, 0.16); border: 1px solid var(--danger); color: var(--danger); width: 100%; padding: 13px; font-size: 0.82rem;" ontouchend="handleClearContest(event)" onclick="clearContestParticipants()">🗑️ Borrar lista de participantes</button>  
- <button type="button" class="admin-action-btn" style="background: rgba(255, 184, 0, 0.16); border: 1px solid var(--count-bg); color: var(--count-bg); width: 100%; padding: 13px; font-size: 0.82rem;" ontouchend="handleResetHype(event)" onclick="resetHypeCounter()">🔄 Resetear Contador Hype a 0</button>  
+ <div class="saved-lists-scroll" style="gap: 6px; padding-top: 2px;">  
+ <button type="button" class="admin-action-btn" id="runDrawBtnModal" style="background: linear-gradient(90deg, var(--accent), var(--accent-2)); color: #fff; width: 100%; padding: 10px; font-size: 0.8rem; box-shadow: 0 4px 12px var(--glow-accent); min-height: 40px;" onclick="handleRunDrawClick(event)">🎰 ¡Lanzar Ruleta y Sortear Ahora!</button>  
+ <button type="button" class="admin-action-btn" id="toggleContestBtnAdminModal" style="background: var(--success); color: #000; width: 100%; padding: 9px 10px; font-size: 0.74rem; min-height: 38px;" ontouchend="handleToggleContest(event)" onclick="toggleContestState()">🔒 Botón Sorteo: ABIERTO</button>  
+ <button type="button" class="admin-action-btn" id="toggleHypeBtnAdminModal" style="background: var(--success); color: #000; width: 100%; padding: 9px 10px; font-size: 0.74rem; min-height: 38px;" ontouchend="handleToggleHype(event)" onclick="toggleHypeState()">🔒 Botón Hype: ABIERTO</button>  
+ <button type="button" class="admin-action-btn" style="background: var(--surface-elevated); border: 1px solid var(--count-bg); color: var(--count-bg); width: 100%; padding: 9px 10px; font-size: 0.74rem; min-height: 38px;" onclick="clearWinnerBannerOnly()">🧹 Ocultar Cartel de Ganador</button>  
+ <button type="button" class="admin-action-btn" style="background: rgba(255, 42, 84, 0.16); border: 1px solid var(--danger); color: var(--danger); width: 100%; padding: 9px 10px; font-size: 0.74rem; min-height: 38px;" ontouchend="handleClearContest(event)" onclick="clearContestParticipants()">🗑️ Borrar lista de participantes</button>  
+ <button type="button" class="admin-action-btn" style="background: rgba(255, 184, 0, 0.16); border: 1px solid var(--count-bg); color: var(--count-bg); width: 100%; padding: 9px 10px; font-size: 0.74rem; min-height: 38px;" ontouchend="handleResetHype(event)" onclick="resetHypeCounter()">🔄 Resetear Contador Hype a 0</button>  
  </div>  
  <button class="history-back-action-btn" ontouchend="handleModalClose(event, 'contest')" onclick="closeAdminModal('contest')">⬅️ Volver al Panel Admin</button>  
  </div>  
  </div>  
 
+ <!-- MODAL INDEPENDIENTE: CONTROL LUMÍNICO GLOBAL ADMIN -->  
  <div class="modal" id="adminLightsModal">  
  <div class="history-modal-content" onclick="event.stopPropagation()">  
  <div class="history-header-box">  
@@ -2527,6 +2504,7 @@
  </div>  
  </div>  
 
+ <!-- MODAL INDEPENDIENTE: ENCUESTA EXPRESS ADMIN -->  
  <div class="modal" id="adminPollModal">  
  <div class="history-modal-content" onclick="event.stopPropagation()">  
  <div class="history-header-box">  
@@ -2593,6 +2571,7 @@
  </div>  
  </div>  
 
+ <!-- MODAL DE VOTACIÓN DE ENCUESTA EXPRESS (PÚBLICO) -->  
  <div class="modal" id="pollModal">  
  <div class="poll-modal-box" onclick="event.stopPropagation()">  
  <div class="poll-status-pill open" id="publicPollStatusBadge">🟢 VOTACIÓN ABIERTA</div>  
@@ -2651,6 +2630,7 @@
  </div>  
  </div>  
 
+ <!-- MODAL GRANDE PARA RESULTADOS DE BÚSQUEDA -->  
  <div class="modal" id="searchResultsModal">  
  <div class="results-modal-content" onclick="event.stopPropagation()">  
  <div class="results-modal-header">  
@@ -2664,6 +2644,7 @@
  <button type="submit" class="search-btn" id="modalSearchBtn">🔍</button>  
  </form>
 
+ <!-- FILTRO INTELIGENTE POR DÉCADAS / ESTILOS -->
  <div class="decade-filters" id="decadeFiltersBar">
  <button type="button" class="decade-chip active" data-decade="all" ontouchend="handleDecadeTouch(event, 'all')" onclick="setDecadeFilter('all')">🌐 Todas</button>
  <button type="button" class="decade-chip" data-decade="80s" ontouchend="handleDecadeTouch(event, '80s')" onclick="setDecadeFilter('80s')">🕹️ 80s</button>
@@ -2683,14 +2664,16 @@
  </div>  
  </div>  
 
+ <!-- MODAL DE DETALLE / PREVISUALIZACIÓN -->  
  <div class="modal" id="imageModal">  
  <div class="modal-content" onclick="event.stopPropagation()">  
+   
+ <button class="back-btn-top" onclick="closeModal()">⬅️ Volver a Resultados</button>  
 
-<button class="back-btn-top" onclick="closeModal()">⬅️ Volver a Resultados</button>
  <img id="modalImg" src="" alt="Portada HD">  
  <div class="modal-title" id="modalTitle"></div>  
  <div class="modal-artist" id="modalArtist"></div>  
-
+   
  <div class="dj-stats">  
  <div class="stat-box">  
  <span class="stat-label">BPM Estimado</span>  
@@ -2701,14 +2684,15 @@
  <span class="stat-value" id="modalKey">---</span>  
  </div>  
  </div>  
-
-<button class="tap-btn" id="tapBtn">⏱️ Tap Tempo (Haz clic al ritmo)</button>
+  
+ <button class="tap-btn" id="tapBtn">⏱️ Tap Tempo (Haz clic al ritmo)</button>  
+  
  <div id="audioContainer">  
  <audio id="modalAudio" controls playsinline></audio>  
  </div>  
-
+  
  <div id="modalActionContainer" style="margin-bottom: 10px;"></div>  
-
+  
  <div class="modal-actions">  
  <a id="modalSpotifyBtn" href="#" target="_blank" class="spotify-btn">  
  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">  
@@ -2732,17 +2716,18 @@
  </div>  
  </div>  
 
+ <!-- MODAL DE INSERCIÓN MANUAL UNIFICADA -->  
  <div class="modal" id="manualModal">  
  <div class="modal-content" onclick="event.stopPropagation()">  
  <div class="modal-title">➕ Añadir Canción Manualmente</div>  
  <div class="modal-artist" style="margin-bottom: 12px;">Introduce los datos de la canción que no encuentras</div>  
-
+  
  <form id="manualRequestForm" onsubmit="submitManualRequest(event)">  
  <div class="manual-form-group">  
  <label class="manual-form-label">Artista</label>  
  <input type="text" id="manualArtistInput" class="manual-form-input" placeholder="Ej: Chimo Bayo" required autocomplete="off" />  
  </div>  
-
+  
  <div class="manual-form-group">  
  <label class="manual-form-label">Nombre de la Canción</label>  
  <input type="text" id="manualTitleInput" class="manual-form-input" placeholder="Ej: Asi Esta Bien" required autocomplete="off" />  
@@ -2760,7 +2745,8 @@
  </form>  
  </div>  
  </div>  
-
+  
+ <!-- MODAL DE HISTÓRICO -->  
  <div class="modal" id="historyModal" data-viewing-list="false" onclick="event.stopPropagation()">  
  <div class="history-modal-content" onclick="event.stopPropagation()">  
  <div class="history-header-box" onclick="event.stopPropagation()">  
@@ -2771,17 +2757,18 @@
  Listas guardadas en la base de datos  
  </div>  
  </div>  
-
+   
  <div id="savedListsContainer" class="saved-lists-scroll" onclick="event.stopPropagation()">  
  <p class="status-msg">Cargando histórico...</p>  
  </div>  
-
+  
  <button class="history-back-action-btn" id="historyBackBtn" ontouchend="handleHistoryBackAction(event)" onclick="handleHistoryBackAction(event)">  
  ⬅️ Cerrar Histórico  
  </button>  
  </div>  
  </div>  
 
+ <!-- MODAL DE ESTADÍSTICAS GLOBALES -->  
  <div class="modal" id="globalStatsModal" onclick="event.stopPropagation()">  
  <div class="history-modal-content" onclick="event.stopPropagation()">  
  <div class="history-header-box">  
@@ -2792,22 +2779,23 @@
  Resumen de eventos, visitas y temazos del año  
  </div>  
  </div>  
-
+   
  <div id="globalStatsContainer" class="saved-lists-scroll">  
  <p class="status-msg">Calculando estadísticas...</p>  
  </div>  
-
+  
  <button class="history-back-action-btn" ontouchend="handleModalClose(event, 'stats')" onclick="closeAdminModal('stats')">  
  ⬅️ Cerrar Estadísticas  
  </button>  
  </div>  
  </div>  
 
+ <!-- MODAL DE CONCURSO / REGISTRO DE ASISTENTE -->  
  <div class="modal" id="contestModal">  
  <div class="modal-content" onclick="event.stopPropagation()">  
  <div class="modal-title">🏆 Concurso / Sorteo Sala</div>  
  <div class="modal-artist" style="margin-bottom: 12px;">¡Inscríbete con tu nombre para participar en el premio!</div>  
-
+  
  <form id="contestForm" onsubmit="submitContestEntry(event)">  
  <div class="manual-form-group" style="margin-bottom: 16px;">  
  <label class="manual-form-label">Tu Nombre o Alias</label>  
@@ -2823,6 +2811,7 @@
  </div>  
  </div>  
 
+ <!-- MODAL PÚBLICO: LISTA DE PARTICIPANTES -->  
  <div class="modal" id="publicParticipantsModal">  
  <div class="results-modal-content" onclick="event.stopPropagation()">  
  <div class="results-modal-header">  
@@ -2834,20 +2823,21 @@
  </div>  
  </div>  
  </div>  
-
+  
+ <!-- PANTALLA STANDBY DE BIENVENIDA -->  
  <div id="standby-screen">  
  <div class="laser-background"></div>  
  <div class="strobe-overlay"></div>  
-
+  
  <div id="bouncing-logo">  
  <img src="logo.jpg" alt="Logo Flotante Arriba">  
  </div>  
-
+   
  <div class="standby-content">  
  <div class="standby-title">We LOVE Live Music</div>  
  <div class="standby-subtitle">Toca la pantalla para hacer tu petición</div>  
  </div>  
-
+  
  <div class="equalizer-container">  
  <div class="eq-bar"></div>  
  <div class="eq-bar"></div>  
@@ -2861,7 +2851,7 @@
  <div class="eq-bar"></div>  
  </div>  
  </div>  
-
+  
  <script>  
  const firebaseConfig = {  
  apiKey: "AIzaSyDcAeldon_Sb8yF4tKTGNvKFJGahvpBQ5E",  
@@ -2887,10 +2877,12 @@
  const drawEventRef = db.ref('welove_live_music_settings/drawEvent');  
  const pollRef = db.ref('welove_live_music_poll');  
  const hypeRef = db.ref('welove_live_music_hype');  
+ const hypeOpenRef = db.ref('welove_live_music_settings/hypeOpen');
  const upNextRef = db.ref('welove_live_music_settings/upNextAlert');  
  let currentDecadeFilter = 'all';  
  let photoCountdownInterval = null;  
  let versusTimerTimeout = null;  
+ let isHypeOpen = true;  
   
  let modalDebounceTimer;  
  let tapTimes = [];  
@@ -2918,23 +2910,20 @@
  let latestAdminEffectData = null;  
  let standbyTimer = null;  
 
-
  let isDrawInProgress = false;
  let lastDrawTriggerTime = 0;
  let rouletteSpinInterval = null;
  let rouletteCountdownInterval = null;
 
-
+ /* Función que detecta si hay carteles activos (ganador, encuesta o usuario inscrito) para ajustar la consola automáticamente sin encoger los botones */
  function syncCompactLayoutState() {
  const pollBanner = document.getElementById('pollNotificationBanner');
  const winnerBanner = document.getElementById('winnerBanner');
  const userBadge = document.getElementById('userBadgeBar');
 
-
  const isPollVisible = pollBanner && pollBanner.style.display !== 'none';
  const isWinnerVisible = winnerBanner && winnerBanner.style.display !== 'none';
  const isBadgeVisible = userBadge && userBadge.style.display !== 'none';
-
 
  if (isPollVisible || isWinnerVisible || isBadgeVisible) {
  document.body.classList.add('has-active-banners');
@@ -2949,7 +2938,6 @@
  standbyScreen.classList.remove('inactive');  
  }  
 
-
  loadHistory();  
  checkSavedUserBadge();  
  const savedTheme = localStorage.getItem('theme') || 'dark';  
@@ -2960,7 +2948,6 @@
    
  const modalSongInput = document.getElementById('modalSongInput');  
  modalSongInput.addEventListener('input', handleModalInput);  
-
 
  document.getElementById('modalSearchForm').addEventListener('submit', (e) => {  
  if (e) e.preventDefault();  
@@ -2988,7 +2975,6 @@
  document.getElementById('modalTidalBtn').addEventListener('click', openTidalApp);  
  document.getElementById('modalYoutubeBtn').addEventListener('click', openYoutubeApp);  
 
-
  const overlay = document.getElementById('room-light-overlay');  
  overlay.addEventListener('click', handleOverlayDoubleTap);  
  overlay.addEventListener('touchend', (e) => {  
@@ -3006,10 +2992,9 @@
  document.getElementById('visitorCount').textContent = count.toLocaleString();  
  });  
 
-
+ /* --- SISTEMA DE PRESENCIA EN VIVO (USUARIOS ONLINE) --- */
  const onlineRef = db.ref('welove_live_music_online');
  const connectedRef = db.ref('.info/connected');
-
 
  connectedRef.on('value', (snapshot) => {
  if (snapshot.val() === true) {
@@ -3018,7 +3003,6 @@
  myPresenceRef.set(true);
  }
  });
-
 
  onlineRef.on('value', (snapshot) => {
  const onlineCount = snapshot.numChildren() || 1;
@@ -3029,7 +3013,6 @@
  const data = snapshot.val();  
  processQueueData(data);  
  });  
-
 
  contestRef.on('value', (snapshot) => {  
  const data = snapshot.val();  
@@ -3047,11 +3030,9 @@
  document.getElementById('participantCountBadgeModal').textContent = countVal;  
  });  
 
-
  drawEventRef.on('value', (snapshot) => {
  const drawData = snapshot.val();
  if (!drawData || !drawData.id || !drawData.winner) return;
-
 
  const now = Date.now();
  const lastSeenDrawId = sessionStorage.getItem('last_seen_draw_id');
@@ -3060,7 +3041,6 @@
  startVisualRouletteSequence(drawData.winner, drawData.participants || []);
  }
  });
-
 
  pollRef.on('value', (snapshot) => {  
  const pollData = snapshot.val();  
@@ -3077,12 +3057,10 @@
  }  
  }  
 
-
  const opt1 = (pollData && pollData.opt1) ? pollData.opt1 : 'Opción 1';  
  const opt2 = (pollData && pollData.opt2) ? pollData.opt2 : 'Opción 2';  
  const opt3 = (pollData && pollData.opt3) ? pollData.opt3 : 'Opción 3';  
  const opt4 = (pollData && pollData.opt4) ? pollData.opt4 : 'Opción 4';  
-
 
  const votes1 = (pollData && pollData.votes1) ? pollData.votes1 : 0;  
  const votes2 = (pollData && pollData.votes2) ? pollData.votes2 : 0;  
@@ -3090,12 +3068,10 @@
  const votes4 = (pollData && pollData.votes4) ? pollData.votes4 : 0;  
  const totalVotes = votes1 + votes2 + votes3 + votes4;  
 
-
  const pct1 = totalVotes > 0 ? Math.round((votes1 / totalVotes) * 100) : 0;  
  const pct2 = totalVotes > 0 ? Math.round((votes2 / totalVotes) * 100) : 0;  
  const pct3 = totalVotes > 0 ? Math.round((votes3 / totalVotes) * 100) : 0;  
  const pct4 = totalVotes > 0 ? Math.round((votes4 / totalVotes) * 100) : 0;  
-
 
  document.getElementById('adminTotalVotesDisplay').textContent = totalVotes;  
  document.getElementById('adminPollLabel1').textContent = opt1;  
@@ -3111,7 +3087,6 @@
  document.getElementById('adminPollBar3').style.width = pct3 + '%';  
  document.getElementById('adminPollBar4').style.width = pct4 + '%';  
 
-
  if (!pollData || !pollData.active) {  
  pollNotifBanner.style.display = 'none';  
  adminStatusBadge.textContent = 'INACTIVA';  
@@ -3121,11 +3096,9 @@
  return;  
  }  
 
-
  const isClosed = pollData.closed === true;  
  pollNotifBanner.style.display = 'flex';  
  syncCompactLayoutState();  
-
 
  if (isClosed) {  
  pollNotifBanner.classList.add('closed-poll');  
@@ -3145,40 +3118,33 @@
  adminStatusBadge.className = 'poll-status-pill open';  
  }  
 
-
  document.getElementById('pollQuestionDisplay').textContent = pollData.question || '📊 ¿Qué estilo ponemos ahora?';  
-
 
  document.getElementById('pollOpt1Btn').textContent = opt1;  
  document.getElementById('pollOpt2Btn').textContent = opt2;  
  document.getElementById('pollOpt3Btn').textContent = opt3;  
  document.getElementById('pollOpt4Btn').textContent = opt4;  
 
-
  document.getElementById('pollLabel1').textContent = opt1;  
  document.getElementById('pollLabel2').textContent = opt2;  
  document.getElementById('pollLabel3').textContent = opt3;  
  document.getElementById('pollLabel4').textContent = opt4;  
-
 
  document.getElementById('pollCount1').textContent = `${votes1} votos (${pct1}%)`;  
  document.getElementById('pollCount2').textContent = `${votes2} votos (${pct2}%)`;  
  document.getElementById('pollCount3').textContent = `${votes3} votos (${pct3}%)`;  
  document.getElementById('pollCount4').textContent = `${votes4} votos (${pct4}%)`;  
 
-
  document.getElementById('pollBar1').style.width = pct1 + '%';  
  document.getElementById('pollBar2').style.width = pct2 + '%';  
  document.getElementById('pollBar3').style.width = pct3 + '%';  
  document.getElementById('pollBar4').style.width = pct4 + '%';  
-
 
  const isVersus = pollData.isVersus === true;
  const versusGrid = document.getElementById('pollVersusGrid');
  const standardGrid = document.getElementById('pollStandardGrid');
  const row3 = document.getElementById('pollBar3') ? document.getElementById('pollBar3').closest('.poll-bar-row') : null;
  const row4 = document.getElementById('pollBar4') ? document.getElementById('pollBar4').closest('.poll-bar-row') : null;
-
 
  if (isVersus) {
  if (versusGrid) versusGrid.style.display = 'grid';
@@ -3197,7 +3163,6 @@
  if (row3) row3.style.display = 'flex';
  if (row4) row4.style.display = 'flex';
  }
-
 
  const myVote = localStorage.getItem('user_poll_vote');  
  ['1', '2', '3', '4'].forEach(n => {  
@@ -3222,13 +3187,12 @@
  });
  });
 
-
+ /* --- LISTENER DE REACCIONES EN VIVO (HYPE-O-METER) --- */
  hypeRef.child('total').on('value', (snap) => {
  const totalHype = snap.val() || 0;
  const badge = document.getElementById('hypeCountBadge');
  if (badge) badge.textContent = totalHype;
  });
-
 
  hypeRef.child('lastEvent').on('value', (snap) => {
  const ev = snap.val();
@@ -3238,7 +3202,7 @@
  }
  });
 
-
+ /* --- LISTENER DE AVISO: ¡TU TEMA ESTÁ A PUNTO DE SONAR! --- */
  upNextRef.on('value', (snap) => {
  const alertData = snap.val();
  if (!alertData || !alertData.id) return;
@@ -3259,13 +3223,17 @@
  updateNeonBannerUI();  
  });  
 
-
  contestOpenRef.on('value', (snapshot) => {  
  const isOpen = snapshot.val();  
  isContestOpen = (isOpen !== null) ? isOpen : true;  
  updateContestButtonUI();  
  });  
 
+ hypeOpenRef.on('value', (snapshot) => {  
+ const isOpen = snapshot.val();  
+ isHypeOpen = (isOpen !== null) ? isOpen : true;  
+ updateHypeButtonUI();  
+ });  
 
  winnerRef.on('value', (snapshot) => {  
  const winnerName = snapshot.val();  
@@ -3280,7 +3248,6 @@
  syncCompactLayoutState();  
  });  
 
-
  adminEffectRef.on('value', (snapshot) => {  
  const val = snapshot.val();  
  latestAdminEffectData = val;  
@@ -3288,7 +3255,6 @@
  applyAdminEffectLocally(val);  
  updateAdminButtonsUI(val);  
  });  
-
 
  history.replaceState({ screen: 'home' }, '', '');  
  window.addEventListener('popstate', (e) => {  
@@ -3305,12 +3271,10 @@
  const pollModal = document.getElementById('pollModal');  
  const qrModal = document.getElementById('qrModal');  
 
-
  if (imageModal.style.display === 'flex') {  
  closeModalFromPopState();  
  return;  
  }  
-
 
  if (manualModal.style.display === 'flex' || searchResultsModal.style.display === 'flex' || historyModal.style.display === 'flex' || globalStatsModal.style.display === 'flex' || adminContestModal.style.display === 'flex' || adminLightsModal.style.display === 'flex' || adminPollModal.style.display === 'flex' || contestModal.style.display === 'flex' || publicParticipantsModal.style.display === 'flex' || pollModal.style.display === 'flex' || qrModal.style.display === 'flex') {  
  closeManualModal();  
@@ -3329,14 +3293,12 @@
  return;  
  }  
 
-
  const activeTabHome = document.getElementById('tabHome');  
  if (!activeTabHome.classList.contains('active')) {  
  switchTab('home', false);  
  history.replaceState({ screen: 'home' }, '', '');  
  return;  
  }  
-
 
  if (confirm("¿Estás seguro de que quieres salir de la aplicación?")) {  
  history.pushState({ screen: 'home' }, '', '');  
@@ -3345,12 +3307,10 @@
  }  
  });  
 
-
  resetStandbyTimer();  
  });  
   
  let wakeLock = null;  
-
 
  async function requestWakeLock() {  
  if ('wakeLock' in navigator) {  
@@ -3365,11 +3325,9 @@
  }  
  }  
 
-
  document.addEventListener('DOMContentLoaded', () => {  
  requestWakeLock();  
  });  
-
 
  ['visibilitychange', 'touchstart', 'click', 'mousemove', 'pointerdown'].forEach(event => {  
  document.addEventListener(event, async () => {  
@@ -3378,7 +3336,6 @@
  }  
  });  
  });  
-
 
  function getStandbyDelay() {  
  return isAdminModeActive ? 120000 : 75000;  
@@ -3405,7 +3362,6 @@
   
  standbyScreen.classList.add('inactive');  
 
-
  setTimeout(() => {  
  closeModal();  
  closeManualModal();  
@@ -3424,7 +3380,6 @@
  }  
  resetStandbyTimer();  
  requestWakeLock();  
-
 
  if (latestAdminEffectData) {  
  applyAdminEffectLocally(latestAdminEffectData);  
@@ -3446,7 +3401,6 @@
  }, { capture: true, passive: false });  
  });  
 
-
  ['click', 'touchstart', 'pointerdown', 'keydown'].forEach(event => {  
  window.addEventListener(event, () => {  
  const standbyScreen = document.getElementById('standby-screen');  
@@ -3455,7 +3409,6 @@
  }  
  }, { passive: true });  
  });  
-
 
  function promptAdminAccess() {  
  if (!isAdminModeActive) {  
@@ -3471,7 +3424,6 @@
  document.getElementById('clearQueueBtn').style.display = 'inline-block';  
  document.getElementById('queueHeaderTitle').textContent = "Control DJ / Admin";  
 
-
  switchTab('admin', true);  
  alert("¡Modo Administrador y DJ activados con éxito! 💡🎧");  
  resetStandbyTimer();  
@@ -3484,7 +3436,7 @@
  }  
  }  
 
-
+ /* --- FUNCIONES WRAPPER TÁCTILES --- */  
  function handleDashClick(e, actionType) {  
  if (e) {  
  e.preventDefault();  
@@ -3498,7 +3450,6 @@
  else if (actionType === 'admin') promptAdminAccess();  
  }  
 
-
  function openQrModal() {  
  const appUrl = "https://www.welovelivemusic.es";  
  const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(appUrl)}`;  
@@ -3508,14 +3459,12 @@
  history.pushState({ screen: 'qrModal' }, '', '');  
  }  
 
-
  function closeQrModal() {  
  const modal = document.getElementById('qrModal');  
  if (modal.style.display === 'flex') {  
  modal.style.display = 'none';  
  }  
  }  
-
 
  function shareQrLink() {  
  const appUrl = "https://www.welovelivemusic.es";  
@@ -3534,7 +3483,6 @@
  }  
  }  
 
-
  function handlePollBannerClick(e) {  
  if (e) {  
  e.preventDefault();  
@@ -3543,7 +3491,6 @@
  }  
  openPollModal();  
  }  
-
 
  function handleContestBadgeClick(e) {  
  if (e) {  
@@ -3554,7 +3501,6 @@
  openContestModal();  
  }  
 
-
  function handleMenuBack(e, targetTab) {  
  if (e) {  
  e.preventDefault();  
@@ -3563,7 +3509,6 @@
  }  
  switchTab(targetTab, true);  
  }  
-
 
  function handleActionBtn(e, actionType) {  
  if (e) {  
@@ -3577,7 +3522,6 @@
  else if (actionType === 'clear') clearQueueSecure();  
  }  
 
-
  function handleAdminMenuBtn(e, modalType) {  
  if (e) {  
  e.preventDefault();  
@@ -3586,7 +3530,6 @@
  }  
  openAdminModal(modalType);  
  }  
-
 
  function handleModalClose(e, modalType) {  
  if (e) {  
@@ -3597,7 +3540,6 @@
  closeAdminModal(modalType);  
  }  
 
-
  function handleColorEffect(e, colorVal) {  
  if (e) {  
  e.preventDefault();  
@@ -3606,7 +3548,6 @@
  }  
  setAdminEffect('color', colorVal);  
  }  
-
 
  function handleLaunchPoll(e) {  
  if (e) {  
@@ -3617,7 +3558,6 @@
  launchExpressPoll();  
  }  
 
-
  function handleClosePoll(e) {  
  if (e) {  
  e.preventDefault();  
@@ -3626,7 +3566,6 @@
  }  
  closeExpressPoll();  
  }  
-
 
  function handleResetPoll(e) {  
  if (e) {  
@@ -3637,7 +3576,6 @@
  resetExpressPoll();  
  }  
 
-
  function handleToggleContest(e) {  
  if (e) {  
  e.preventDefault();  
@@ -3646,7 +3584,6 @@
  }  
  toggleContestState();  
  }  
-
 
  function handleClearContest(e) {  
  if (e) {  
@@ -3657,7 +3594,7 @@
  clearContestParticipants();  
  }  
 
-
+ /* --- FUNCIONES PARA ABRIR Y CERRAR MODALES ADMIN --- */  
  function openAdminModal(type) {  
  if (!isAdminModeActive) return;  
  if (type === 'contest') {  
@@ -3674,7 +3611,6 @@
  }  
  }  
 
-
  function closeAdminModal(type) {  
  if (type === 'contest') {  
  document.getElementById('adminContestModal').style.display = 'none';  
@@ -3687,7 +3623,7 @@
  }  
  }  
 
-
+ /* --- LÓGICA DE ENCUESTA EXPRESS --- */  
  function launchExpressPoll() {  
  if (!isAdminModeActive) return;  
  const question = document.getElementById('adminPollQuestion').value.trim() || '¿Qué estilo ponemos ahora?';  
@@ -3696,11 +3632,9 @@
  const opt3 = document.getElementById('adminPollOpt3').value.trim() || 'Opción 3';  
  const opt4 = document.getElementById('adminPollOpt4').value.trim() || 'Opción 4';  
 
-
  pollRef.once('value', (snapshot) => {  
  const currentData = snapshot.val() || {};  
  const hasExistingVotes = (currentData.votes1 || 0) + (currentData.votes2 || 0) + (currentData.votes3 || 0) + (currentData.votes4 || 0) > 0;  
-
 
  pollRef.set({  
  active: true,  
@@ -3722,7 +3656,6 @@
  });  
  }  
 
-
  function closeExpressPoll() {  
  if (!isAdminModeActive) return;  
  pollRef.once('value', (snapshot) => {  
@@ -3739,7 +3672,6 @@
  });  
  }  
 
-
  function resetExpressPoll() {  
  if (!isAdminModeActive) return;  
  if (!confirm("¿Seguro que quieres REINICIAR la encuesta? Se pondrán todos los votos a 0 y se retirará de las pantallas de la sala.")) {  
@@ -3751,11 +3683,9 @@
  const opt3 = document.getElementById('adminPollOpt3').value.trim() || 'Opción 3';  
  const opt4 = document.getElementById('adminPollOpt4').value.trim() || 'Opción 4';  
 
-
  const newPollId = Date.now();  
  localStorage.removeItem('user_poll_vote');  
  localStorage.setItem('user_poll_id', String(newPollId));  
-
 
  pollRef.set({  
  active: false,  
@@ -3776,13 +3706,11 @@
  });  
  }  
 
-
  function openPollModal() {  
  const modal = document.getElementById('pollModal');  
  modal.style.display = 'flex';  
  history.pushState({ screen: 'pollModal' }, '', '');  
  }  
-
 
  function closePollModal() {  
  const modal = document.getElementById('pollModal');  
@@ -3791,18 +3719,15 @@
  }  
  }  
 
-
  function votePoll(optionNumber) {  
  pollRef.once('value', (snapshot) => {  
  const data = snapshot.val();  
  if (!data || !data.active) return;  
 
-
  if (data.closed) {  
  alert("🔒 La encuesta ya está cerrada. Solo puedes consultar los resultados finales.");  
  return;  
  }  
-
 
  const hasVoted = localStorage.getItem('user_poll_vote');  
  if (hasVoted) {  
@@ -3810,10 +3735,8 @@
  return;  
  }  
 
-
  let updates = {};  
  updates[`votes${optionNumber}`] = (data[`votes${optionNumber}`] || 0) + 1;  
-
 
  pollRef.update(updates).then(() => {  
  localStorage.setItem('user_poll_vote', optionNumber.toString());  
@@ -3825,24 +3748,20 @@
  });  
  }  
 
-
  function setAdminEffect(type, value) {  
  adminEffectRef.set({ type: type, value: value });  
  }  
-
 
  function updateAdminButtonsUI(effectData) {  
  document.querySelectorAll('.light-color-tile, .admin-action-btn').forEach(btn => {  
  if (btn.id !== 'toggleContestBtnAdminModal' && btn.id !== 'runDrawBtnModal') btn.classList.remove('active');  
  });  
 
-
  const resetBtn = document.getElementById('btnResetLight');  
  if (!effectData || effectData.type === 'off') {  
  if (resetBtn) resetBtn.classList.add('active');  
  return;  
  }  
-
 
  if (effectData.type === 'color') {  
  const btn = document.querySelector(`.light-color-tile[data-effect-val="${effectData.value}"]`);  
@@ -3856,12 +3775,10 @@
  }  
  }  
 
-
  function handleOverlayDoubleTap(e) {  
  e.stopPropagation();  
  const now = Date.now();  
  const overlay = document.getElementById('room-light-overlay');  
-
 
  if (now - lastOverlayTapTime < 800) {  
  userDismissedLight = true;  
@@ -3879,18 +3796,15 @@
  }  
  }  
 
-
  function applyAdminEffectLocally(effectData) {  
  if (effectInterval) {  
  clearInterval(effectInterval);  
  effectInterval = null;  
  }  
 
-
  const overlay = document.getElementById('room-light-overlay');  
  const adminLightsModal = document.getElementById('adminLightsModal');  
  const isInAdminLights = adminLightsModal && adminLightsModal.style.display === 'flex';  
-
 
  if (!effectData || effectData.type === 'off' || isInAdminLights || userDismissedLight) {  
  overlay.classList.remove('active', 'heart-active', 'photo-active', 'show-notice');  
@@ -3898,9 +3812,7 @@
  return;  
  }  
 
-
  overlay.classList.add('active');  
-
 
  if (effectData.type === 'color') {  
  overlay.classList.remove('heart-active', 'photo-active');  
@@ -3930,7 +3842,6 @@
  }  
  }  
 
-
  function openContestModal() {  
  if (!isContestOpen && !isAdminModeActive) {  
  alert("⛔ El sorteo está desactivado temporalmente por el Administrador.");  
@@ -3947,14 +3858,12 @@
  setTimeout(() => document.getElementById('contestUserInput').focus(), 100);  
  }  
 
-
  function closeContestModal() {  
  const contestModal = document.getElementById('contestModal');  
  if (contestModal.style.display === 'flex') {  
  contestModal.style.display = 'none';  
  }  
  }  
-
 
  function checkSavedUserBadge() {  
  const savedName = localStorage.getItem('user_contest_name');  
@@ -3969,12 +3878,10 @@
  syncCompactLayoutState();  
  }  
 
-
  function submitContestEntry(event) {  
  event.preventDefault();  
  const userName = document.getElementById('contestUserInput').value.trim();  
  if (!userName) return;  
-
 
  contestRef.once('value', (snapshot) => {  
  const data = snapshot.val() || {};  
@@ -3986,13 +3893,11 @@
  }  
  }  
 
-
  if (nameExists) {  
  alert(`⚠️ El nombre o alias "${userName}" ya está registrado en el sorteo. Por favor, elige uno diferente.`);  
  document.getElementById('contestUserInput').focus();  
  return;  
  }  
-
 
  const userKey = btoa(unescape(encodeURIComponent(userName))).replace(/[/+:=]/g, '_');  
  contestRef.child(userKey).set({  
@@ -4007,7 +3912,6 @@
  });  
  }  
 
-
  function toggleContestState() {  
  if (!isAdminModeActive) return;  
  const newState = !isContestOpen;  
@@ -4019,12 +3923,10 @@
  });  
  }  
 
-
  function updateContestButtonUI() {  
  const btn = document.getElementById('toggleContestBtnAdminModal');  
  const contestDashBtn = document.getElementById('dashContestBtn');  
  const contestModal = document.getElementById('contestModal');  
-
 
  if (isContestOpen) {  
  if (btn) {  
@@ -4055,21 +3957,17 @@
  }  
  }  
 
-
  function openPublicParticipantsModal() {  
  const modal = document.getElementById('publicParticipantsModal');  
  const container = document.getElementById('publicParticipantsListContainer');  
 
-
  modal.style.display = 'flex';  
  history.pushState({ screen: 'publicParticipantsModal' }, '', '');  
-
 
  if (globalContestParticipants.length === 0) {  
  container.innerHTML = '<p class="status-msg">No hay participantes apuntados todavía.</p>';  
  return;  
  }  
-
 
  container.innerHTML = globalContestParticipants.map((p, index) => `  
  <div class="queue-item">  
@@ -4081,7 +3979,6 @@
  `).join('');  
  }  
 
-
  function closePublicParticipantsModal() {  
  const modal = document.getElementById('publicParticipantsModal');  
  if (modal.style.display === 'flex') {  
@@ -4089,14 +3986,12 @@
  }  
  }  
 
-
  function clearWinnerBannerOnly() {
  if (!isAdminModeActive) return;
  winnerRef.remove().then(() => {
  alert("🧹 Cartel de ganador ocultado de las pantallas.");
  });
  }
-
 
  function clearContestParticipants() {  
  if (confirm("¿Estás seguro de borrar toda la lista de participantes del concurso?")) {  
@@ -4110,7 +4005,7 @@
  }  
  }  
 
-
+ /* --- CONTROLADOR RULETA DE 5 SEGUNDOS --- */
  function handleRunDrawClick(e) {
  if (e) {
  e.preventDefault();
@@ -4119,7 +4014,6 @@
  runLuckyDraw();
  }
 
-
  function runLuckyDraw() {  
  const now = Date.now();
  if (isDrawInProgress || (now - lastDrawTriggerTime < 3000)) {
@@ -4127,30 +4021,24 @@
  }
  lastDrawTriggerTime = now;
 
-
  if (globalContestParticipants.length === 0) {  
  alert("⚠️ No hay ningún participante registrado en el concurso todavía.");  
  return;  
  }  
 
-
  if (!confirm("¿Quieres lanzar la Ruleta en directo y sortear el ganador ahora?")) {  
  return;  
  }  
 
-
  isDrawInProgress = true;
  lastDrawTriggerTime = Date.now();
-
 
  const winner = globalContestParticipants[Math.floor(Math.random() * globalContestParticipants.length)];  
  const namesPool = globalContestParticipants.map(p => p.name);
  const drawId = Date.now();
 
-
  winnerRef.remove();
  closeAdminModal('contest');
-
 
  drawEventRef.set({
  id: drawId,
@@ -4158,13 +4046,11 @@
  participants: namesPool
  });
 
-
  setTimeout(() => {
  winnerRef.set(winner.name);
  isDrawInProgress = false;
  }, 5100);
  }  
-
 
  function startVisualRouletteSequence(winnerName, participantsList) {
  const standbyScreen = document.getElementById('standby-screen');
@@ -4172,7 +4058,6 @@
  standbyScreen.classList.add('inactive');
  }
  resetStandbyTimer();
-
 
  const overlay = document.getElementById('rouletteOverlay');
  const statusBadge = document.getElementById('rouletteStatusBadge');
@@ -4182,26 +4067,21 @@
  const slotName = document.getElementById('rouletteSlotName');
  const closeBtn = document.getElementById('closeRouletteBtn');
 
-
  if (rouletteSpinInterval) clearInterval(rouletteSpinInterval);
  if (rouletteCountdownInterval) clearInterval(rouletteCountdownInterval);
-
 
  const pool = (participantsList && participantsList.length > 0)
  ? participantsList
  : (globalContestParticipants.length > 0 ? globalContestParticipants.map(p => p.name) : [winnerName]);
-
 
  slotWindow.classList.remove('winner-revealed');
  statusBadge.textContent = '🎲 SORTEO EN DIRECTO EN SALA';
  slotLabel.textContent = 'Girando ruleta de participantes...';
  closeBtn.style.display = 'none';
 
-
  let secondsLeft = 5;
  countdownEl.textContent = secondsLeft;
  overlay.style.display = 'flex';
-
 
  let idx = 0;
  rouletteSpinInterval = setInterval(() => {
@@ -4209,7 +4089,6 @@
  slotName.textContent = randomName;
  idx++;
  }, 75);
-
 
  rouletteCountdownInterval = setInterval(() => {
  secondsLeft--;
@@ -4221,14 +4100,12 @@
  rouletteCountdownInterval = null;
  rouletteSpinInterval = null;
 
-
  countdownEl.textContent = '🏆';
  statusBadge.textContent = '🎉 ¡TENEMOS GANADOR/A EN LA SALA! 🎉';
  slotWindow.classList.add('winner-revealed');
  slotLabel.textContent = '⭐ PREMIO PARA ⭐';
  slotName.textContent = winnerName.toUpperCase();
  closeBtn.style.display = 'block';
-
 
  if ('vibrate' in navigator) {
  try { navigator.vibrate([200, 100, 400]); } catch (e) {}
@@ -4237,13 +4114,12 @@
  }, 1000);
  }
 
-
  function closeRouletteOverlay() {
  if (rouletteSpinInterval || rouletteCountdownInterval) return;
  document.getElementById('rouletteOverlay').style.display = 'none';
  }
 
-
+ /* --- LÓGICA DE ESTADÍSTICAS GLOBALES --- */  
  function openGlobalStatsModal() {  
  if (!isAdminModeActive) return;  
  const modal = document.getElementById('globalStatsModal');  
@@ -4253,10 +4129,8 @@
  modal.style.display = 'flex';  
  history.pushState({ screen: 'globalStatsModal' }, '', '');  
 
-
  statsRef.once('value', (statsSnap) => {  
  const totalVisits = statsSnap.val() || 0;  
-
 
  historyRef.once('value', (historySnap) => {  
  const histData = historySnap.val();  
@@ -4272,11 +4146,9 @@
  return;  
  }  
 
-
  let totalSessions = 0;  
  let songCounts = {};  
  let monthCounts = {};  
-
 
  for (let key in histData) {  
  totalSessions++;  
@@ -4289,7 +4161,6 @@
  monthCounts[monthYearKey] = (monthCounts[monthYearKey] || 0) + 1;  
  }  
  }  
-
 
  if (session.items && Array.isArray(session.items)) {  
  session.items.forEach(song => {  
@@ -4309,9 +4180,7 @@
  }  
  }  
 
-
  let sortedSongs = Object.values(songCounts).sort((a, b) => b.totalRequests - a.totalRequests).slice(0, 5);  
-
 
  container.innerHTML = `  
  <div class="instructions-box" style="margin-bottom: 12px; display: flex !important;">  
@@ -4321,7 +4190,6 @@
  📁 Sesiones musicales guardadas: <strong>${totalSessions}</strong>  
  </div>  
  </div>  
-
 
  <div class="history-item-title" style="margin-bottom: 8px;">🏆 Top 5 Temas Más Pedidos del Año</div>  
  ${sortedSongs.length > 0 ? sortedSongs.map((s, idx) => `  
@@ -4350,7 +4218,6 @@
  alert("⚠️ No tienes permisos de administrador activos.");  
  return;  
  }  
-
 
  const newState = !areRequestsOpen;  
  settingsRef.set(newState).then(() => {  
@@ -4480,12 +4347,10 @@
  viewSavedList(listId);  
  }  
 
-
  function exportCurrentActiveListToPDF() {  
  if (!currentViewingListId) return;  
  exportSavedListToPDF(currentViewingListId);  
  }  
-
 
  function deleteHistoryListDirecta(e, listId, listName) {  
  if (e) {  
@@ -4495,7 +4360,6 @@
  }  
  deleteHistoryList(listId, listName);  
  }  
-
 
  function viewSavedList(listId) {  
  const container = document.getElementById('savedListsContainer');  
@@ -4549,7 +4413,6 @@
  });  
  }  
 
-
  function exportSavedListToPDF(listId) {  
  historyRef.child(listId).once('value', (snapshot) => {  
  const listData = snapshot.val();  
@@ -4558,7 +4421,6 @@
  return;  
  }  
 
-
  const container = document.getElementById('savedListsContainer');  
  const previousHTML = container.innerHTML;  
  const modalTitle = document.getElementById('historyModalTitle');  
@@ -4566,10 +4428,8 @@
  const prevTitleHTML = modalTitle.innerHTML;  
  const prevSubText = modalSubtitle.textContent;  
 
-
  modalTitle.innerHTML = `<span>🎵 ${listData.name} (${listData.date})</span>`;  
  modalSubtitle.textContent = `Listado oficial de canciones (${listData.items.length} temas)`;  
-
 
  container.innerHTML = listData.items.map((item, index) => {  
  const absoluteIndex = index + 1;  
@@ -4593,9 +4453,7 @@
  `;  
  }).join('');  
 
-
  window.print();  
-
 
  setTimeout(() => {  
  modalTitle.innerHTML = prevTitleHTML;  
@@ -4605,14 +4463,12 @@
  });  
  }  
 
-
  function handleHistoryBackAction(e) {  
  if (e) {  
  e.preventDefault();  
  e.stopPropagation();  
  if (e.stopImmediatePropagation) e.stopImmediatePropagation();  
  }  
-
 
  const historyModal = document.getElementById('historyModal');  
  if (historyModal.dataset.viewingList === 'true') {  
@@ -4676,12 +4532,10 @@
  document.getElementById('tabAdmin').classList.add('active');  
  }  
 
-
  adminEffectRef.once('value', (snapshot) => {  
  applyAdminEffectLocally(snapshot.val());  
  updateAdminButtonsUI(snapshot.val());  
  });  
-
 
  if (pushState) {  
  history.pushState({ screen: tabName }, '', '');  
@@ -4727,7 +4581,6 @@
  executeSearch(query);  
  }, 500);  
  }  
-
 
  function modalClearSearchInput() {  
  const modalSongInput = document.getElementById('modalSongInput');  
@@ -4804,7 +4657,6 @@
  const modal = document.getElementById('searchResultsModal');  
  const modalInput = document.getElementById('modalSongInput');  
 
-
  if (query) {  
  modalInput.value = query;  
  document.getElementById('modalClearSearchBtn').style.display = 'block';  
@@ -4820,7 +4672,6 @@
  loadHistory();  
  }  
 
-
  function closeSearchResultsModal() {  
  const modal = document.getElementById('searchResultsModal');  
  if (modal.style.display === 'flex') {  
@@ -4829,10 +4680,8 @@
  }  
  }  
 
-
  function renderResults(results, query) {  
  const resultsDiv = document.getElementById('modalResultsList');  
-
 
  let closedNoticeHtml = '';  
  if (!areRequestsOpen) {  
@@ -4843,7 +4692,6 @@
  </div>  
  `;  
  }  
-
 
  if (!results || results.length === 0) {  
  resultsDiv.innerHTML = closedNoticeHtml + `  
@@ -4869,7 +4717,6 @@
  return true;
  });
 
-
  if (filteredResults.length === 0) {
  resultsDiv.innerHTML = closedNoticeHtml + `
  <div class="manual-fallback-box">
@@ -4880,9 +4727,7 @@
  return;
  }
 
-
  results = filteredResults;
-
 
  results.sort((a, b) => {  
  const yearA = a.releaseDate ? new Date(a.releaseDate).getFullYear() : 9999;  
@@ -5120,13 +4965,11 @@
  function triggerDjAlert(reasonText) {  
  if (!isAdminModeActive) return;  
 
-
  if ('vibrate' in navigator) {  
  try {  
  navigator.vibrate([400, 150, 400, 150, 600]);  
  } catch (e) {}  
  }  
-
 
  try {  
  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();  
@@ -5444,7 +5287,6 @@
  imageModal.style.display = 'none';  
  }  
 
-
  const resultsModal = document.getElementById('searchResultsModal');  
  if (resultsModal.style.display === 'flex') {  
  resultsModal.style.display = 'none';  
@@ -5452,13 +5294,11 @@
  resultsModal.style.display = 'flex';  
  }  
 
-
  const query = document.getElementById('modalSongInput').value.trim();  
  if (query && searchCache.has(query.toLowerCase())) {  
  renderResults(searchCache.get(query.toLowerCase()), query);  
  }  
  }  
-
 
  function closeModalFromPopState() {  
  const audioElement = document.getElementById('modalAudio');  
@@ -5468,14 +5308,12 @@
  }  
  document.getElementById('imageModal').style.display = 'none';  
 
-
  const resultsModal = document.getElementById('searchResultsModal');  
  if (resultsModal.style.display === 'flex') {  
  resultsModal.style.display = 'none';  
  void resultsModal.offsetHeight;  
  resultsModal.style.display = 'flex';  
  }  
-
 
  const query = document.getElementById('modalSongInput').value.trim();  
  if (query && searchCache.has(query.toLowerCase())) {  
@@ -5513,6 +5351,7 @@
  openSearchResultsModal(query);  
  }  
  
+ /* --- FUNCIONES DE LAS 5 NUEVAS CARACTERÍSTICAS --- */
  let lastHypeClickTime = 0;
  function handleHypeTouch(e, emoji) {
  if (e) {
@@ -5522,8 +5361,11 @@
  sendHypeReaction(emoji);
  }
 
-
  function sendHypeReaction(emoji) {
+ if (!isHypeOpen) {
+ alert("⛔ Las reacciones de Hype están desactivadas temporalmente por el Administrador.");
+ return;
+ }
  const now = Date.now();
  if (now - lastHypeClickTime < 350) return;
  lastHypeClickTime = now;
@@ -5532,6 +5374,48 @@
  hypeRef.child('lastEvent').set({ id: now, emoji: emoji });
  }
 
+ function toggleHypeState() {  
+ if (!isAdminModeActive) return;  
+ const newState = !isHypeOpen;  
+ hypeOpenRef.set(newState).then(() => {  
+ alert(newState ? "¡Hype ABIERTO para el público! 🟢" : "¡Hype CERRADO para el público! ⛔");  
+ });  
+ }  
+
+ function handleToggleHype(e) {  
+ if (e) {  
+ e.preventDefault();  
+ e.stopPropagation();  
+ }  
+ toggleHypeState();  
+ }  
+
+ function updateHypeButtonUI() {  
+ const btn = document.getElementById('toggleHypeBtnAdminModal');  
+ const hypeBarEl = document.querySelector('.hype-bar');
+
+ if (isHypeOpen) {  
+ if (btn) {  
+ btn.textContent = "🔒 Botón Hype: ABIERTO";  
+ btn.style.background = "var(--success)";  
+ btn.style.color = "#000000";  
+ }  
+ if (hypeBarEl) {
+ hypeBarEl.style.opacity = '1';
+ hypeBarEl.style.pointerEvents = 'auto';
+ }
+ } else {  
+ if (btn) {  
+ btn.textContent = "🔓 Botón Hype: CERRADO";  
+ btn.style.background = "var(--danger)";  
+ btn.style.color = "#ffffff";  
+ }  
+ if (hypeBarEl) {
+ hypeBarEl.style.opacity = '0.5';
+ hypeBarEl.style.pointerEvents = 'none';
+ }
+ }  
+ }
 
  function spawnFloatingHypeEmoji(emoji) {
  const container = document.getElementById('hype-floating-container');
@@ -5546,7 +5430,6 @@
  }, 2600);
  }
 
-
  function handleDecadeTouch(e, decade) {
  if (e) {
  e.preventDefault();
@@ -5554,7 +5437,6 @@
  }
  setDecadeFilter(decade);
  }
-
 
  function setDecadeFilter(decade) {
  currentDecadeFilter = decade;
@@ -5567,7 +5449,6 @@
  }
  }
 
-
  function rememberMySongKey(songKey) {
  try {
  const list = JSON.parse(localStorage.getItem('my_requested_songs') || '[]');
@@ -5577,7 +5458,6 @@
  }
  } catch (e) {}
  }
-
 
  function notifySongUpNext(songId, event) {
  if (event) event.stopPropagation();
@@ -5596,7 +5476,6 @@
  });
  }
 
-
  function showUpNextAlertModal(alertData, isMine) {
  const standbyScreen = document.getElementById('standby-screen');
  if (standbyScreen && !standbyScreen.classList.contains('inactive')) {
@@ -5613,11 +5492,9 @@
  }
  }
 
-
  function closeUpNextOverlay() {
  document.getElementById('upNextOverlay').style.display = 'none';
  }
-
 
  function triggerPhotoMomentAlert(e) {
  if (e) {
@@ -5628,7 +5505,6 @@
  setAdminEffect('photo_countdown', String(Date.now()));
  closeAdminModal('lights');
  }
-
 
  function runLocalPhotoCountdown() {
  const standbyScreen = document.getElementById('standby-screen');
@@ -5667,7 +5543,6 @@
  }, 1000);
  }
 
-
  function handleVersusLaunch(e) {
  if (e) {
  e.preventDefault();
@@ -5675,7 +5550,6 @@
  }
  launchTop2VersusBattle();
  }
-
 
  function handleResetHype(e) {
  if (e) {
@@ -5685,7 +5559,6 @@
  resetHypeCounter();
  }
 
-
  function resetHypeCounter() {
  if (!isAdminModeActive) return;
  if (confirm("¿Seguro que quieres poner el contador de Hype a 0?")) {
@@ -5694,7 +5567,6 @@
  });
  }
  }
-
 
  function launchTop2VersusBattle() {
  if (!isAdminModeActive) return;
@@ -5708,7 +5580,6 @@
  const newPollId = Date.now();
  localStorage.removeItem('user_poll_vote');
  localStorage.setItem('user_poll_id', String(newPollId));
-
 
  pollRef.set({
  active: true,
@@ -5736,7 +5607,7 @@
  }, 60000);
  });
  }
- </script>  
 
+ </script>  
 </body>  
 </html>
