@@ -6566,15 +6566,18 @@
 
  </script>  
 
+
 <script>
 let touchStartX = 0;
 let touchStartY = 0;
+let touchStartTime = 0;
 let isScrolling = false;
 
 window.addEventListener('touchstart', (e) => {
     if (e.touches && e.touches.length > 0) {
         touchStartX = e.touches[0].clientX;
         touchStartY = e.touches[0].clientY;
+        touchStartTime = Date.now();
         isScrolling = false;
     }
 }, { passive: true });
@@ -6583,9 +6586,16 @@ window.addEventListener('touchmove', (e) => {
     if (e.touches && e.touches.length > 0) {
         const moveX = Math.abs(e.touches[0].clientX - touchStartX);
         const moveY = Math.abs(e.touches[0].clientY - touchStartY);
-        if (moveX > 8 || moveY > 8) {
+        if (moveX > 6 || moveY > 6) {
             isScrolling = true;
         }
+    }
+}, { passive: true });
+
+window.addEventListener('touchend', (e) => {
+    const duration = Date.now() - touchStartTime;
+    if (duration > 400) { // If finger held down for a while or slow drag
+        isScrolling = true;
     }
 }, { passive: true });
 
