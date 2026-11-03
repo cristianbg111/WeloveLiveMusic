@@ -185,18 +185,48 @@
   
  .header-row {  
  display: flex;  
- justify-content: space-between;  
- align-items: center;  
+ flex-direction: column;  
+ justify-content: center;  
+ align-items: stretch;  
  flex: 1;  
  min-width: 0;  
+ gap: 4px;  
+ }  
+
+ .header-top-bar {  
+ display: flex;  
+ justify-content: space-between;  
+ align-items: center;  
+ width: 100%;  
  gap: 6px;  
+ min-width: 0;  
+ }  
+
+ .header-actions {  
+ display: flex;  
+ gap: 4px;  
+ align-items: center;  
+ flex-shrink: 0;  
+ }  
+
+ .brand-header .live-sub-badge {  
+ margin-bottom: 0;  
+ font-size: 0.55rem;  
+ letter-spacing: 0.6px;  
+ white-space: nowrap;  
+ }  
+
+ .brand-header .theme-btn {  
+ padding: 4px 8px;  
+ font-size: 0.62rem;  
+ border-radius: 9px;  
  }  
 
  .title-stack {  
  display: flex;  
  flex-direction: column;  
  align-items: flex-start;  
- flex: 1;  
+ width: 100%;  
  min-width: 0;  
  }  
 
@@ -234,13 +264,15 @@
   
  h1 {   
  font-family: 'Syne', sans-serif;  
- font-size: clamp(0.65rem, 2.8vw, 0.78rem);   
+ font-size: clamp(0.66rem, 2.9vw, 0.82rem);   
  font-weight: 800;   
  color: var(--text);   
  letter-spacing: -0.2px;  
  text-transform: uppercase;  
  margin: 0;  
  white-space: nowrap;  
+ overflow: hidden;  
+ text-overflow: ellipsis;  
  line-height: 1.15;  
  width: 100%;  
  }  
@@ -2592,16 +2624,18 @@
  <img src="logo.jpg" alt="We Love The Remember" class="app-logo">  
  </div>
  <div class="header-row">  
- <div class="title-stack">
+ <div class="header-top-bar">
  <div class="live-sub-badge">
  <span class="mini-eq"><i></i><i></i><i></i></span> LIVE DJ DECK
  </div>
- <h1>WE LOVE LIVE MUSIC</h1>  
- </div>
- <div style="display: flex; gap: 5px; align-items: center; flex-shrink: 0;">
+ <div class="header-actions">
  <button class="theme-btn" id="backToPortalBtn" ontouchend="handleMenuBack(event, 'portal')" onclick="switchTab('portal', true)">⬅️ Inicio</button>
  <button class="theme-btn" id="themeToggle">☀️ Claro</button>
  </div>  
+ </div>
+ <div class="title-stack">
+ <h1>WE LOVE LIVE MUSIC</h1>  
+ </div>
  </div>  
  </div>  
   
