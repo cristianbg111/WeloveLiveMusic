@@ -3200,7 +3200,7 @@
  <div class="results-modal-content" onclick="event.stopPropagation()">  
  <div class="results-modal-header">  
  <span class="results-modal-title" id="searchResultsModalTitle">💿 Buscador Musical</span>  
- <button class="close-results-btn" onclick="closeSearchResultsModal()">✕ Cerrar</button>  
+ <button type="button" class="close-results-btn" ontouchend="if(typeof isScrolling==='undefined'||!isScrolling){event.preventDefault();event.stopPropagation();closeSearchResultsModal();}" onclick="closeSearchResultsModal()">✕ Cerrar</button>  
  </div>  
 
  <form class="search-box" id="modalSearchForm" action="javascript:void(0);" style="margin-bottom: 6px;">  
@@ -3233,7 +3233,7 @@
  <div class="modal" id="imageModal">  
  <div class="modal-content" onclick="event.stopPropagation()">  
    
- <button class="back-btn-top" onclick="closeModal()">⬅️ Volver a Resultados</button>  
+ <button type="button" class="back-btn-top" ontouchend="if(typeof isScrolling==='undefined'||!isScrolling){event.preventDefault();event.stopPropagation();closeModal();}" onclick="closeModal()">⬅️ Volver a Resultados</button>  
 
  <img id="modalImg" src="" alt="Portada HD">  
  <div class="modal-title" id="modalTitle"></div>  
@@ -3919,6 +3919,12 @@
  const pollModal = document.getElementById('pollModal');  
  const qrModal = document.getElementById('qrModal');  
 
+ const quickReqModal = document.getElementById('quickRequestModal');
+ if (quickReqModal && quickReqModal.style.display === 'flex') {
+ closeQuickRequestModal();
+ return;
+ }
+
  if (imageModal.style.display === 'flex') {  
  closeModalFromPopState();  
  return;  
@@ -4023,6 +4029,7 @@
  standbyScreen.classList.add('inactive');  
 
  setTimeout(() => {  
+ closeQuickRequestModal();
  closeModal();  
  closeManualModal();  
  closeSearchResultsModal();  
@@ -5556,6 +5563,36 @@
  }  
  }  
 
+ let renderedSongsMap = {};
+ let lastSongBtnTouchTime = 0;
+ let pendingSongAction = null;
+
+ function escapeAttrSafe(str) {
+ return String(str || '')
+ .replace(/&/g, '&amp;')
+ .replace(/"/g, '&quot;')
+ .replace(/'/g, '&#39;')
+ .replace(/</g, '&lt;')
+ .replace(/>/g, '&gt;');
+ }
+
+ function safeStorageGet(key) {
+ try { return localStorage.getItem(key); } catch (e) { return null; }
+ }
+
+ function safeStorageSet(key, val) {
+ try { localStorage.setItem(key, val); } catch (e) {}
+ }
+
+ function makeSongKey(title, artist) {
+ try {
+ return btoa(unescape(encodeURIComponent((title || '') + " - " + (artist || ''))))
+ .replace(/[/+:=]/g, '_');
+ } catch (e) {
+ return String((title || '') + '_' + (artist || '')).replace(/[^a-zA-Z0-9_-]/g, '_');
+ }
+ }
+
  function renderResults(results, query) {  
  const resultsDiv = document.getElementById('modalResultsList');  
 
@@ -5569,11 +5606,13 @@
  `;  
  }  
 
+ const safeQueryAttr = escapeAttrSafe(query);
+
  if (!results || results.length === 0) {  
  resultsDiv.innerHTML = closedNoticeHtml + `  
  <div class="manual-fallback-box">  
  <div class="manual-fallback-text">⚠️ Esa canción no está disponible o no se encuentra en el catálogo.</div>  
- <button class="manual-trigger-btn" onclick="openManualModalWithQuery('${query}')">➕ Introducir manualmente</button>  
+ <button type="button" class="manual-trigger-btn" data-manual-q="${safeQueryAttr}" ontouchend="handleManualBtnTouch(event, this)" onclick="handleManualBtnClick(event, this)">➕ Introducir manualmente</button>  
  </div>  
  `;  
  return;  
@@ -5581,10 +5620,10 @@
   
  saveToHistory(query);  
   
- let filteredResults = results.filter((song) => {
+ let filteredResults = results.filter(function(song) {
  if (currentDecadeFilter === 'all') return true;
  const rDate = song.releaseDate ? new Date(song.releaseDate) : null;
- const y = rDate && !isNaN(rDate) ? rDate.getFullYear() : 0;
+ const y = rDate && !isNaN(rDate.getTime()) ? rDate.getFullYear() : 0;
  if (!y) return false;
  if (currentDecadeFilter === '80s') return y >= 1980 && y <= 1989;
  if (currentDecadeFilter === '90s') return y >= 1990 && y <= 1999;
@@ -5597,65 +5636,134 @@
  resultsDiv.innerHTML = closedNoticeHtml + `
  <div class="manual-fallback-box">
  <div class="manual-fallback-text">⚠️ No hay resultados en la década seleccionada (${currentDecadeFilter.toUpperCase()}). Prueba marcando "🌐 Todas" o introdúcela manualmente.</div>
- <button class="manual-trigger-btn" onclick="openManualModalWithQuery('${query}')">➕ Introducir manualmente</button>
+ <button type="button" class="manual-trigger-btn" data-manual-q="${safeQueryAttr}" ontouchend="handleManualBtnTouch(event, this)" onclick="handleManualBtnClick(event, this)">➕ Introducir manualmente</button>
  </div>
  `;
  return;
  }
 
- results = filteredResults;
+ results = filteredResults.slice();
 
- results.sort((a, b) => {  
- const yearA = a.releaseDate ? new Date(a.releaseDate).getFullYear() : 9999;  
- const yearB = b.releaseDate ? new Date(b.releaseDate).getFullYear() : 9999;  
+ results.sort(function(a, b) {  
+ const dA = a.releaseDate ? new Date(a.releaseDate) : null;
+ const dB = b.releaseDate ? new Date(b.releaseDate) : null;
+ const yearA = dA && !isNaN(dA.getTime()) ? dA.getFullYear() : 9999;  
+ const yearB = dB && !isNaN(dB.getTime()) ? dB.getFullYear() : 9999;  
  return Number(yearA) - Number(yearB);  
  });  
   
  resultsDiv.innerHTML = closedNoticeHtml + `  
  <div class="manual-fallback-box" style="margin-bottom: 12px; background: rgba(139, 92, 246, 0.1); border-color: var(--badge-bg);">  
  <div class="manual-fallback-text">¿No encuentras la versión exacta que buscas?</div>  
- <button class="manual-trigger-btn" style="background: var(--badge-bg);" onclick="openManualModalWithQuery('${query}')">➕ Introducir manualmente</button>  
+ <button type="button" class="manual-trigger-btn" style="background: var(--badge-bg);" data-manual-q="${safeQueryAttr}" ontouchend="handleManualBtnTouch(event, this)" onclick="handleManualBtnClick(event, this)">➕ Introducir manualmente</button>  
  </div>  
- ` + results.map((song) => {  
+ ` + results.map(function(song) {  
  const releaseDate = song.releaseDate ? new Date(song.releaseDate) : null;  
- const year = releaseDate && !isNaN(releaseDate) ? releaseDate.getFullYear() : 'N/D';  
+ const year = releaseDate && !isNaN(releaseDate.getTime()) ? String(releaseDate.getFullYear()) : 'N/D';  
  const artwork100 = song.artworkUrl100 || 'https://via.placeholder.com/100?text=Sin+Imagen';  
  const artworkHD = song.artworkUrl100 ? song.artworkUrl100.replace('100x100bb', '1000x1000bb') : artwork100;  
  const previewAudio = song.previewUrl || '';  
- const genre = song.primaryGenreName || '';  
+ const genre = song.primaryGenreName || 'Live Music';  
+ const trackTitle = song.trackName || 'Sin título';
+ const artistName = song.artistName || 'Artista desconocido';
   
- const safeTitle = (song.trackName || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');  
- const safeArtist = (song.artistName || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');  
+ const songKey = makeSongKey(trackTitle, artistName);
+ renderedSongsMap[songKey] = {
+ songKey: songKey,
+ title: trackTitle,
+ artist: artistName,
+ artwork100: artwork100,
+ artworkHD: artworkHD,
+ previewAudio: previewAudio,
+ genre: genre,
+ year: year
+ };
   
  const disabledAttr = !areRequestsOpen ? 'disabled' : '';  
  const btnTitleAttr = !areRequestsOpen ? 'title="Las peticiones están desactivadas por el DJ"' : '';  
-  
- const songKey = btoa(unescape(encodeURIComponent(song.trackName + " - " + song.artistName)))  
- .replace(/[/+:=]/g, '_');  
- const existingQueueItem = globalQueueItems.find(item => item.id === songKey);  
+ const existingQueueItem = globalQueueItems.find(function(item) { return item.id === songKey; });  
    
  let actionButtonHtml = '';  
  if (existingQueueItem) {  
- actionButtonHtml = `<button class="vote-btn" ${disabledAttr} ${btnTitleAttr} onclick="voteSong('${songKey}', '${safeTitle}')">🔥 Votar (+1)</button>`;  
+ actionButtonHtml = `<button type="button" class="vote-btn" ${disabledAttr} ${btnTitleAttr} data-song-key="${escapeAttrSafe(songKey)}" ontouchend="handleSongActionTouch(event, this.getAttribute('data-song-key'), false)" onclick="handleSongActionClick(event, this.getAttribute('data-song-key'), false)">🔥 Votar (+1)</button>`;  
  } else {  
- actionButtonHtml = `<button class="request-btn" ${disabledAttr} ${btnTitleAttr} onclick="requestSong('${safeTitle}', '${safeArtist}', '${artwork100}', '${previewAudio}', '${genre}', '${year}')">➕ Pedir</button>`;  
+ actionButtonHtml = `<button type="button" class="request-btn" ${disabledAttr} ${btnTitleAttr} data-song-key="${escapeAttrSafe(songKey)}" ontouchend="handleSongActionTouch(event, this.getAttribute('data-song-key'), false)" onclick="handleSongActionClick(event, this.getAttribute('data-song-key'), false)">➕ Pedir</button>`;  
  }  
   
  return `  
  <div class="song-item">  
- <img src="${artwork100}" alt="${song.trackName}" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}', '${year}')">  
- <div class="song-info" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}', '${year}')">  
- <div class="song-title">${song.trackName}</div>  
- <div class="song-artist">${song.artistName}</div>  
+ <img src="${escapeAttrSafe(artwork100)}" alt="${escapeAttrSafe(trackTitle)}" data-song-key="${escapeAttrSafe(songKey)}" ontouchend="handleOpenModalTouch(event, this.getAttribute('data-song-key'))" onclick="handleOpenModalClick(event, this.getAttribute('data-song-key'))">  
+ <div class="song-info" data-song-key="${escapeAttrSafe(songKey)}" ontouchend="handleOpenModalTouch(event, this.getAttribute('data-song-key'))" onclick="handleOpenModalClick(event, this.getAttribute('data-song-key'))">  
+ <div class="song-title">${escapeHtmlStr(trackTitle)}</div>  
+ <div class="song-artist">${escapeHtmlStr(artistName)}</div>  
  </div>  
  <div class="action-buttons">  
- <span class="badge-year">${year}</span>  
+ <span class="badge-year">${escapeHtmlStr(year)}</span>  
  ${actionButtonHtml}  
  </div>  
  </div>  
  `;  
  }).join('');  
- }  
+ }
+
+ function handleManualBtnTouch(e, btnEl) {
+ if (typeof isScrolling !== 'undefined' && isScrolling) return;
+ if (e) { e.preventDefault(); e.stopPropagation(); }
+ lastSongBtnTouchTime = Date.now();
+ openManualModalWithQuery(btnEl.getAttribute('data-manual-q') || '');
+ }
+
+ function handleManualBtnClick(e, btnEl) {
+ if (Date.now() - lastSongBtnTouchTime < 500) {
+ if (e) { e.preventDefault(); e.stopPropagation(); }
+ return;
+ }
+ openManualModalWithQuery(btnEl.getAttribute('data-manual-q') || '');
+ }
+
+ function handleSongActionTouch(e, songKey, fromDetailModal) {
+ if (typeof isScrolling !== 'undefined' && isScrolling) return;
+ if (e) {
+ e.preventDefault();
+ e.stopPropagation();
+ }
+ lastSongBtnTouchTime = Date.now();
+ triggerSongRequestOrVote(songKey, fromDetailModal);
+ }
+
+ function handleSongActionClick(e, songKey, fromDetailModal) {
+ if (e) e.stopPropagation();
+ if (Date.now() - lastSongBtnTouchTime < 500) {
+ if (e) e.preventDefault();
+ return;
+ }
+ triggerSongRequestOrVote(songKey, fromDetailModal);
+ }
+
+ function handleOpenModalTouch(e, songKey) {
+ if (typeof isScrolling !== 'undefined' && isScrolling) return;
+ if (e) {
+ e.preventDefault();
+ e.stopPropagation();
+ }
+ lastSongBtnTouchTime = Date.now();
+ openModalByKey(songKey);
+ }
+
+ function handleOpenModalClick(e, songKey) {
+ if (e) e.stopPropagation();
+ if (Date.now() - lastSongBtnTouchTime < 500) {
+ if (e) e.preventDefault();
+ return;
+ }
+ openModalByKey(songKey);
+ }
+
+ function openModalByKey(songKey) {
+ const s = renderedSongsMap[songKey];
+ if (!s) return;
+ openModal(s.artworkHD, s.title, s.artist, s.previewAudio, s.genre, s.year);
+ }
   
  function openManualModalWithQuery(defaultQuery) {  
  if (!areRequestsOpen) {  
@@ -5665,12 +5773,13 @@
   
  document.getElementById('manualArtistInput').value = defaultQuery || '';  
  document.getElementById('manualTitleInput').value = '';  
- document.getElementById('manualUserInput').value = '';  
+ const savedAlias = safeStorageGet('last_requester_name') || safeStorageGet('user_contest_name') || '';
+ document.getElementById('manualUserInput').value = savedAlias;  
   
  const manualModal = document.getElementById('manualModal');  
  manualModal.style.display = 'flex';  
  history.pushState({ screen: 'manualModal' }, '', '');  
- setTimeout(() => document.getElementById('manualTitleInput').focus(), 100);  
+ setTimeout(function() { document.getElementById('manualTitleInput').focus(); }, 100);  
  }  
   
  function closeManualModal() {  
@@ -5686,7 +5795,7 @@
  alert("⚠️ En este momento las peticiones están desactivadas por el DJ.");  
  return;  
  }  
- if (!checkRateLimit()) return;  
+ if (!checkRateLimit(false)) return;  
   
  const artistName = document.getElementById('manualArtistInput').value.trim();  
  const songTitle = document.getElementById('manualTitleInput').value.trim();  
@@ -5696,18 +5805,19 @@
  alert("Por favor, rellena todos los campos.");  
  return;  
  }  
+
+ checkRateLimit(true);
+ safeStorageSet('last_requester_name', requesterName);
   
- const songKey = btoa(unescape(encodeURIComponent(songTitle + " - " + artistName)))  
- .replace(/[/+:=]/g, '_');  
-  
+ const songKey = makeSongKey(songTitle, artistName);
  const songRef = db.ref('welove_live_music_queue/' + songKey);  
  const defaultPlaceholderImg = 'https://via.placeholder.com/100?text=Live+Music';  
   
- songRef.once('value', (snapshot) => {  
+ songRef.once('value', function(snapshot) {  
  if (snapshot.exists()) {  
  const data = snapshot.val();  
  const newCount = Number(data.count || 1) + 1;  
- const updatedUsers = data.users ? `${data.users}, ${requesterName}` : requesterName;  
+ const updatedUsers = data.users ? (data.users + ', ' + requesterName) : requesterName;  
   
  songRef.update({  
  count: newCount,  
@@ -5732,110 +5842,209 @@
  });  
   
  rememberMySongKey(songKey);
- alert(`¡Petición manual de "${songTitle}" enviada al DJ correctamente! 🎧🔥`);  
+ alert('¡Petición manual de "' + songTitle + '" enviada al DJ correctamente! 🎧🔥');  
  closeManualModal();  
  closeSearchResultsModal();  
  switchTab('queue', true);  
  }  
   
- function checkRateLimit() {  
- const lastRequestTime = localStorage.getItem('last_request_timestamp');  
+ function checkRateLimit(commitTimestamp) {  
+ const lastRequestTime = safeStorageGet('last_request_timestamp');  
  const now = Date.now();  
  const cooldownTime = 15000;  
   
- if (lastRequestTime && (now - lastRequestTime < cooldownTime)) {  
- const remainingSeconds = Math.ceil((cooldownTime - (now - lastRequestTime)) / 1000);  
- alert(`⏳ Por favor, espera ${remainingSeconds} segundos antes de realizar otra petición.`);  
+ if (lastRequestTime && (now - Number(lastRequestTime) < cooldownTime)) {  
+ const remainingSeconds = Math.ceil((cooldownTime - (now - Number(lastRequestTime))) / 1000);  
+ alert('⏳ Por favor, espera ' + remainingSeconds + ' segundos antes de realizar otra petición.');  
  return false;  
  }  
- localStorage.setItem('last_request_timestamp', now);  
+ if (commitTimestamp !== false) {
+ safeStorageSet('last_request_timestamp', String(now));  
+ }
  return true;  
  }  
-  
- function requestSong(title, artist, artwork, previewAudio, genre, year) {  
- if (!areRequestsOpen) {  
- alert("⚠️ En este momento las peticiones están desactivadas por el DJ.");  
- return;  
- }  
-  
- if (!checkRateLimit()) return;  
-  
- let requesterName = prompt("Introduce tu nombre o alias para la petición:");  
- if (!requesterName || requesterName.trim() === "") return;  
- requesterName = requesterName.trim();  
-  
- const songKey = btoa(unescape(encodeURIComponent(title + " - " + artist)))  
- .replace(/[/+:=]/g, '_');  
-  
- const songRef = db.ref('welove_live_music_queue/' + songKey);  
-  
- songRef.once('value', (snapshot) => {  
- if (snapshot.exists()) {  
- const data = snapshot.val();  
- const newCount = Number(data.count || 1) + 1;  
- const updatedUsers = data.users ? `${data.users}, ${requesterName}` : requesterName;  
-  
- songRef.update({  
- count: newCount,  
- users: updatedUsers,  
- timestamp: Date.now()  
- });  
- } else {  
- songRef.set({  
- title: title,  
- artist: artist,  
- artwork: artwork,  
- previewAudio: previewAudio || '',  
- genre: genre || 'Live Music',  
- year: year || 'N/D',  
- user: requesterName,  
- users: requesterName,  
- count: 1,  
- played: false,  
- timestamp: Date.now()  
- });  
- }  
- });  
-  
+
+ function ensureQuickRequestModal() {
+ let modal = document.getElementById('quickRequestModal');
+ if (modal) return modal;
+
+ modal = document.createElement('div');
+ modal.id = 'quickRequestModal';
+ modal.className = 'modal';
+ modal.style.zIndex = '2200';
+ modal.onclick = function(e) {
+ if (e.target === modal) closeQuickRequestModal();
+ };
+ modal.innerHTML = `
+ <div class="modal-content" onclick="event.stopPropagation()">
+ <div class="modal-title" id="quickReqModalHeading">🎧 Pedir Canción al DJ</div>
+ <div class="modal-artist" id="quickReqSongLabel" style="margin-bottom: 12px; color: var(--cyan); font-weight: 800;"></div>
+ <form id="quickRequestForm" onsubmit="confirmQuickSongAction(event)">
+ <div class="manual-form-group" style="margin-bottom: 16px;">
+ <label class="manual-form-label">Tu Nombre o Alias</label>
+ <input type="text" id="quickRequesterNameInput" class="manual-form-input" placeholder="Ej: Cristian" required autocomplete="off" />
+ </div>
+ <div class="modal-actions">
+ <button type="submit" id="quickReqSubmitBtn" class="request-btn" style="width: 100%; padding: 12px; font-size: 0.85rem;" ontouchend="if(typeof isScrolling==='undefined'||!isScrolling){event.preventDefault();event.stopPropagation();confirmQuickSongAction(event);}" onclick="confirmQuickSongAction(event)">🚀 Enviar Petición al DJ</button>
+ <button type="button" class="back-btn" ontouchend="if(typeof isScrolling==='undefined'||!isScrolling){event.preventDefault();event.stopPropagation();closeQuickRequestModal();}" onclick="closeQuickRequestModal()">Cancelar</button>
+ </div>
+ </form>
+ </div>
+ `;
+ document.body.appendChild(modal);
+ return modal;
+ }
+
+ function closeQuickRequestModal() {
+ const modal = document.getElementById('quickRequestModal');
+ if (modal) modal.style.display = 'none';
+ pendingSongAction = null;
+ }
+
+ function triggerSongRequestOrVote(songKey, fromDetailModal) {
+ if (!areRequestsOpen) {
+ alert("⚠️ En este momento las peticiones están desactivadas por el DJ.");
+ return;
+ }
+ if (!checkRateLimit(false)) return;
+
+ const songData = renderedSongsMap[songKey];
+ if (!songData) return;
+
+ const modalInput = document.getElementById('modalSongInput');
+ if (modalInput) modalInput.blur();
+
+ const existingQueueItem = globalQueueItems.find(function(item) { return item.id === songKey; });
+ const isVote = Boolean(existingQueueItem);
+
+ pendingSongAction = {
+ type: isVote ? 'vote' : 'request',
+ songKey: songKey,
+ songData: songData,
+ fromDetailModal: Boolean(fromDetailModal)
+ };
+
+ const modal = ensureQuickRequestModal();
+ document.getElementById('quickReqModalHeading').textContent = isVote ? '🔥 Votar Canción (+1)' : '🎧 Pedir Canción al DJ';
+ document.getElementById('quickReqSongLabel').textContent = songData.title + ' - ' + songData.artist;
+ const submitBtn = document.getElementById('quickReqSubmitBtn');
+ submitBtn.textContent = isVote ? '🔥 Confirmar Voto (+1)' : '🚀 Enviar Petición al DJ';
+ submitBtn.className = isVote ? 'vote-btn' : 'request-btn';
+
+ const nameInput = document.getElementById('quickRequesterNameInput');
+ const savedName = safeStorageGet('last_requester_name') || safeStorageGet('user_contest_name') || '';
+ nameInput.value = savedName;
+
+ modal.style.display = 'flex';
+ history.pushState({ screen: 'quickRequestModal' }, '', '');
+ setTimeout(function() { nameInput.focus(); }, 80);
+ }
+
+ function confirmQuickSongAction(event) {
+ if (event) event.preventDefault();
+ if (!pendingSongAction) return;
+ if (!areRequestsOpen) {
+ alert("⚠️ En este momento las peticiones están desactivadas por el DJ.");
+ closeQuickRequestModal();
+ return;
+ }
+
+ const nameInput = document.getElementById('quickRequesterNameInput');
+ const userName = (nameInput ? nameInput.value : '').trim();
+ if (!userName) {
+ alert("Por favor, escribe tu nombre o alias.");
+ if (nameInput) nameInput.focus();
+ return;
+ }
+
+ if (!checkRateLimit(true)) return;
+ safeStorageSet('last_requester_name', userName);
+
+ const action = pendingSongAction;
+ const s = action.songData;
+ const songKey = action.songKey;
+ const wasFromDetailModal = action.fromDetailModal;
+
+ closeQuickRequestModal();
+
+ const songRef = db.ref('welove_live_music_queue/' + songKey);
+ songRef.once('value', function(snapshot) {
+ if (snapshot.exists()) {
+ const data = snapshot.val();
+ const newCount = Number(data.count || 1) + 1;
+ const updatedUsers = data.users ? (data.users + ', ' + userName) : userName;
+ songRef.update({
+ count: newCount,
+ users: updatedUsers,
+ timestamp: action.type === 'request' ? Date.now() : (data.timestamp || Date.now())
+ });
+ } else {
+ songRef.set({
+ title: s.title,
+ artist: s.artist,
+ artwork: s.artwork100,
+ previewAudio: s.previewAudio || '',
+ genre: s.genre || 'Live Music',
+ year: s.year || 'N/D',
+ user: userName,
+ users: userName,
+ count: 1,
+ played: false,
+ timestamp: Date.now()
+ });
+ }
+ });
+
  rememberMySongKey(songKey);
- alert(`¡Petición enviada al DJ correctamente! 🎧🔥`);  
- const query = document.getElementById('modalSongInput').value.trim();  
- if (query && searchCache.has(query.toLowerCase())) {  
- renderResults(searchCache.get(query.toLowerCase()), query);  
- }  
+
+ if (wasFromDetailModal) {
+ closeModal();
+ } else {
+ const query = document.getElementById('modalSongInput').value.trim();
+ if (query && searchCache.has(query.toLowerCase())) {
+ renderResults(searchCache.get(query.toLowerCase()), query);
+ }
+ }
+
+ setTimeout(function() {
+ if (action.type === 'vote') {
+ alert('🔥 ¡Voto sumado con éxito para "' + s.title + '"!');
+ } else {
+ alert('¡Petición enviada al DJ correctamente! 🎧🔥');
+ }
+ }, 60);
+ }
+
+ function requestSong(title, artist, artwork, previewAudio, genre, year) {  
+ const songKey = makeSongKey(title, artist);
+ renderedSongsMap[songKey] = {
+ songKey: songKey,
+ title: title,
+ artist: artist,
+ artwork100: artwork,
+ artworkHD: (artwork || '').replace('100x100bb', '1000x1000bb'),
+ previewAudio: previewAudio || '',
+ genre: genre || 'Live Music',
+ year: year || 'N/D'
+ };
+ triggerSongRequestOrVote(songKey, false);
  }  
   
  function voteSong(songKey, title) {  
- if (!areRequestsOpen) {  
- alert("⚠️ En este momento las peticiones están desactivadas por el DJ.");  
- return;  
- }  
-  
- if (!checkRateLimit()) return;  
-  
- let voterName = prompt("Introduce tu nombre o alias para votar esta canción:");  
- if (!voterName || voterName.trim() === "") return;  
- voterName = voterName.trim();  
-  
- const songRef = db.ref('welove_live_music_queue/' + songKey);  
- songRef.once('value', (snapshot) => {  
- if (snapshot.exists()) {  
- const data = snapshot.val();  
- const newCount = Number(data.count || 1) + 1;  
- const updatedUsers = data.users ? `${data.users}, ${voterName}` : voterName;  
-  
- songRef.update({  
- count: newCount,  
- users: updatedUsers  
- });  
- rememberMySongKey(songKey);
- alert(`🔥 ¡Voto sumado con éxito para "${title}"!`);  
- const query = document.getElementById('modalSongInput').value.trim();  
- if (query && searchCache.has(query.toLowerCase())) {  
- renderResults(searchCache.get(query.toLowerCase()), query);  
- }  
- }  
- });  
+ if (!renderedSongsMap[songKey]) {
+ const existing = globalQueueItems.find(function(i) { return i.id === songKey; });
+ renderedSongsMap[songKey] = {
+ songKey: songKey,
+ title: title || (existing ? existing.title : 'Canción'),
+ artist: existing ? existing.artist : '',
+ artwork100: existing ? existing.artwork : '',
+ artworkHD: existing ? existing.artwork : '',
+ previewAudio: '',
+ genre: 'Live Music',
+ year: existing ? existing.year : 'N/D'
+ };
+ }
+ triggerSongRequestOrVote(songKey, false);
  }  
   
  function triggerDjAlert(reasonText) {  
@@ -6081,6 +6290,9 @@
  }  
   
  function openModal(imgUrl, title, artist, audioUrl, genre, year) {  
+ const modalInput = document.getElementById('modalSongInput');
+ if (modalInput) modalInput.blur();
+
  document.getElementById('modalImg').src = imgUrl;  
  document.getElementById('modalTitle').textContent = title;  
  document.getElementById('modalArtist').textContent = artist;  
@@ -6088,7 +6300,7 @@
  document.getElementById('modalKey').textContent = getHashKey(title + artist);  
    
  tapTimes = [];  
- currentSearchTerm = `${title} ${artist}`;  
+ currentSearchTerm = title + ' ' + artist;  
   
  const audioElement = document.getElementById('modalAudio');  
  if (audioUrl) {  
@@ -6100,25 +6312,33 @@
  }  
   
  const musicQuery = encodeURIComponent(currentSearchTerm);  
- document.getElementById('modalSpotifyBtn').href = `https://open.spotify.com/search/${musicQuery}`;  
+ document.getElementById('modalSpotifyBtn').href = 'https://open.spotify.com/search/' + musicQuery;  
    
  const modalActionContainer = document.getElementById('modalActionContainer');  
- const safeTitle = title.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');  
- const safeArtist = artist.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');  
- const artwork100 = imgUrl.replace('1000x1000bb', '100x100bb');  
-  
- const songKey = btoa(unescape(encodeURIComponent(title + " - " + artist)))  
- .replace(/[/+:=]/g, '_');  
- const existingQueueItem = globalQueueItems.find(item => item.id === songKey);  
+ const artwork100 = (imgUrl || '').replace('1000x1000bb', '100x100bb');  
+ const songKey = makeSongKey(title, artist);
+
+ renderedSongsMap[songKey] = {
+ songKey: songKey,
+ title: title,
+ artist: artist,
+ artwork100: artwork100,
+ artworkHD: imgUrl,
+ previewAudio: audioUrl || '',
+ genre: genre || 'Live Music',
+ year: year || 'N/D'
+ };
+
+ const existingQueueItem = globalQueueItems.find(function(item) { return item.id === songKey; });  
  const disabledAttr = !areRequestsOpen ? 'disabled' : '';  
  const btnTitleAttr = !areRequestsOpen ? 'title="Las peticiones están desactivadas por el DJ"' : '';  
   
  if (!areRequestsOpen) {  
- modalActionContainer.innerHTML = `<button class="request-btn" style="width: 100%; padding: 10px; font-size: 0.85rem; background: var(--danger);" disabled title="Peticiones desactivadas">⛔ Peticiones Desactivadas por el Administrador</button>`;  
+ modalActionContainer.innerHTML = `<button type="button" class="request-btn" style="width: 100%; padding: 10px; font-size: 0.85rem; background: var(--danger);" disabled title="Peticiones desactivadas">⛔ Peticiones Desactivadas por el Administrador</button>`;  
  } else if (existingQueueItem) {  
- modalActionContainer.innerHTML = `<button class="vote-btn" style="width: 100%; padding: 10px; font-size: 0.85rem;" ${disabledAttr} ${btnTitleAttr} onclick="voteSong('${songKey}', '${safeTitle}'); closeModal();">🔥 Votar esta canción (+1)</button>`;  
+ modalActionContainer.innerHTML = `<button type="button" class="vote-btn" style="width: 100%; padding: 10px; font-size: 0.85rem;" ${disabledAttr} ${btnTitleAttr} data-song-key="${escapeAttrSafe(songKey)}" ontouchend="handleSongActionTouch(event, this.getAttribute('data-song-key'), true)" onclick="handleSongActionClick(event, this.getAttribute('data-song-key'), true)">🔥 Votar esta canción (+1)</button>`;  
  } else {  
- modalActionContainer.innerHTML = `<button class="request-btn" style="width: 100%; padding: 10px; font-size: 0.85rem;" ${disabledAttr} ${btnTitleAttr} onclick="requestSong('${safeTitle}', '${safeArtist}', '${artwork100}', '${audioUrl || ''}', '${genre}', '${year}'); closeModal();">➕ Pedir esta canción al DJ</button>`;  
+ modalActionContainer.innerHTML = `<button type="button" class="request-btn" style="width: 100%; padding: 10px; font-size: 0.85rem;" ${disabledAttr} ${btnTitleAttr} data-song-key="${escapeAttrSafe(songKey)}" ontouchend="handleSongActionTouch(event, this.getAttribute('data-song-key'), true)" onclick="handleSongActionClick(event, this.getAttribute('data-song-key'), true)">➕ Pedir esta canción al DJ</button>`;  
  }  
   
  document.getElementById('imageModal').style.display = 'flex';  
@@ -6178,13 +6398,6 @@
  imageModal.style.display = 'none';  
  }  
 
- const resultsModal = document.getElementById('searchResultsModal');  
- if (resultsModal.style.display === 'flex') {  
- resultsModal.style.display = 'none';  
- void resultsModal.offsetHeight;  
- resultsModal.style.display = 'flex';  
- }  
-
  const query = document.getElementById('modalSongInput').value.trim();  
  if (query && searchCache.has(query.toLowerCase())) {  
  renderResults(searchCache.get(query.toLowerCase()), query);  
@@ -6192,24 +6405,7 @@
  }  
 
  function closeModalFromPopState() {  
- const audioElement = document.getElementById('modalAudio');  
- if (audioElement) {  
- audioElement.pause();  
- audioElement.src = '';  
- }  
- document.getElementById('imageModal').style.display = 'none';  
-
- const resultsModal = document.getElementById('searchResultsModal');  
- if (resultsModal.style.display === 'flex') {  
- resultsModal.style.display = 'none';  
- void resultsModal.offsetHeight;  
- resultsModal.style.display = 'flex';  
- }  
-
- const query = document.getElementById('modalSongInput').value.trim();  
- if (query && searchCache.has(query.toLowerCase())) {  
- renderResults(searchCache.get(query.toLowerCase()), query);  
- }  
+ closeModal();  
  }  
   
  function saveToHistory(query) {  
@@ -6570,42 +6766,31 @@
 <script>
 let touchStartX = 0;
 let touchStartY = 0;
-let touchStartTime = 0;
 let isScrolling = false;
 
-window.addEventListener('touchstart', (e) => {
+window.addEventListener('touchstart', function(e) {
     if (e.touches && e.touches.length > 0) {
         touchStartX = e.touches[0].clientX;
         touchStartY = e.touches[0].clientY;
-        touchStartTime = Date.now();
         isScrolling = false;
     }
 }, { passive: true });
 
-window.addEventListener('touchmove', (e) => {
+window.addEventListener('touchmove', function(e) {
     if (e.touches && e.touches.length > 0) {
         const moveX = Math.abs(e.touches[0].clientX - touchStartX);
         const moveY = Math.abs(e.touches[0].clientY - touchStartY);
-        if (moveX > 6 || moveY > 6) {
+        if (moveX > 14 || moveY > 14) {
             isScrolling = true;
         }
     }
 }, { passive: true });
 
-window.addEventListener('touchend', (e) => {
-    const duration = Date.now() - touchStartTime;
-    if (duration > 400) { // If finger held down for a while or slow drag
-        isScrolling = true;
-    }
-}, { passive: true });
-
-window.addEventListener('click', (e) => {
-    if (isScrolling) {
-        e.preventDefault();
-        e.stopPropagation();
+window.addEventListener('touchend', function() {
+    setTimeout(function() {
         isScrolling = false;
-    }
-}, { capture: true });
+    }, 50);
+}, { passive: true });
 
 function handleLightTouch(e, type, val) {
     if (isScrolling) {
