@@ -185,48 +185,18 @@
   
  .header-row {  
  display: flex;  
- flex-direction: column;  
- justify-content: center;  
- align-items: stretch;  
- flex: 1;  
- min-width: 0;  
- gap: 4px;  
- }  
-
- .header-top-bar {  
- display: flex;  
  justify-content: space-between;  
  align-items: center;  
- width: 100%;  
- gap: 6px;  
+ flex: 1;  
  min-width: 0;  
- }  
-
- .header-actions {  
- display: flex;  
- gap: 4px;  
- align-items: center;  
- flex-shrink: 0;  
- }  
-
- .brand-header .live-sub-badge {  
- margin-bottom: 0;  
- font-size: 0.55rem;  
- letter-spacing: 0.6px;  
- white-space: nowrap;  
- }  
-
- .brand-header .theme-btn {  
- padding: 4px 8px;  
- font-size: 0.62rem;  
- border-radius: 9px;  
+ gap: 6px;  
  }  
 
  .title-stack {  
  display: flex;  
  flex-direction: column;  
  align-items: flex-start;  
- width: 100%;  
+ flex: 1;  
  min-width: 0;  
  }  
 
@@ -264,15 +234,13 @@
   
  h1 {   
  font-family: 'Syne', sans-serif;  
- font-size: clamp(0.66rem, 2.9vw, 0.82rem);   
+ font-size: clamp(0.65rem, 2.8vw, 0.78rem);   
  font-weight: 800;   
  color: var(--text);   
  letter-spacing: -0.2px;  
  text-transform: uppercase;  
  margin: 0;  
  white-space: nowrap;  
- overflow: hidden;  
- text-overflow: ellipsis;  
  line-height: 1.15;  
  width: 100%;  
  }  
@@ -2572,6 +2540,132 @@
  pointer-events: none;
  }
 
+
+ /* ================== COMPATIBILIDAD ANDROID / iOS ================== */
+ html, body { width: 100%; }
+ body { height: var(--app-height, 100dvh); min-height: 0; }
+ .card, .tab-content { min-width: 0; }
+ .card { min-height: 0; }
+ .dashboard-container {
+   overflow-x: hidden;
+   overflow-y: auto;
+   -webkit-overflow-scrolling: touch;
+   overscroll-behavior-y: contain;
+   touch-action: pan-y;
+   justify-content: flex-start;
+   gap: clamp(6px, 1.2dvh, 10px);
+   padding-bottom: 4px;
+ }
+ .dash-btn-primary { min-height: 100px; }
+ .launchpad-grid {
+   grid-template-columns: repeat(2, minmax(0, 1fr));
+   grid-template-rows: repeat(2, minmax(106px, 1fr));
+   grid-auto-rows: auto;
+   flex: 1 0 228px;
+   min-height: 228px;
+ }
+ .dash-btn.pad-card {
+   min-width: 0;
+   padding: clamp(9px, 2.7vw, 13px);
+ }
+ .pad-title, .pad-sub { overflow-wrap: anywhere; }
+ .hype-bar { min-width: 0; }
+ .hype-btns { gap: clamp(3px, 1.1vw, 6px); }
+ .hype-btn { padding-inline: clamp(5px, 2vw, 10px); }
+ .admin-menu-container, .saved-lists-scroll, .results, .portal-container {
+   min-height: 0;
+   overscroll-behavior-y: contain;
+   -webkit-overflow-scrolling: touch;
+   touch-action: pan-y;
+ }
+ .admin-menu-container { align-content: start; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+ .admin-menu-btn { min-width: 0; overflow-wrap: anywhere; }
+ .modal, #rouletteOverlay, #upNextOverlay { height: var(--app-height, 100dvh); }
+ .modal-content, .history-modal-content, .poll-modal-box {
+   max-height: calc(var(--app-height, 100dvh) - 28px);
+   -webkit-overflow-scrolling: touch;
+ }
+ .history-modal-content { height: calc(var(--app-height, 100dvh) - 28px); min-height: 0; }
+ .queue-actions { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+ .queue-actions > button { min-width: 0; overflow-wrap: anywhere; white-space: normal; }
+
+ @media (max-width: 390px) {
+   .card { padding: 9px 10px; border-radius: 20px; }
+   .brand-header { gap: 6px; padding: 7px 8px; }
+   .vinyl-platter { width: 47px; min-width: 47px; height: 47px; }
+   .theme-btn { padding: 6px; font-size: 0.62rem; }
+   .dash-btn-primary { padding: 11px 12px; gap: 7px; border-radius: 18px; }
+   .hero-main-title { font-size: clamp(0.94rem, 4vw, 1.15rem); }
+   .launchpad-grid { gap: 7px; }
+   .dash-btn.pad-card { border-radius: 16px; }
+   .pad-title { font-size: 0.74rem; }
+   .pad-sub { font-size: 0.59rem; }
+   .portal-main-btn { padding: 13px 11px; gap: 6px; }
+   .portal-btn-left { gap: 8px; }
+   .portal-btn-title { font-size: 0.88rem; }
+   .portal-btn-subtitle { font-size: 0.62rem; }
+   .portal-btn-arrow { padding: 5px 7px; font-size: 0.64rem; }
+   .hype-label { font-size: 0.55rem; }
+   .admin-menu-btn { padding: 10px; font-size: 0.72rem; }
+   .queue-actions > button { font-size: 0.62rem; padding: 8px 3px; }
+   .modal { padding: 8px; }
+   .modal-content { padding: 12px; }
+ }
+ @media (max-width: 345px) {
+   .card { padding: 7px; }
+   .live-sub-badge { font-size: 0.48rem; letter-spacing: 0; }
+   .pad-icon { font-size: 1.2rem; }
+   .pad-sub { font-size: 0.55rem; }
+   .portal-btn-arrow { font-size: 0.6rem; }
+   .hype-label { font-size: 0.49rem; }
+ }
+ @media (max-height: 680px) {
+   .brand-header { margin-bottom: 5px; }
+   .instructions-box { margin-bottom: 5px; padding: 5px 8px; }
+   .neon-banner { margin-bottom: 5px; }
+   .dash-btn-primary { min-height: 90px; }
+   .launchpad-grid { flex-basis: 204px; min-height: 204px; grid-template-rows: repeat(2, minmax(96px, 1fr)); }
+   .portal-vinyl-wrapper { width: clamp(105px, 26dvh, 155px); height: clamp(105px, 26dvh, 155px); padding: 10px; }
+   .portal-main-btn { padding-block: 11px; }
+   .admin-menu-btn { min-height: 74px !important; }
+ }
+ @media (orientation: landscape) and (max-height: 520px) {
+   .card { border-radius: 15px; padding: 6px 10px; }
+   .brand-header { padding: 4px 8px; }
+   .footer { padding-top: 3px; margin-top: 3px; }
+   .dashboard-container { flex: 1; }
+   .portal-container { padding-top: 2px; }
+   .portal-vinyl-wrapper { width: 100px; height: 100px; }
+   .admin-menu-container { padding-top: 2px; }
+   .modal { align-items: flex-start; }
+ }
+
+ /* ================== HOJA AISLADA PARA PDF ================== */
+ #print-sheet { display: none !important; }
+ @page { size: A4; margin: 12mm; }
+ @media print {
+   html, body { width: 100% !important; height: auto !important; min-height: 0 !important; overflow: visible !important; }
+   body.pdf-printing { display: block !important; padding: 0 !important; margin: 0 !important; background: #fff !important; color: #111 !important; }
+   body.pdf-printing > :not(#print-sheet) { display: none !important; }
+   body.pdf-printing #print-sheet { display: block !important; position: static !important; visibility: visible !important; width: 100% !important; height: auto !important; margin: 0 !important; padding: 0 !important; color: #111 !important; background: #fff !important; font-family: Arial, sans-serif !important; }
+   body.pdf-printing #print-sheet * { visibility: visible !important; color: #111 !important; box-shadow: none !important; }
+   body.pdf-printing #print-sheet h1 { font: bold 16pt Arial, sans-serif !important; color: #111 !important; white-space: normal !important; margin: 0 0 6mm !important; width: 100%; }
+   body.pdf-printing .print-subheading { font-size: 9pt !important; margin: 0 0 5mm !important; }
+   body.pdf-printing .print-songs-table { border-collapse: collapse !important; width: 100% !important; table-layout: fixed !important; font-size: 8pt !important; }
+   body.pdf-printing .print-songs-table thead { display: table-header-group !important; }
+   body.pdf-printing .print-songs-table th { text-align: left !important; background: #eee !important; font-weight: bold !important; }
+   body.pdf-printing .print-songs-table td, body.pdf-printing .print-songs-table th { border: 1px solid #bbb !important; padding: 5px 4px !important; vertical-align: top !important; overflow-wrap: anywhere !important; }
+   body.pdf-printing .print-songs-table th:nth-child(1) { width: 5%; }
+   body.pdf-printing .print-songs-table th:nth-child(2) { width: 25%; }
+   body.pdf-printing .print-songs-table th:nth-child(3) { width: 22%; }
+   body.pdf-printing .print-songs-table th:nth-child(4) { width: 21%; }
+   body.pdf-printing .print-songs-table th:nth-child(5) { width: 8%; }
+   body.pdf-printing .print-songs-table th:nth-child(6) { width: 6%; }
+   body.pdf-printing .print-songs-table th:nth-child(7) { width: 13%; }
+   body.pdf-printing .print-songs-table tr { break-inside: avoid !important; page-break-inside: avoid !important; }
+   body.pdf-printing .print-footer { font-size: 8pt !important; margin-top: 5mm !important; }
+ }
+
  </style>  
 </head>  
 <body class="portal-mode">  
@@ -2624,23 +2718,21 @@
  <img src="logo.jpg" alt="We Love The Remember" class="app-logo">  
  </div>
  <div class="header-row">  
- <div class="header-top-bar">
+ <div class="title-stack">
  <div class="live-sub-badge">
  <span class="mini-eq"><i></i><i></i><i></i></span> LIVE DJ DECK
  </div>
- <div class="header-actions">
- <button class="theme-btn" id="backToPortalBtn" ontouchend="handleMenuBack(event, 'portal')" onclick="switchTab('portal', true)">⬅️ Inicio</button>
- <button class="theme-btn" id="themeToggle">☀️ Claro</button>
- </div>  
- </div>
- <div class="title-stack">
  <h1>WE LOVE LIVE MUSIC</h1>  
  </div>
+ <div style="display: flex; gap: 5px; align-items: center; flex-shrink: 0;">
+ <button class="theme-btn" id="backToPortalBtn" onclick="switchTab('portal', true)">⬅️ Inicio</button>
+ <button class="theme-btn" id="themeToggle">☀️ Claro</button>
+ </div>  
  </div>  
  </div>  
   
  <!-- BOTÓN FLOTANTE DE NOTIFICACIÓN DE ENCUESTA -->  
- <div class="poll-notification-banner" id="pollNotificationBanner" style="display: none;" ontouchend="handlePollBannerClick(event)" onclick="openPollModal()">  
+ <div class="poll-notification-banner" id="pollNotificationBanner" style="display: none;" onclick="openPollModal()">  
  <div class="poll-notif-text">  
  📊 <span id="pollNotifTitleDisplay">Encuesta activa en sala</span>  
  </div>  
@@ -2665,7 +2757,7 @@
  <!-- BARRA DE USUARIO IDENTIFICADO EN PEQUEÑO -->  
  <div class="user-badge-bar" id="userBadgeBar" style="display: none;">  
  <span>👤 Participante: <strong id="currentUserNameDisplay"></strong></span>  
- <button class="theme-btn" style="padding: 2px 6px; font-size: 0.65rem;" ontouchend="handleContestBadgeClick(event)" onclick="openContestModal()">Ya inscrito</button>  
+ <button class="theme-btn" style="padding: 2px 6px; font-size: 0.65rem;" onclick="openContestModal()">Ya inscrito</button>  
  </div>  
    
  <div id="neonBanner" class="neon-banner enabled">🟢 Peticiones de canciones: ABIERTAS</div>  
@@ -2691,7 +2783,7 @@
  </div>
 
  <div class="portal-buttons-stack">
- <button type="button" class="portal-main-btn portal-btn-live" ontouchend="handlePortalNav(event, 'home')" onclick="switchTab('home', true)">
+ <button type="button" class="portal-main-btn portal-btn-live" onclick="switchTab('home', true)">
  <div class="portal-btn-left">
  <span class="portal-btn-icon">🎧</span>
  <div class="portal-btn-text-group">
@@ -2702,7 +2794,7 @@
  <span class="portal-btn-arrow">Entrar ➔</span>
  </button>
 
- <button type="button" class="portal-main-btn portal-btn-events" ontouchend="handlePortalNav(event, 'events')" onclick="switchTab('events', true)">
+ <button type="button" class="portal-main-btn portal-btn-events" onclick="switchTab('events', true)">
  <div class="portal-btn-left">
  <span class="portal-btn-icon">📅</span>
  <div class="portal-btn-text-group">
@@ -2720,14 +2812,14 @@
  <div id="tabEvents" class="tab-content">
  <div class="queue-header" style="flex-direction: row; justify-content: space-between; align-items: center; margin-bottom: 10px;">
  <span class="queue-title">📅 Próximos Eventos</span>
- <button class="theme-btn" style="padding: 6px 11px;" ontouchend="handleMenuBack(event, 'portal')" onclick="switchTab('portal', true)">⬅️ Volver</button>
+ <button class="theme-btn" style="padding: 6px 11px;" onclick="switchTab('portal', true)">⬅️ Volver</button>
  </div>
 
  <div id="publicEventsList" class="results" style="padding-bottom: 14px;">
  <p class="status-msg">Cargando próximos eventos...</p>
  </div>
 
- <button type="button" class="back-btn-top" style="margin-bottom: 0; margin-top: 6px; flex-shrink: 0;" ontouchend="handlePortalNav(event, 'home')" onclick="switchTab('home', true)">
+ <button type="button" class="back-btn-top" style="margin-bottom: 0; margin-top: 6px; flex-shrink: 0;" onclick="switchTab('home', true)">
  🎧 Ir a Sala en Directo!
  </button>
  </div>
@@ -2746,7 +2838,7 @@
 
  <div class="dashboard-container">  
  <!-- MÓDULO PROTAGONISTA: BUSCADOR MUSICAL -->
- <button class="dash-btn dash-btn-primary" ontouchend="handleDashClick(event, 'search')" onclick="openSearchResultsModal('')">  
+ <button class="dash-btn dash-btn-primary" onclick="openSearchResultsModal('')">  
  <div class="hero-top-row">
  <span class="hero-badge">💿 BUSCADOR EN DIRECTO</span>
  <div class="hero-wave"><span></span><span></span><span></span><span></span><span></span><span></span></div>
@@ -2760,7 +2852,7 @@
    
  <!-- MATRIZ 2x2 DE PADS DE CABINA CON EL TAMAÑO AMPLIO ORIGINAL -->
  <div class="launchpad-grid">
- <button class="dash-btn pad-card dash-btn-queue" id="dashQueueBtn" ontouchend="handleDashClick(event, 'queue')" onclick="switchTab('queue', true)">  
+ <button class="dash-btn pad-card dash-btn-queue" id="dashQueueBtn" onclick="switchTab('queue', true)">  
  <span class="pad-led"></span>
  <span class="pad-icon">📻</span>
  <div>
@@ -2769,7 +2861,7 @@
  </div>
  </button>  
 
- <button class="dash-btn pad-card dash-btn-contest" id="dashContestBtn" ontouchend="handleDashClick(event, 'contest')" onclick="openContestModal()">  
+ <button class="dash-btn pad-card dash-btn-contest" id="dashContestBtn" onclick="openContestModal()">  
  <span class="pad-led"></span>
  <span class="pad-icon">🏆</span>
  <div>
@@ -2778,7 +2870,7 @@
  </div>
  </button>  
 
- <button class="dash-btn pad-card dash-btn-qr" ontouchend="handleDashClick(event, 'qr')" onclick="openQrModal()">  
+ <button class="dash-btn pad-card dash-btn-qr" onclick="openQrModal()">  
  <span class="pad-led"></span>
  <span class="pad-icon">📱</span>
  <div>
@@ -2787,7 +2879,7 @@
  </div>
  </button>  
 
- <button class="dash-btn pad-card dash-btn-admin-access" ontouchend="handleDashClick(event, 'admin')" onclick="promptAdminAccess()">  
+ <button class="dash-btn pad-card dash-btn-admin-access" onclick="promptAdminAccess()">  
  <span class="pad-led"></span>
  <span class="pad-icon">🎛️</span>
  <div>
@@ -2801,10 +2893,10 @@
  <div class="hype-bar">
  <div class="hype-label">⚡ HYPE PISTA (<span id="hypeCountBadge">0</span>):</div>
  <div class="hype-btns">
- <button type="button" class="hype-btn" ontouchend="handleHypeTouch(event, '🔥')" onclick="sendHypeReaction('🔥')" title="Fuego">🔥</button>
- <button type="button" class="hype-btn" ontouchend="handleHypeTouch(event, '🙌')" onclick="sendHypeReaction('🙌')" title="Manos arriba">🙌</button>
- <button type="button" class="hype-btn" ontouchend="handleHypeTouch(event, '💣')" onclick="sendHypeReaction('💣')" title="Temazo">💣</button>
- <button type="button" class="hype-btn" ontouchend="handleHypeTouch(event, '❤️')" onclick="sendHypeReaction('❤️')" title="Me encanta">❤️</button>
+ <button type="button" class="hype-btn" onclick="sendHypeReaction('🔥')" title="Fuego">🔥</button>
+ <button type="button" class="hype-btn" onclick="sendHypeReaction('🙌')" title="Manos arriba">🙌</button>
+ <button type="button" class="hype-btn" onclick="sendHypeReaction('💣')" title="Temazo">💣</button>
+ <button type="button" class="hype-btn" onclick="sendHypeReaction('❤️')" title="Me encanta">❤️</button>
  </div>
  </div>
  </div>  
@@ -2814,18 +2906,18 @@
  <div class="queue-header">  
  <div class="queue-header-top">  
  <span class="queue-title" id="queueHeaderTitle">Peticiones del público</span>  
- <button class="theme-btn" style="padding: 5px 10px;" ontouchend="handleMenuBack(event, 'home')" onclick="switchTab('home', true)">⬅️ Consola</button>  
+ <button class="theme-btn" style="padding: 5px 10px;" onclick="switchTab('home', true)">⬅️ Consola</button>  
  </div>  
 
  <div id="djToggleContainer" style="display: none; margin-bottom: 8px; width: 100%;">  
- <button class="toggle-requests-btn off" id="masterToggleBtn" style="width: 100%; padding: 12px; font-size: 0.82rem; font-weight: 900; letter-spacing: 0.5px;" ontouchend="executeToggleRequests(event)" onclick="executeToggleRequests(event)">🔒 Peticiones: OFF</button>  
+ <button class="toggle-requests-btn off" id="masterToggleBtn" style="width: 100%; padding: 12px; font-size: 0.82rem; font-weight: 900; letter-spacing: 0.5px;" onclick="executeToggleRequests(event)">🔒 Peticiones: OFF</button>  
  </div>  
 
  <div class="queue-actions">  
- <button class="save-list-btn" id="saveListBtn" style="display: none;" ontouchend="handleActionBtn(event, 'save')" onclick="saveCurrentList()">💾 Guardar</button>  
- <button class="history-list-btn" id="historyListBtn" style="display: none;" ontouchend="handleActionBtn(event, 'history')" onclick="openHistoryModal()">📁 Histórico</button>  
- <button class="pdf-btn" id="pdfBtn" style="display: none;" ontouchend="handleActionBtn(event, 'pdf')" onclick="exportQueueToPDF()">📄 PDF</button>  
- <button class="clear-queue-btn" id="clearQueueBtn" style="display: none;" ontouchend="handleActionBtn(event, 'clear')" onclick="clearQueueSecure()">🗑️ Borrar</button>  
+ <button class="save-list-btn" id="saveListBtn" style="display: none;" onclick="saveCurrentList()">💾 Guardar</button>  
+ <button class="history-list-btn" id="historyListBtn" style="display: none;" onclick="openHistoryModal()">📁 Histórico</button>  
+ <button class="pdf-btn" id="pdfBtn" style="display: none;" onclick="exportQueueToPDF()">📄 PDF</button>  
+ <button class="clear-queue-btn" id="clearQueueBtn" style="display: none;" onclick="clearQueueSecure()">🗑️ Borrar</button>  
  </div>  
  </div>  
   
@@ -2846,41 +2938,41 @@
  <div id="tabAdmin" class="tab-content">  
  <div class="queue-header" style="flex-direction: row; justify-content: space-between; align-items: center; margin-bottom: 6px;">  
  <span class="queue-title">🎛️ Rack de Control (Admin)</span>  
- <button class="theme-btn" style="padding: 5px 10px;" ontouchend="handleMenuBack(event, 'home')" onclick="switchTab('home', true)">⬅️ Consola</button>  
+ <button class="theme-btn" style="padding: 5px 10px;" onclick="switchTab('home', true)">⬅️ Consola</button>  
  </div>  
 
  <div class="admin-menu-container" style="grid-template-columns: repeat(2, 1fr); gap: 8px;">  
- <button class="admin-menu-btn" style="background: rgba(255, 184, 0, 0.14); color: #fff; border-color: var(--count-bg); min-height: 90px;" ontouchend="handleAdminMenuBtn(event, 'contest')" onclick="openAdminModal('contest')">  
+ <button class="admin-menu-btn" style="background: rgba(255, 184, 0, 0.14); color: #fff; border-color: var(--count-bg); min-height: 90px;" onclick="openAdminModal('contest')">  
  <span style="font-size: 1.4rem;">🎁</span>  
  <span style="font-size: 0.76rem;">Sorteo y Concurso</span>  
  </button>  
 
- <button class="admin-menu-btn" style="background: rgba(255, 0, 122, 0.14); color: #fff; border-color: var(--accent); min-height: 90px;" ontouchend="handleAdminMenuBtn(event, 'lights')" onclick="openAdminModal('lights')">  
+ <button class="admin-menu-btn" style="background: rgba(255, 0, 122, 0.14); color: #fff; border-color: var(--accent); min-height: 90px;" onclick="openAdminModal('lights')">  
  <span style="font-size: 1.4rem;">✨</span>  
  <span style="font-size: 0.76rem;">Luces de Sala DMX</span>  
  </button>  
 
- <button class="admin-menu-btn" style="background: rgba(121, 40, 202, 0.16); color: #fff; border-color: var(--badge-bg); min-height: 90px;" ontouchend="handleAdminMenuBtn(event, 'poll')" onclick="openAdminModal('poll')">  
+ <button class="admin-menu-btn" style="background: rgba(121, 40, 202, 0.16); color: #fff; border-color: var(--badge-bg); min-height: 90px;" onclick="openAdminModal('poll')">  
  <span style="font-size: 1.4rem;">📊</span>  
  <span style="font-size: 0.76rem;">Encuesta Express</span>  
  </button>  
 
- <button class="admin-menu-btn" style="background: rgba(0, 240, 255, 0.12); color: #fff; border-color: var(--cyan); min-height: 90px;" ontouchend="handleAdminMenuBtn(event, 'stats')" onclick="openAdminModal('stats')">  
+ <button class="admin-menu-btn" style="background: rgba(0, 240, 255, 0.12); color: #fff; border-color: var(--cyan); min-height: 90px;" onclick="openAdminModal('stats')">  
  <span style="font-size: 1.4rem;">📈</span>  
  <span style="font-size: 0.76rem;">Estadísticas Globales</span>  
  </button>  
 
- <button class="admin-menu-btn" id="toggleHypeBtnAdminMain" style="background: rgba(0, 245, 155, 0.14); color: #fff; border-color: var(--success); min-height: 90px;" ontouchend="handleToggleHype(event)" onclick="toggleHypeState()">  
+ <button class="admin-menu-btn" id="toggleHypeBtnAdminMain" style="background: rgba(0, 245, 155, 0.14); color: #fff; border-color: var(--success); min-height: 90px;" onclick="toggleHypeState()">  
  <span style="font-size: 1.4rem;">⚡</span>  
  <span id="toggleHypeTextMain" style="font-size: 0.74rem;">Hype: ABIERTO</span>  
  </button>  
 
- <button class="admin-menu-btn" style="background: rgba(255, 184, 0, 0.16); color: #fff; border-color: var(--count-bg); min-height: 90px;" ontouchend="handleResetHype(event)" onclick="resetHypeCounter()">  
+ <button class="admin-menu-btn" style="background: rgba(255, 184, 0, 0.16); color: #fff; border-color: var(--count-bg); min-height: 90px;" onclick="resetHypeCounter()">  
  <span style="font-size: 1.4rem;">🔄</span>  
  <span style="font-size: 0.76rem;">Reset Hype a 0</span>  
  </button>  
 
- <button class="admin-menu-btn" style="grid-column: span 2; background: linear-gradient(135deg, rgba(2, 132, 199, 0.28), rgba(121, 40, 202, 0.26)); color: #fff; border-color: var(--accent); min-height: 74px; flex-direction: row; align-items: center; justify-content: space-between; padding: 12px 16px;" ontouchend="handleAdminMenuBtn(event, 'calendar')" onclick="openAdminModal('calendar')">  
+ <button class="admin-menu-btn" style="grid-column: span 2; background: linear-gradient(135deg, rgba(2, 132, 199, 0.28), rgba(121, 40, 202, 0.26)); color: #fff; border-color: var(--accent); min-height: 74px; flex-direction: row; align-items: center; justify-content: space-between; padding: 12px 16px;" onclick="openAdminModal('calendar')">  
  <div style="display: flex; align-items: center; gap: 10px;">  
  <span style="font-size: 1.5rem;">📅</span>  
  <div style="display: flex; flex-direction: column; text-align: left;">  
@@ -2891,7 +2983,7 @@
  <span class="poll-status-pill open" id="adminCalendarCountBadge" style="margin-bottom: 0;">0</span>  
  </button>  
 
-  <button class="admin-menu-btn" style="grid-column: span 2; background: linear-gradient(135deg, rgba(255, 0, 122, 0.22), rgba(0, 240, 255, 0.18)); color: #fff; border-color: var(--cyan); min-height: 78px; flex-direction: row; align-items: center; justify-content: space-between; padding: 12px 16px;" ontouchend="handleAdminMenuBtn(event, 'nextParty')" onclick="openAdminModal('nextParty')">  
+  <button class="admin-menu-btn" style="grid-column: span 2; background: linear-gradient(135deg, rgba(255, 0, 122, 0.22), rgba(0, 240, 255, 0.18)); color: #fff; border-color: var(--cyan); min-height: 78px; flex-direction: row; align-items: center; justify-content: space-between; padding: 12px 16px;" onclick="openAdminModal('nextParty')">  
  <div style="display: flex; align-items: center; gap: 10px;">  
  <span style="font-size: 1.5rem;">🎉</span>  
  <div style="display: flex; flex-direction: column; text-align: left;">  
@@ -2945,11 +3037,11 @@
  </div>  
  <div class="saved-lists-scroll" style="gap: 6px; padding-top: 2px;">  
  <button type="button" class="admin-action-btn" id="runDrawBtnModal" style="background: linear-gradient(90deg, var(--accent), var(--accent-2)); color: #fff; width: 100%; padding: 10px; font-size: 0.8rem; box-shadow: 0 4px 12px var(--glow-accent); min-height: 40px;" onclick="handleRunDrawClick(event)">🎰 ¡Lanzar Ruleta y Sortear Ahora!</button>  
- <button type="button" class="admin-action-btn" id="toggleContestBtnAdminModal" style="background: var(--success); color: #000; width: 100%; padding: 9px 10px; font-size: 0.74rem; min-height: 38px;" ontouchend="handleToggleContest(event)" onclick="toggleContestState()">🔒 Botón Sorteo: ABIERTO</button>  
+ <button type="button" class="admin-action-btn" id="toggleContestBtnAdminModal" style="background: var(--success); color: #000; width: 100%; padding: 9px 10px; font-size: 0.74rem; min-height: 38px;" onclick="toggleContestState()">🔒 Botón Sorteo: ABIERTO</button>  
  <button type="button" class="admin-action-btn" style="background: var(--surface-elevated); border: 1px solid var(--count-bg); color: var(--count-bg); width: 100%; padding: 9px 10px; font-size: 0.74rem; min-height: 38px;" onclick="clearWinnerBannerOnly()">🧹 Ocultar Cartel de Ganador</button>  
- <button type="button" class="admin-action-btn" style="background: rgba(255, 42, 84, 0.16); border: 1px solid var(--danger); color: var(--danger); width: 100%; padding: 9px 10px; font-size: 0.74rem; min-height: 38px;" ontouchend="handleClearContest(event)" onclick="clearContestParticipants()">🗑️ Borrar lista de participantes</button>  
+ <button type="button" class="admin-action-btn" style="background: rgba(255, 42, 84, 0.16); border: 1px solid var(--danger); color: var(--danger); width: 100%; padding: 9px 10px; font-size: 0.74rem; min-height: 38px;" onclick="clearContestParticipants()">🗑️ Borrar lista de participantes</button>  
  </div>  
- <button class="history-back-action-btn" ontouchend="handleModalClose(event, 'contest')" onclick="closeAdminModal('contest')">⬅️ Volver al Panel Admin</button>  
+ <button class="history-back-action-btn" onclick="closeAdminModal('contest')">⬅️ Volver al Panel Admin</button>  
  </div>  
  </div>  
 
@@ -2964,48 +3056,48 @@
  </div>  
  <div class="saved-lists-scroll" style="gap: 12px; padding-top: 4px;">  
  <div class="admin-panel-grid">  
- <button class="light-color-tile" data-effect-type="color" data-effect-val="#ff007f" ontouchend="handleColorEffect(event, '#ff007f')" onclick="setAdminEffect('color', '#ff007f')">  
+ <button class="light-color-tile" data-effect-type="color" data-effect-val="#ff007f" onclick="setAdminEffect('color', '#ff007f')">  
  <div class="color-dot" style="background: #ff007f;"></div>  
  <span class="color-tile-text">Rosa Neón</span>  
  </button>  
- <button class="light-color-tile" data-effect-type="color" data-effect-val="#00f3ff" ontouchend="handleColorEffect(event, '#00f3ff')" onclick="setAdminEffect('color', '#00f3ff')">  
+ <button class="light-color-tile" data-effect-type="color" data-effect-val="#00f3ff" onclick="setAdminEffect('color', '#00f3ff')">  
  <div class="color-dot" style="background: #00f3ff;"></div>  
  <span class="color-tile-text">Azul Láser</span>  
  </button>  
- <button class="light-color-tile" data-effect-type="color" data-effect-val="#ffe600" ontouchend="handleColorEffect(event, '#ffe600')" onclick="setAdminEffect('color', '#ffe600')">  
+ <button class="light-color-tile" data-effect-type="color" data-effect-val="#ffe600" onclick="setAdminEffect('color', '#ffe600')">  
  <div class="color-dot" style="background: #ffe600;"></div>  
  <span class="color-tile-text">Amarillo Strobe</span>  
  </button>  
- <button class="light-color-tile" data-effect-type="color" data-effect-val="#8b5cf6" ontouchend="handleColorEffect(event, '#8b5cf6')" onclick="setAdminEffect('color', '#8b5cf6')">  
+ <button class="light-color-tile" data-effect-type="color" data-effect-val="#8b5cf6" onclick="setAdminEffect('color', '#8b5cf6')">  
  <div class="color-dot" style="background: #8b5cf6;"></div>  
  <span class="color-tile-text">Morado Club</span>  
  </button>  
- <button class="light-color-tile" data-effect-type="color" data-effect-val="#10b981" ontouchend="handleColorEffect(event, '#10b981')" onclick="setAdminEffect('color', '#10b981')">  
+ <button class="light-color-tile" data-effect-type="color" data-effect-val="#10b981" onclick="setAdminEffect('color', '#10b981')">  
  <div class="color-dot" style="background: #10b981;"></div>  
  <span class="color-tile-text">Verde Rave</span>  
  </button>  
- <button class="light-color-tile" data-effect-type="color" data-effect-val="#ff5500" ontouchend="handleColorEffect(event, '#ff5500')" onclick="setAdminEffect('color', '#ff5500')">  
+ <button class="light-color-tile" data-effect-type="color" data-effect-val="#ff5500" onclick="setAdminEffect('color', '#ff5500')">  
  <div class="color-dot" style="background: #ff5500;"></div>  
  <span class="color-tile-text">Naranja Fuego</span>  
  </button>  
- <button class="light-color-tile" data-effect-type="color" data-effect-val="#ffffff" ontouchend="handleColorEffect(event, '#ffffff')" onclick="setAdminEffect('color', '#ffffff')">  
+ <button class="light-color-tile" data-effect-type="color" data-effect-val="#ffffff" onclick="setAdminEffect('color', '#ffffff')">  
  <div class="color-dot" style="background: #ffffff;"></div>  
  <span class="color-tile-text">Blanco Puro</span>  
  </button>  
- <button class="light-color-tile" data-effect-type="color" data-effect-val="#000000" ontouchend="handleColorEffect(event, '#000000')" onclick="setAdminEffect('color', '#000000')">  
+ <button class="light-color-tile" data-effect-type="color" data-effect-val="#000000" onclick="setAdminEffect('color', '#000000')">  
  <div class="color-dot" style="background: #000000; border-color: rgba(255,255,255,0.7);"></div>  
  <span class="color-tile-text">Negro / Off</span>  
  </button>  
  </div>  
  <div class="admin-action-row" style="flex-direction: column; gap: 8px;">  
- <button class="admin-action-btn btn-flash" style="width: 100%; padding: 14px;" ontouchend="handleLightTouch(event, 'flash', 'flash')" onclick="setAdminEffect('flash', 'flash')">⚡ Flash Blanco (Estrobo)</button>  
- <button class="admin-action-btn btn-burst" style="width: 100%; padding: 14px;" ontouchend="handleLightTouch(event, 'burst', 'burst')" onclick="setAdminEffect('burst', 'burst')">💥 Ráfaga Color</button>  
- <button class="admin-action-btn" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #ff0055, #ec4899); color: #fff;" ontouchend="handleLightTouch(event, 'heart', 'heart')" onclick="setAdminEffect('heart', 'heart')">❤️ Corazón Neón (Fondo Blanco)</button>  
- <button class="admin-action-btn" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #ffb800, #ff007a); color: #fff;" ontouchend="handleLightPhotoTouch(event)" onclick="triggerPhotoMomentAlert(event)">📸 Alerta Momento Foto / Subidón (10s + Flash)</button>
+ <button class="admin-action-btn btn-flash" style="width: 100%; padding: 14px;" onclick="setAdminEffect('flash', 'flash')">⚡ Flash Blanco (Estrobo)</button>  
+ <button class="admin-action-btn btn-burst" style="width: 100%; padding: 14px;" onclick="setAdminEffect('burst', 'burst')">💥 Ráfaga Color</button>  
+ <button class="admin-action-btn" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #ff0055, #ec4899); color: #fff;" onclick="setAdminEffect('heart', 'heart')">❤️ Corazón Neón (Fondo Blanco)</button>  
+ <button class="admin-action-btn" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #ffb800, #ff007a); color: #fff;" onclick="triggerPhotoMomentAlert(event)">📸 Alerta Momento Foto / Subidón (10s + Flash)</button>
  </div>  
- <button class="admin-action-btn btn-reset-light" id="btnResetLight" style="padding: 14px;" ontouchend="handleLightTouch(event, 'off', '')" onclick="setAdminEffect('off', '')">🛑 Apagar Efectos / Normal</button>  
+ <button class="admin-action-btn btn-reset-light" id="btnResetLight" style="padding: 14px;" onclick="setAdminEffect('off', '')">🛑 Apagar Efectos / Normal</button>  
  </div>  
- <button class="history-back-action-btn" ontouchend="handleModalClose(event, 'lights')" onclick="closeAdminModal('lights')">⬅️ Volver al Panel Admin</button>  
+ <button class="history-back-action-btn" onclick="closeAdminModal('lights')">⬅️ Volver al Panel Admin</button>  
  </div>  
  </div>  
 
@@ -3066,13 +3158,13 @@
  </div>  
 
  <div style="display: flex; gap: 8px; margin-top: 6px;">  
- <button class="admin-action-btn" style="background: var(--success); color: #000; flex: 1;" ontouchend="handleLaunchPoll(event)" onclick="launchExpressPoll()">🚀 Lanzar Encuesta</button>  
- <button class="admin-action-btn" style="background: var(--count-bg); color: #000; flex: 1;" ontouchend="handleClosePoll(event)" onclick="closeExpressPoll()">🔒 Cerrar Votación</button>  
+ <button class="admin-action-btn" style="background: var(--success); color: #000; flex: 1;" onclick="launchExpressPoll()">🚀 Lanzar Encuesta</button>  
+ <button class="admin-action-btn" style="background: var(--count-bg); color: #000; flex: 1;" onclick="closeExpressPoll()">🔒 Cerrar Votación</button>  
  </div>
- <button class="admin-action-btn" style="background: linear-gradient(90deg, var(--accent), var(--accent-2)); color: #fff; width: 100%; margin-top: 4px;" ontouchend="handleVersusLaunch(event)" onclick="launchTop2VersusBattle()">⚔️ Batalla VS (Enfrentar Top 2 de la Cola - 60s)</button>  
- <button class="admin-action-btn" style="background: rgba(255, 42, 84, 0.18); border: 1px solid var(--danger); color: var(--danger); width: 100%; margin-top: 2px;" ontouchend="handleResetPoll(event)" onclick="resetExpressPoll()">🔄 Reiniciar Encuesta (Borrar Resultados)</button>  
+ <button class="admin-action-btn" style="background: linear-gradient(90deg, var(--accent), var(--accent-2)); color: #fff; width: 100%; margin-top: 4px;" onclick="launchTop2VersusBattle()">⚔️ Batalla VS (Enfrentar Top 2 de la Cola - 60s)</button>  
+ <button class="admin-action-btn" style="background: rgba(255, 42, 84, 0.18); border: 1px solid var(--danger); color: var(--danger); width: 100%; margin-top: 2px;" onclick="resetExpressPoll()">🔄 Reiniciar Encuesta (Borrar Resultados)</button>  
  </div>  
- <button class="history-back-action-btn" ontouchend="handleModalClose(event, 'poll')" onclick="closeAdminModal('poll')">⬅️ Volver al Panel Admin</button>  
+ <button class="history-back-action-btn" onclick="closeAdminModal('poll')">⬅️ Volver al Panel Admin</button>  
  </div>  
  </div>  
 
@@ -3101,12 +3193,12 @@
  </div>  
 
  <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 6px;">  
- <button type="button" class="admin-action-btn" style="background: var(--success); color: #000; width: 100%; padding: 12px;" ontouchend="handleSaveNextParty(event, true)" onclick="saveNextPartyBanner(true)">📢 Publicar / Mostrar Banner en Sala</button>  
- <button type="button" class="admin-action-btn" style="background: var(--count-bg); color: #000; width: 100%; padding: 12px;" ontouchend="handleSaveNextParty(event, false)" onclick="saveNextPartyBanner(false)">🙈 Ocultar Banner (Guardar Datos)</button>  
- <button type="button" class="admin-action-btn" style="background: rgba(255, 42, 84, 0.18); border: 1px solid var(--danger); color: var(--danger); width: 100%; padding: 12px;" ontouchend="handleClearNextParty(event)" onclick="clearNextPartyBanner()">🗑️ Borrar y Desactivar Banner</button>  
+ <button type="button" class="admin-action-btn" style="background: var(--success); color: #000; width: 100%; padding: 12px;" onclick="saveNextPartyBanner(true)">📢 Publicar / Mostrar Banner en Sala</button>  
+ <button type="button" class="admin-action-btn" style="background: var(--count-bg); color: #000; width: 100%; padding: 12px;" onclick="saveNextPartyBanner(false)">🙈 Ocultar Banner (Guardar Datos)</button>  
+ <button type="button" class="admin-action-btn" style="background: rgba(255, 42, 84, 0.18); border: 1px solid var(--danger); color: var(--danger); width: 100%; padding: 12px;" onclick="clearNextPartyBanner()">🗑️ Borrar y Desactivar Banner</button>  
  </div>  
  </div>  
- <button class="history-back-action-btn" ontouchend="handleModalClose(event, 'nextParty')" onclick="closeAdminModal('nextParty')">⬅️ Volver al Panel Admin</button>  
+ <button class="history-back-action-btn" onclick="closeAdminModal('nextParty')">⬅️ Volver al Panel Admin</button>  
  </div>  
  </div>  
 
@@ -3166,7 +3258,7 @@
  </div>
  </div>  
 
- <button class="history-back-action-btn" ontouchend="handleModalClose(event, 'calendar')" onclick="closeAdminModal('calendar')">⬅️ Volver al Panel Admin</button>  
+ <button class="history-back-action-btn" onclick="closeAdminModal('calendar')">⬅️ Volver al Panel Admin</button>  
  </div>  
  </div>  
 
@@ -3234,7 +3326,7 @@
  <div class="results-modal-content" onclick="event.stopPropagation()">  
  <div class="results-modal-header">  
  <span class="results-modal-title" id="searchResultsModalTitle">💿 Buscador Musical</span>  
- <button type="button" class="close-results-btn" ontouchend="if(typeof isScrolling==='undefined'||!isScrolling){event.preventDefault();event.stopPropagation();closeSearchResultsModal();}" onclick="closeSearchResultsModal()">✕ Cerrar</button>  
+ <button class="close-results-btn" onclick="closeSearchResultsModal()">✕ Cerrar</button>  
  </div>  
 
  <form class="search-box" id="modalSearchForm" action="javascript:void(0);" style="margin-bottom: 6px;">  
@@ -3245,11 +3337,11 @@
 
  <!-- FILTRO INTELIGENTE POR DÉCADAS / ESTILOS -->
  <div class="decade-filters" id="decadeFiltersBar">
- <button type="button" class="decade-chip active" data-decade="all" ontouchend="handleDecadeTouch(event, 'all')" onclick="setDecadeFilter('all')">🌐 Todas</button>
- <button type="button" class="decade-chip" data-decade="80s" ontouchend="handleDecadeTouch(event, '80s')" onclick="setDecadeFilter('80s')">🕹️ 80s</button>
- <button type="button" class="decade-chip" data-decade="90s" ontouchend="handleDecadeTouch(event, '90s')" onclick="setDecadeFilter('90s')">💿 90s Remember</button>
- <button type="button" class="decade-chip" data-decade="2000s" ontouchend="handleDecadeTouch(event, '2000s')" onclick="setDecadeFilter('2000s')">⚡ 2000s</button>
- <button type="button" class="decade-chip" data-decade="actual" ontouchend="handleDecadeTouch(event, 'actual')" onclick="setDecadeFilter('actual')">🔥 Actual (2010+)</button>
+ <button type="button" class="decade-chip active" data-decade="all" onclick="setDecadeFilter('all')">🌐 Todas</button>
+ <button type="button" class="decade-chip" data-decade="80s" onclick="setDecadeFilter('80s')">🕹️ 80s</button>
+ <button type="button" class="decade-chip" data-decade="90s" onclick="setDecadeFilter('90s')">💿 90s Remember</button>
+ <button type="button" class="decade-chip" data-decade="2000s" onclick="setDecadeFilter('2000s')">⚡ 2000s</button>
+ <button type="button" class="decade-chip" data-decade="actual" onclick="setDecadeFilter('actual')">🔥 Actual (2010+)</button>
  </div>  
 
  <div id="historySection" class="history-section" style="display: none; margin-bottom: 6px;">  
@@ -3267,7 +3359,7 @@
  <div class="modal" id="imageModal">  
  <div class="modal-content" onclick="event.stopPropagation()">  
    
- <button type="button" class="back-btn-top" ontouchend="if(typeof isScrolling==='undefined'||!isScrolling){event.preventDefault();event.stopPropagation();closeModal();}" onclick="closeModal()">⬅️ Volver a Resultados</button>  
+ <button class="back-btn-top" onclick="closeModal()">⬅️ Volver a Resultados</button>  
 
  <img id="modalImg" src="" alt="Portada HD">  
  <div class="modal-title" id="modalTitle"></div>  
@@ -3361,7 +3453,7 @@
  <p class="status-msg">Cargando histórico...</p>  
  </div>  
   
- <button class="history-back-action-btn" id="historyBackBtn" ontouchend="handleHistoryBackAction(event)" onclick="handleHistoryBackAction(event)">  
+ <button class="history-back-action-btn" id="historyBackBtn" onclick="handleHistoryBackAction(event)">  
  ⬅️ Cerrar Histórico  
  </button>  
  </div>  
@@ -3383,7 +3475,7 @@
  <p class="status-msg">Calculando estadísticas...</p>  
  </div>  
   
- <button class="history-back-action-btn" ontouchend="handleModalClose(event, 'stats')" onclick="closeAdminModal('stats')">  
+ <button class="history-back-action-btn" onclick="closeAdminModal('stats')">  
  ⬅️ Cerrar Estadísticas  
  </button>  
  </div>  
@@ -3953,12 +4045,6 @@
  const pollModal = document.getElementById('pollModal');  
  const qrModal = document.getElementById('qrModal');  
 
- const quickReqModal = document.getElementById('quickRequestModal');
- if (quickReqModal && quickReqModal.style.display === 'flex') {
- closeQuickRequestModal();
- return;
- }
-
  if (imageModal.style.display === 'flex') {  
  closeModalFromPopState();  
  return;  
@@ -4063,7 +4149,6 @@
  standbyScreen.classList.add('inactive');  
 
  setTimeout(() => {  
- closeQuickRequestModal();
  closeModal();  
  closeManualModal();  
  closeSearchResultsModal();  
@@ -5012,6 +5097,7 @@
  const historyModal = document.getElementById('historyModal');  
  historyModal.dataset.viewingList = 'false';  
  currentViewingListId = null;  
+ currentLoadedSavedListData = null;
  modalTitle.innerHTML = `<span>📁 Histórico de Sesiones</span>`;  
  modalSubtitle.textContent = "Listas guardadas en la base de datos (pulsa en el nombre para verlas)";  
  backBtn.innerHTML = "⬅️ Cerrar Histórico";  
@@ -5038,7 +5124,7 @@
  const totalSongs = list.items ? list.items.length : 0;  
  const safeListName = (list.name || '').replace(/'/g, "\\'");  
  return `  
- <div class="history-item-card" onpointerdown="verListaDirecta(event, '${list.id}')">  
+ <div class="history-item-card" onclick="verListaDirecta(event, '${list.id}')">  
  <div class="history-item-header">  
  <div style="flex: 1;">  
  <div class="history-item-title">🎵 ${list.name}</div>  
@@ -5047,7 +5133,7 @@
  <span class="history-badge-count">🎸 ${totalSongs} temas</span>  
  </div>  
  <div class="history-actions" onclick="event.stopPropagation()">  
- <button type="button" class="history-delete-btn" onpointerdown="deleteHistoryListDirecta(event, '${list.id}', '${safeListName}')">🗑️ Borrar</button>  
+ <button type="button" class="history-delete-btn" onclick="deleteHistoryListDirecta(event, '${list.id}', '${safeListName}')">🗑️ Borrar</button>  
  </div>  
  </div>  
  `;  
@@ -5087,6 +5173,7 @@
   
  historyModal.dataset.viewingList = 'true';  
  currentViewingListId = listId;  
+ currentLoadedSavedListData = null;
  container.innerHTML = '<p class="status-msg">Cargando canciones...</p>';  
   
  historyRef.child(listId).once('value', (snapshot) => {  
@@ -5096,6 +5183,7 @@
  return;  
  }  
   
+ currentLoadedSavedListData = { id: listId, data: listData };
  modalTitle.innerHTML = `<span>🎵 ${listData.name}</span> <button class="history-pdf-btn" id="headerPdfBtn" onclick="exportCurrentActiveListToPDF()">📄 PDF</button>`;  
  modalSubtitle.textContent = `Guardada el ${listData.date} (${listData.items.length} canciones)`;  
  backBtn.innerHTML = "⬅️ Volver a Listas Guardadas";  
@@ -5130,55 +5218,119 @@
  });  
  }  
 
- function exportSavedListToPDF(listId) {  
- historyRef.child(listId).once('value', (snapshot) => {  
- const listData = snapshot.val();  
- if (!listData || !listData.items || listData.items.length === 0) {  
- alert("No hay canciones en esta lista para exportar.");  
- return;  
- }  
 
- const container = document.getElementById('savedListsContainer');  
- const previousHTML = container.innerHTML;  
- const modalTitle = document.getElementById('historyModalTitle');  
- const modalSubtitle = document.getElementById('historyModalSubtitle');  
- const prevTitleHTML = modalTitle.innerHTML;  
- const prevSubText = modalSubtitle.textContent;  
+ // Exportación estable: preparación exclusiva de la hoja de impresión.
+ let activePrintCleanup = null;
+ let currentLoadedSavedListData = null;
 
- modalTitle.innerHTML = `<span>🎵 ${listData.name} (${listData.date})</span>`;  
- modalSubtitle.textContent = `Listado oficial de canciones (${listData.items.length} temas)`;  
+ function printSongsAsPDF(title, subtitle, songs) {
+   if (!Array.isArray(songs) || songs.length === 0) {
+     alert('No hay canciones para exportar.');
+     return;
+   }
 
- container.innerHTML = listData.items.map((item, index) => {  
- const absoluteIndex = index + 1;  
- const count = Number(item.count || 1);  
- const displayUser = item.users || item.user || 'Anónimo';  
- const isPlayed = item.played === true;  
-  
- return `  
- <div class="queue-item${isPlayed ? ' played' : ''}">  
- <img src="${item.artwork || 'https://via.placeholder.com/100?text=Live'}" alt="${item.title}">  
- <div class="song-info">  
- <div class="song-title">${absoluteIndex}. ${item.title}</div>  
- <div class="song-artist">${item.artist}</div>  
- <div class="requester-tag">Pedido: ${displayUser} ${isPlayed ? '✅ [Pinchada]' : ''}</div>  
- </div>  
- <div class="action-buttons">  
- <span class="badge-count">🔥 ${count}</span>  
- <span class="badge-year">${item.year || 'N/D'}</span>  
- </div>  
- </div>  
- `;  
- }).join('');  
+   if (activePrintCleanup) activePrintCleanup();
+   const sheet = document.createElement('section');
+   sheet.id = 'print-sheet';
+   sheet.setAttribute('aria-label', 'Listado para imprimir');
 
- window.print();  
+   const heading = document.createElement('h1');
+   heading.textContent = String(title || 'Listado de canciones');
+   sheet.appendChild(heading);
 
- setTimeout(() => {  
- modalTitle.innerHTML = prevTitleHTML;  
- modalSubtitle.textContent = prevSubText;  
- container.innerHTML = previousHTML;  
- }, 800);  
- });  
- }  
+   const subheading = document.createElement('p');
+   subheading.className = 'print-subheading';
+   subheading.textContent = String(subtitle || '') + ' · ' + songs.length + ' canciones';
+   sheet.appendChild(subheading);
+
+   const table = document.createElement('table');
+   table.className = 'print-songs-table';
+   const columns = ['Nº', 'Canción', 'Artista', 'Solicitante', 'Petic.', 'Año', 'Estado'];
+   const thead = document.createElement('thead');
+   const headRow = document.createElement('tr');
+   columns.forEach(label => {
+     const th = document.createElement('th');
+     th.textContent = label;
+     headRow.appendChild(th);
+   });
+   thead.appendChild(headRow);
+   table.appendChild(thead);
+   const tbody = document.createElement('tbody');
+   songs.forEach((song, index) => {
+     const values = [
+       String(index + 1),
+       String(song.title || 'Sin título'),
+       String(song.artist || 'Artista desconocido'),
+       String(song.users || song.user || 'Anónimo'),
+       String(Number.isFinite(Number(song.count)) ? Number(song.count) : 1),
+       String(song.year || '—'),
+       song.played ? 'Pinchada' : 'Pendiente'
+     ];
+     const tr = document.createElement('tr');
+     values.forEach(value => {
+       const td = document.createElement('td');
+       td.textContent = value;
+       tr.appendChild(td);
+     });
+     tbody.appendChild(tr);
+   });
+   table.appendChild(tbody);
+   sheet.appendChild(table);
+
+   const footer = document.createElement('p');
+   footer.className = 'print-footer';
+   footer.textContent = 'WE LOVE LIVE MUSIC · ' + new Date().toLocaleString('es-ES');
+   sheet.appendChild(footer);
+   document.body.appendChild(sheet);
+   document.body.classList.add('pdf-printing');
+
+   let cleanupTimer;
+   let finished = false;
+   const cleanup = () => {
+     if (finished) return;
+     finished = true;
+     clearTimeout(cleanupTimer);
+     window.removeEventListener('afterprint', afterPrint);
+     document.body.classList.remove('pdf-printing');
+     if (sheet.parentNode) sheet.parentNode.removeChild(sheet);
+     if (activePrintCleanup === cleanup) activePrintCleanup = null;
+   };
+   const afterPrint = () => setTimeout(cleanup, 1000);
+   activePrintCleanup = cleanup;
+   window.addEventListener('afterprint', afterPrint);
+   // Algunos navegadores móviles no emiten afterprint.
+   cleanupTimer = setTimeout(cleanup, 120000);
+   try {
+     // La impresión se lanza dentro del gesto del usuario (importante en Safari).
+     window.print();
+   } catch (error) {
+     cleanup();
+     console.error('Error al preparar el PDF:', error);
+     alert('No se pudo abrir la impresión. Vuelve a intentarlo desde el navegador.');
+   }
+ }
+
+ function exportSavedListToPDF(listId) {
+   // La lista ya abierta se imprime de forma síncrona para conservar el gesto del usuario en iPhone.
+   if (currentLoadedSavedListData && currentLoadedSavedListData.id === listId) {
+     const data = currentLoadedSavedListData.data;
+     printSongsAsPDF(data.name || 'Sesión guardada', 'Guardada el ' + (data.date || ''), data.items);
+     return;
+   }
+   // Compatibilidad para llamadas directas sin haber abierto la lista antes.
+   historyRef.child(listId).once('value').then(snapshot => {
+     const data = snapshot.val();
+     if (!data || !Array.isArray(data.items) || data.items.length === 0) {
+       alert('No hay canciones en esta lista para exportar.');
+       return;
+     }
+     printSongsAsPDF(data.name || 'Sesión guardada', 'Guardada el ' + (data.date || ''), data.items);
+   }).catch(error => {
+     console.error('Error al cargar histórico para PDF:', error);
+     alert('No se pudo cargar esta lista. Revisa la conexión e inténtalo de nuevo.');
+   });
+ }
+
 
  function handleHistoryBackAction(e) {  
  if (e) {  
@@ -5597,36 +5749,6 @@
  }  
  }  
 
- let renderedSongsMap = {};
- let lastSongBtnTouchTime = 0;
- let pendingSongAction = null;
-
- function escapeAttrSafe(str) {
- return String(str || '')
- .replace(/&/g, '&amp;')
- .replace(/"/g, '&quot;')
- .replace(/'/g, '&#39;')
- .replace(/</g, '&lt;')
- .replace(/>/g, '&gt;');
- }
-
- function safeStorageGet(key) {
- try { return localStorage.getItem(key); } catch (e) { return null; }
- }
-
- function safeStorageSet(key, val) {
- try { localStorage.setItem(key, val); } catch (e) {}
- }
-
- function makeSongKey(title, artist) {
- try {
- return btoa(unescape(encodeURIComponent((title || '') + " - " + (artist || ''))))
- .replace(/[/+:=]/g, '_');
- } catch (e) {
- return String((title || '') + '_' + (artist || '')).replace(/[^a-zA-Z0-9_-]/g, '_');
- }
- }
-
  function renderResults(results, query) {  
  const resultsDiv = document.getElementById('modalResultsList');  
 
@@ -5640,13 +5762,11 @@
  `;  
  }  
 
- const safeQueryAttr = escapeAttrSafe(query);
-
  if (!results || results.length === 0) {  
  resultsDiv.innerHTML = closedNoticeHtml + `  
  <div class="manual-fallback-box">  
  <div class="manual-fallback-text">⚠️ Esa canción no está disponible o no se encuentra en el catálogo.</div>  
- <button type="button" class="manual-trigger-btn" data-manual-q="${safeQueryAttr}" ontouchend="handleManualBtnTouch(event, this)" onclick="handleManualBtnClick(event, this)">➕ Introducir manualmente</button>  
+ <button class="manual-trigger-btn" onclick="openManualModalWithQuery('${query}')">➕ Introducir manualmente</button>  
  </div>  
  `;  
  return;  
@@ -5654,10 +5774,10 @@
   
  saveToHistory(query);  
   
- let filteredResults = results.filter(function(song) {
+ let filteredResults = results.filter((song) => {
  if (currentDecadeFilter === 'all') return true;
  const rDate = song.releaseDate ? new Date(song.releaseDate) : null;
- const y = rDate && !isNaN(rDate.getTime()) ? rDate.getFullYear() : 0;
+ const y = rDate && !isNaN(rDate) ? rDate.getFullYear() : 0;
  if (!y) return false;
  if (currentDecadeFilter === '80s') return y >= 1980 && y <= 1989;
  if (currentDecadeFilter === '90s') return y >= 1990 && y <= 1999;
@@ -5670,134 +5790,65 @@
  resultsDiv.innerHTML = closedNoticeHtml + `
  <div class="manual-fallback-box">
  <div class="manual-fallback-text">⚠️ No hay resultados en la década seleccionada (${currentDecadeFilter.toUpperCase()}). Prueba marcando "🌐 Todas" o introdúcela manualmente.</div>
- <button type="button" class="manual-trigger-btn" data-manual-q="${safeQueryAttr}" ontouchend="handleManualBtnTouch(event, this)" onclick="handleManualBtnClick(event, this)">➕ Introducir manualmente</button>
+ <button class="manual-trigger-btn" onclick="openManualModalWithQuery('${query}')">➕ Introducir manualmente</button>
  </div>
  `;
  return;
  }
 
- results = filteredResults.slice();
+ results = filteredResults;
 
- results.sort(function(a, b) {  
- const dA = a.releaseDate ? new Date(a.releaseDate) : null;
- const dB = b.releaseDate ? new Date(b.releaseDate) : null;
- const yearA = dA && !isNaN(dA.getTime()) ? dA.getFullYear() : 9999;  
- const yearB = dB && !isNaN(dB.getTime()) ? dB.getFullYear() : 9999;  
+ results.sort((a, b) => {  
+ const yearA = a.releaseDate ? new Date(a.releaseDate).getFullYear() : 9999;  
+ const yearB = b.releaseDate ? new Date(b.releaseDate).getFullYear() : 9999;  
  return Number(yearA) - Number(yearB);  
  });  
   
  resultsDiv.innerHTML = closedNoticeHtml + `  
  <div class="manual-fallback-box" style="margin-bottom: 12px; background: rgba(139, 92, 246, 0.1); border-color: var(--badge-bg);">  
  <div class="manual-fallback-text">¿No encuentras la versión exacta que buscas?</div>  
- <button type="button" class="manual-trigger-btn" style="background: var(--badge-bg);" data-manual-q="${safeQueryAttr}" ontouchend="handleManualBtnTouch(event, this)" onclick="handleManualBtnClick(event, this)">➕ Introducir manualmente</button>  
+ <button class="manual-trigger-btn" style="background: var(--badge-bg);" onclick="openManualModalWithQuery('${query}')">➕ Introducir manualmente</button>  
  </div>  
- ` + results.map(function(song) {  
+ ` + results.map((song) => {  
  const releaseDate = song.releaseDate ? new Date(song.releaseDate) : null;  
- const year = releaseDate && !isNaN(releaseDate.getTime()) ? String(releaseDate.getFullYear()) : 'N/D';  
+ const year = releaseDate && !isNaN(releaseDate) ? releaseDate.getFullYear() : 'N/D';  
  const artwork100 = song.artworkUrl100 || 'https://via.placeholder.com/100?text=Sin+Imagen';  
  const artworkHD = song.artworkUrl100 ? song.artworkUrl100.replace('100x100bb', '1000x1000bb') : artwork100;  
  const previewAudio = song.previewUrl || '';  
- const genre = song.primaryGenreName || 'Live Music';  
- const trackTitle = song.trackName || 'Sin título';
- const artistName = song.artistName || 'Artista desconocido';
+ const genre = song.primaryGenreName || '';  
   
- const songKey = makeSongKey(trackTitle, artistName);
- renderedSongsMap[songKey] = {
- songKey: songKey,
- title: trackTitle,
- artist: artistName,
- artwork100: artwork100,
- artworkHD: artworkHD,
- previewAudio: previewAudio,
- genre: genre,
- year: year
- };
+ const safeTitle = (song.trackName || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');  
+ const safeArtist = (song.artistName || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');  
   
  const disabledAttr = !areRequestsOpen ? 'disabled' : '';  
  const btnTitleAttr = !areRequestsOpen ? 'title="Las peticiones están desactivadas por el DJ"' : '';  
- const existingQueueItem = globalQueueItems.find(function(item) { return item.id === songKey; });  
+  
+ const songKey = btoa(unescape(encodeURIComponent(song.trackName + " - " + song.artistName)))  
+ .replace(/[/+:=]/g, '_');  
+ const existingQueueItem = globalQueueItems.find(item => item.id === songKey);  
    
  let actionButtonHtml = '';  
  if (existingQueueItem) {  
- actionButtonHtml = `<button type="button" class="vote-btn" ${disabledAttr} ${btnTitleAttr} data-song-key="${escapeAttrSafe(songKey)}" ontouchend="handleSongActionTouch(event, this.getAttribute('data-song-key'), false)" onclick="handleSongActionClick(event, this.getAttribute('data-song-key'), false)">🔥 Votar (+1)</button>`;  
+ actionButtonHtml = `<button class="vote-btn" ${disabledAttr} ${btnTitleAttr} onclick="voteSong('${songKey}', '${safeTitle}')">🔥 Votar (+1)</button>`;  
  } else {  
- actionButtonHtml = `<button type="button" class="request-btn" ${disabledAttr} ${btnTitleAttr} data-song-key="${escapeAttrSafe(songKey)}" ontouchend="handleSongActionTouch(event, this.getAttribute('data-song-key'), false)" onclick="handleSongActionClick(event, this.getAttribute('data-song-key'), false)">➕ Pedir</button>`;  
+ actionButtonHtml = `<button class="request-btn" ${disabledAttr} ${btnTitleAttr} onclick="requestSong('${safeTitle}', '${safeArtist}', '${artwork100}', '${previewAudio}', '${genre}', '${year}')">➕ Pedir</button>`;  
  }  
   
  return `  
  <div class="song-item">  
- <img src="${escapeAttrSafe(artwork100)}" alt="${escapeAttrSafe(trackTitle)}" data-song-key="${escapeAttrSafe(songKey)}" ontouchend="handleOpenModalTouch(event, this.getAttribute('data-song-key'))" onclick="handleOpenModalClick(event, this.getAttribute('data-song-key'))">  
- <div class="song-info" data-song-key="${escapeAttrSafe(songKey)}" ontouchend="handleOpenModalTouch(event, this.getAttribute('data-song-key'))" onclick="handleOpenModalClick(event, this.getAttribute('data-song-key'))">  
- <div class="song-title">${escapeHtmlStr(trackTitle)}</div>  
- <div class="song-artist">${escapeHtmlStr(artistName)}</div>  
+ <img src="${artwork100}" alt="${song.trackName}" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}', '${year}')">  
+ <div class="song-info" onclick="openModal('${artworkHD}', '${safeTitle}', '${safeArtist}', '${previewAudio}', '${genre}', '${year}')">  
+ <div class="song-title">${song.trackName}</div>  
+ <div class="song-artist">${song.artistName}</div>  
  </div>  
  <div class="action-buttons">  
- <span class="badge-year">${escapeHtmlStr(year)}</span>  
+ <span class="badge-year">${year}</span>  
  ${actionButtonHtml}  
  </div>  
  </div>  
  `;  
  }).join('');  
- }
-
- function handleManualBtnTouch(e, btnEl) {
- if (typeof isScrolling !== 'undefined' && isScrolling) return;
- if (e) { e.preventDefault(); e.stopPropagation(); }
- lastSongBtnTouchTime = Date.now();
- openManualModalWithQuery(btnEl.getAttribute('data-manual-q') || '');
- }
-
- function handleManualBtnClick(e, btnEl) {
- if (Date.now() - lastSongBtnTouchTime < 500) {
- if (e) { e.preventDefault(); e.stopPropagation(); }
- return;
- }
- openManualModalWithQuery(btnEl.getAttribute('data-manual-q') || '');
- }
-
- function handleSongActionTouch(e, songKey, fromDetailModal) {
- if (typeof isScrolling !== 'undefined' && isScrolling) return;
- if (e) {
- e.preventDefault();
- e.stopPropagation();
- }
- lastSongBtnTouchTime = Date.now();
- triggerSongRequestOrVote(songKey, fromDetailModal);
- }
-
- function handleSongActionClick(e, songKey, fromDetailModal) {
- if (e) e.stopPropagation();
- if (Date.now() - lastSongBtnTouchTime < 500) {
- if (e) e.preventDefault();
- return;
- }
- triggerSongRequestOrVote(songKey, fromDetailModal);
- }
-
- function handleOpenModalTouch(e, songKey) {
- if (typeof isScrolling !== 'undefined' && isScrolling) return;
- if (e) {
- e.preventDefault();
- e.stopPropagation();
- }
- lastSongBtnTouchTime = Date.now();
- openModalByKey(songKey);
- }
-
- function handleOpenModalClick(e, songKey) {
- if (e) e.stopPropagation();
- if (Date.now() - lastSongBtnTouchTime < 500) {
- if (e) e.preventDefault();
- return;
- }
- openModalByKey(songKey);
- }
-
- function openModalByKey(songKey) {
- const s = renderedSongsMap[songKey];
- if (!s) return;
- openModal(s.artworkHD, s.title, s.artist, s.previewAudio, s.genre, s.year);
- }
+ }  
   
  function openManualModalWithQuery(defaultQuery) {  
  if (!areRequestsOpen) {  
@@ -5807,13 +5858,12 @@
   
  document.getElementById('manualArtistInput').value = defaultQuery || '';  
  document.getElementById('manualTitleInput').value = '';  
- const savedAlias = safeStorageGet('last_requester_name') || safeStorageGet('user_contest_name') || '';
- document.getElementById('manualUserInput').value = savedAlias;  
+ document.getElementById('manualUserInput').value = '';  
   
  const manualModal = document.getElementById('manualModal');  
  manualModal.style.display = 'flex';  
  history.pushState({ screen: 'manualModal' }, '', '');  
- setTimeout(function() { document.getElementById('manualTitleInput').focus(); }, 100);  
+ setTimeout(() => document.getElementById('manualTitleInput').focus(), 100);  
  }  
   
  function closeManualModal() {  
@@ -5829,7 +5879,7 @@
  alert("⚠️ En este momento las peticiones están desactivadas por el DJ.");  
  return;  
  }  
- if (!checkRateLimit(false)) return;  
+ if (!checkRateLimit()) return;  
   
  const artistName = document.getElementById('manualArtistInput').value.trim();  
  const songTitle = document.getElementById('manualTitleInput').value.trim();  
@@ -5839,19 +5889,18 @@
  alert("Por favor, rellena todos los campos.");  
  return;  
  }  
-
- checkRateLimit(true);
- safeStorageSet('last_requester_name', requesterName);
   
- const songKey = makeSongKey(songTitle, artistName);
+ const songKey = btoa(unescape(encodeURIComponent(songTitle + " - " + artistName)))  
+ .replace(/[/+:=]/g, '_');  
+  
  const songRef = db.ref('welove_live_music_queue/' + songKey);  
  const defaultPlaceholderImg = 'https://via.placeholder.com/100?text=Live+Music';  
   
- songRef.once('value', function(snapshot) {  
+ songRef.once('value', (snapshot) => {  
  if (snapshot.exists()) {  
  const data = snapshot.val();  
  const newCount = Number(data.count || 1) + 1;  
- const updatedUsers = data.users ? (data.users + ', ' + requesterName) : requesterName;  
+ const updatedUsers = data.users ? `${data.users}, ${requesterName}` : requesterName;  
   
  songRef.update({  
  count: newCount,  
@@ -5876,209 +5925,110 @@
  });  
   
  rememberMySongKey(songKey);
- alert('¡Petición manual de "' + songTitle + '" enviada al DJ correctamente! 🎧🔥');  
+ alert(`¡Petición manual de "${songTitle}" enviada al DJ correctamente! 🎧🔥`);  
  closeManualModal();  
  closeSearchResultsModal();  
  switchTab('queue', true);  
  }  
   
- function checkRateLimit(commitTimestamp) {  
- const lastRequestTime = safeStorageGet('last_request_timestamp');  
+ function checkRateLimit() {  
+ const lastRequestTime = localStorage.getItem('last_request_timestamp');  
  const now = Date.now();  
  const cooldownTime = 15000;  
   
- if (lastRequestTime && (now - Number(lastRequestTime) < cooldownTime)) {  
- const remainingSeconds = Math.ceil((cooldownTime - (now - Number(lastRequestTime))) / 1000);  
- alert('⏳ Por favor, espera ' + remainingSeconds + ' segundos antes de realizar otra petición.');  
+ if (lastRequestTime && (now - lastRequestTime < cooldownTime)) {  
+ const remainingSeconds = Math.ceil((cooldownTime - (now - lastRequestTime)) / 1000);  
+ alert(`⏳ Por favor, espera ${remainingSeconds} segundos antes de realizar otra petición.`);  
  return false;  
  }  
- if (commitTimestamp !== false) {
- safeStorageSet('last_request_timestamp', String(now));  
- }
+ localStorage.setItem('last_request_timestamp', now);  
  return true;  
  }  
-
- function ensureQuickRequestModal() {
- let modal = document.getElementById('quickRequestModal');
- if (modal) return modal;
-
- modal = document.createElement('div');
- modal.id = 'quickRequestModal';
- modal.className = 'modal';
- modal.style.zIndex = '2200';
- modal.onclick = function(e) {
- if (e.target === modal) closeQuickRequestModal();
- };
- modal.innerHTML = `
- <div class="modal-content" onclick="event.stopPropagation()">
- <div class="modal-title" id="quickReqModalHeading">🎧 Pedir Canción al DJ</div>
- <div class="modal-artist" id="quickReqSongLabel" style="margin-bottom: 12px; color: var(--cyan); font-weight: 800;"></div>
- <form id="quickRequestForm" onsubmit="confirmQuickSongAction(event)">
- <div class="manual-form-group" style="margin-bottom: 16px;">
- <label class="manual-form-label">Tu Nombre o Alias</label>
- <input type="text" id="quickRequesterNameInput" class="manual-form-input" placeholder="Ej: Cristian" required autocomplete="off" />
- </div>
- <div class="modal-actions">
- <button type="submit" id="quickReqSubmitBtn" class="request-btn" style="width: 100%; padding: 12px; font-size: 0.85rem;" ontouchend="if(typeof isScrolling==='undefined'||!isScrolling){event.preventDefault();event.stopPropagation();confirmQuickSongAction(event);}" onclick="confirmQuickSongAction(event)">🚀 Enviar Petición al DJ</button>
- <button type="button" class="back-btn" ontouchend="if(typeof isScrolling==='undefined'||!isScrolling){event.preventDefault();event.stopPropagation();closeQuickRequestModal();}" onclick="closeQuickRequestModal()">Cancelar</button>
- </div>
- </form>
- </div>
- `;
- document.body.appendChild(modal);
- return modal;
- }
-
- function closeQuickRequestModal() {
- const modal = document.getElementById('quickRequestModal');
- if (modal) modal.style.display = 'none';
- pendingSongAction = null;
- }
-
- function triggerSongRequestOrVote(songKey, fromDetailModal) {
- if (!areRequestsOpen) {
- alert("⚠️ En este momento las peticiones están desactivadas por el DJ.");
- return;
- }
- if (!checkRateLimit(false)) return;
-
- const songData = renderedSongsMap[songKey];
- if (!songData) return;
-
- const modalInput = document.getElementById('modalSongInput');
- if (modalInput) modalInput.blur();
-
- const existingQueueItem = globalQueueItems.find(function(item) { return item.id === songKey; });
- const isVote = Boolean(existingQueueItem);
-
- pendingSongAction = {
- type: isVote ? 'vote' : 'request',
- songKey: songKey,
- songData: songData,
- fromDetailModal: Boolean(fromDetailModal)
- };
-
- const modal = ensureQuickRequestModal();
- document.getElementById('quickReqModalHeading').textContent = isVote ? '🔥 Votar Canción (+1)' : '🎧 Pedir Canción al DJ';
- document.getElementById('quickReqSongLabel').textContent = songData.title + ' - ' + songData.artist;
- const submitBtn = document.getElementById('quickReqSubmitBtn');
- submitBtn.textContent = isVote ? '🔥 Confirmar Voto (+1)' : '🚀 Enviar Petición al DJ';
- submitBtn.className = isVote ? 'vote-btn' : 'request-btn';
-
- const nameInput = document.getElementById('quickRequesterNameInput');
- const savedName = safeStorageGet('last_requester_name') || safeStorageGet('user_contest_name') || '';
- nameInput.value = savedName;
-
- modal.style.display = 'flex';
- history.pushState({ screen: 'quickRequestModal' }, '', '');
- setTimeout(function() { nameInput.focus(); }, 80);
- }
-
- function confirmQuickSongAction(event) {
- if (event) event.preventDefault();
- if (!pendingSongAction) return;
- if (!areRequestsOpen) {
- alert("⚠️ En este momento las peticiones están desactivadas por el DJ.");
- closeQuickRequestModal();
- return;
- }
-
- const nameInput = document.getElementById('quickRequesterNameInput');
- const userName = (nameInput ? nameInput.value : '').trim();
- if (!userName) {
- alert("Por favor, escribe tu nombre o alias.");
- if (nameInput) nameInput.focus();
- return;
- }
-
- if (!checkRateLimit(true)) return;
- safeStorageSet('last_requester_name', userName);
-
- const action = pendingSongAction;
- const s = action.songData;
- const songKey = action.songKey;
- const wasFromDetailModal = action.fromDetailModal;
-
- closeQuickRequestModal();
-
- const songRef = db.ref('welove_live_music_queue/' + songKey);
- songRef.once('value', function(snapshot) {
- if (snapshot.exists()) {
- const data = snapshot.val();
- const newCount = Number(data.count || 1) + 1;
- const updatedUsers = data.users ? (data.users + ', ' + userName) : userName;
- songRef.update({
- count: newCount,
- users: updatedUsers,
- timestamp: action.type === 'request' ? Date.now() : (data.timestamp || Date.now())
- });
- } else {
- songRef.set({
- title: s.title,
- artist: s.artist,
- artwork: s.artwork100,
- previewAudio: s.previewAudio || '',
- genre: s.genre || 'Live Music',
- year: s.year || 'N/D',
- user: userName,
- users: userName,
- count: 1,
- played: false,
- timestamp: Date.now()
- });
- }
- });
-
- rememberMySongKey(songKey);
-
- if (wasFromDetailModal) {
- closeModal();
- } else {
- const query = document.getElementById('modalSongInput').value.trim();
- if (query && searchCache.has(query.toLowerCase())) {
- renderResults(searchCache.get(query.toLowerCase()), query);
- }
- }
-
- setTimeout(function() {
- if (action.type === 'vote') {
- alert('🔥 ¡Voto sumado con éxito para "' + s.title + '"!');
- } else {
- alert('¡Petición enviada al DJ correctamente! 🎧🔥');
- }
- }, 60);
- }
-
+  
  function requestSong(title, artist, artwork, previewAudio, genre, year) {  
- const songKey = makeSongKey(title, artist);
- renderedSongsMap[songKey] = {
- songKey: songKey,
- title: title,
- artist: artist,
- artwork100: artwork,
- artworkHD: (artwork || '').replace('100x100bb', '1000x1000bb'),
- previewAudio: previewAudio || '',
- genre: genre || 'Live Music',
- year: year || 'N/D'
- };
- triggerSongRequestOrVote(songKey, false);
+ if (!areRequestsOpen) {  
+ alert("⚠️ En este momento las peticiones están desactivadas por el DJ.");  
+ return;  
+ }  
+  
+ if (!checkRateLimit()) return;  
+  
+ let requesterName = prompt("Introduce tu nombre o alias para la petición:");  
+ if (!requesterName || requesterName.trim() === "") return;  
+ requesterName = requesterName.trim();  
+  
+ const songKey = btoa(unescape(encodeURIComponent(title + " - " + artist)))  
+ .replace(/[/+:=]/g, '_');  
+  
+ const songRef = db.ref('welove_live_music_queue/' + songKey);  
+  
+ songRef.once('value', (snapshot) => {  
+ if (snapshot.exists()) {  
+ const data = snapshot.val();  
+ const newCount = Number(data.count || 1) + 1;  
+ const updatedUsers = data.users ? `${data.users}, ${requesterName}` : requesterName;  
+  
+ songRef.update({  
+ count: newCount,  
+ users: updatedUsers,  
+ timestamp: Date.now()  
+ });  
+ } else {  
+ songRef.set({  
+ title: title,  
+ artist: artist,  
+ artwork: artwork,  
+ previewAudio: previewAudio || '',  
+ genre: genre || 'Live Music',  
+ year: year || 'N/D',  
+ user: requesterName,  
+ users: requesterName,  
+ count: 1,  
+ played: false,  
+ timestamp: Date.now()  
+ });  
+ }  
+ });  
+  
+ rememberMySongKey(songKey);
+ alert(`¡Petición enviada al DJ correctamente! 🎧🔥`);  
+ const query = document.getElementById('modalSongInput').value.trim();  
+ if (query && searchCache.has(query.toLowerCase())) {  
+ renderResults(searchCache.get(query.toLowerCase()), query);  
+ }  
  }  
   
  function voteSong(songKey, title) {  
- if (!renderedSongsMap[songKey]) {
- const existing = globalQueueItems.find(function(i) { return i.id === songKey; });
- renderedSongsMap[songKey] = {
- songKey: songKey,
- title: title || (existing ? existing.title : 'Canción'),
- artist: existing ? existing.artist : '',
- artwork100: existing ? existing.artwork : '',
- artworkHD: existing ? existing.artwork : '',
- previewAudio: '',
- genre: 'Live Music',
- year: existing ? existing.year : 'N/D'
- };
- }
- triggerSongRequestOrVote(songKey, false);
+ if (!areRequestsOpen) {  
+ alert("⚠️ En este momento las peticiones están desactivadas por el DJ.");  
+ return;  
+ }  
+  
+ if (!checkRateLimit()) return;  
+  
+ let voterName = prompt("Introduce tu nombre o alias para votar esta canción:");  
+ if (!voterName || voterName.trim() === "") return;  
+ voterName = voterName.trim();  
+  
+ const songRef = db.ref('welove_live_music_queue/' + songKey);  
+ songRef.once('value', (snapshot) => {  
+ if (snapshot.exists()) {  
+ const data = snapshot.val();  
+ const newCount = Number(data.count || 1) + 1;  
+ const updatedUsers = data.users ? `${data.users}, ${voterName}` : voterName;  
+  
+ songRef.update({  
+ count: newCount,  
+ users: updatedUsers  
+ });  
+ rememberMySongKey(songKey);
+ alert(`🔥 ¡Voto sumado con éxito para "${title}"!`);  
+ const query = document.getElementById('modalSongInput').value.trim();  
+ if (query && searchCache.has(query.toLowerCase())) {  
+ renderResults(searchCache.get(query.toLowerCase()), query);  
+ }  
+ }  
+ });  
  }  
   
  function triggerDjAlert(reasonText) {  
@@ -6269,45 +6219,15 @@
  }  
  }  
   
- function exportQueueToPDF() {  
- if (globalQueueItems.length === 0) {  
- alert("No hay canciones en la lista para exportar.");  
- return;  
- }  
-  
- const queueResults = document.getElementById('queueResults');  
- const previousHTML = queueResults.innerHTML;  
-  
- queueResults.innerHTML = globalQueueItems.map((item, index) => {  
- const absoluteIndex = index + 1;  
- const count = Number(item.count || 1);  
- const displayUser = item.users || item.user || 'Anónimo';  
- const isPlayed = item.played === true;  
-  
- return `  
- <div class="queue-item${isPlayed ? ' played' : ''}">  
- <img src="${item.artwork}" alt="${item.title}">  
- <div class="song-info">  
- <div class="song-title">${absoluteIndex}. ${item.title}</div>  
- <div class="song-artist">${item.artist}</div>  
- <div class="requester-tag">Pedido: ${displayUser} ${isPlayed ? '✅ [Pinchada]' : ''}</div>  
- </div>  
- <div class="action-buttons">  
- <span class="badge-count">🔥 ${count}</span>  
- <span class="badge-year">${item.year || 'N/D'}</span>  
- </div>  
- </div>  
- `;  
- }).join('');  
-  
- window.print();  
-  
- setTimeout(() => {  
- queueResults.innerHTML = previousHTML;  
- renderQueuePage();  
- }, 800);  
- }  
-  
+ function exportQueueToPDF() {
+   if (!Array.isArray(globalQueueItems) || globalQueueItems.length === 0) {
+     alert('No hay canciones en la lista para exportar.');
+     return;
+   }
+   printSongsAsPDF('Peticiones del público', 'Cola actual de la sala', globalQueueItems);
+ }
+
+
  function estimateBpm(genre, title) {  
  const lowerTitle = title.toLowerCase();  
  if (lowerTitle.includes('rock') || lowerTitle.includes('metal')) return '130-150';  
@@ -6324,9 +6244,6 @@
  }  
   
  function openModal(imgUrl, title, artist, audioUrl, genre, year) {  
- const modalInput = document.getElementById('modalSongInput');
- if (modalInput) modalInput.blur();
-
  document.getElementById('modalImg').src = imgUrl;  
  document.getElementById('modalTitle').textContent = title;  
  document.getElementById('modalArtist').textContent = artist;  
@@ -6334,7 +6251,7 @@
  document.getElementById('modalKey').textContent = getHashKey(title + artist);  
    
  tapTimes = [];  
- currentSearchTerm = title + ' ' + artist;  
+ currentSearchTerm = `${title} ${artist}`;  
   
  const audioElement = document.getElementById('modalAudio');  
  if (audioUrl) {  
@@ -6346,33 +6263,25 @@
  }  
   
  const musicQuery = encodeURIComponent(currentSearchTerm);  
- document.getElementById('modalSpotifyBtn').href = 'https://open.spotify.com/search/' + musicQuery;  
+ document.getElementById('modalSpotifyBtn').href = `https://open.spotify.com/search/${musicQuery}`;  
    
  const modalActionContainer = document.getElementById('modalActionContainer');  
- const artwork100 = (imgUrl || '').replace('1000x1000bb', '100x100bb');  
- const songKey = makeSongKey(title, artist);
-
- renderedSongsMap[songKey] = {
- songKey: songKey,
- title: title,
- artist: artist,
- artwork100: artwork100,
- artworkHD: imgUrl,
- previewAudio: audioUrl || '',
- genre: genre || 'Live Music',
- year: year || 'N/D'
- };
-
- const existingQueueItem = globalQueueItems.find(function(item) { return item.id === songKey; });  
+ const safeTitle = title.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');  
+ const safeArtist = artist.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');  
+ const artwork100 = imgUrl.replace('1000x1000bb', '100x100bb');  
+  
+ const songKey = btoa(unescape(encodeURIComponent(title + " - " + artist)))  
+ .replace(/[/+:=]/g, '_');  
+ const existingQueueItem = globalQueueItems.find(item => item.id === songKey);  
  const disabledAttr = !areRequestsOpen ? 'disabled' : '';  
  const btnTitleAttr = !areRequestsOpen ? 'title="Las peticiones están desactivadas por el DJ"' : '';  
   
  if (!areRequestsOpen) {  
- modalActionContainer.innerHTML = `<button type="button" class="request-btn" style="width: 100%; padding: 10px; font-size: 0.85rem; background: var(--danger);" disabled title="Peticiones desactivadas">⛔ Peticiones Desactivadas por el Administrador</button>`;  
+ modalActionContainer.innerHTML = `<button class="request-btn" style="width: 100%; padding: 10px; font-size: 0.85rem; background: var(--danger);" disabled title="Peticiones desactivadas">⛔ Peticiones Desactivadas por el Administrador</button>`;  
  } else if (existingQueueItem) {  
- modalActionContainer.innerHTML = `<button type="button" class="vote-btn" style="width: 100%; padding: 10px; font-size: 0.85rem;" ${disabledAttr} ${btnTitleAttr} data-song-key="${escapeAttrSafe(songKey)}" ontouchend="handleSongActionTouch(event, this.getAttribute('data-song-key'), true)" onclick="handleSongActionClick(event, this.getAttribute('data-song-key'), true)">🔥 Votar esta canción (+1)</button>`;  
+ modalActionContainer.innerHTML = `<button class="vote-btn" style="width: 100%; padding: 10px; font-size: 0.85rem;" ${disabledAttr} ${btnTitleAttr} onclick="voteSong('${songKey}', '${safeTitle}'); closeModal();">🔥 Votar esta canción (+1)</button>`;  
  } else {  
- modalActionContainer.innerHTML = `<button type="button" class="request-btn" style="width: 100%; padding: 10px; font-size: 0.85rem;" ${disabledAttr} ${btnTitleAttr} data-song-key="${escapeAttrSafe(songKey)}" ontouchend="handleSongActionTouch(event, this.getAttribute('data-song-key'), true)" onclick="handleSongActionClick(event, this.getAttribute('data-song-key'), true)">➕ Pedir esta canción al DJ</button>`;  
+ modalActionContainer.innerHTML = `<button class="request-btn" style="width: 100%; padding: 10px; font-size: 0.85rem;" ${disabledAttr} ${btnTitleAttr} onclick="requestSong('${safeTitle}', '${safeArtist}', '${artwork100}', '${audioUrl || ''}', '${genre}', '${year}'); closeModal();">➕ Pedir esta canción al DJ</button>`;  
  }  
   
  document.getElementById('imageModal').style.display = 'flex';  
@@ -6432,6 +6341,13 @@
  imageModal.style.display = 'none';  
  }  
 
+ const resultsModal = document.getElementById('searchResultsModal');  
+ if (resultsModal.style.display === 'flex') {  
+ resultsModal.style.display = 'none';  
+ void resultsModal.offsetHeight;  
+ resultsModal.style.display = 'flex';  
+ }  
+
  const query = document.getElementById('modalSongInput').value.trim();  
  if (query && searchCache.has(query.toLowerCase())) {  
  renderResults(searchCache.get(query.toLowerCase()), query);  
@@ -6439,7 +6355,24 @@
  }  
 
  function closeModalFromPopState() {  
- closeModal();  
+ const audioElement = document.getElementById('modalAudio');  
+ if (audioElement) {  
+ audioElement.pause();  
+ audioElement.src = '';  
+ }  
+ document.getElementById('imageModal').style.display = 'none';  
+
+ const resultsModal = document.getElementById('searchResultsModal');  
+ if (resultsModal.style.display === 'flex') {  
+ resultsModal.style.display = 'none';  
+ void resultsModal.offsetHeight;  
+ resultsModal.style.display = 'flex';  
+ }  
+
+ const query = document.getElementById('modalSongInput').value.trim();  
+ if (query && searchCache.has(query.toLowerCase())) {  
+ renderResults(searchCache.get(query.toLowerCase()), query);  
+ }  
  }  
   
  function saveToHistory(query) {  
@@ -6798,53 +6731,59 @@
 
 
 <script>
+// Desplazamiento seguro: un gesto de arrastre no puede activar un onclick.
+let isScrolling = false;
 let touchStartX = 0;
 let touchStartY = 0;
-let isScrolling = false;
+let lastScrollMovementAt = 0;
 
-window.addEventListener('touchstart', function(e) {
-    if (e.touches && e.touches.length > 0) {
-        touchStartX = e.touches[0].clientX;
-        touchStartY = e.touches[0].clientY;
-        isScrolling = false;
-    }
-}, { passive: true });
+window.addEventListener('touchstart', (event) => {
+  if (!event.touches || event.touches.length !== 1) return;
+  touchStartX = event.touches[0].clientX;
+  touchStartY = event.touches[0].clientY;
+  isScrolling = false;
+}, { capture: true, passive: true });
 
-window.addEventListener('touchmove', function(e) {
-    if (e.touches && e.touches.length > 0) {
-        const moveX = Math.abs(e.touches[0].clientX - touchStartX);
-        const moveY = Math.abs(e.touches[0].clientY - touchStartY);
-        if (moveX > 14 || moveY > 14) {
-            isScrolling = true;
-        }
-    }
-}, { passive: true });
+window.addEventListener('touchmove', (event) => {
+  if (!event.touches || event.touches.length !== 1) return;
+  const x = Math.abs(event.touches[0].clientX - touchStartX);
+  const y = Math.abs(event.touches[0].clientY - touchStartY);
+  if (x > 9 || y > 9) {
+    isScrolling = true;
+    lastScrollMovementAt = Date.now();
+  }
+}, { capture: true, passive: true });
 
-window.addEventListener('touchend', function() {
-    setTimeout(function() {
-        isScrolling = false;
-    }, 50);
-}, { passive: true });
+window.addEventListener('touchend', (event) => {
+  if (!event.changedTouches || !event.changedTouches.length) return;
+  const x = Math.abs(event.changedTouches[0].clientX - touchStartX);
+  const y = Math.abs(event.changedTouches[0].clientY - touchStartY);
+  if (x > 9 || y > 9) {
+    isScrolling = true;
+    lastScrollMovementAt = Date.now();
+  }
+}, { capture: true, passive: true });
 
-function handleLightTouch(e, type, val) {
-    if (isScrolling) {
-        if (e) { e.preventDefault(); e.stopPropagation(); }
-        return;
-    }
-    if (e) {
-        e.preventDefault();
-        e.stopPropagation();
-    }
-    setAdminEffect(type, val);
+window.addEventListener('touchcancel', () => { isScrolling = false; }, { capture: true, passive: true });
+window.addEventListener('click', (event) => {
+  if (isScrolling && Date.now() - lastScrollMovementAt < 1000) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.stopImmediatePropagation) event.stopImmediatePropagation();
+  }
+  isScrolling = false;
+}, true);
+
+// Ajustar al viewport visual (barras móviles, modo PWA y teclado virtual).
+function syncAppViewport() {
+  const viewport = window.visualViewport;
+  const height = viewport ? viewport.height : window.innerHeight;
+  if (height > 0) document.documentElement.style.setProperty('--app-height', Math.round(height) + 'px');
 }
-
-function handleLightPhotoTouch(e) {
-    if (isScrolling) {
-        if (e) { e.preventDefault(); e.stopPropagation(); }
-        return;
-    }
-    triggerPhotoMomentAlert(e);
-}
+syncAppViewport();
+window.addEventListener('resize', syncAppViewport, { passive: true });
+window.addEventListener('orientationchange', syncAppViewport, { passive: true });
+if (window.visualViewport) window.visualViewport.addEventListener('resize', syncAppViewport, { passive: true });
 </script>
 
 </body>
